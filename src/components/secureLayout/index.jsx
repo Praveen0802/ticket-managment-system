@@ -34,11 +34,13 @@ const SecureLayout = ({ children }) => {
       {pageLoader ? (
         <PageLoader />
       ) : (
-        <div className="flex">
+        <div className="flex h-screen">
           {!hideLeftMenu && <LeftMenuBar />}
-          <div className="w-full">
+          <div className="flex flex-col w-full overflow-hidden">
             {!hideHeader && <Header />}
-            {children}
+            <div className="flex-1 overflow-hidden">
+              {children}
+            </div>
           </div>
         </div>
       )}

@@ -9,8 +9,9 @@ const ViewContainer = ({
   onChange,
   selectedOption,
 }) => {
+  
   return (
-    <div className="bg-white border-[1px] flex flex-col gap-[16px] w-[310px] border-[#E0E1EA] rounded-md p-[20px]">
+    <div className="bg-white border-[1px] flex flex-col gap-[16px] w-full border-[#eaeaf1] rounded-md p-[20px]">
       <div className="flex justify-between  items-center">
         <p className="text-[#323A70] text-[14px] whitespace-nowrap">{title}</p>
         <CustomSelect
@@ -22,7 +23,7 @@ const ViewContainer = ({
           dropdownItemPadding="py-1 pl-2 pr-6"
         />
       </div>
-      <div className="p-4 border-[1px] border-[#E0E1EA] flex flex-col gap-[12px] rounded-md">
+      <div className="p-4 border-[1px] border-[#eaeaf1] flex flex-col gap-[12px] rounded-md">
         {listValues?.map((listItem, listIndex) => {
           return (
             <div className="flex items-center justify-between" key={listIndex}>

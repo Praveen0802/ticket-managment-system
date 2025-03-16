@@ -67,11 +67,11 @@ const CustomSelect = ({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span className="text-indigo-900 font-medium">
+        <span className="text-[#130061] font-medium">
           {getSelectedLabel()}
         </span>
         <svg
-          className={`w-5 h-5 ml-2 text-indigo-900 transition-transform duration-200 ${
+          className={`w-5 h-5 ml-2 text-[#130061] transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""
           }`}
           xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +103,7 @@ const CustomSelect = ({
                   key={index}
                   className={`cursor-pointer select-none relative ${dropdownItemPadding} hover:bg-indigo-50 ${
                     isSelectedOption
-                      ? "bg-indigo-100 text-indigo-900"
+                      ? "bg-indigo-100 text-[#130061]"
                       : "text-gray-900"
                   }`}
                   id={`option-${index}`}

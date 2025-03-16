@@ -9,11 +9,12 @@ const FloatingLabelInput = ({
   id,
   name,
   required = false,
+  readOnly,
   className = "",
   placeholder = "",
   error = "",
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(value ? true : false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleFocus = () => setIsFocused(true);
@@ -39,10 +40,14 @@ const FloatingLabelInput = ({
 
   return (
     <div className="relative w-full">
-      <FloatingPlaceholder isFocused={isFocused} hasError={!!error}>
+      <FloatingPlaceholder
+        className={``}
+        isFocused={isFocused}
+        hasError={!!error}
+      >
         <span
           style={{ fontSize: isFocused ? "11px" : "13px" }}
-          className={`${error ? "text-red-500" : "text-[#808082]"}`}
+          className={`${error ? "text-red-500" : "text-[#808082]"} }`}
         >
           {label}
         </span>
@@ -56,7 +61,8 @@ const FloatingLabelInput = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
         // required={required}
-        className={`${baseClasses}  ${className}`}
+        readOnly={readOnly}
+        className={`${baseClasses} ${readOnly && "bg-gray-100"} ${className}`}
         placeholder={isFocused ? placeholder : ""}
       />
       {type === "password" && (

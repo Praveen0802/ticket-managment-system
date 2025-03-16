@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const Header = () => {
   return (
-    <div className="px-[24px] h-[80px] bg-white border-b-[1px] flex w-full justify-between items-center border-[#E0E1EA]">
+    <div className="px-[24px] h-[80px] bg-white border-b-[1px] flex w-full justify-between items-center border-[#eaeaf1]">
       <p className="text-[24px] font-semibold text-[#323A70]">
         Good Afternoon, Ahmad
       </p>
