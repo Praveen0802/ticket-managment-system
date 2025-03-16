@@ -22,3 +22,16 @@ export function formatDate(date) {
 
   return `${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
 }
+
+export const convertSnakeCaseToCamelCase = (snakeCase) => {
+  // Split the string by underscores
+  const words = snakeCase.split("_");
+
+  // Capitalize the first letter of each word
+  const capitalizedWords = words.map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  });
+
+  // Join the words with spaces
+  return capitalizedWords.join(" ");
+};

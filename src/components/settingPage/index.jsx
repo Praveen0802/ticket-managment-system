@@ -11,7 +11,7 @@ const SettingsPage = (props) => {
 
   const router = useRouter();
 
-  const IconclassName = "size-6";
+  const IconclassName = "size-6 stroke-[#130061]";
   const profileValues = [
     {
       icon: <IconStore.profile className={IconclassName} />,
@@ -39,7 +39,7 @@ const SettingsPage = (props) => {
       key: "myReferrals",
     },
     {
-      icon: <IconStore.profile className={IconclassName}/>,
+      icon: <IconStore.profile className={IconclassName} />,
       title: "Request A Feature",
       key: "requestAFeature",
     },
@@ -69,7 +69,7 @@ const SettingsPage = (props) => {
               <li
                 key={index}
                 className={`flex ${
-                  activeTab == value?.key ? "text-purple-600" : "text-gray-600"
+                  activeTab == value?.key ? "text-[#130061] font-semibold" : "text-gray-600"
                 } items-center gap-3 cursor-pointer`}
                 onClick={() => handleTabClick(value?.key)}
               >
