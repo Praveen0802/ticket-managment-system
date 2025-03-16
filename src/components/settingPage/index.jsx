@@ -4,13 +4,14 @@ import Overview from "./overview";
 import { useRouter } from "next/router";
 import MyAccountTeam from "./myAccountTeam";
 import MyTeamView from "./myTeamView";
+import TXPay from "./txPay";
 
 const SettingsPage = (props) => {
   const [activeTab, setActiveTab] = useState(props?.profile);
 
   const router = useRouter();
 
-  const IconclassName = "size-3 stroke-purple-600";
+  const IconclassName = "size-6";
   const profileValues = [
     {
       icon: <IconStore.profile className={IconclassName} />,
@@ -53,7 +54,7 @@ const SettingsPage = (props) => {
     overview: <Overview />,
     myAccount: <MyAccountTeam />,
     myTeam: <MyTeamView />,
-    // txPay: <TXPay />,
+    txPay: <TXPay />,
     // myReferrals: <MyReferrals />,
     // requestAFeature: <RequestAFeature />,
   };
