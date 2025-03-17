@@ -3,8 +3,8 @@ import React from "react";
 const RightViewContainer = (props) => {
   const { tableView } = props;
   return (
-    <div className="border-[1px] w-[50%] border-[#eaeaf1] rounded-md">
-      <table className="w-full">
+    <div className="border-[1px] w-full md:w-[50%] border-[#eaeaf1] rounded-md overflow-x-auto">
+      <table className="w-full min-w-[300px]">
         <thead>
           <tr>
             {tableView?.head.map((head, headIndex) => (

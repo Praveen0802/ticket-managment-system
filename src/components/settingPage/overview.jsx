@@ -1,5 +1,4 @@
 import React from "react";
-import { FiEye, FiEdit2, FiLink, FiClock, FiCheck } from "react-icons/fi";
 import EyeHeader from "./components/eyeHeader";
 import ComponentWrapper from "./components/componentWrapper";
 import calendar from "../../../public/calendar-03.svg";
@@ -44,21 +43,24 @@ const Overview = () => {
     { title: "21", desc: "Total Earnings" },
     { title: "21", desc: "Referral" },
   ];
+
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex gap-4">
-        <ComponentWrapper>
-          <div className="flex flex-col gap-3 ">
+    <div className="flex flex-col gap-4 p-3 md:p-4">
+      <div className="flex flex-col md:flex-row gap-4">
+        <ComponentWrapper className="w-full md:w-1/2">
+          <div className="flex flex-col gap-3">
             <EyeHeader title="My account" />
             <div className="border-[1px] flex flex-col gap-2 border-[#eaeaf1] rounded-lg p-3">
-              <h3 className="text-[20px] font-medium">Good afternoon, Amir</h3>
-              <div className="flex items-center text-gray-500 text-[12px] gap-2">
+              <h3 className="text-lg md:text-xl font-medium">
+                Good afternoon, Amir
+              </h3>
+              <div className="flex items-center text-gray-500 text-xs gap-2">
                 <span>Member Since</span>
-                <Image src={calendar} width={14} height={14} />
+                <Image src={calendar} width={14} height={14} alt="Calendar" />
                 <span>8 September 2023</span>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {myAccountValues.map((item, index) => (
                 <ListView
                   key={index}
@@ -70,10 +72,11 @@ const Overview = () => {
             </div>
           </div>
         </ComponentWrapper>
-        <ComponentWrapper>
-          <div className="flex flex-col gap-6">
+
+        <ComponentWrapper className="w-full md:w-1/2">
+          <div className="flex flex-col gap-4 md:gap-6">
             <EyeHeader title="My Team" />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {myTeamValues?.values?.map((item, index) => (
                 <ListView
                   key={index}
@@ -88,9 +91,9 @@ const Overview = () => {
                 return (
                   <div
                     key={index}
-                    className="text-[12px] border-b-[1px] pb-1 border-[#eaeaf1]  flex justify-between items-center font-medium"
+                    className="text-xs border-b-[1px] pb-1 border-[#eaeaf1] flex justify-between items-center font-medium"
                   >
-                    <p> {item.name}</p>
+                    <p>{item.name}</p>
                     <IconStore.pencilEdit className="size-3" />
                   </div>
                 );
@@ -101,11 +104,11 @@ const Overview = () => {
       </div>
 
       {/* Middle Row */}
-      <div className="flex gap-4">
-        <ComponentWrapper>
+      <div className="flex flex-col md:flex-row gap-4">
+        <ComponentWrapper className="w-full md:w-1/2">
           <div className="flex flex-col gap-4">
             <EyeHeader title="TX Pay" />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {txPayValues.map((item, index) => (
                 <ListView
                   key={index}
@@ -119,7 +122,7 @@ const Overview = () => {
         </ComponentWrapper>
 
         {/* My Referrals Card */}
-        <ComponentWrapper>
+        <ComponentWrapper className="w-full md:w-1/2">
           <div className="flex flex-col gap-4">
             <EyeHeader title="My Referrals" />
             <ListView
@@ -130,7 +133,7 @@ const Overview = () => {
                 <IconStore.linkTag className="size-4 stroke-2 stroke-purple-500" />
               }
             />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {referralValues.map((item, index) => (
                 <ListView
                   key={index}
@@ -144,15 +147,15 @@ const Overview = () => {
         </ComponentWrapper>
       </div>
 
-      <ComponentWrapper>
+      <ComponentWrapper className="w-full">
         <div className="flex flex-col gap-4">
-        <EyeHeader title="System status"  hideEye={true}/>
-        <ListView
-          title={"Tixstock core"}
-          desc={"All systems operational"}
-          className={{ descClass: "text-green-500 font-medium", root: "p-3" }}
-          icon={<IconStore.linkTag className="size-3 stroke-2 " />}
-        />
+          <EyeHeader title="System status" hideEye={true} />
+          <ListView
+            title={"Tixstock core"}
+            desc={"All systems operational"}
+            className={{ descClass: "text-green-500 font-medium", root: "p-3" }}
+            icon={<IconStore.linkTag className="size-3 stroke-2" />}
+          />
         </div>
       </ComponentWrapper>
     </div>

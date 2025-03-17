@@ -1,5 +1,4 @@
 import CustomSelect from "@/components/commonComponents/customSelect";
-import Image from "next/image";
 import React from "react";
 import LeftViewContainer from "./leftViewContainer";
 import RightViewContainer from "./rightViewContainer";
@@ -8,19 +7,19 @@ const ReportViewContainer = ({ reportValues }) => {
   const { title, options, selectedOption, onChange, reports, tableView } =
     reportValues;
   return (
-    <div className="bg-white border-[1px] border-[#eaeaf1] p-[20px] rounded-md flex flex-col gap-4 h-full">
-      <div className="flex items-center justify-between">
-        <p className="text-[16px] font-semibold">{title}</p>
+    <div className="bg-white border border-[#eaeaf1] p-3 md:p-5 rounded-md flex flex-col gap-3 md:gap-4 h-full">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <p className="text-sm md:text-base font-semibold">{title}</p>
         <CustomSelect
           selectedValue={selectedOption}
           options={options}
           onSelect={onChange}
-          textSize="text-[12px]"
-          buttonPadding="px-[10px] py-[4px]"
-          dropdownItemPadding="py-1 pl-2 pr-6"
+          textSize="text-xs md:text-sm"
+          buttonPadding="px-2 md:px-3 py-1 md:py-1.5"
+          dropdownItemPadding="py-1 pl-2 pr-4 md:pr-6"
         />
       </div>
-      <div className="flex gap-[20px] flex-1">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-5 flex-1">
         <LeftViewContainer reports={reports} />
         <RightViewContainer tableView={tableView} />
       </div>

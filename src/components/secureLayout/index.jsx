@@ -36,7 +36,7 @@ const SecureLayout = ({ children }) => {
       ) : (
         <div className="flex h-screen">
           {!hideLeftMenu && <LeftMenuBar />}
-          <div className="flex flex-col w-full overflow-hidden">
+          <div className="flex flex-col max-md:pt-20 w-full overflow-hidden">
             {!hideHeader && <Header />}
             <div className="flex-1 overflow-hidden">
               {children}

@@ -9,7 +9,7 @@ const AccounInfoForm = ({
   handleCountryCodeChange,
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-4 w-[80%]">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full md:w-[90%] lg:w-[80%]">
       <FloatingLabelInput
         id="firstName"
         name="firstName"

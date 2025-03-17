@@ -5,14 +5,16 @@ const ListView = ({ title, desc, icon, sideLabel = "", className = {} }) => {
 
   return (
     <div
-      className={`border-[1px] flex flex-col rounded-md ${root} gap-1 p-2 border-[#eaeaf1]`}
+      className={`border-[1px] flex flex-col rounded-md ${root} gap-1 p-3 border-[#eaeaf1]`}
     >
       <div
         className={`${label} text-[16px] font-semibold flex items-center w-full justify-between`}
       >
-        {title}
-        {sideLabel && <span className={rightLabel}>{sideLabel}</span>}
-        {icon && icon}
+        <span>{title}</span>
+        <div className="flex items-center gap-2">
+          {sideLabel && <span className={rightLabel}>{sideLabel}</span>}
+          {icon && icon}
+        </div>
       </div>
       <div className={`text-gray-500 text-[12px] ${descClass}`}>{desc}</div>
     </div>

@@ -151,11 +151,11 @@ const DashboardPage = () => {
     <div className="flex flex-col h-full">
       <Subheader />
 
-      <div className="overflow-auto p-[24px] flex flex-col gap-[20px] bg-[#F5F7FA]">
-        <div className="flex gap-[24px]">
-          <div className="w-[50%] flex flex-col gap-[24px]">
+      <div className="overflow-auto p-4 md:p-6 flex flex-col gap-4 md:gap-5 bg-[#F5F7FA]">
+        <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+          <div className="w-full lg:w-1/2 flex flex-col gap-4 md:gap-6">
             {/* Top metrics cards */}
-            <div className="flex gap-[24px]">
+            <div className="flex flex-col sm:flex-row gap-4">
               {listValues?.map((listItem, listIndex) => {
                 return (
                   <ViewContainer
@@ -169,10 +169,10 @@ const DashboardPage = () => {
                 );
               })}
             </div>
-            {/* Reports section - takes remaining height */}
+            {/* Reports section */}
             <ReportViewContainer reportValues={reportValues} />
           </div>
-          <div className="w-[50%] flex flex-col">
+          <div className="w-full lg:w-1/2 flex flex-col">
             <TopSellingEvents sellingEvents={sellingEvents} />
           </div>
         </div>

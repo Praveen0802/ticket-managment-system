@@ -6,8 +6,8 @@ import RightFold from "./rightFold";
 
 const LoginPage = () => {
   return (
-    <div className="bg-[#130061]  w-[100vw] h-[100vh] flex items-center justify-center">
-      <div className="w-[920px] mx-auto flex min-h-[432px] z-[99]">
+    <div className="bg-[#130061] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
+      <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row min-h-[432px] z-10 relative">
         <LeftFold />
         <RightFold />
       </div>
@@ -16,7 +16,8 @@ const LoginPage = () => {
         className="w-full absolute bottom-0 left-0"
         width={100}
         height={180}
-        alt="logo"
+        alt="background design"
+        priority
       />
     </div>
   );

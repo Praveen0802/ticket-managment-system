@@ -67,17 +67,19 @@ const RightFold = () => {
   };
 
   return (
-    <div className="flex flex-col gap-[32px] px-[40px] justify-center items-center py-[32px] bg-white w-[50%] rounded-tr-xl rounded-br-xl">
-      <div className="text-center flex flex-col gap-[12px] ">
-        <p className="text-[#323A70] text-[24px] font-semibold">Login</p>
-        <p className="text-[#7D82A4] text-[14px] font-normal">
+    <div className="flex flex-col gap-6 px-6 md:px-8 justify-center items-center py-6 md:py-8 bg-white w-full md:w-1/2 rounded-b-xl md:rounded-bl-none md:rounded-r-xl">
+      <div className="text-center flex flex-col gap-2 md:gap-3">
+        <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
+          Login
+        </p>
+        <p className="text-[#7D82A4] text-sm font-normal">
           Connecting trusted ticket sellers together with our worldwide
           distribution network
         </p>
       </div>
 
       <form
-        className="flex flex-col gap-6 w-[310px] mx-auto"
+        className="flex flex-col gap-6 w-full max-w-xs mx-auto"
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col gap-4">
@@ -119,13 +121,13 @@ const RightFold = () => {
             label={"Login"}
             type="primary"
             classNames={{
-              root: " justify-center items-center",
-              label_: " text-[16px] text-center w-full font-medium",
+              root: "justify-center items-center",
+              label_: "text-base text-center w-full font-medium",
             }}
             submitButton={true}
             loading={loader}
           />
-          <p className="text-[14px] cursor-pointer hover:underline text-center text-[#130061] font-medium">
+          <p className="text-sm cursor-pointer hover:underline text-center text-[#130061] font-medium">
             Forgot Password?
           </p>
         </div>

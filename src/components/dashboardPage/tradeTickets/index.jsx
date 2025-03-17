@@ -26,7 +26,6 @@ const TradeTickets = () => {
         title: "Al-Nassr FC vs Inter Miami CF",
         amount: "Thu, 01 Feb 2024, 18:00",
       },
-
       {
         title: "Al-Nassr FC vs Inter Miami CF",
         amount: "Thu, 01 Feb 2024, 18:00",
@@ -48,19 +47,21 @@ const TradeTickets = () => {
 
   return (
     <div className="border-[1px] border-[#eaeaf1] rounded-md bg-white">
-      <div className="flex items-center justify-between p-4 border-b-[1px] border-[#eaeaf1]">
-        <p className="text-[16px] text-[#323A70] font-semibold">
+      <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-b-[1px] border-[#eaeaf1]">
+        <p className="text-[16px] text-[#323A70] font-semibold mb-3 sm:mb-0">
           Trade Tickets
         </p>
         <Button type="blueType" label="Find Tickets" />
       </div>
-      <div className="flex">
+      <div className="flex flex-col md:flex-row">
         <TradeTicketsContainer
           tracking={tracking}
-          className="w-[50%] border-r-[1px] border-[#eaeaf1] m"
+          className="w-full md:w-[50%] border-b-[1px] md:border-b-0 md:border-r-[1px] border-[#eaeaf1]"
         />
-
-        <TradeTicketsContainer tracking={purchases}   className="w-[50%]"/>
+        <TradeTicketsContainer
+          tracking={purchases}
+          className="w-full md:w-[50%]"
+        />
       </div>
     </div>
   );

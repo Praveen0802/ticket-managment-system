@@ -52,7 +52,7 @@ const NotificationActivityList = () => {
   const [activeTab, setActiveTab] = useState("notifications");
   return (
     <div className="border-[1px] border-[#eaeaf1] rounded-md bg-white">
-      <div className="flex gap-[30px] items-center px-4 pt-4 border-b-[1px] border-[#eaeaf1]">
+      <div className="flex gap-4 sm:gap-[30px] items-center px-4 pt-4 border-b-[1px] border-[#eaeaf1]">
         {heading.map((item, index) => (
           <p
             key={index}
@@ -62,8 +62,8 @@ const NotificationActivityList = () => {
             className={`${
               item?.key == activeTab
                 ? "text-[#0137D5] font-semibold border-b-[1px] border-[#0137D5]"
-                : "text-[#7D82A4 font-normal"
-            }  text-[16px]  pb-4 cursor-pointer`}
+                : "text-[#7D82A4] font-normal"
+            } text-[14px] sm:text-[16px] pb-4 cursor-pointer`}
           >
             {item.name}
           </p>
@@ -73,12 +73,12 @@ const NotificationActivityList = () => {
         {displayedValues.map((item, index) => (
           <div
             key={index}
-            className="flex items-center justify-between px-4 py-2 border-b-[1px] border-[#F0F0F5]"
+            className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-2 border-b-[1px] border-[#F0F0F5]"
           >
-            <p className="text-[#323A70] text-[12px] font-normal">
+            <p className="text-[#323A70] text-[13px] font-normal mb-1 sm:mb-0 sm:mr-2 sm:flex-1">
               {item?.name}
             </p>
-            <p className="text-[#03BA8A] text-[12px] font-normal">
+            <p className="text-[#03BA8A] text-[13px] font-normal whitespace-nowrap">
               {item?.time}
             </p>
           </div>
