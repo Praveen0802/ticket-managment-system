@@ -15,6 +15,7 @@ const SecureLayout = ({ children }) => {
   const { pageLoader } = useSelector((state) => state.pageLoader);
 
   useEffect(() => {
+    // dispatch(showpageLoader());
     const handleStart = () => dispatch(showpageLoader());
     const handleComplete = () => dispatch(hidepageLoader());
 

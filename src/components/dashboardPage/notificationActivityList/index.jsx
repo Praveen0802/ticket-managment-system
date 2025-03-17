@@ -73,7 +73,7 @@ const NotificationActivityList = () => {
         {displayedValues.map((item, index) => (
           <div
             key={index}
-            className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-2 border-b-[1px] border-[#F0F0F5]"
+            className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-[10px] border-b-[1px] border-[#F0F0F5]"
           >
             <p className="text-[#323A70] text-[13px] font-normal mb-1 sm:mb-0 sm:mr-2 sm:flex-1">
               {item?.name}
