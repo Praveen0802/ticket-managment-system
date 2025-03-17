@@ -31,19 +31,15 @@ const SecureLayout = ({ children }) => {
 
   return (
     <>
-      {pageLoader ? (
-        <PageLoader />
-      ) : (
-        <div className="flex h-screen">
-          {!hideLeftMenu && <LeftMenuBar />}
-          <div className="flex flex-col max-md:pt-20 w-full overflow-hidden">
-            {!hideHeader && <Header />}
-            <div className="flex-1 overflow-hidden">
-              {children}
-            </div>
+      <div className="flex h-screen">
+        {!hideLeftMenu && <LeftMenuBar />}
+        <div className="flex flex-col max-md:pt-20 w-full overflow-hidden">
+          {!hideHeader && <Header />}
+          <div className="flex-1 overflow-hidden">
+            {pageLoader ? <PageLoader /> : <>{children}</>}
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

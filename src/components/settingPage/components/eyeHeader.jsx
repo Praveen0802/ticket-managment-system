@@ -5,7 +5,7 @@ const EyeHeader = ({ title, onChange, hideEye }) => {
   return (
     <div className="flex justify-between items-center">
       <h2 className="text-lg font-medium">{title}</h2>
-      {!hideEye && <FiEye onChange={onChange} className="text-purple-600" />}
+      {!hideEye && <FiEye onChange={onChange} className="text-[#130061]" />}
     </div>
   );
 };

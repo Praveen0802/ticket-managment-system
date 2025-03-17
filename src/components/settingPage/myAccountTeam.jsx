@@ -99,7 +99,7 @@ const MyAccountTeam = () => {
                     <p className="text-sm md:text-base text-[#323A70] font-medium">
                       {item?.title}
                     </p>
-                    <IconStore.pencilEdit className="size-4 stroke-2 cursor-pointer stroke-purple-500" />
+                    <IconStore.pencilEdit className="size-4 stroke-2 cursor-pointer stroke-[#130061]" />
                   </div>
                   <p className="p-3 md:p-4 max-w-[150px] text-xs md:text-sm">
                     {item?.address}

@@ -128,9 +128,9 @@ const Overview = () => {
             <ListView
               title={"my.tixstock.com/sign-up/1edb01"}
               desc={"Share your referral link"}
-              className={{ label: "text-purple-500 font-medium", root: "p-3" }}
+              className={{ label: "text-[#130061] font-medium", root: "p-3" }}
               icon={
-                <IconStore.linkTag className="size-4 stroke-2 stroke-purple-500" />
+                <IconStore.linkTag className="size-4 stroke-2 stroke-[#130061]" />
               }
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
