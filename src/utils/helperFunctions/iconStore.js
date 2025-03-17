@@ -296,6 +296,23 @@ export const IconStore = {
       <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
   )),
+  exclamatory: withMerger((props) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="size-6"
+      {...props}
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+      />
+    </svg>
+  )),
   expand: withMerger((props) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -338,7 +355,7 @@ export const IconStore = {
       stroke-width="1.5"
       stroke="currentColor"
       {...props}
-      class="size-6"
+      class="size-4"
     >
       <path
         stroke-linecap="round"
