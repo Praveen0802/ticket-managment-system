@@ -90,6 +90,7 @@ const RightFold = () => {
               value={formData?.email}
               onChange={handleChange}
               error={errors.email}
+              autoComplete="off"
               required
             />
             {errors.email && (

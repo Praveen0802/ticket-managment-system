@@ -9,6 +9,7 @@ const FloatingLabelInput = ({
   id,
   name,
   required = false,
+  autoComplete = "on",
   readOnly,
   className = "",
   placeholder = "",
@@ -60,6 +61,7 @@ const FloatingLabelInput = ({
         onChange={onChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        autoComplete={autoComplete}
         // required={required}
         readOnly={readOnly}
         className={`${baseClasses} ${readOnly && "bg-gray-100"} ${className}`}
