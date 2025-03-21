@@ -3,7 +3,7 @@ import React from "react";
 import plus from "../../../../public/plus.svg";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 
-const ViewComponent = ({ item }) => {
+const ViewComponent = ({ item, onClick }) => {
   const keyValues = [
     { key: "On Hold", value: item?.keys?.onHold, hold: true },
     { key: "Pending Delivery", value: item?.keys?.pendingDelivery },
@@ -22,7 +22,10 @@ const ViewComponent = ({ item }) => {
             </p>
           </div>
         </div>
-        <div className="p-[8px] cursor-pointer rounded-md bg-[#F2F5FD]">
+        <div
+          onClick={() => onClick(item)}
+          className="p-[8px] cursor-pointer rounded-md bg-[#F2F5FD]"
+        >
           <Image src={plus} width={18} height={18} alt="plus" />
         </div>
       </div>

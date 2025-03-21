@@ -22,7 +22,7 @@ const LeftMenuBar = () => {
 
   const leftPaneValues = [
     { image: arrowRight, name: "Minimise" },
-    { text: "MJ", name: "MJ", key: "name", route: "settings/overview", },
+    { text: "MJ", name: "MJ", key: "name", route: "settings/overview" },
     {
       image: category,
       name: "Dashboard",
@@ -32,8 +32,8 @@ const LeftMenuBar = () => {
     { image: addSquare, name: "Add Listings", key: "addList" },
     { image: listing, name: "My listings", key: "myList" },
     { image: shopping, name: "document", key: "document" },
-    { image: diagram, name: "Sales", key: "sales" },
-    { image: ticketStar, name: "Reports", key: "reports" },
+    { image: diagram, name: "Reports", key: "reports", route: "reports" },
+    { image: ticketStar, name: "Sales", key: "sales" },
     { image: ticket, name: "TX Pay", key: "tx-pay" },
     { image: documentupload, name: "TX Trade", key: "tx-trade" },
   ];
@@ -186,7 +186,7 @@ const LeftMenuBar = () => {
               )}
               {item?.name && (
                 <div
-                  className={`text-white capitalize text-[13px] whitespace-nowrap overflow-hidden transition-all duration-300 ${
+                  className={`text-white capitalize text-[15px] whitespace-nowrap overflow-hidden transition-all duration-300 ${
                     showFullDisplay
                       ? "max-w-[120px] opacity-100"
                       : "max-w-0 opacity-0"

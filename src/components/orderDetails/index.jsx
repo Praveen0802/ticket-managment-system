@@ -1,5 +1,5 @@
 import { IconStore } from "@/utils/helperFunctions/iconStore";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../commonComponents/button";
 import { convertSnakeCaseToCamelCase } from "@/utils/helperFunctions";
 import OrderValues from "./components/orderValues";
@@ -9,12 +9,15 @@ import Benifits from "./components/benifits";
 import CustomModal from "../commonComponents/customModal";
 import CtaValues from "./components/ctaValues";
 
-const OrderDetails = ({ testingValues }) => {
+const OrderDetails = ({ testingValues, show, onClose }) => {
   const [expandedVersion, setExpandedVersion] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   const ctaText = [
     { title: "Order Notes", cta: "+ Add Note" },
     { title: "Additional File", cta: "Download File" },
   ];
+
   const {
     orderId,
     date,
@@ -36,53 +39,113 @@ const OrderDetails = ({ testingValues }) => {
   };
 
   const handleCollapseModal = () => {
+    setIsTransitioning(true);
     setExpandedVersion(!expandedVersion);
+    // Reset transitioning state after animation completes with a longer duration
+    setTimeout(() => setIsTransitioning(false), 600);
   };
 
   return (
-    <CustomModal className={expandedVersion ? "w-full" : ""} show={true}>
-      <div className={`${expandedVersion ? "w-full h-full" : "m-4"}`}>
+    <>
+      <style>{`
+        .scale-transition {
+          animation: scale-zoom 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes scale-zoom {
+          0% {
+            transform: scale(expandedVersion ? 0.95 : 1);
+          }
+          70% {
+            transform: scale(expandedVersion ? 1.01 : 0.99);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        .transition-custom {
+          transition: all 500ms cubic-bezier(0.25, 1, 0.5, 1);
+        }
+      `}</style>
+
+      <CustomModal
+        className={`transition-custom ${expandedVersion ? "w-full" : ""}`}
+        show={show}
+        onClose={onClose}
+      >
         <div
-          className={`${
-            expandedVersion ? "w-full h-full" : "max-w-[676px] max-h-[90vh]"
-          }  overflow-auto rounded-md bg-white`}
+          className={`transition-custom ${
+            expandedVersion ? "w-full h-full" : "m-4"
+          }`}
         >
-          <div className="flex items-center  border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[24px]">
-            <p className="text-[18px] text-[#323A70] ">Order ID: {orderId}</p>
-            <div className="flex items-center gap-2">
-              {expandedVersion ? (
-                <IconStore.collapse
-                  onClick={handleCollapseModal}
-                  className="size-4 cursor-pointer stroke-[#130061]"
+          <div
+            className={`
+              transition-custom overflow-auto rounded-md bg-white
+              ${
+                expandedVersion ? "w-full h-full" : "max-w-[676px] max-h-[90vh]"
+              }
+              ${isTransitioning ? "scale-transition" : ""}
+            `}
+            style={{
+              transformOrigin: "center",
+            }}
+          >
+            <div className="flex items-center border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[24px]">
+              <p className="text-[18px] text-[#323A70]">Order ID: {orderId}</p>
+              <div className="flex items-center gap-2">
+                {expandedVersion ? (
+                  <IconStore.collapse
+                    onClick={handleCollapseModal}
+                    className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
+                  />
+                ) : (
+                  <IconStore.expand
+                    onClick={handleCollapseModal}
+                    className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
+                  />
+                )}
+                <IconStore.close
+                  onClick={onClose}
+                  className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
                 />
-              ) : (
-                <IconStore.expand
-                  onClick={handleCollapseModal}
-                  className="size-4 cursor-pointer stroke-[#130061]"
-                />
-              )}{" "}
-              <IconStore.close className="size-4 cursor-pointer stroke-[#130061]" />
-            </div>
-          </div>
-          <div className="p-[24px] flex flex-col gap-4">
-            <CtaValues ctaText={ctaText} />
-            <div className={`flex ${expandedVersion ? "" : "flex-col "} gap-4`}>
-              <div className={`${expandedVersion ? "w-1/2" : "w-full"}`}>
-                <OrderValues orderObject={orderObject} />
               </div>
-              <div className={`${expandedVersion ? "w-1/2 h-full" : "w-full"}`}>
-                <CustomerDetails
-                  customerEmail={customerEmail}
-                  customerName={customerName}
-                />
-              </div>
             </div>
-            <OrderedTickets testingValues={testingValues} />
-            <Benifits testingValues={testingValues} />
+            <div className="p-[24px] flex flex-col gap-4">
+              <CtaValues ctaText={ctaText} />
+              <div
+                className={`flex gap-4 transition-custom ${
+                  expandedVersion ? "" : "flex-col"
+                }`}
+              >
+                <div
+                  className={`transition-custom ${
+                    expandedVersion ? "w-1/2" : "w-full"
+                  }`}
+                >
+                  <OrderValues orderObject={orderObject} />
+                </div>
+                <div
+                  className={`transition-custom ${
+                    expandedVersion ? "w-1/2 h-full" : "w-full"
+                  }`}
+                >
+                  <CustomerDetails
+                    customerEmail={customerEmail}
+                    customerName={customerName}
+                  />
+                </div>
+              </div>
+              <OrderedTickets testingValues={testingValues} />
+              <Benifits
+                testingValues={testingValues}
+                expandedVersion={expandedVersion}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </CustomModal>
+      </CustomModal>
+    </>
   );
 };
 
