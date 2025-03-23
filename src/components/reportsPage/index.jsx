@@ -11,54 +11,35 @@ import FloatingSelect from "../floatinginputFields/floatingSelect";
 import Spinner from "../commonComponents/spinner";
 import AddPayOutPopup from "./components/addPayOutPopup";
 import OrderDetails from "../orderDetails";
+import WalletHistory from "./components/walletHistory";
+import TransactionHistory from "./components/transactionHistory";
+import OrderViewPopup from "./components/orderViewPopup";
 
-const ReportsPage = () => {
-  const values = [
-    {
-      icon: ukFlag,
-      amount: "£50",
+const ReportsPage = (props) => {
+  console.log(props, "propspropsprops");
+  const { apiData } = props;
+  const { account_data, deposit_history, transaction_history } = apiData;
+  const flagMap = {
+    GBP: ukFlag,
+    USD: usFlag,
+    EUR: euFalg,
+    AED: Flag,
+  };
+
+  // Convert to the desired format
+  const values = account_data.map((item) => {
+    return {
+      icon: flagMap[item.currency],
+      amount: item.balance_amount,
       balance: "Available Balance",
       keys: {
-        onHold: "£0.00",
-        pendingDelivery: "£5.00",
-        pendingPayment: "£0.00",
-        total: "£5.00",
+        // onHold: "£0.00",
+        pendingDelivery: item?.pending_orders,
+        pendingPayment: item?.pending_amount,
+        confirmedOrder: item?.confirmed_orders,
       },
-    },
-    {
-      icon: usFlag,
-      amount: "£50",
-      balance: "Available Balance",
-      keys: {
-        onHold: "£0.00",
-        pendingDelivery: "£5.00",
-        pendingPayment: "£0.00",
-        total: "£5.00",
-      },
-    },
-    {
-      icon: euFalg,
-      amount: "£50",
-      balance: "Available Balance",
-      keys: {
-        onHold: "£0.00",
-        pendingDelivery: "£5.00",
-        pendingPayment: "£0.00",
-        total: "£5.00",
-      },
-    },
-    {
-      icon: Flag,
-      amount: "£50",
-      balance: "Available Balance",
-      keys: {
-        onHold: "£0.00",
-        pendingDelivery: "£5.00",
-        pendingPayment: "£0.00",
-        total: "£5.00",
-      },
-    },
-  ];
+    };
+  });
 
   const testingValues = {
     orderId: "6B1C74A9",
@@ -109,8 +90,11 @@ const ReportsPage = () => {
     setPayOutPopup({ flag: true, data: item });
   };
 
-  const handleEyeClick = (item) => {
-    setEyeViewPopup({ flag: true, data: testingValues });
+  const handleEyeClick = (item, transactionType) => {
+    setEyeViewPopup({
+      flag: true,
+      data: { ...item, transactionType: transactionType },
+    });
   };
 
   const paymentSections = [
@@ -249,6 +233,7 @@ const ReportsPage = () => {
               <FloatingLabelInput
                 id="paymentReference"
                 name="paymentReference"
+                keyValue={"paymentReference"}
                 label="Search by Payment Refrence"
                 className="!py-[6px] !px-[12px] w-full"
                 value={paymentReference}
@@ -278,14 +263,27 @@ const ReportsPage = () => {
               {tabSwitchLoader ? (
                 <Spinner />
               ) : (
-                <CollapsablePaymentTable
-                  sections={
-                    selectedTab == "transaction"
-                      ? paymentSections
-                      : walletHistory
-                  }
-                  onRowClick={handleEyeClick}
-                />
+                <>
+                  {selectedTab == "transaction" ? (
+                    <TransactionHistory
+                      transactions={transaction_history}
+                      onRowClick={handleEyeClick}
+                    />
+                  ) : (
+                    <WalletHistory
+                      transactions={deposit_history}
+                      onRowClick={handleEyeClick}
+                    />
+                  )}
+                </>
+                // <CollapsablePaymentTable
+                //   sections={
+                //     selectedTab == "transaction"
+                //       ? paymentSections
+                //       : walletHistory
+                //   }
+                //   onRowClick={handleEyeClick}
+                // />
               )}
             </div>
           </div>
@@ -298,10 +296,16 @@ const ReportsPage = () => {
         }}
         item={payOutPopup?.data}
       />
-      <OrderDetails
+      {/* <OrderDetails
         testingValues={eyeViewPopup?.data}
         show={eyeViewPopup?.flag}
         onClose={() => setEyeViewPopup({ flag: false, data: "" })}
+      /> */}
+      <OrderViewPopup
+        show={eyeViewPopup?.flag}
+        onClose={() => setEyeViewPopup({ flag: false, data: "" })}
+        data={eyeViewPopup?.data}
+        outSideClickClose={false}
       />
     </div>
   );

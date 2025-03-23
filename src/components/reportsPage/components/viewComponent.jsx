@@ -5,10 +5,10 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 
 const ViewComponent = ({ item, onClick }) => {
   const keyValues = [
-    { key: "On Hold", value: item?.keys?.onHold, hold: true },
+    { key: "Confirmed Orders", value: item?.keys?.confirmedOrder },
+    // { key: "On Hold", value: item?.keys?.onHold, hold: true },""
     { key: "Pending Delivery", value: item?.keys?.pendingDelivery },
     { key: "Pending Payout", value: item?.keys?.pendingPayment },
-    { key: "Total Revenue", value: item?.keys?.total },
   ];
   return (
     <div className="p-4 border-[1px] border-[#eaeaf1] rounded-md flex flex-col gap-2">

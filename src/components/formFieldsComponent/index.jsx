@@ -16,15 +16,16 @@ const FormFields = ({ formFields }) => {
                 onSelect={field?.onChange}
                 paddingClassName={field?.className} // Wider horizontal padding
               />
-            ) : field?.type === "text" ? (
+            ) : field?.type === "text" || field?.type === "password" ? (
               <FloatingLabelInput
                 id={field?.id}
                 name={field?.name}
+                keyValue={field?.name}
                 type={field?.type}
-                label="Search by Payment Refrence"
+                label={field?.label}
                 className={field?.className}
                 value={field?.value}
-                onChange={(e) => field?.onChange(e)}
+                onChange={field?.onChange}
                 autoComplete="off"
                 required
               />

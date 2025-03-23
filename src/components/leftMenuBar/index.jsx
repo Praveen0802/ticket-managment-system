@@ -42,8 +42,6 @@ const LeftMenuBar = () => {
 
   const isMobile = useIsMobile();
 
-  console.log(router?.pathname);
-
   const [active, setActive] = useState(router?.pathname?.replace("/", ""));
 
   const handleSelectedClick = (index, item) => {

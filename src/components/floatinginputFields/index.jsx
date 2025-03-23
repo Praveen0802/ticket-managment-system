@@ -7,6 +7,7 @@ const FloatingLabelInput = ({
   value,
   onChange,
   id,
+  keyValue,
   name,
   required = false,
   autoComplete = "on",
@@ -58,7 +59,7 @@ const FloatingLabelInput = ({
         type={actualType}
         name={name}
         value={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e, keyValue)}
         onFocus={handleFocus}
         onBlur={handleBlur}
         autoComplete={autoComplete}

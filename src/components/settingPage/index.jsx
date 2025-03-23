@@ -8,7 +8,8 @@ import TXPay from "./txPay";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 
 const SettingsPage = (props) => {
-  const [activeTab, setActiveTab] = useState(props?.profile);
+  const { profile, apiData } = props;
+  const [activeTab, setActiveTab] = useState(profile);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const router = useRouter();
@@ -61,7 +62,7 @@ const SettingsPage = (props) => {
 
   const stepperComponent = {
     overview: <Overview />,
-    myAccount: <MyAccountTeam />,
+    myAccount: <MyAccountTeam {...apiData}/>,
     myTeam: <MyTeamView />,
     txPay: <TXPay />,
     // myReferrals: <MyReferrals />,

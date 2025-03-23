@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import FloatingLabelInput from "../floatinginputFields";
 import { useRouter } from "next/router";
 import Button from "../commonComponents/button";
+import AJAX from "@/utils/apiHandler";
+import { API_ROUTES } from "@/utils/apiHandler/apiRoutes";
+import { setCookie } from "@/utils/helperFunctions/cookie";
+import { currentTimeEpochTimeInMilliseconds } from "@/utils/helperFunctions";
+import { loginUser } from "@/utils/apiHandler/request";
 
 const RightFold = () => {
   const [formData, setFormData] = useState({
@@ -19,8 +24,9 @@ const RightFold = () => {
 
   const router = useRouter();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (e, key) => {
+    const name = key;
+    const { value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -52,15 +58,40 @@ const RightFold = () => {
     return valid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormSubmitted(true);
 
     if (validateForm()) {
       setLoader(true);
-      console.log("Form submitted:", formData);
-      // Proceed with login logic here
-      router.push("/dashboard");
+      const body = {
+        user_name: formData.email,
+        password: formData.password,
+      };
+      try {
+        const response = await loginUser(null, body);
+        const authToken = response?.token;
+        if (authToken) {
+          setCookie("auth_token", authToken);
+          setCookie(
+            "auth_token_validity",
+            currentTimeEpochTimeInMilliseconds()
+          );
+          router.push("/dashboard");
+        } else {
+          setErrors({
+            email: "Invalid email or password",
+            password: "Invalid email or password",
+          });
+          setLoader(false);
+        }
+      } catch {
+        setErrors({
+          email: "Invalid email or password",
+          password: "Invalid email or password",
+        });
+        setLoader(false);
+      }
     } else {
       console.log("Form validation failed");
     }
@@ -87,6 +118,7 @@ const RightFold = () => {
             <FloatingLabelInput
               id="email"
               name="email"
+              keyValue={"email"}
               type="email"
               label="Email Address"
               value={formData?.email}
@@ -105,6 +137,7 @@ const RightFold = () => {
               id="password"
               name="password"
               type="password"
+              keyValue={"password"}
               label="Password"
               value={formData?.password}
               onChange={handleChange}
