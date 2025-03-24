@@ -7,8 +7,7 @@ export const fetchAuthorizationKey = (token = "") => {
   const validateAuthToken = checkValidAuthToken("", authToken);
   const headers = {
     "Content-Type": "application/json",
-    ...(authToken &&
-      validateAuthToken && { Authorization: `Bearer ${authToken}` }),
+    ...(authToken && { Authorization: `Bearer ${authToken}` }),
   };
   return headers;
 };

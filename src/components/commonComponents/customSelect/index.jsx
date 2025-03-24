@@ -4,7 +4,7 @@ const CustomSelect = ({
   options = [],
   selectedValue = null,
   onSelect,
-  placeholder = "Today",
+  placeholder = "Select Your option",
   className = "",
   textSize = "text-lg", // Default text size
   buttonPadding = "px-4 py-2", // Default button padding
@@ -47,7 +47,7 @@ const CustomSelect = ({
 
   // Find the currently selected option's label
   const getSelectedLabel = () => {
-    if (!selected && placeholder) return placeholder;
+    if (!selected && placeholder) return { placeholder: placeholder };
 
     const selectedOption = options.find(
       (option) => option.value === selected || option === selected
@@ -55,7 +55,7 @@ const CustomSelect = ({
 
     return selectedOption
       ? selectedOption.label || selectedOption
-      : placeholder;
+      : { placeholder: placeholder };
   };
 
   return (
@@ -67,9 +67,7 @@ const CustomSelect = ({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span className="text-[#130061] font-medium">
-          {getSelectedLabel()}
-        </span>
+        <span className="text-[#130061] font-medium">{getSelectedLabel()}</span>
         <svg
           className={`w-5 h-5 ml-2 text-[#130061] transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""

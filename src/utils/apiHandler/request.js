@@ -23,6 +23,7 @@ const makeRequest = async ({
     });
   }
   // Making API call based on client or server
+  console.log(modifiedUrl, method, { ...fetchAuthorizationKey(token) },'ooooooooooooo');
   try {
     const response = isClient
       ? (await method.toLowerCase()) === "get"

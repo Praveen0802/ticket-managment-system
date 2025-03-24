@@ -1,6 +1,9 @@
-import React from "react";
+import CustomSelect from "@/components/commonComponents/customSelect";
+import React, { useState } from "react";
 
-const LatestOrderView = ({ transactions }) => {
+const LatestOrderView = ({ listItems }) => {
+  const [transactions, setTransactions] = useState(listItems);
+
   const formatDateTime = (dateTimeStr) => {
     const date = new Date(dateTimeStr);
     return date.toLocaleString("en-US", {
@@ -13,20 +16,42 @@ const LatestOrderView = ({ transactions }) => {
     });
   };
 
+  const filterValues = {
+    options: [
+      { value: "today", label: "last 7 days" },
+      { value: "yesterday", label: "last 15 days" },
+      { value: "yesterday", label: "last 30 days" },
+      { value: "yesterday", label: "last 45 days" },
+    ],
+    selectedOption: "today",
+    onchange: () => {},
+  };
+
+  const handleFilterChange = () => {};
+
   return (
     <div className="flex flex-col h-full">
       <div className="w-full h-full flex flex-col gap-4 md:gap-5 bg-[#F5F7FA]">
-        <div className="bg-white border border-[#eaeaf1] flex flex-col gap-3 md:gap-5 rounded-md p-3 md:p-5">
+        <div className="bg-white border border-[#eaeaf1] h-full flex flex-col gap-3 md:gap-5 rounded-md p-3 md:p-5">
           <div className="flex flex-col gap-5">
-            <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
-              Transaction History
-            </p>
-
+            <div className="flex gap-3 items-center">
+              <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
+                Transaction History
+              </p>
+              <CustomSelect
+                selectedValue={""}
+                options={filterValues?.options}
+                onSelect={handleFilterChange}
+                textSize="text-xs md:text-sm"
+                buttonPadding="px-2 md:px-3 py-1 md:py-1.5"
+                dropdownItemPadding="py-1 pl-2 pr-4 md:pr-6"
+              />
+            </div>
             {/* This div controls the scrolling */}
-            <div className="overflow-auto max-h-[300px]">
+            <div className="overflow-auto h-full">
               <table className="min-w-full border-collapse">
-                <thead className="sticky top-0 bg-[#F5F7FA]">
-                  <tr className="text-[#323A70]">
+                <thead className="sticky top-0 bg-white">
+                  <tr className="text-gray-400">
                     <th className="p-3 text-left text-sm font-medium">
                       Reference No
                     </th>
@@ -37,13 +62,10 @@ const LatestOrderView = ({ transactions }) => {
                     <th className="p-3 text-left text-sm font-medium">
                       Amount
                     </th>
-                    <th className="p-3 text-left text-sm font-medium">
-                      Description
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((transaction) => (
+                  {transactions?.map((transaction) => (
                     <tr
                       key={transaction?.id}
                       className="border-t border-[#eaeaf1]"
@@ -77,12 +99,6 @@ const LatestOrderView = ({ transactions }) => {
                             {transaction?.price_with_currency}
                           </span>
                         </div>
-                      </td>
-                      <td
-                        className="p-3 text-sm text-gray-700 max-w-md truncate"
-                        title={transaction?.description}
-                      >
-                        {transaction?.description}
                       </td>
                     </tr>
                   ))}

@@ -67,15 +67,16 @@ export const checkValidAuthToken = (context = null, authToken) => {
     : isClient
     ? readCookie("auth_token")
     : context?.req?.cookies?.auth_token;
-
+  console.log(token, "token");
   const fetchAuthTokenTime = isClient
     ? readCookie("auth_token_validity")
     : context?.req?.cookies?.auth_token_validity;
-
+  console.log(fetchAuthTokenTime, "111token");
   if (!token || !fetchAuthTokenTime) return false;
 
   const currentTimeEpoch = currentTimeEpochTimeInMilliseconds();
   const tokenTimeEpoch = Number(fetchAuthTokenTime);
+  console.log(tokenTimeEpoch, "111211token");
   const timeDiffBolean = tokenTimeEpoch > currentTimeEpoch - 3600000;
   return timeDiffBolean;
 };
