@@ -47,7 +47,7 @@ const CustomSelect = ({
 
   // Find the currently selected option's label
   const getSelectedLabel = () => {
-    if (!selected && placeholder) return { placeholder: placeholder };
+    if (!selected && placeholder) return placeholder ;
 
     const selectedOption = options.find(
       (option) => option.value === selected || option === selected
@@ -55,7 +55,7 @@ const CustomSelect = ({
 
     return selectedOption
       ? selectedOption.label || selectedOption
-      : { placeholder: placeholder };
+      :  placeholder ;
   };
 
   return (
