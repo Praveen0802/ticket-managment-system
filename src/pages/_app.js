@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import "@/styles/globals.css";
 import { store } from "@/utils/redux/store";
 import { Roboto } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -16,6 +18,17 @@ export default function App({ Component, pageProps }) {
       <Provider store={store}>
         <SecureLayout>
           <Component {...pageProps} />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </SecureLayout>
       </Provider>
     </main>

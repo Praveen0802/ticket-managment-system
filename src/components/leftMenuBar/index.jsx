@@ -22,7 +22,7 @@ const LeftMenuBar = () => {
 
   const leftPaneValues = [
     { image: arrowRight, name: "Minimise" },
-    { text: "MJ", name: "MJ", key: "name", route: "settings/overview" },
+    { text: "MJ", name: "MJ", key: "name", route: "settings/myAccount" },
     {
       image: category,
       name: "Dashboard",

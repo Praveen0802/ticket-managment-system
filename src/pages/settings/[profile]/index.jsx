@@ -22,7 +22,6 @@ export async function getServerSideProps(ctx) {
   }
 
   const response = await fetchSettingsPageDetails(profile, authToken);
-
   return {
     props: { profile, apiData: response ?? {} },
   };

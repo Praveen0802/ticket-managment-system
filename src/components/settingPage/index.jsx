@@ -6,6 +6,9 @@ import MyAccountTeam from "./myAccountTeam";
 import MyTeamView from "./myTeamView";
 import TXPay from "./txPay";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
+import ChangePassword from "./changePassword";
+import AddressBook from "./addressBook";
+import BankAccounts from "./bankAccounts";
 
 const SettingsPage = (props) => {
   const { profile, apiData } = props;
@@ -20,33 +23,23 @@ const SettingsPage = (props) => {
   const profileValues = [
     {
       icon: <IconStore.profile className={IconclassName} />,
-      title: "Overview",
-      key: "overview",
-    },
-    {
-      icon: <IconStore.profile className={IconclassName} />,
       title: "My Account",
       key: "myAccount",
     },
     {
       icon: <IconStore.users className={IconclassName} />,
-      title: "My Team",
-      key: "myTeam",
-    },
-    {
-      icon: <IconStore.profile className={IconclassName} />,
-      title: "TX Pay",
-      key: "txPay",
+      title: "Change Password",
+      key: "changepassword",
     },
     {
       icon: <IconStore.userPlus className={IconclassName} />,
-      title: "My Referrals",
-      key: "myReferrals",
+      title: "Address Book",
+      key: "addressBook",
     },
     {
       icon: <IconStore.profile className={IconclassName} />,
-      title: "Request A Feature",
-      key: "requestAFeature",
+      title: "Bank Accounts",
+      key: "bankAccounts",
     },
   ];
 
@@ -61,12 +54,13 @@ const SettingsPage = (props) => {
   };
 
   const stepperComponent = {
-    overview: <Overview />,
-    myAccount: <MyAccountTeam {...apiData}/>,
-    myTeam: <MyTeamView />,
-    txPay: <TXPay />,
-    // myReferrals: <MyReferrals />,
-    // requestAFeature: <RequestAFeature />,
+    // overview: <Overview />,
+    myAccount: <MyAccountTeam {...apiData} />,
+    changepassword: <ChangePassword {...apiData} />,
+    addressBook: <AddressBook {...apiData} />,
+    bankAccounts: <BankAccounts {...apiData} />,
+    // myTeam: <MyTeamView />,
+    // txPay: <TXPay />,
   };
 
   // Toggle mobile menu

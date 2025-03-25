@@ -22,6 +22,6 @@ export async function getServerSideProps(ctx) {
   const response = await fetchWalletPageDetails(authToken);
 
   return {
-    props: { apiData: response },
+    props: { apiData: response ?? {} },
   };
 }

@@ -10,9 +10,9 @@ export default async function handler(req, res) {
   await axios({
     url: url,
     method,
-    headers: {
-      ...headers,
-    },
+    ...(headers?.authorization && {
+      headers: { Authorization: headers?.authorization },
+    }),
   })
     .then((response) => {
       res.status(200).json(response?.data);

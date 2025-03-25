@@ -5,6 +5,7 @@ import {
   getAuthToken,
   nextRedirect,
 } from "@/utils/helperFunctions";
+import { fetchDashboardPageDetails } from "@/utils/serverSideRequests";
 import React from "react";
 
 const Dashboard = (props) => {
@@ -19,8 +20,9 @@ export const getServerSideProps = async (context) => {
   if (!validToken) {
     return nextRedirect("login");
   }
-  const response = await fetchDashboardData(authToken);
+  // const response = await fetchDashboardData(authToken);
+  const response = await fetchDashboardPageDetails(authToken);
   return {
-    props: { apiData: response },
+    props: { apiData: response ?? {} },
   };
 };

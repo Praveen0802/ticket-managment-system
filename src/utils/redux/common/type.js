@@ -1,0 +1,1 @@
+export const ADD_WALLET_POPUP = "ADD_WALLET_POPUP";

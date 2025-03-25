@@ -11,6 +11,8 @@ const FloatingLabelInput = ({
   name,
   required = false,
   autoComplete = "on",
+  mandatory = false,
+  labelClassName = "",
   readOnly,
   className = "",
   placeholder = "",
@@ -43,15 +45,18 @@ const FloatingLabelInput = ({
   return (
     <div className="relative w-full">
       <FloatingPlaceholder
-        className={``}
+        className={`${labelClassName}`}
         isFocused={isFocused}
         hasError={!!error}
       >
         <span
           style={{ fontSize: isFocused ? "11px" : "13px" }}
-          className={`${error ? "text-red-500" : "text-[#808082]"} }`}
+          className={`${labelClassName} ${
+            error ? "text-red-500" : "text-[#808082]"
+          } }`}
         >
           {label}
+          {mandatory ? "*" : ""}
         </span>
       </FloatingPlaceholder>
       <input
@@ -78,7 +83,7 @@ const FloatingLabelInput = ({
           {showPassword ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -93,7 +98,7 @@ const FloatingLabelInput = ({
           ) : (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

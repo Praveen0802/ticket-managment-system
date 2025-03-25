@@ -6,6 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { hidepageLoader, showpageLoader } from "@/utils/redux/loader/action";
 import PageLoader from "../pageLoader";
 import Header from "../header";
+import RightViewModal from "../commonComponents/rightViewModal";
+import { updateWalletPopupFlag } from "@/utils/redux/common/action";
+import { ADD_WALLET_POPUP } from "@/utils/redux/common/type";
+import AddDepositSummary from "../addDepositSummary";
 
 const SecureLayout = ({ children }) => {
   const router = useRouter();
@@ -13,6 +17,7 @@ const SecureLayout = ({ children }) => {
   const hideHeader = hideHeaderPages?.includes(router?.pathname);
   const dispatch = useDispatch();
   const { pageLoader } = useSelector((state) => state.pageLoader);
+  const { addWalletflag } = useSelector((state) => state.common);
 
   useEffect(() => {
     // dispatch(showpageLoader());
@@ -30,6 +35,14 @@ const SecureLayout = ({ children }) => {
     };
   }, [router]);
 
+  const closeAddWalletPopup = () => {
+    dispatch(
+      updateWalletPopupFlag({
+        flag: false,
+      })
+    );
+  };
+
   return (
     <>
       <div className="flex h-screen">
@@ -40,6 +53,21 @@ const SecureLayout = ({ children }) => {
             {pageLoader ? <PageLoader /> : <>{children}</>}
           </div>
         </div>
+        <RightViewModal
+          show={addWalletflag}
+          onClose={() => {
+            closeAddWalletPopup();
+          }}
+          className={"w-[500px]"}
+          outSideClickClose={true}
+        >
+          <AddDepositSummary
+            show={addWalletflag}
+            onClose={() => {
+              closeAddWalletPopup();
+            }}
+          />
+        </RightViewModal>
       </div>
     </>
   );

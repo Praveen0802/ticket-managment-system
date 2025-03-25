@@ -1,23 +1,12 @@
-import React from "react";
-
-import canelTicket from "../../../public/cancel-ticke.svg";
-import replaced from "../../../public/replaced.svg";
-import Pound from "../../../public/dashboard-pound.svg";
-import Currency from "../../../public/dashboard-currency.svg";
-import Shopping from "../../../public/dashboard-shopping.svg";
-import ViewContainer from "./viewContainer";
-import Subheader from "./subheader";
-import ReportViewContainer from "./reportViewContainer";
-import TopSellingEvents from "./topSellingEvents";
-import TradeTickets from "./tradeTickets";
-import NotificationActivityList from "./notificationActivityList";
-import OrderList from "./orderList";
-import LatestOrderView from "./latestOrderView";
 import LatestBookingTable from "./latestBookingTable";
+import LatestOrderView from "./latestOrderView";
+import OrderList from "./orderList";
+import Subheader from "./subheader";
 
 const DashboardPage = (props) => {
-  console.log("props", props);
   const { apiData } = props;
+  const { dashboardData, orderHistory, transactionHistory } = apiData;
+  console.log(apiData, "apiDataapiDataapiDataapiData");
   return (
     <div className="flex flex-col h-full">
       <Subheader />
@@ -28,8 +17,8 @@ const DashboardPage = (props) => {
               <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 {"Wallet"}
               </p>
-              <div className="grid grid-cols-2 gap-4">
-                {apiData?.wallet?.map((wallet, index) => {
+              <div className="grid grid-cols-4 gap-4">
+                {dashboardData?.wallet?.map((wallet, index) => {
                   return (
                     <OrderList
                       key={index}
@@ -47,20 +36,27 @@ const DashboardPage = (props) => {
                 {"Orders"}
               </p>
               <div className="grid grid-cols-3 gap-4">
-                {Object.entries(apiData?.orders)?.map(([key, value], index) => {
-                  const title =
-                    key == "completedOrders"
-                      ? "Completed Orders"
-                      : key == "pendingOrders"
-                      ? "Pending Orders"
-                      : "Pending Tickets";
-                  return <OrderList key={index} title={title} desc={value} />;
-                })}
+                {Object.entries(dashboardData?.orders)?.map(
+                  ([key, value], index) => {
+                    const title =
+                      key == "completedOrders"
+                        ? "Completed Orders"
+                        : key == "pendingOrders"
+                        ? "Pending Orders"
+                        : "Pending Tickets";
+                    return <OrderList key={index} title={title} desc={value} />;
+                  }
+                )}
               </div>
             </div>
           </div>
-          <LatestOrderView listItems={apiData?.latestTransactions} />
-          <LatestBookingTable bookings={apiData?.latestOrders} />
+          <LatestOrderView
+            listItems={transactionHistory?.transaction_history}
+          />
+          <LatestBookingTable
+            listValues={orderHistory?.order_history}
+            meta={orderHistory?.meta}
+          />
         </div>
       </div>
     </div>

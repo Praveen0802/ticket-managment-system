@@ -33,41 +33,46 @@ const WalletHistory = ({ transactions, onRowClick }) => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction, index) => (
+            {transactions?.map((transaction, index) => (
               <tr
-                key={transaction.id}
+                key={transaction?.id}
                 className={` ${
-                  index !== transactions.length - 1
+                  index !== transactions?.length - 1
                     ? "border-b border-gray-200"
                     : ""
                 }`}
               >
                 <td className="px-6 py-4 text-sm font-medium text-blue-600">
-                  {transaction.reference_no}
+                  {transaction?.reference_no}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
-                  {transaction.amount}
+                  {transaction?.amount}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
-                  {transaction.currency}
+                  {transaction?.currency}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
-                  {transaction.payment_transfer_by}
+                  {transaction?.payment_transfer_by}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
-                  {formatDateTime(transaction.updated_at)}
+                  {formatDateTime(transaction?.updated_at)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-                  {transaction.notes}
+                  {transaction?.notes}
                 </td>
-                <td  onClick={() => onRowClick && onRowClick(transaction,'wallet')} className="px-6 border-l-[1px] border-[#eaeaf1] hover:bg-gray-50 cursor-pointer py-4 text-sm text-gray-600 max-w-xs truncate">
+                <td
+                  onClick={() =>
+                    onRowClick && onRowClick(transaction, "wallet")
+                  }
+                  className="px-6 border-l-[1px] border-[#eaeaf1] hover:bg-gray-50 cursor-pointer py-4 text-sm text-gray-600 max-w-xs truncate"
+                >
                   <IconStore.eye />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {transactions.length === 0 && (
+        {transactions?.length === 0 && (
           <div className="text-center py-10">
             <p className="text-gray-500">No transactions found</p>
           </div>

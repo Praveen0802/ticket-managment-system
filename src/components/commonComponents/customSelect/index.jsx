@@ -47,7 +47,7 @@ const CustomSelect = ({
 
   // Find the currently selected option's label
   const getSelectedLabel = () => {
-    if (!selected && placeholder) return placeholder ;
+    if (!selected && placeholder) return { placeholder: placeholder };
 
     const selectedOption = options.find(
       (option) => option.value === selected || option === selected
@@ -55,8 +55,10 @@ const CustomSelect = ({
 
     return selectedOption
       ? selectedOption.label || selectedOption
-      :  placeholder ;
+      : { placeholder: placeholder };
   };
+
+  const viewingValue = getSelectedLabel();
 
   return (
     <div className={`relative  w-fit ${className}`} ref={dropdownRef}>
@@ -67,9 +69,17 @@ const CustomSelect = ({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span className="text-[#130061] font-medium">{getSelectedLabel()}</span>
+        <span
+          className={`${
+            viewingValue?.placeholder ? "text-gray-400" : "text-[#130061]"
+          } font-medium"`}
+        >
+          {viewingValue?.placeholder ? viewingValue?.placeholder : viewingValue}
+        </span>
         <svg
-          className={`w-5 h-5 ml-2 text-[#130061] transition-transform duration-200 ${
+          className={`w-5 h-5 ml-2 ${
+            viewingValue?.placeholder ? "text-gray-400" : "text-[#130061]"
+          } transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""
           }`}
           xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +130,7 @@ const CustomSelect = ({
                   </span>
 
                   {isSelectedOption && (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#323A70]">
                       <svg
                         className="w-5 h-5"
                         xmlns="http://www.w3.org/2000/svg"

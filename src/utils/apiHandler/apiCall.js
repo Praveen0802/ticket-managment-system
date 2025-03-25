@@ -22,8 +22,7 @@ const postApiCall = async (url, payload, headers = {}, method) => {
   }
 };
 
-const getApiCall = async (url, header = {}, config = {}) => {
-  const { headers } = header;
+const getApiCall = async (url, headers = {}, config = {}) => {
   try {
     const response = await axios({
       url: `/api/get/${url}`,

@@ -6,13 +6,16 @@ const FloatingSelect = ({
   label = "Select",
   selectedValue = null,
   onSelect,
+  keyValue,
   placeholder = "",
   className = "",
+  mandatory = false,
   paddingClassName = "px-3 py-[14px]", // Default padding that can be overridden by parent
   error = "",
   id,
   name,
   required = false,
+  labelClassName = "",
   disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +54,7 @@ const FloatingSelect = ({
     setIsOpen(false);
     setIsFocused(true); // Keep label floating after selection
     if (onSelect) {
-      onSelect(option);
+      onSelect(option, keyValue, "select");
     }
   };
 
@@ -86,12 +89,19 @@ const FloatingSelect = ({
 
   return (
     <div className={`relative w-full ${className}`} ref={dropdownRef}>
-      <FloatingPlaceholder isFocused={isFocused || isOpen} hasError={!!error}>
+      <FloatingPlaceholder
+        className={`${labelClassName}`}
+        isFocused={isFocused || isOpen}
+        hasError={!!error}
+      >
         <span
           style={{ fontSize: isFocused || isOpen ? "11px" : "13px" }}
-          className={`${error ? "text-red-500" : "text-[#808082]"}`}
+          className={`${labelClassName} ${
+            error ? "text-red-500" : "text-[#808082]"
+          }`}
         >
           {label}
+          {mandatory ? "*" : ""}
         </span>
       </FloatingPlaceholder>
 
@@ -161,7 +171,7 @@ const FloatingSelect = ({
                   </span>
 
                   {isSelectedOption && (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#323A70]">
                       <svg
                         className="w-5 h-5"
                         xmlns="http://www.w3.org/2000/svg"

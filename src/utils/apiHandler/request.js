@@ -23,7 +23,6 @@ const makeRequest = async ({
     });
   }
   // Making API call based on client or server
-  console.log(modifiedUrl, method, { ...fetchAuthorizationKey(token) },'ooooooooooooo');
   try {
     const response = isClient
       ? (await method.toLowerCase()) === "get"
@@ -91,12 +90,18 @@ export const fetchProfileDetails = async (token, method, data) => {
   }
 };
 
-export const fetchAddressBookDetails = async (token) => {
+export const fetchAddressBookDetails = async (
+  token,
+  id,
+  method = "GET",
+  data
+) => {
   try {
     const response = await makeRequest({
-      url: API_ROUTES.FETCH_ADDRESS_BOOK_DETAILS,
-      method: "GET",
+      url: `${API_ROUTES.FETCH_ADDRESS_BOOK_DETAILS}${id ? `/${id}` : ""}`,
+      method: method,
       ...(token && { token: token }),
+      ...(data && { data: data }),
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
@@ -148,16 +153,66 @@ export const fetchDepositHistory = async (token) => {
   }
 };
 
-export const fetchTransactionHistory = async (token) => {
+export const fetchTransactionHistory = async (token, params) => {
   try {
     const response = await makeRequest({
       url: API_ROUTES.TRANSACTION_HISTORY,
       method: "GET",
+      ...(params && { params: params }),
       ...(token && { token: token }),
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in fetchTransactionHistory", error);
+    throw error;
+  }
+};
+
+export const fetchBankAccountDetails = async (
+  token,
+  id,
+  method = "GET",
+  data
+) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.FETCH_BANK_ACCOUNTS}${id ? `/${id}` : ""}`,
+      method: method,
+      ...(token && { token: token }),
+      ...(data && { data: data }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in fetchBankAccountDetails", error);
+    throw error;
+  }
+};
+
+export const sendResetRequest = async (data) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.SEND_RESET_REQUEST,
+      method: "POST",
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in sendResetRequest", error);
+    throw error;
+  }
+};
+
+export const fetchOrderHistory = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.GET_ORDER_HISTORY,
+      method: "GET",
+      ...(params && { params: params }),
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in fetchOrderHistory", error);
     throw error;
   }
 };

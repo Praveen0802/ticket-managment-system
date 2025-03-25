@@ -16,7 +16,6 @@ import TransactionHistory from "./components/transactionHistory";
 import OrderViewPopup from "./components/orderViewPopup";
 
 const ReportsPage = (props) => {
-  console.log(props, "propspropsprops");
   const { apiData } = props;
   const { account_data, deposit_history, transaction_history } = apiData;
   const flagMap = {
@@ -27,7 +26,7 @@ const ReportsPage = (props) => {
   };
 
   // Convert to the desired format
-  const values = account_data.map((item) => {
+  const values = account_data?.map((item) => {
     return {
       icon: flagMap[item.currency],
       amount: item.balance_amount,
