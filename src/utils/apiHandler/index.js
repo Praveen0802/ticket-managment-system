@@ -1,12 +1,16 @@
 import axios from "axios";
 import { checkValidAuthToken, getAuthToken } from "../helperFunctions";
-import { getApiCall, postApiCall, putApiCall } from "./apiCall";
+import {
+  getApiCall,
+  postApiCall,
+  formPostAPICall,
+  putApiCall,
+} from "./apiCall";
 
 export const fetchAuthorizationKey = (token = "") => {
   const authToken = getAuthToken("", token);
   const validateAuthToken = checkValidAuthToken("", authToken);
   const headers = {
-    "Content-Type": "application/json",
     ...(authToken && { Authorization: `Bearer ${authToken}` }),
   };
   return headers;
@@ -14,14 +18,15 @@ export const fetchAuthorizationKey = (token = "") => {
 
 const AJAX = {
   post: async (url, data, formData = null, opts = {}, method) => {
+    console.log(formData, "formDataformData");
     if (formData) {
+      console.log(formData, url, "enteredhere");
+      // const modifiedUrl = `${process.env.API_BASE_URL}${url}`;
       const formDataHeader = {
-        headers: {
-          ...fetchAuthorizationKey(),
-          "Content-Type": "multipart/form-data",
-        },
+        ...fetchAuthorizationKey(),
+        "Content-Type": "multipart/form-data",
       };
-      return axios.post(url, formData, formDataHeader);
+      return formPostAPICall(url, formData, formDataHeader);
     } else {
       return postApiCall(
         url,

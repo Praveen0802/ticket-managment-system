@@ -22,6 +22,28 @@ const postApiCall = async (url, payload, headers = {}, method) => {
   }
 };
 
+const formPostAPICall = async (url, payload, headers = {}) => {
+  try {
+    const response = await axios({
+      url: `/api/formPost${url}`,
+      method: "POST",
+      data: payload,
+      headers: {
+        ...headers,
+      },
+    });
+    return response;
+  } catch (err) {
+    console.error("API call failed:", {
+      url: `/api/post/${url}`,
+      status: err.response?.status,
+      data: err.response?.data,
+      message: err.message,
+    });
+    throw err;
+  }
+};
+
 const getApiCall = async (url, headers = {}, config = {}) => {
   try {
     const response = await axios({
@@ -54,4 +76,4 @@ const putApiCall = async (url, payload, header = {}) => {
   }
 };
 
-export { postApiCall, getApiCall, putApiCall };
+export { postApiCall, getApiCall, putApiCall, formPostAPICall };

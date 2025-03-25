@@ -5,10 +5,31 @@ import {
 } from "@/utils/apiHandler/request";
 import React, { useState, useEffect, useRef } from "react";
 
+// Shimmer loader row component
+const ShimmerRow = () => {
+  return (
+    <tr className="border-t border-[#eaeaf1]">
+      <td className="p-3">
+        <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+      </td>
+      <td className="p-3">
+        <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+      </td>
+      <td className="p-3">
+        <div className="h-4 bg-gray-300 rounded w-1/4 animate-pulse"></div>
+      </td>
+      <td className="p-3">
+        <div className="h-4 bg-gray-300 rounded w-1/3 animate-pulse"></div>
+      </td>
+    </tr>
+  );
+};
+
 const LatestOrderView = ({ listItems, meta }) => {
   const [transactions, setTransactions] = useState(listItems);
   const [currentPage, setCurrentPage] = useState(meta?.current_page);
   const [loading, setLoading] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("");
   const tableRef = useRef(null);
 
   const formatDateTime = (dateTimeStr) => {
@@ -25,26 +46,46 @@ const LatestOrderView = ({ listItems, meta }) => {
 
   const filterValues = {
     options: [
-      { value: "today", label: "last 7 days" },
-      { value: "15days", label: "last 15 days" },
-      { value: "30days", label: "last 30 days" },
-      { value: "45days", label: "last 45 days" },
+      { value: "7", label: "last 7 days" },
+      { value: "15", label: "last 15 days" },
+      { value: "30", label: "last 30 days" },
+      { value: "45", label: "last 45 days" },
     ],
-    selectedOption: "today",
-    onchange: () => {},
+    selectedOption: selectedFilter,
+    onchange: (option) => {
+      setSelectedFilter(option);
+    },
   };
 
-  const handleFilterChange = () => {};
+  const handleFilterChange = async (option) => {
+    setLoading(true);
+    setSelectedFilter(option);
+    setCurrentPage(1);
+    try {
+      const response = await fetchTransactionHistory("", {
+        days: option,
+        page: 1,
+      });
+      setTransactions(response?.transaction_history || []);
+    } catch (error) {
+      console.error("Error fetching filtered data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchNextPage = async () => {
     if (loading || currentPage >= meta?.last_page) return;
     setLoading(true);
     try {
       const nextPage = currentPage + 1;
-      const data = await fetchTransactionHistory("", { page: nextPage });
+      const data = await fetchTransactionHistory("", {
+        page: nextPage,
+        days: selectedFilter,
+      });
       setTransactions((prevTransactions) => [
         ...prevTransactions,
-        ...data.order_history,
+        ...(data?.transaction_history || []),
       ]);
       setCurrentPage(nextPage);
     } catch (error) {
@@ -71,7 +112,7 @@ const LatestOrderView = ({ listItems, meta }) => {
     return () => {
       container.removeEventListener("scroll", handleScroll);
     };
-  }, [loading, currentPage]);
+  }, [loading, currentPage, selectedFilter]);
 
   return (
     <div className="flex flex-col h-full">
@@ -83,7 +124,7 @@ const LatestOrderView = ({ listItems, meta }) => {
                 Transaction History
               </p>
               <CustomSelect
-                selectedValue={""}
+                selectedValue={selectedFilter}
                 options={filterValues?.options}
                 onSelect={handleFilterChange}
                 textSize="text-xs md:text-sm"
@@ -92,7 +133,6 @@ const LatestOrderView = ({ listItems, meta }) => {
               />
             </div>
 
-            {/* This div controls the scrolling */}
             <div className="overflow-auto h-full px-3 md:px-5" ref={tableRef}>
               <table className="min-w-full border-collapse">
                 <thead className="sticky top-0 bg-white">
@@ -110,48 +150,50 @@ const LatestOrderView = ({ listItems, meta }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions?.map((transaction) => (
-                    <tr
-                      key={transaction?.id}
-                      className="border-t border-[#eaeaf1]"
-                    >
-                      <td className="p-3 text-sm text-gray-700">
-                        {transaction?.reference_no}
-                      </td>
-                      <td className="p-3 text-sm text-gray-700">
-                        {formatDateTime(transaction?.created_date_time)}
-                      </td>
-                      <td className="p-3 text-sm">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            transaction?.credit_depit === "CREDIT"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
+                  {loading
+                    ? Array(5)
+                        .fill()
+                        .map((_, index) => <ShimmerRow key={index} />)
+                    : transactions?.map((transaction) => (
+                        <tr
+                          key={transaction?.id}
+                          className="border-t border-[#eaeaf1]"
                         >
-                          {transaction?.credit_depit}
-                        </span>
-                      </td>
-                      <td className="p-3 text-sm font-medium">
-                        <div className="flex items-center">
-                          <span
-                            className={
-                              transaction?.credit_depit === "CREDIT"
-                                ? "text-green-600"
-                                : "text-red-600"
-                            }
-                          >
-                            {transaction?.price_with_currency}
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                          <td className="p-3 text-sm text-gray-700">
+                            {transaction?.reference_no}
+                          </td>
+                          <td className="p-3 text-sm text-gray-700">
+                            {formatDateTime(transaction?.created_date_time)}
+                          </td>
+                          <td className="p-3 text-sm">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs ${
+                                transaction?.credit_depit === "CREDIT"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {transaction?.credit_depit}
+                            </span>
+                          </td>
+                          <td className="p-3 text-sm font-medium">
+                            <div className="flex items-center">
+                              <span
+                                className={
+                                  transaction?.credit_depit === "CREDIT"
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                                }
+                              >
+                                {transaction?.price_with_currency}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                 </tbody>
               </table>
             </div>
-
-            {loading && <div className="text-center py-2">Loading...</div>}
           </div>
         </div>
       </div>

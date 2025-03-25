@@ -1,5 +1,4 @@
 import axios from "axios";
-import https from "https";
 
 export default async function handler(req, res) {
   const { payload } = req?.body;
@@ -9,7 +8,7 @@ export default async function handler(req, res) {
 
   const ROOT_URL = process.env.API_BASE_URL;
   const url = `${ROOT_URL}/${apiName}`.replace(/'/g, "");
- 
+
   try {
     const response = await axios({
       url: url,
@@ -20,7 +19,6 @@ export default async function handler(req, res) {
       }),
     });
 
-    console.log("API response successful");
     return res.status(200).json(response?.data);
   } catch (err) {
     console.error("API Error:", {

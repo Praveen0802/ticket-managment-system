@@ -1,3 +1,4 @@
+import { refreshAuthToken } from "../apiHandler/request";
 import { readCookie } from "./cookie";
 
 export function formatDate(date) {
@@ -60,6 +61,22 @@ export const currentTimeEpochTimeInMilliseconds = () => {
   return new Date().getTime();
 };
 
+export const checkAuthTokenValidationMiddleWare = async (
+  authToken,
+  timeValidity
+) => {
+  if (!authToken || !timeValidity) return false;
+  const currentTimeEpoch = currentTimeEpochTimeInMilliseconds();
+  const tokenTimeEpoch = Number(timeValidity);
+  const timeDiffBolean = tokenTimeEpoch > currentTimeEpoch - 3600000;
+  if (timeDiffBolean) {
+    return true;
+  } else {
+    const fetchNewAuthToken = await refreshAuthToken(authToken);
+    return fetchNewAuthToken;
+  }
+};
+
 export const checkValidAuthToken = (context = null, authToken) => {
   const isClient = typeof window != "undefined";
   const token = authToken
@@ -86,67 +103,6 @@ export const clearUserCookie = async () => {
   );
   return deleteCookieStrings;
 };
-
-export function convertDataToWalletHistoryFormat(originalData) {
-  // Group data by month
-  const groupedByMonth = {};
-
-  originalData.forEach((item) => {
-    // Extract date from created_date_time
-    const date = new Date(item.created_date_time);
-    const monthYear = date.toLocaleString("en-US", {
-      month: "long",
-      year: "numeric",
-    });
-
-    if (!groupedByMonth[monthYear]) {
-      groupedByMonth[monthYear] = [];
-    }
-
-    // Format the date to "MMM D, YYYY" format
-    const formattedDate = date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-
-    // Add the item to the respective month group
-    groupedByMonth[monthYear].push({
-      orderId: item.id.toString(),
-      reference: item.reference_no,
-      event: item.description.substring(0, 15) + "...", // Truncated for brevity
-      netAmount: item.price_with_currency,
-      deductions: "-", // No deduction info in original data
-      payoutValue: item.price_with_currency, // Using same amount since no deduction
-      payoutDate: formattedDate,
-      ticket: item.payment_transfer_by,
-      status: item.status === 1 ? "Paid" : "Pending",
-      eye: true,
-    });
-  });
-
-  // Convert to the required format
-  const walletHistory = Object.keys(groupedByMonth).map((monthYear) => {
-    return {
-      title: monthYear,
-      headers: [
-        "Order ID",
-        "Payment Reference",
-        "Event",
-        "Net Amount",
-        "Deductions",
-        "Payout Value",
-        "Payout Initiated Date",
-        "Ticket",
-        "Status",
-        "",
-      ],
-      data: groupedByMonth[monthYear],
-    };
-  });
-
-  return walletHistory;
-}
 
 export const formatDateTime = (dateTimeString) => {
   const date = new Date(dateTimeString);

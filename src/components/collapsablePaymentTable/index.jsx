@@ -1,7 +1,7 @@
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React, { useState, useRef, useEffect } from "react";
 
-const CollapsablePaymentTable = ({ sections, onRowClick }) => {
+const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
   const [expandedSections, setExpandedSections] = useState(
     sections.map((_, index) => index === 0)
   );
@@ -83,16 +83,25 @@ const CollapsablePaymentTable = ({ sections, onRowClick }) => {
                 </thead>
                 <tbody>
                   {section.data.map((row, rowIndex) => (
-                    <tr key={rowIndex} className="hover:bg-gray-50">
+                    <tr key={rowIndex} className="">
                       {Object.entries(row).map(([key, values], cellIndex) => {
+                        if (key == "id") return null;
                         const statusKey = key === "status";
                         const eyeKey = key === "eye";
                         return (
                           <td
                             onClick={() => {
-                              eyeKey && onRowClick(section);
+                              eyeKey &&
+                                onRowClick(
+                                  row,
+                                  selectedTab == "transaction"
+                                    ? "transaction"
+                                    : "wallet"
+                                );
                             }}
-                            className={`py-3 pl-4 text-left text-[12px] border-b border-[#E0E1EA] ${
+                            className={`py-3 pl-4 ${
+                              key === "eye" && "w-[56px] hover:bg-gray-100"
+                            } text-left text-[12px] border-b border-[#E0E1EA] ${
                               statusKey
                                 ? values?.toLowerCase() === "paid"
                                   ? "!text-[#03BA8A]  w-fit px-[6px] py-[4px] rounded-md"

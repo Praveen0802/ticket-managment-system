@@ -1,11 +1,15 @@
 import {
   fetchAddressBookDetails,
   fetchBankAccountDetails,
+  fetchCountrieList,
   fetchDashboardData,
   fetchDepositHistory,
+  fetchDepositHistoryMonthly,
   fetchOrderHistory,
   fetchProfileDetails,
   fetchTransactionHistory,
+  fetchTransactionHistoryMonthly,
+  fetchUserDetails,
   fetchWalletBalance,
 } from "../apiHandler/request";
 
@@ -14,16 +18,21 @@ export const fetchSettingsPageDetails = async (profile, token) => {
 
   try {
     if (validProfiles?.includes(profile)) {
-      const [addressDetails, profileDetails] = await Promise.all([
-        fetchAddressBookDetails(token),
-        fetchProfileDetails(token, "GET"),
-      ]);
-      return { addressDetails, profileDetails };
+      const [addressDetails, profileDetails, fetchCountries] =
+        await Promise.all([
+          fetchAddressBookDetails(token),
+          fetchProfileDetails(token, "GET"),
+          fetchCountrieList(token),
+        ]);
+      return { addressDetails, profileDetails, fetchCountries };
     } else if (profile === "bankAccounts") {
       const bankDetails = await fetchBankAccountDetails(token);
       return {
         bankDetails,
       };
+    } else if (profile == "myTeam") {
+      const userDetails = await fetchUserDetails(token);
+      return { userDetails };
     }
   } catch {}
 };
@@ -33,8 +42,8 @@ export const fetchWalletPageDetails = async (token) => {
     const [walletBalance, depositHistory, transactionHistory] =
       await Promise.all([
         fetchWalletBalance(token),
-        fetchDepositHistory(token),
-        fetchTransactionHistory(token),
+        fetchDepositHistoryMonthly(token),
+        fetchTransactionHistoryMonthly(token),
       ]);
     return { ...transactionHistory, ...depositHistory, ...walletBalance };
   } catch {}

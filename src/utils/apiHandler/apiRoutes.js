@@ -12,4 +12,13 @@ export const API_ROUTES = {
   WALLET_BALANCE: `/wallet/get-wallet-balance`,
   DEPOSIT_HISTORY: `/wallet/get-deposit-history`,
   TRANSACTION_HISTORY: `/wallet/get-transaction-history`,
+  MONTHLY_TRANSACTION_HISTORY: `/wallet/get-transaction-history-monthly`,
+  MONTHLY_DEPOSIT_HISTORY: `/wallet/get-deposit-history-monthly`,
+  GET_DEPOSIT_DETAILS: `/wallet/get-deposit-details`,
+  GET_TRANSACTION_DETAILS: `/wallet/get-transaction-details`,
+  SEND_DEPOSIT_REQUEST: `/wallet/deposit`,
+  REFRESH_AUTH_TOKEN: `/auth/refresh-token`,
+  FETCH_COUNTRIES: `/settings/countries`,
+  FETCH_CITIES: `/settings/cities`,
+  FETCH_USER_DETAILS: `/travelpartner/customer`,
 };

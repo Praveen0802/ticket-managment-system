@@ -4,7 +4,9 @@ import CustomSelect from "../commonComponents/customSelect";
 import Button from "../commonComponents/button";
 import TableView from "./components/tableView";
 
-const MyTeamView = () => {
+const MyTeamView = (props) => {
+  const { userDetails } = props;
+  const { travel_Customers, meta } = userDetails;
   const selectOptions = {
     options: [
       { value: "today", label: "Today" },
@@ -14,9 +16,9 @@ const MyTeamView = () => {
     onChange: () => {},
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(meta.current_page);
+  const [itemsPerPage, setItemsPerPage] = useState(meta.per_page);
+  const [totalPages, setTotalPages] = useState(meta.last_page);
 
   const viewOptions = {
     options: [
@@ -24,91 +26,18 @@ const MyTeamView = () => {
       { value: "20", label: "20" },
       { value: "50", label: "50" },
     ],
-    selectedOption: "10",
+    selectedOption: itemsPerPage.toString(),
     onChange: (value) => {
       setItemsPerPage(parseInt(value));
       setCurrentPage(1); // Reset to first page when changing items per page
     },
   };
 
-  const users = [
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-    {
-      name: "Amir Khan",
-      email: "tradeNumberz@yopmail.com",
-      type: "Primary User",
-    },
-  ];
-
   // Calculate total pages whenever users array or itemsPerPage changes
   useEffect(() => {
-    const calculatedTotalPages = Math.ceil(users.length / itemsPerPage);
-    setTotalPages(calculatedTotalPages > 0 ? calculatedTotalPages : 1);
-
-    // If current page is greater than total pages, reset to total pages
-    if (currentPage > calculatedTotalPages) {
-      setCurrentPage(calculatedTotalPages > 0 ? calculatedTotalPages : 1);
-    }
-  }, [users.length, itemsPerPage, currentPage]);
-
-  // Get current users for the current page
-  const indexOfLastUser = currentPage * itemsPerPage;
-  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+    setTotalPages(meta.last_page);
+    setCurrentPage(meta.current_page);
+  }, [meta.last_page, meta.current_page]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -169,7 +98,7 @@ const MyTeamView = () => {
           {/* User count and pagination controls */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <p className="p-3 sm:p-4 text-xs sm:text-sm text-[#323A70] border-b-[1px] sm:border-b-0 sm:border-r-[1px] border-[#eaeaf1] font-medium w-full sm:w-auto">
-              {users.length} users
+              {meta.total} users
             </p>
 
             <div className="flex flex-wrap sm:flex-nowrap justify-between w-full sm:w-auto border-t-[1px] sm:border-t-0 sm:border-l-[1px] p-3 sm:pl-4 border-[#eaeaf1] items-center text-[#323A70] text-xs sm:text-sm">
@@ -228,7 +157,7 @@ const MyTeamView = () => {
           <TableView
             headerClassName={headerClassName}
             rowClassName={rowClassName}
-            currentUsers={currentUsers}
+            currentUsers={travel_Customers}
           />
           <Button
             label="Invite User"

@@ -11,16 +11,16 @@ const TableView = (props) => {
         {currentUsers.map((user, index) => (
           <div key={index} className="border rounded-md border-[#eaeaf1] p-3">
             <div className="flex justify-between items-center border-b border-[#eaeaf1] pb-2 mb-2">
-              <span className="font-medium text-sm">{user.name}</span>
+              <span className="font-medium text-sm">
+                {user.first_name} {user.last_name}
+              </span>
               <div className="flex gap-2 items-center">
                 <button className="text-[#323A70] hover:text-[#130061]">
                   <IconStore.pencilEdit className="size-4 stroke-[#130061]" />
                 </button>
-                {user?.type !== "Primary User" && (
-                  <button className="text-[#323A70] hover:text-red-600">
-                    <IconStore.trash className="size-4 stroke-red-600" />
-                  </button>
-                )}
+                <button className="text-[#323A70] hover:text-red-600">
+                  <IconStore.trash className="size-4 stroke-red-600" />
+                </button>
               </div>
             </div>
             <div className="flex flex-col gap-1 text-xs">
@@ -29,8 +29,14 @@ const TableView = (props) => {
                 <span className="text-right">{user.email}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Type:</span>
-                <span>{user.type}</span>
+                <span className="text-gray-500">Phone:</span>
+                <span>
+                  +{user.phone_code} {user.mobile_number}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Country:</span>
+                <span>{user.country}</span>
               </div>
             </div>
           </div>
@@ -48,27 +54,30 @@ const TableView = (props) => {
             <tr className="text-left">
               <th className={headerClassName}>Name</th>
               <th className={headerClassName}>Email</th>
-              <th className={headerClassName}>Type</th>
+              <th className={headerClassName}>Phone</th>
+              <th className={headerClassName}>Country</th>
+              <th className={headerClassName}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user, index) => (
               <tr key={index}>
-                <td className={rowClassName}>{user.name}</td>
+                <td className={rowClassName}>
+                  {user.first_name} {user.last_name}
+                </td>
                 <td className={rowClassName}>{user.email}</td>
                 <td className={rowClassName}>
-                  <div className="flex justify-between items-center">
-                    {user.type}
-                    <div className="flex gap-2 items-center">
-                      <button className="text-[#323A70] hover:text-[#130061]">
-                        <IconStore.pencilEdit className="size-4 stroke-[#130061]" />
-                      </button>
-                      {user?.type !== "Primary User" && (
-                        <button className="text-[#323A70] hover:text-red-600">
-                          <IconStore.trash className="size-4 stroke-red-600" />
-                        </button>
-                      )}
-                    </div>
+                  +{user.phone_code} {user.mobile_number}
+                </td>
+                <td className={rowClassName}>{user.country}</td>
+                <td className={rowClassName}>
+                  <div className="flex gap-2 items-center">
+                    <button className="text-[#323A70] hover:text-[#130061]">
+                      <IconStore.pencilEdit className="size-4 stroke-[#130061]" />
+                    </button>
+                    <button className="text-[#323A70] hover:text-red-600">
+                      <IconStore.trash className="size-4 stroke-red-600" />
+                    </button>
                   </div>
                 </td>
               </tr>

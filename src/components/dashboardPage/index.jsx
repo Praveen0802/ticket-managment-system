@@ -6,7 +6,6 @@ import Subheader from "./subheader";
 const DashboardPage = (props) => {
   const { apiData } = props;
   const { dashboardData, orderHistory, transactionHistory } = apiData;
-  console.log(apiData, "apiDataapiDataapiDataapiData");
   return (
     <div className="flex flex-col h-full">
       <Subheader />

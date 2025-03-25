@@ -216,3 +216,135 @@ export const fetchOrderHistory = async (token, params) => {
     throw error;
   }
 };
+
+export const fetchTransactionHistoryMonthly = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.MONTHLY_TRANSACTION_HISTORY,
+      method: "GET",
+      ...(params && { params: params }),
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in fetchTransactionHistoryMonthly", error);
+    throw error;
+  }
+};
+
+export const fetchDepositHistoryMonthly = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.MONTHLY_DEPOSIT_HISTORY,
+      method: "GET",
+      ...(params && { params: params }),
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in fetchDepositHistoryMonthly", error);
+    throw error;
+  }
+};
+
+export const getDepositDetails = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.GET_DEPOSIT_DETAILS,
+      method: "GET",
+      ...(params && { params: params }),
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getDepositDetails", error);
+    throw error;
+  }
+};
+
+export const getTransactionDetails = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.GET_TRANSACTION_DETAILS,
+      method: "GET",
+      ...(params && { params: params }),
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getTransactionDetails", error);
+    throw error;
+  }
+};
+
+export const sendDepositRequest = async (data) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.SEND_DEPOSIT_REQUEST,
+      method: "POST",
+      formData: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in sendDepositRequest", error);
+    throw error;
+  }
+};
+
+export const refreshAuthToken = async (token) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.REFRESH_AUTH_TOKEN,
+      method: "GET",
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getDepositDetails", error);
+    throw error;
+  }
+};
+
+export const fetchCountrieList = async (token) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.FETCH_COUNTRIES,
+      method: "GET",
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getDepositDetails", error);
+    throw error;
+  }
+};
+
+export const fetchCityBasedonCountry = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.FETCH_CITIES,
+      method: "GET",
+      ...(token && { token: token }),
+      ...(params && { params: params }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getDepositDetails", error);
+    throw error;
+  }
+};
+
+export const fetchUserDetails = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.FETCH_USER_DETAILS,
+      method: "GET",
+      ...(token && { token: token }),
+      ...(params && { params: params }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in fetchUserDetails", error);
+    throw error;
+  }
+};

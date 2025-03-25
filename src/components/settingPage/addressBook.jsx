@@ -6,8 +6,8 @@ import Button from "../commonComponents/button";
 import { fetchAddressBookDetails } from "@/utils/apiHandler/request";
 
 const AddressBook = (props) => {
-  const { addressDetails, profileDetails } = props;
-
+  const { addressDetails, profileDetails, fetchCountries } = props;
+  console.log(addressDetails, props, "addressDetailsaddressDetails");
   const [addressBookDetails, setAddressBookDetails] = useState(addressDetails);
   const [addressViewPopup, setAddressViewPopup] = useState({
     show: false,
@@ -17,15 +17,27 @@ const AddressBook = (props) => {
   const [editAdressValues, setEditAdressValues] = useState();
 
   const addressValues = addressBookDetails?.map((item) => {
-    const title = `Address - ${item.zip_code}`;
-    const address = `${item.address} ${item.city} ${item.state} ${item.country} ${item.zip_code}`;
-    const phoneNumber = `+${profileDetails?.phone_code} ${profileDetails?.mobile_number}`;
+    const title = `Address - ${item.zip_code || "N/A"}`;
+    const address = [
+      item?.address || "N/A",
+      item?.city || "N/A",
+      item?.state || "N/A",
+      item?.country || "N/A",
+      item?.zip_code || "N/A",
+    ]
+      .filter((part) => part !== "N/A")
+      .join(" ");
+
+    const phoneNumber =
+      profileDetails?.phone_code && profileDetails?.mobile_number
+        ? `+${profileDetails.phone_code} ${profileDetails.mobile_number}`
+        : "N/A";
 
     return {
       title,
-      address,
+      address: address || "N/A",
       phoneNumber,
-      id: item?.id,
+      id: item?.id || "N/A",
     };
   });
 
@@ -108,6 +120,7 @@ const AddressBook = (props) => {
           type={addressViewPopup?.type}
           addressDetails={editAdressValues}
           onClose={handleClosePopup}
+          fetchCountries={fetchCountries}
         />
       </RightViewModal>
     </div>

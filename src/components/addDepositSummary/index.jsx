@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import Button from "@/components/commonComponents/button";
 import FormFields from "@/components/formFieldsComponent";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
+import { sendDepositRequest } from "@/utils/apiHandler/request";
+import { toast } from "react-toastify";
 
 const AddDepositSummary = ({ onClose }) => {
   const [loader, setLoader] = useState(false);
   const [formFieldValues, setFormFieldValues] = useState({
     deposit_amount: "",
-    api_partner: "",
-    deposit_currency: "",
-    transfer_by: "",
+    currency: "",
+    payment_transfer_by: "",
     proof: "",
-    deposit_notes: "",
+    notes: "",
   });
 
   const handleChange = (e, key, type) => {
@@ -33,10 +34,10 @@ const AddDepositSummary = ({ onClose }) => {
   const isFormValid = () => {
     const requiredFields = [
       "deposit_amount",
-      "api_partner",
-      "deposit_currency",
-      "transfer_by",
+      "currency",
+      "payment_transfer_by",
       "proof",
+      "notes",
     ];
     return requiredFields.every((field) => formFieldValues[field]);
   };
@@ -57,29 +58,14 @@ const AddDepositSummary = ({ onClose }) => {
       labelClassName: "font-medium text-gray-500 mb-1",
       placeholder: "Enter Your Deposit Amount",
     },
-    {
-      label: "API Partner",
-      type: "select",
-      id: "api_partner",
-      name: "api_partner",
-      mandatory: true,
-      value: formFieldValues?.api_partner,
-      onChange: handleChange,
-      className: `!py-2 !px-4 ${fieldStyle}`,
-      labelClassName: "font-medium text-gray-500 mb-1",
-      options: [
-        { value: "partner1", label: "Partner 1" },
-        { value: "partner2", label: "Partner 2" },
-        { value: "partner3", label: "Partner 3" },
-      ],
-    },
+
     {
       label: "Deposit Currency",
       type: "select",
-      id: "deposit_currency",
-      name: "deposit_currency",
+      id: "currency",
+      name: "currency",
       mandatory: true,
-      value: formFieldValues?.deposit_currency,
+      value: formFieldValues?.currency,
       onChange: handleChange,
       className: `!py-2 !px-4 ${fieldStyle}`,
       labelClassName: "font-medium text-gray-500 mb-1",
@@ -93,10 +79,10 @@ const AddDepositSummary = ({ onClose }) => {
     {
       label: "Transfer By",
       type: "select",
-      id: "transfer_by",
-      name: "transfer_by",
+      id: "payment_transfer_by",
+      name: "payment_transfer_by",
       mandatory: true,
-      value: formFieldValues?.transfer_by,
+      value: formFieldValues?.payment_transfer_by,
       onChange: handleChange,
       className: `!py-2 !px-4 ${fieldStyle}`,
       labelClassName: "font-medium text-gray-500 mb-1",
@@ -124,9 +110,9 @@ const AddDepositSummary = ({ onClose }) => {
     {
       label: "Deposit Notes",
       type: "text",
-      id: "deposit_notes",
-      name: "deposit_notes",
-      value: formFieldValues?.deposit_notes,
+      id: "notes",
+      name: "notes",
+      value: formFieldValues?.notes,
       onChange: handleChange,
       className: `!py-2 !px-4 ${fieldStyle}`,
       labelClassName: "font-medium text-gray-500 mb-1",
@@ -146,12 +132,14 @@ const AddDepositSummary = ({ onClose }) => {
     });
 
     try {
-      console.log("Deposit details saved successfully", response);
+      await sendDepositRequest(payload);
+      toast.success("Deposit details saved successfully");
+      onClose();
     } catch (error) {
       console.error("Error saving deposit details", error);
+      toast.error("Error saving deposit details");
     } finally {
       setLoader(false);
-      onClose();
     }
   };
 

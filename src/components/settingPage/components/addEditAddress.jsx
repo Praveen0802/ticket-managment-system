@@ -1,28 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/commonComponents/button";
 import FormFields from "@/components/formFieldsComponent";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
-import { fetchAddressBookDetails } from "@/utils/apiHandler/request";
+import {
+  fetchAddressBookDetails,
+  fetchCityBasedonCountry,
+} from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
 
-const AddEditAddress = ({ onClose, type, addressDetails = {} }) => {
+const AddEditAddress = ({
+  onClose,
+  type,
+  addressDetails = {},
+  fetchCountries = [],
+}) => {
   const {
     country = "",
     address = "",
     city = "",
+    country_id = "",
+    city_id,
     zip_code = "",
   } = addressDetails;
   const editType = type === "edit";
   const [loader, setLoader] = useState(false);
+  const [cityOptions, setCityOptions] = useState([]);
   const [formFieldValues, setFormFieldValues] = useState({
     address_title: "",
     address_line_1: address,
     address_line_2: "",
     address_line_3: "",
-    country: country,
-    city: city,
+    country: country_id,
+    city: city_id,
     zipCode: zip_code,
   });
+
+  const fetchCityDetails = async (id) => {
+    const response = await fetchCityBasedonCountry("", { country_id: id });
+    console.log(response, "responseresponse");
+    const cityField =
+      response?.length > 0
+        ? response?.map((list) => {
+            return { value: list?.id, label: list?.name };
+          })
+        : [];
+    setCityOptions(cityField);
+  };
+
+  useEffect(() => {
+    fetchCityDetails(formFieldValues?.country);
+  }, [formFieldValues?.country]);
 
   const handleChange = (e, key, type) => {
     const selectType = type === "select";
@@ -30,11 +57,14 @@ const AddEditAddress = ({ onClose, type, addressDetails = {} }) => {
     setFormFieldValues({ ...formFieldValues, [key]: value });
   };
 
-  // Check if required fields are filled for form validation
   const isFormValid = () => {
     const requiredFields = ["address_line_1", "country", "city", "zipCode"];
     return requiredFields.every((field) => formFieldValues[field]);
   };
+
+  const countryList = fetchCountries?.map((list) => {
+    return { value: list?.id, label: list?.name };
+  });
 
   const fieldStyle =
     "w-full rounded-md border border-gray-200 p-3 text-gray-700 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 focus:outline-none transition-all duration-200";
@@ -100,10 +130,7 @@ const AddEditAddress = ({ onClose, type, addressDetails = {} }) => {
         onChange: handleChange,
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "font-medium text-gray-500 mb-1",
-        options: [
-          { value: "103", label: "United States" },
-          { value: "104", label: "Canada" },
-        ],
+        options: countryList,
       },
     ],
     [
@@ -120,10 +147,7 @@ const AddEditAddress = ({ onClose, type, addressDetails = {} }) => {
           !formFieldValues?.country ? "opacity-60" : ""
         }`,
         labelClassName: "font-medium text-gray-500 mb-1",
-        options: [
-          { value: "103", label: "United States" },
-          { value: "104", label: "Canada" },
-        ],
+        options: cityOptions,
       },
       {
         label: "Zip Code",
@@ -142,7 +166,6 @@ const AddEditAddress = ({ onClose, type, addressDetails = {} }) => {
 
   const handleSubmit = async () => {
     setLoader(true);
-    console.log(formFieldValues);
     const payload = {
       address: `${formFieldValues?.address_line_1} ${formFieldValues?.address_line_2} ${formFieldValues?.address_line_3}`,
       city: formFieldValues?.city,

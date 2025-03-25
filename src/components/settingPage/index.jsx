@@ -41,6 +41,11 @@ const SettingsPage = (props) => {
       title: "Bank Accounts",
       key: "bankAccounts",
     },
+    {
+      icon: <IconStore.profile className={IconclassName} />,
+      title: "My Team",
+      key: "myTeam",
+    },
   ];
 
   const handleTabClick = (tab) => {
@@ -59,7 +64,7 @@ const SettingsPage = (props) => {
     changepassword: <ChangePassword {...apiData} />,
     addressBook: <AddressBook {...apiData} />,
     bankAccounts: <BankAccounts {...apiData} />,
-    // myTeam: <MyTeamView />,
+    myTeam: <MyTeamView {...apiData} />,
     // txPay: <TXPay />,
   };
 

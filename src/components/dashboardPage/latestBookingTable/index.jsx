@@ -1,13 +1,13 @@
 import CustomSelect from "@/components/commonComponents/customSelect";
 import { fetchOrderHistory } from "@/utils/apiHandler/request";
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const LatestBookingTable = ({ listValues, meta }) => {
   const [bookings, setBookings] = useState(listValues);
   const [currentPage, setCurrentPage] = useState(meta?.current_page);
   const [loading, setLoading] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState();
   const tableRef = useRef(null);
-  console.log(meta, "metameta");
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-US", {
@@ -17,30 +17,78 @@ const LatestBookingTable = ({ listValues, meta }) => {
     });
   };
 
+  const ShimmerRow = () => {
+    return (
+      <tr className="border-t border-[#eaeaf1]">
+        <td className="p-3">
+          <div className="animate-pulse flex space-x-4">
+            <div className="flex-1 space-y-2">
+              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+            </div>
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+        </td>
+        <td className="p-3">
+          <div className="animate-pulse flex space-x-4">
+            <div className="flex-1 space-y-2">
+              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+            </div>
+          </div>
+        </td>
+        <td className="p-3 text-center">
+          <div className="h-4 bg-gray-300 rounded w-1/4 mx-auto animate-pulse"></div>
+        </td>
+        <td className="p-3">
+          <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+        </td>
+      </tr>
+    );
+  };
+
   const formatDateTime = (date, time) => {
     return `${formatDate(date)} ${time}`;
   };
 
-  const filterValues = {
-    options: [
-      { value: "today", label: "last 7 days" },
-      { value: "15days", label: "last 15 days" },
-      { value: "30days", label: "last 30 days" },
-      { value: "45days", label: "last 45 days" },
-    ],
-    selectedOption: "today",
-    onchange: () => {},
+  const handleApiCall = async (params) => {
+    const data = await fetchOrderHistory("", params);
+    return data;
   };
 
-  const handleFilterChange = () => {};
+  const filterValues = {
+    options: [
+      { value: "7", label: "last 7 days" },
+      { value: "15", label: "last 15 days" },
+      { value: "30", label: "last 30 days" },
+      { value: "45", label: "last 45 days" },
+    ],
+    selectedOption: selectedFilter,
+    onchange: (option) => {
+      setSelectedFilter(option);
+    },
+  };
 
-  // Function to fetch the next page
+  const handleFilterChange = async (option) => {
+    setLoading(true);
+    setSelectedFilter(option);
+    setCurrentPage(1);
+    const response = await handleApiCall({ days: option, page: 1 });
+    setBookings(response?.order_history);
+    setLoading(false);
+  };
+
   const fetchNextPage = async () => {
     if (loading || currentPage >= meta?.last_page) return;
     setLoading(true);
     try {
       const nextPage = currentPage + 1;
-      const data = await fetchOrderHistory("", { page: nextPage });
+      const data = await handleApiCall({
+        page: nextPage,
+        ...(selectedFilter && { days: selectedFilter }),
+      });
       setBookings((prevBookings) => [...prevBookings, ...data.order_history]);
       setCurrentPage(nextPage);
     } catch (error) {
@@ -50,25 +98,22 @@ const LatestBookingTable = ({ listValues, meta }) => {
     }
   };
 
-  // Scroll event handler
   const handleScroll = () => {
     const container = tableRef.current;
     if (
       container.scrollTop + container.clientHeight >=
       container.scrollHeight - 50
     ) {
-      // User is near the bottom of the container
       fetchNextPage();
     }
   };
 
-  // UseEffect to add the scroll event listener
   useEffect(() => {
     const container = tableRef.current;
     container.addEventListener("scroll", handleScroll);
 
     return () => {
-      container.removeEventListener("scroll", handleScroll); // Cleanup on component unmount
+      container.removeEventListener("scroll", handleScroll);
     };
   }, [loading, currentPage]);
 
@@ -108,48 +153,50 @@ const LatestBookingTable = ({ listValues, meta }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {bookings.map((booking) => (
-                    <tr
-                      key={booking?.booking_id}
-                      className="border-t border-[#eaeaf1] hover:bg-gray-50"
-                    >
-                      <td className="p-3 text-sm text-gray-700">
-                        <div className="flex flex-col">
-                          <span className="font-medium">
-                            {booking?.match_name}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {booking?.tournament_name}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-3 text-sm text-gray-700">
-                        {formatDateTime(
-                          booking?.match_date,
-                          booking?.match_time
-                        )}
-                      </td>
-                      <td className="p-3 text-sm text-gray-700">
-                        <div className="flex flex-col">
-                          <span>{booking?.stadium_name}</span>
-                          <span className="text-xs text-gray-500">
-                            {booking?.city_name}, {booking?.country_name}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-3 text-sm text-gray-700 text-center">
-                        {booking?.quantity}
-                      </td>
-                      <td className="p-3 text-sm font-medium">
-                        {booking?.price_with_currency}
-                      </td>
-                    </tr>
-                  ))}
+                  {loading
+                    ? Array(5)
+                        .fill()
+                        .map((_, index) => <ShimmerRow key={index} />)
+                    : bookings.map((booking) => (
+                        <tr
+                          key={booking?.booking_id}
+                          className="border-t border-[#eaeaf1] hover:bg-gray-50"
+                        >
+                          <td className="p-3 text-sm text-gray-700">
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {booking?.match_name}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {booking?.tournament_name}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-3 text-sm text-gray-700">
+                            {formatDateTime(
+                              booking?.match_date,
+                              booking?.match_time
+                            )}
+                          </td>
+                          <td className="p-3 text-sm text-gray-700">
+                            <div className="flex flex-col">
+                              <span>{booking?.stadium_name}</span>
+                              <span className="text-xs text-gray-500">
+                                {booking?.city_name}, {booking?.country_name}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-3 text-sm text-gray-700 text-center">
+                            {booking?.quantity}
+                          </td>
+                          <td className="p-3 text-sm font-medium">
+                            {booking?.price_with_currency}
+                          </td>
+                        </tr>
+                      ))}
                 </tbody>
               </table>
             </div>
-
-            {loading && <div className="text-center py-2">Loading...</div>}
           </div>
         </div>
       </div>

@@ -14,6 +14,10 @@ import OrderDetails from "../orderDetails";
 import WalletHistory from "./components/walletHistory";
 import TransactionHistory from "./components/transactionHistory";
 import OrderViewPopup from "./components/orderViewPopup";
+import {
+  getDepositDetails,
+  getTransactionDetails,
+} from "@/utils/apiHandler/request";
 
 const ReportsPage = (props) => {
   const { apiData } = props;
@@ -89,105 +93,62 @@ const ReportsPage = (props) => {
     setPayOutPopup({ flag: true, data: item });
   };
 
-  const handleEyeClick = (item, transactionType) => {
+  const handleEyeClick = async (item, transactionType) => {
+    const payload = { id: item?.id };
+    const response =
+      transactionType == "transaction"
+        ? await getTransactionDetails("", payload)
+        : await getDepositDetails("", payload);
     setEyeViewPopup({
       flag: true,
-      data: { ...item, transactionType: transactionType },
+      data: { ...response, transactionType: transactionType },
     });
   };
 
-  const paymentSections = [
-    {
-      title: "April 2024",
+  const depositData = deposit_history?.map((list) => {
+    return {
+      title: list?.month,
       headers: [
-        "Payment Reference",
-        "To Account",
+        "Reference No",
         "Amount",
-        "Initiated Date",
-        "Expected Date",
-        "Status",
-      ],
-      data: [
-        {
-          reference: "PAYREF1",
-          account: "GB68SAPY6083829656452",
-          amount: "£3,500",
-          initiatedDate: "Nov 18, 2024",
-          expectedDate: "Nov 23, 2024",
-          status: "Sent",
-        },
-        {
-          reference: "PAYREF2",
-          account: "GB68SAPY6083829656452",
-          amount: "£3,500",
-          initiatedDate: "Nov 15, 2024",
-          expectedDate: "Nov 20, 2024",
-          status: "Approved",
-        },
-        {
-          reference: "PAYREF3",
-          account: "GB68SAPY6083829656452",
-          amount: "£3,500",
-          initiatedDate: "Nov 10, 2024",
-          expectedDate: "Nov 15, 2024",
-          status: "Sent",
-        },
-      ],
-    },
-    {
-      title: "March 2024",
-      headers: [
-        "Payment Reference",
-        "To Account",
-        "Amount",
-        "Initiated Date",
-        "Expected Date",
-        "Status",
-      ],
-      data: [
-        {
-          reference: "PAYREF4",
-          account: "GB68SAPY6083829656452",
-          amount: "£3,500",
-          initiatedDate: "Oct 18, 2024",
-          expectedDate: "Oct 23, 2024",
-          status: "Sent",
-        },
-      ],
-    },
-  ];
-
-  const walletHistory = [
-    {
-      title: "April 2024",
-      headers: [
-        "Order ID",
-        "Payment Reference",
-        "Event",
-        "Net Amount",
-        "Deductions",
-        "Payout Value",
-        "Payout Initiated Date",
-        "Ticket",
-        "Status",
+        "Currency",
+        "Payment Method",
+        "Date",
+        // "Notes",
         "",
       ],
-      data: [
-        {
-          orderId: "18016559658735 ",
-          reference: "PAYREF1",
-          event: "180165596587377 ",
-          netAmount: "£100",
-          deductions: "£10",
-          payoutValue: "£90",
-          payoutDate: "Apr 7, 2024",
-          ticket: "1 × Shortside",
-          status: "Paid",
+      data: list?.transactions?.map((listItems) => {
+        return {
+          referenceNo: listItems?.reference_no,
+          amount: listItems?.amount,
+          currency: listItems?.currency,
+          paymentMethod: listItems?.payment_transfer_by,
+          date: listItems?.created_date_time,
+          // notes: listItems?.noted ?? "-",
           eye: true,
-        },
-      ],
-    },
-  ];
+          id: listItems?.id,
+        };
+      }),
+    };
+  });
+
+  const transactionData = transaction_history?.map((list) => {
+    return {
+      title: list?.month,
+      headers: ["Reference No", "Amount", "Currency", "Type", "Date", ""],
+      data: list?.transactions?.map((listItems) => {
+        return {
+          referenceNo: listItems?.reference_no,
+          amount: listItems?.amount,
+          currency: listItems?.currency,
+          paymentMethod: listItems?.credit_debit,
+          date: listItems?.created_date_time,
+          eye: true,
+          id: listItems?.id,
+        };
+      }),
+    };
+  });
 
   const [paymentReference, setPaymentReference] = useState("");
 
@@ -262,27 +223,26 @@ const ReportsPage = (props) => {
               {tabSwitchLoader ? (
                 <Spinner />
               ) : (
-                <>
-                  {selectedTab == "transaction" ? (
-                    <TransactionHistory
-                      transactions={transaction_history}
-                      onRowClick={handleEyeClick}
-                    />
-                  ) : (
-                    <WalletHistory
-                      transactions={deposit_history}
-                      onRowClick={handleEyeClick}
-                    />
-                  )}
-                </>
-                // <CollapsablePaymentTable
-                //   sections={
-                //     selectedTab == "transaction"
-                //       ? paymentSections
-                //       : walletHistory
-                //   }
-                //   onRowClick={handleEyeClick}
-                // />
+                // <>
+                //   {selectedTab == "transaction" ? (
+                //     <TransactionHistory
+                //       transactions={transaction_history}
+                //       onRowClick={handleEyeClick}
+                //     />
+                //   ) : (
+                //     <WalletHistory
+                //       transactions={deposit_history}
+                //       onRowClick={handleEyeClick}
+                //     />
+                //   )}
+                // </>
+                <CollapsablePaymentTable
+                  sections={
+                    selectedTab == "transaction" ? transactionData : depositData
+                  }
+                  selectedTab={selectedTab}
+                  onRowClick={handleEyeClick}
+                />
               )}
             </div>
           </div>

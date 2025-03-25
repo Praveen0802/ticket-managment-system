@@ -25,3 +25,16 @@ export const parseCookie = (str) =>
       acc[decodeURIComponent(v[0]?.trim())] = decodeURIComponent(v[1]?.trim());
       return acc;
     }, {});
+
+export const getMiddlewareCookieValue = (cookies, key) => {
+  const cookiesObj = {};
+  if (cookies) {
+    cookies.split(";").map((cookie) => {
+      const indexOfEqualTo = cookie.indexOf("=");
+      const key = cookie.slice(0, indexOfEqualTo);
+      const value = cookie.slice(indexOfEqualTo + 1);
+      cookiesObj[key.trim()] = value.trim();
+    });
+  }
+  return cookiesObj[key];
+};

@@ -68,8 +68,7 @@ const RightFold = () => {
       if (isForgotPassword) {
         // Handle forgot password request
         try {
-          const response = await sendResetRequest(formData?.email);
-          console.log("Password reset requested for", formData.email);
+          const response = await sendResetRequest({ email: formData?.email });
           setResetRequestSent(true);
           setLoader(false);
         } catch (error) {
