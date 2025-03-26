@@ -7,7 +7,6 @@ import { fetchAddressBookDetails } from "@/utils/apiHandler/request";
 
 const AddressBook = (props) => {
   const { addressDetails, profileDetails, fetchCountries } = props;
-  console.log(addressDetails, props, "addressDetailsaddressDetails");
   const [addressBookDetails, setAddressBookDetails] = useState(addressDetails);
   const [addressViewPopup, setAddressViewPopup] = useState({
     show: false,

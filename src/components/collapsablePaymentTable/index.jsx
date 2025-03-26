@@ -29,17 +29,19 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4 mobile:gap-2">
       {sections.map((section, sectionIndex) => (
         <div key={sectionIndex} className="mb-1 overflow-hidden">
           {/* Section Header */}
           <div
-            className="flex items-center justify-between bg-[#130061] rounded-t-xl text-white px-4 py-3 cursor-pointer"
+            className="flex items-center justify-between bg-[#130061] rounded-t-xl text-white px-4 py-3 cursor-pointer mobile:px-3 mobile:py-2"
             onClick={() => toggleSection(sectionIndex)}
           >
-            <h3 className="text-[14px] font-semibold">{section.title}</h3>
+            <h3 className="text-[14px] font-semibold mobile:text-xs">
+              {section.title}
+            </h3>
             <svg
-              className={`w-5 h-5 transition-transform duration-300 ${
+              className={`w-5 h-5 mobile:w-4 mobile:h-4 transition-transform duration-300 ${
                 expandedSections[sectionIndex] ? "rotate-180" : ""
               }`}
               fill="none"
@@ -68,13 +70,13 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
             }}
           >
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white">
+              <table className="min-w-full bg-white mobile:text-xs">
                 <thead>
                   <tr>
                     {section.headers.map((header, idx) => (
                       <th
                         key={idx}
-                        className="p-3 text-left text-[12px] text-[#7D82A4] font-normal border border-[#E0E1EA]"
+                        className="p-3 mobile:p-2 text-left text-[12px] mobile:text-[10px] text-[#7D82A4] font-normal border border-[#E0E1EA]"
                       >
                         {header}
                       </th>
@@ -83,7 +85,7 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
                 </thead>
                 <tbody>
                   {section.data.map((row, rowIndex) => (
-                    <tr key={rowIndex} className="">
+                    <tr key={rowIndex} className="mobile:text-xs">
                       {Object.entries(row).map(([key, values], cellIndex) => {
                         if (key == "id") return null;
                         const statusKey = key === "status";
@@ -99,14 +101,14 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
                                     : "wallet"
                                 );
                             }}
-                            className={`py-3 pl-4 ${
+                            className={`py-3 pl-4 mobile:py-2 mobile:pl-2 ${
                               key === "eye" && "w-[56px] hover:bg-gray-100"
-                            } text-left text-[12px] border-b border-[#E0E1EA] ${
+                            } text-left text-[12px] mobile:text-[10px] border-b border-[#E0E1EA] ${
                               statusKey
                                 ? values?.toLowerCase() === "paid"
-                                  ? "!text-[#03BA8A]  w-fit px-[6px] py-[4px] rounded-md"
+                                  ? "!text-[#03BA8A] w-fit px-[6px] py-[4px] rounded-md"
                                   : values?.toLowerCase() === "pending"
-                                  ? "text-[#F57B1B]  w-fit px-[6px] py-[4px] rounded-md"
+                                  ? "text-[#F57B1B] w-fit px-[6px] py-[4px] rounded-md"
                                   : ""
                                 : ""
                             } ${eyeKey && "border-l-[1px] cursor-pointer"} ${
@@ -124,7 +126,7 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
                             key={cellIndex}
                           >
                             {key === "eye" && values ? (
-                              <IconStore.eye className="stroke-black size-4" />
+                              <IconStore.eye className="stroke-black size-4 mobile:size-3" />
                             ) : (
                               values
                             )}

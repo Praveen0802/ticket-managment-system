@@ -292,6 +292,7 @@ export const sendDepositRequest = async (data) => {
 };
 
 export const refreshAuthToken = async (token) => {
+  console.log("hitting hereeeeee");
   try {
     const response = await makeRequest({
       url: API_ROUTES.REFRESH_AUTH_TOKEN,
@@ -301,7 +302,7 @@ export const refreshAuthToken = async (token) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in getDepositDetails", error);
-    throw error;
+    return { error: true };
   }
 };
 
@@ -334,13 +335,13 @@ export const fetchCityBasedonCountry = async (token, params) => {
   }
 };
 
-export const fetchUserDetails = async (token, params) => {
+export const fetchUserDetails = async (token, id, method = "GET", data) => {
   try {
     const response = await makeRequest({
-      url: API_ROUTES.FETCH_USER_DETAILS,
-      method: "GET",
+      url: `${API_ROUTES.FETCH_USER_DETAILS}${id ? `/${id}` : ""}`,
+      method: method,
       ...(token && { token: token }),
-      ...(params && { params: params }),
+      ...(data && { data: data }),
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {

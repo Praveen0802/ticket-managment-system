@@ -3,23 +3,40 @@ import {
   fetchOrderHistory,
   fetchTransactionHistory,
 } from "@/utils/apiHandler/request";
+import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import React, { useState, useEffect, useRef } from "react";
 
-// Shimmer loader row component
-const ShimmerRow = () => {
+const ShimmerRow = ({ isMobile }) => {
+  if (isMobile) {
+    return (
+      <div className="border-t border-[#eaeaf1] p-3 flex justify-between items-center">
+        <div className="flex flex-col w-2/3 space-y-2">
+          <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+          <div className="h-3 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+        </div>
+        <div className="flex flex-col items-end w-1/3 space-y-2">
+          <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+          <div className="h-3 bg-gray-300 rounded w-1/3 animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop/Web Shimmer
   return (
     <tr className="border-t border-[#eaeaf1]">
       <td className="p-3">
         <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+        <div className="h-3 bg-gray-300 rounded w-1/2 mt-2 animate-pulse"></div>
+      </td>
+      <td className="p-3">
+        <div className="h-4 bg-gray-300 rounded w-full animate-pulse"></div>
       </td>
       <td className="p-3">
         <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
       </td>
       <td className="p-3">
-        <div className="h-4 bg-gray-300 rounded w-1/4 animate-pulse"></div>
-      </td>
-      <td className="p-3">
-        <div className="h-4 bg-gray-300 rounded w-1/3 animate-pulse"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
       </td>
     </tr>
   );
@@ -43,6 +60,8 @@ const LatestOrderView = ({ listItems, meta }) => {
       hour12: true,
     });
   };
+
+  const isMobile = useIsMobile();
 
   const filterValues = {
     options: [
@@ -117,9 +136,9 @@ const LatestOrderView = ({ listItems, meta }) => {
   return (
     <div className="flex flex-col h-full">
       <div className="w-full h-full flex flex-col gap-4 md:gap-5 bg-[#F5F7FA]">
-        <div className="bg-white border border-[#eaeaf1] h-full flex flex-col gap-3 md:gap-5 rounded-md ">
+        <div className="bg-white border border-[#eaeaf1] h-full flex flex-col gap-3 md:gap-5 rounded-md">
           <div className="flex flex-col gap-2">
-            <div className="flex gap-5 items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-start sm:items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
               <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 Transaction History
               </p>
@@ -134,7 +153,8 @@ const LatestOrderView = ({ listItems, meta }) => {
             </div>
 
             <div className="overflow-auto h-full px-3 md:px-5" ref={tableRef}>
-              <table className="min-w-full border-collapse">
+              {/* Desktop Table View */}
+              <table className="min-w-full border-collapse hidden sm:table">
                 <thead className="sticky top-0 bg-white">
                   <tr className="text-gray-400">
                     <th className="p-3 text-left text-sm font-medium">
@@ -193,6 +213,51 @@ const LatestOrderView = ({ listItems, meta }) => {
                       ))}
                 </tbody>
               </table>
+
+              {/* Mobile List View */}
+              <div className="sm:hidden">
+                {loading
+                  ? Array(5)
+                      .fill()
+                      .map((_, index) => (
+                        <ShimmerRow key={index} isMobile={isMobile} />
+                      ))
+                  : transactions?.map((transaction) => (
+                      <div
+                        key={transaction?.id}
+                        className="border-t border-[#eaeaf1] p-3 flex justify-between items-center"
+                      >
+                        <div className="flex flex-col">
+                          <span className="text-sm text-gray-700 font-medium">
+                            {transaction?.reference_no}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {formatDateTime(transaction?.created_date_time)}
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs mb-1 ${
+                              transaction?.credit_depit === "CREDIT"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {transaction?.credit_depit}
+                          </span>
+                          <span
+                            className={
+                              transaction?.credit_depit === "CREDIT"
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }
+                          >
+                            {transaction?.price_with_currency}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+              </div>
             </div>
           </div>
         </div>

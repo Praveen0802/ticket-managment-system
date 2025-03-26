@@ -8,9 +8,8 @@ import {
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  const authToken = getMiddlewareCookieValue(
-    request.headers.get("cookie"),
-    "auth_token"
+  const authToken = decodeURIComponent(
+    getMiddlewareCookieValue(request.headers.get("cookie"), "auth_token")
   );
   const authTokenValidity = getMiddlewareCookieValue(
     request.headers.get("cookie"),
@@ -20,6 +19,13 @@ export async function middleware(request) {
     authToken,
     authTokenValidity
   );
+
+  if (validateAuthToken?.error) {
+    const response = NextResponse.redirect(new URL(`/login`, request.url));
+    response.cookies.set("auth_token", "");
+    response.cookies.set("auth_token_validity", "");
+    return response;
+  }
 
   if (pathname.includes("/api")) {
     try {
@@ -33,7 +39,12 @@ export async function middleware(request) {
       if (validateAuthToken) {
         if (validateAuthToken?.token) {
           const response = NextResponse.next();
-          response.cookies.set("auth_token", validateAuthToken.token);
+          response.cookies.set("auth_token", validateAuthToken.token, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === 'production',
+            sameSite: "strict",
+            // maxAge: 3600 // Optional: set expiration
+          });
           response.cookies.set(
             "auth_token_validity",
             currentTimeEpochTimeInMilliseconds().toString()
@@ -64,7 +75,12 @@ export async function middleware(request) {
   } else if (validateAuthToken) {
     if (validateAuthToken?.token) {
       const response = NextResponse.next();
-      response.cookies.set("auth_token", validateAuthToken.token);
+      response.cookies.set("auth_token", validateAuthToken?.token, {
+        httpOnly: true,
+        // secure: process.env.NODE_ENV === 'production',
+        sameSite: "strict",
+        // maxAge: 3600 // Optional: set expiration
+      });
       response.cookies.set(
         "auth_token_validity",
         currentTimeEpochTimeInMilliseconds().toString()

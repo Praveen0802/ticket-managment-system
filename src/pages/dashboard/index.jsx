@@ -15,7 +15,7 @@ const Dashboard = (props) => {
 export default Dashboard;
 
 export const getServerSideProps = async (context) => {
-  // const validToken = checkValidAuthToken(context);
+  const validToken = checkValidAuthToken(context);
   const authToken = getAuthToken(context);
   // if (!validToken) {
   //   return nextRedirect("login");

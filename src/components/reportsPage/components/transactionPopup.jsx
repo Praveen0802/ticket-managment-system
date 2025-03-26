@@ -9,6 +9,7 @@ const TransactionPopup = ({ data, onClose }) => {
       <span className="text-[#323A70] font-medium text-sm">{value}</span>
     </div>
   );
+
   return (
     <div className="m-4 border border-gray-200 rounded-md shadow-sm">
       <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200 bg-gray-50">
@@ -64,6 +65,21 @@ const TransactionPopup = ({ data, onClose }) => {
           Close
         </button>
       </div>
+
+      {/* Mobile-specific styling */}
+      <style jsx>{`
+        @media (max-width: 640px) {
+          .text-[18px] {
+            font-size: 1rem;
+          }
+          .text-[24px] {
+            font-size: 1.25rem;
+          }
+          .text-sm {
+            font-size: 0.75rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };

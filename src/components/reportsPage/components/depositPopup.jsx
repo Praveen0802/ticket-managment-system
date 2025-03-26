@@ -26,6 +26,7 @@ const DepositPopup = ({ onClose, data }) => {
     // Return the clean description or the original if parsing fails
     return desc.split(" - DATA -")[0] || desc;
   };
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -133,6 +134,29 @@ const DepositPopup = ({ onClose, data }) => {
           )}
         </div>
       </div>
+
+      {/* Mobile-specific styling */}
+      <style jsx>{`
+        @media (max-width: 640px) {
+          .mx-6 {
+            margin-left: 1rem;
+            margin-right: 1rem;
+          }
+          .px-6 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+          .text-xl {
+            font-size: 1rem;
+          }
+          .text-sm {
+            font-size: 0.75rem;
+          }
+          .text-2xl {
+            font-size: 1.25rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };

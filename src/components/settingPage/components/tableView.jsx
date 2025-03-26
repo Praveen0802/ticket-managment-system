@@ -2,7 +2,13 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React from "react";
 
 const TableView = (props) => {
-  const { headerClassName, rowClassName, currentUsers } = props;
+  const {
+    headerClassName,
+    rowClassName,
+    currentUsers,
+    handleEditClick,
+    handleDeleteClick,
+  } = props;
 
   // For mobile view - card style display
   const renderMobileView = () => {
@@ -15,10 +21,16 @@ const TableView = (props) => {
                 {user.first_name} {user.last_name}
               </span>
               <div className="flex gap-2 items-center">
-                <button className="text-[#323A70] hover:text-[#130061]">
+                <button
+                  onClick={() => handleEditClick(user)}
+                  className="text-[#323A70] hover:text-[#130061]"
+                >
                   <IconStore.pencilEdit className="size-4 stroke-[#130061]" />
                 </button>
-                <button className="text-[#323A70] hover:text-red-600">
+                <button
+                  onClick={() => handleDeleteClick(user)}
+                  className="text-[#323A70] hover:text-red-600"
+                >
                   <IconStore.trash className="size-4 stroke-red-600" />
                 </button>
               </div>
@@ -72,10 +84,16 @@ const TableView = (props) => {
                 <td className={rowClassName}>{user.country}</td>
                 <td className={rowClassName}>
                   <div className="flex gap-2 items-center">
-                    <button className="text-[#323A70] hover:text-[#130061]">
+                    <button
+                      onClick={() => handleEditClick(user)}
+                      className="text-[#323A70] cursor-pointer hover:text-[#130061]"
+                    >
                       <IconStore.pencilEdit className="size-4 stroke-[#130061]" />
                     </button>
-                    <button className="text-[#323A70] hover:text-red-600">
+                    <button
+                      onClick={() => handleDeleteClick(user)}
+                      className="text-[#323A70] hover:text-red-600 cursor-pointer"
+                    >
                       <IconStore.trash className="size-4 stroke-red-600" />
                     </button>
                   </div>

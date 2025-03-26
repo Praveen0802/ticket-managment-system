@@ -1,6 +1,59 @@
 import CustomSelect from "@/components/commonComponents/customSelect";
 import { fetchOrderHistory } from "@/utils/apiHandler/request";
+import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import { useEffect, useRef, useState } from "react";
+
+// Shimmer Component
+const ShimmerRow = ({ isMobile }) => {
+  if (isMobile) {
+    return (
+      <div className="border-t border-[#eaeaf1] p-3 flex flex-col">
+        <div className="flex justify-between mb-2">
+          <div className="flex flex-col space-y-2 w-2/3">
+            <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+            <div className="h-3 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+          </div>
+          <div className="h-4 bg-gray-300 rounded w-1/4 animate-pulse"></div>
+        </div>
+        <div className="flex justify-between mt-2">
+          <div className="flex flex-col space-y-2 w-2/3">
+            <div className="h-3 bg-gray-300 rounded w-full animate-pulse"></div>
+            <div className="h-3 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+            <div className="h-3 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+          </div>
+          <div className="h-6 bg-gray-300 rounded w-1/4 animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop/Web Shimmer
+  return (
+    <tr className="border-t border-[#eaeaf1]">
+      <td className="p-3">
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+          <div className="h-3 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+      </td>
+      <td className="p-3">
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+          <div className="h-3 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+        </div>
+      </td>
+      <td className="p-3 text-center">
+        <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto animate-pulse"></div>
+      </td>
+      <td className="p-3">
+        <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+      </td>
+    </tr>
+  );
+};
 
 const LatestBookingTable = ({ listValues, meta }) => {
   const [bookings, setBookings] = useState(listValues);
@@ -8,6 +61,7 @@ const LatestBookingTable = ({ listValues, meta }) => {
   const [loading, setLoading] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState();
   const tableRef = useRef(null);
+  const isMobile = useIsMobile();
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-US", {
@@ -15,38 +69,6 @@ const LatestBookingTable = ({ listValues, meta }) => {
       month: "short",
       year: "numeric",
     });
-  };
-
-  const ShimmerRow = () => {
-    return (
-      <tr className="border-t border-[#eaeaf1]">
-        <td className="p-3">
-          <div className="animate-pulse flex space-x-4">
-            <div className="flex-1 space-y-2">
-              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-              <div className="h-3 bg-gray-300 rounded w-1/2"></div>
-            </div>
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
-        </td>
-        <td className="p-3">
-          <div className="animate-pulse flex space-x-4">
-            <div className="flex-1 space-y-2">
-              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-              <div className="h-3 bg-gray-300 rounded w-1/2"></div>
-            </div>
-          </div>
-        </td>
-        <td className="p-3 text-center">
-          <div className="h-4 bg-gray-300 rounded w-1/4 mx-auto animate-pulse"></div>
-        </td>
-        <td className="p-3">
-          <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
-        </td>
-      </tr>
-    );
   };
 
   const formatDateTime = (date, time) => {
@@ -120,14 +142,14 @@ const LatestBookingTable = ({ listValues, meta }) => {
   return (
     <div className="flex flex-col h-full">
       <div className="w-full h-full flex flex-col gap-4 md:gap-5 bg-[#F5F7FA]">
-        <div className="bg-white border border-[#eaeaf1] h-full flex flex-col gap-3 md:gap-5 rounded-md ">
+        <div className="bg-white border border-[#eaeaf1] h-full flex flex-col gap-3 md:gap-5 rounded-md">
           <div className="flex flex-col gap-2">
-            <div className="flex gap-5 items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-start sm:items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
               <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 Booking History
               </p>
               <CustomSelect
-                selectedValue={""}
+                selectedValue={selectedFilter}
                 options={filterValues?.options}
                 onSelect={handleFilterChange}
                 textSize="text-xs md:text-sm"
@@ -140,7 +162,8 @@ const LatestBookingTable = ({ listValues, meta }) => {
               className="overflow-auto max-h-[350px] px-3 md:px-5"
               ref={tableRef}
             >
-              <table className="min-w-full border-collapse">
+              {/* Desktop Table View */}
+              <table className="min-w-full border-collapse hidden sm:table">
                 <thead className="sticky top-0 bg-white">
                   <tr className="text-gray-400">
                     <th className="p-3 text-left text-sm font-medium">Match</th>
@@ -156,7 +179,9 @@ const LatestBookingTable = ({ listValues, meta }) => {
                   {loading
                     ? Array(5)
                         .fill()
-                        .map((_, index) => <ShimmerRow key={index} />)
+                        .map((_, index) => (
+                          <ShimmerRow key={index} isMobile={isMobile} />
+                        ))
                     : bookings.map((booking) => (
                         <tr
                           key={booking?.booking_id}
@@ -196,6 +221,57 @@ const LatestBookingTable = ({ listValues, meta }) => {
                       ))}
                 </tbody>
               </table>
+
+              {/* Mobile List View */}
+              <div className="sm:hidden">
+                {loading
+                  ? Array(5)
+                      .fill()
+                      .map((_, index) => (
+                        <ShimmerRow key={index} isMobile={true} />
+                      ))
+                  : bookings.map((booking) => (
+                      <div
+                        key={booking?.booking_id}
+                        className="border-t border-[#eaeaf1] p-3 flex flex-col"
+                      >
+                        <div className="flex justify-between mb-2">
+                          <div className="flex flex-col">
+                            <span className="font-medium text-sm text-gray-700">
+                              {booking?.match_name}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {booking?.tournament_name}
+                            </span>
+                          </div>
+                          <span className="text-sm font-medium">
+                            {booking?.price_with_currency}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-xs text-gray-700">
+                              {formatDateTime(
+                                booking?.match_date,
+                                booking?.match_time
+                              )}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {booking?.stadium_name}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {booking?.city_name}, {booking?.country_name}
+                            </span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="text-xs text-gray-700 bg-gray-100 px-2 py-1 rounded">
+                              Qty: {booking?.quantity}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+              </div>
             </div>
           </div>
         </div>

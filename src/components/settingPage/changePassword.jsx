@@ -26,15 +26,12 @@ const ChangePassword = (props) => {
     };
     await changePasswordRequest("", payload);
     toast.success("Password Changed Successfully");
-    setTimeout(() => {
-      setIsSubmitting(false);
-      handleClose();
-    }, 1000);
+    setPasswordData({ newPassword: "", confirmPassword: "" });
   };
 
   const formFields = [
     {
-      className: "!py-[10px] !px-[12px] rounded-md",
+      className: "!py-[10px] !px-[12px] rounded-md w-full", // Added w-full for mobile
       autoComplete: "new-password",
       id: "newPassword",
       name: "newPassword",
@@ -45,7 +42,7 @@ const ChangePassword = (props) => {
       placeholder: "Enter new password",
     },
     {
-      className: "!py-[10px] !px-[12px] rounded-md",
+      className: "!py-[10px] !px-[12px] rounded-md w-full", // Added w-full for mobile
       autoComplete: "new-password",
       id: "confirmPassword",
       name: "confirmPassword",
@@ -62,8 +59,9 @@ const ChangePassword = (props) => {
     passwordData?.confirmPassword &&
     !isSubmitting &&
     passwordData?.newPassword === passwordData?.confirmPassword;
+
   return (
-    <div className="h-[90%]">
+    <div className="h-[90%] max-w-full">
       <p className="pb-4 text-base sm:text-lg md:text-xl p-3 md:p-4 font-semibold">
         Change Password
       </p>
@@ -73,8 +71,8 @@ const ChangePassword = (props) => {
           <p className="text-gray-600 text-sm md:text-base">
             Change your account password
           </p>
-          <div className="flex gap-4 w-[60%]">
-            <FormFields formFields={formFields} />
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-[60%]">
+            <FormFields formFields={formFields} className="w-full" />
           </div>
           <Button
             label="Submit"

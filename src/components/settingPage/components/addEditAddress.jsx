@@ -37,7 +37,6 @@ const AddEditAddress = ({
 
   const fetchCityDetails = async (id) => {
     const response = await fetchCityBasedonCountry("", { country_id: id });
-    console.log(response, "responseresponse");
     const cityField =
       response?.length > 0
         ? response?.map((list) => {
@@ -125,6 +124,7 @@ const AddEditAddress = ({
         type: "select",
         mandatory: true,
         id: "country",
+        searchable: true,
         name: "country",
         value: formFieldValues?.country,
         onChange: handleChange,
@@ -137,6 +137,7 @@ const AddEditAddress = ({
       {
         label: "City",
         type: "select",
+        searchable: true,
         id: "city",
         mandatory: true,
         name: "city",
@@ -169,7 +170,6 @@ const AddEditAddress = ({
     const payload = {
       address: `${formFieldValues?.address_line_1} ${formFieldValues?.address_line_2} ${formFieldValues?.address_line_3}`,
       city: formFieldValues?.city,
-      // state: "Tamilnadu",
       zip_code: formFieldValues?.zipCode,
       country: formFieldValues?.country,
     };
@@ -190,9 +190,9 @@ const AddEditAddress = ({
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto rounded-lg relative bg-white">
+    <div className="w-full max-w-3xl h-full mx-auto rounded-lg relative bg-white">
       <div className="flex p-4 border-b border-gray-200 justify-between items-center rounded-t-lg">
-        <h2 className="text-xl text-[#323A70] font-semibold">
+        <h2 className="text-lg sm:text-xl text-[#323A70] font-semibold">
           {editType ? "Edit" : "Add"} Address
         </h2>
         <button
@@ -200,16 +200,16 @@ const AddEditAddress = ({
           className="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
           aria-label="Close"
         >
-          <IconStore.close className="size-5 text-gray-600" />
+          <IconStore.close className="size-4 sm:size-5 text-gray-600" />
         </button>
       </div>
 
-      <div className="p-6 flex flex-col gap-6">
+      <div className="p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
         <div className="w-full md:w-1/2">
           <FormFields formFields={addressFormFields[0]} />
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
           <FormFields formFields={addressFormFields[1]} />
         </div>
 
@@ -223,14 +223,14 @@ const AddEditAddress = ({
         </div>
       </div>
 
-      <div className="fixed bottom-0 w-full px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end gap-3">
+      <div className="fixed bottom-0 w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end gap-2 sm:gap-3">
         <Button
           label="Cancel"
           type="secondary"
           onClick={onClose}
           classNames={{
-            root: "py-2 px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200",
-            label_: "text-sm font-medium text-gray-700",
+            root: "py-1 sm:py-2 px-3 sm:px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200",
+            label_: "text-xs sm:text-sm font-medium text-gray-700",
           }}
         />
         <Button
@@ -240,12 +240,12 @@ const AddEditAddress = ({
           loading={loader}
           onClick={handleSubmit}
           classNames={{
-            root: `py-2 px-6 rounded-md transition-all duration-200 ${
+            root: `py-1 sm:py-2 px-4 sm:px-6 rounded-md transition-all duration-200 ${
               isFormValid()
                 ? "bg-indigo-600 hover:bg-indigo-700"
                 : "bg-indigo-200 cursor-not-allowed"
             }`,
-            label_: `text-sm font-medium ${
+            label_: `text-xs sm:text-sm font-medium ${
               isFormValid() ? "text-white" : "text-[#323A70]"
             }`,
           }}

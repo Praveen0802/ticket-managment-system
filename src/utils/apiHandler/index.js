@@ -18,9 +18,7 @@ export const fetchAuthorizationKey = (token = "") => {
 
 const AJAX = {
   post: async (url, data, formData = null, opts = {}, method) => {
-    console.log(formData, "formDataformData");
     if (formData) {
-      console.log(formData, url, "enteredhere");
       // const modifiedUrl = `${process.env.API_BASE_URL}${url}`;
       const formDataHeader = {
         ...fetchAuthorizationKey(),

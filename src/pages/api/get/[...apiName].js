@@ -1,17 +1,20 @@
+import { parseCookie } from "@/utils/helperFunctions/cookie";
 import axios from "axios";
 
 export default async function handler(req, res) {
   const method = req?.method;
   const { headers } = req;
   const apiName = req?.url.replace("/api/get/", "");
+  const parsedCookie = parseCookie(headers?.cookie);
   const ROOT_URL = process.env.API_BASE_URL;
   const url = `${ROOT_URL}/${apiName}`.replace(/'/g, "");
+  const authToken = decodeURIComponent(parsedCookie?.auth_token);
 
   await axios({
     url: url,
     method,
-    ...(headers?.authorization && {
-      headers: { Authorization: headers?.authorization },
+    ...(authToken && {
+      headers: { Authorization: `Bearer ${authToken}` },
     }),
   })
     .then((response) => {

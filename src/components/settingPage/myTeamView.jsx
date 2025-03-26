@@ -3,10 +3,19 @@ import React, { useState, useEffect } from "react";
 import CustomSelect from "../commonComponents/customSelect";
 import Button from "../commonComponents/button";
 import TableView from "./components/tableView";
+import RightViewModal from "../commonComponents/rightViewModal";
+import AddEditUser from "./components/addEditUser";
+import { fetchUserDetails } from "@/utils/apiHandler/request";
+import DeleteConfirmation from "../commonComponents/deleteConfirmation";
+import { toast } from "react-toastify";
 
 const MyTeamView = (props) => {
-  const { userDetails } = props;
-  const { travel_Customers, meta } = userDetails;
+  const { userDetails, fetchCountries } = props;
+  const { travel_Customers = [], meta = {} } = userDetails || {};
+
+  const [travelCustomerValues, setTravelCustomerValues] =
+    useState(travel_Customers);
+  const [deleteLoader, setDeleteLoader] = useState(false);
   const selectOptions = {
     options: [
       { value: "today", label: "Today" },
@@ -16,9 +25,17 @@ const MyTeamView = (props) => {
     onChange: () => {},
   };
 
+  const [userViewPopup, setUserViewPopup] = useState({
+    show: false,
+    type: "",
+  });
+  const [editUserValues, setEditUserValues] = useState("");
+
   const [currentPage, setCurrentPage] = useState(meta.current_page);
   const [itemsPerPage, setItemsPerPage] = useState(meta.per_page);
   const [totalPages, setTotalPages] = useState(meta.last_page);
+  const [deleteConfirmPopup, setDeleteConfirmPopup] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const viewOptions = {
     options: [
@@ -26,14 +43,13 @@ const MyTeamView = (props) => {
       { value: "20", label: "20" },
       { value: "50", label: "50" },
     ],
-    selectedOption: itemsPerPage.toString(),
+    selectedOption: itemsPerPage?.toString(),
     onChange: (value) => {
       setItemsPerPage(parseInt(value));
-      setCurrentPage(1); // Reset to first page when changing items per page
+      setCurrentPage(1);
     },
   };
 
-  // Calculate total pages whenever users array or itemsPerPage changes
   useEffect(() => {
     setTotalPages(meta.last_page);
     setCurrentPage(meta.current_page);
@@ -62,6 +78,39 @@ const MyTeamView = (props) => {
     }
   };
 
+  const handleClosePopup = async (submit) => {
+    if (submit?.submit) {
+      const response = await fetchUserDetails();
+      setTravelCustomerValues(response?.travel_Customers);
+    }
+    setUserViewPopup({ show: false, type: "" });
+    setEditUserValues();
+  };
+
+  const handleEditClick = async (item) => {
+    const response = await fetchUserDetails("", item?.id);
+    setEditUserValues({ id: item?.id, ...response[0] });
+    setUserViewPopup({
+      show: true,
+      type: "edit",
+    });
+  };
+
+  const handleDeleteClick = async (item) => {
+    setDeleteId(item?.id);
+    setDeleteConfirmPopup(true);
+  };
+
+  const handleDeleteCall = async () => {
+    setDeleteLoader(true);
+    await fetchUserDetails("", deleteId, "DELETE");
+    toast.success("User deleted successfully");
+    const response = await fetchUserDetails();
+    setTravelCustomerValues(response?.travel_Customers);
+    setDeleteConfirmPopup(false);
+    setDeleteLoader(false);
+  };
+
   const headerClassName =
     "px-2 sm:px-4 py-2 border-b border-r border-[#eaeaf1] text-xs sm:text-sm font-medium text-[#323A70]";
 
@@ -76,7 +125,7 @@ const MyTeamView = (props) => {
       <div className="bg-white p-3 sm:p-4 border-[1px] flex flex-col gap-3 sm:gap-4 border-[#eaeaf1] w-full h-full">
         <div className="border-[1px] border-[#eaeaf1] rounded-md">
           {/* Search and filter area */}
-          <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          {/* <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="border-[1px] flex gap-2 items-center px-1 py-[4px] w-full sm:w-[40%] border-[#eaeaf1] rounded-md">
               <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
               <input
@@ -93,7 +142,7 @@ const MyTeamView = (props) => {
               buttonPadding="px-[10px] py-[4px]"
               dropdownItemPadding="py-1 pl-2 pr-6"
             />
-          </div>
+          </div> */}
 
           {/* User count and pagination controls */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
@@ -157,16 +206,46 @@ const MyTeamView = (props) => {
           <TableView
             headerClassName={headerClassName}
             rowClassName={rowClassName}
-            currentUsers={travel_Customers}
+            currentUsers={travelCustomerValues}
+            handleEditClick={handleEditClick}
+            handleDeleteClick={handleDeleteClick}
           />
           <Button
             label="Invite User"
+            onClick={() => {
+              setUserViewPopup({
+                show: true,
+                type: "add",
+              });
+            }}
             classNames={{
               root: "bg-[#130061] text-white w-fit px-4 py-2 text-xs sm:text-sm",
             }}
           />
         </div>
       </div>
+      <RightViewModal
+        show={userViewPopup?.show}
+        onClose={handleClosePopup}
+        className={"w-[600px]"}
+        outSideClickClose={true}
+      >
+        <AddEditUser
+          type={userViewPopup?.type}
+          userDetails={editUserValues}
+          onClose={handleClosePopup}
+          fetchCountries={fetchCountries}
+        />
+      </RightViewModal>
+
+      {deleteConfirmPopup && (
+        <DeleteConfirmation
+          content="Are you sure you want to delete this user"
+          handleClose={() => setDeleteConfirmPopup(false)}
+          handleDelete={() => handleDeleteCall()}
+          loader={deleteLoader}
+        />
+      )}
     </div>
   );
 };

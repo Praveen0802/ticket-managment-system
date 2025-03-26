@@ -42,13 +42,18 @@ const MyAccountTeam = (props) => {
       mobile_number: formData?.phoneNumber,
       phone_code: countryCode?.replace("+", ""),
     };
-    const response = await fetchProfileDetails(null, "PUT", payload);
-    toast.success("Profile Details Updated Successfully");
-    setSubmitLoader(false);
+    try {
+      const response = await fetchProfileDetails(null, "PUT", payload);
+      toast.success("Profile Details Updated Successfully");
+    } catch (error) {
+      toast.error("Failed to update profile details");
+    } finally {
+      setSubmitLoader(false);
+    }
   };
 
   return (
-    <div className="h-[90%]">
+    <div className="h-[90%] max-w-full">
       <p className="pb-4 text-base sm:text-lg md:text-xl p-3 md:p-4 font-semibold">
         My Account
       </p>
@@ -64,7 +69,7 @@ const MyAccountTeam = (props) => {
               countryCode={countryCode}
               handleCountryCodeChange={handleCountryCodeChange}
             />
-            <div className="flex gap-3 items-center">
+            <div className="flex max-md:w-[50%] gap-3 items-center">
               <Button
                 type="secondary"
                 label="Cancel"
@@ -72,34 +77,23 @@ const MyAccountTeam = (props) => {
                   setFormData(initialValues);
                 }}
                 classNames={{
-                  root: "border-[1px] border-[#022B50] py-1 px-3 md:px-[14px]",
-                  label_: "text-xs md:text-sm font-medium",
+                  root: "w-full sm:w-auto border-[1px] justify-center border-[#022B50] py-1 px-3 md:px-[14px]",
+                  label_: "text-xs md:text-sm text-center font-medium",
                 }}
               />
               <Button
                 label="Submit"
-                onClick={() => {
-                  updateProfileDetails();
-                }}
+                onClick={updateProfileDetails}
                 loading={submitLoader}
                 classNames={{
-                  root: "bg-[#130061] py-1 px-3 md:px-[14px]",
-                  label_: "text-xs md:text-sm text-white font-normal",
+                  root: "w-full sm:w-auto bg-[#130061] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
+                  label_: "text-xs md:text-sm text-center text-white font-normal",
                 }}
               />
             </div>
           </div>
         </div>
       </div>
-
-      {/* <ChangePassword
-        show={changePasswordPopup}
-        onClose={() => {
-          setChangePassWordPopup(false);
-        }}
-        email={profileDetails?.email}
-        outSideClickClose={true}
-      /> */}
     </div>
   );
 };

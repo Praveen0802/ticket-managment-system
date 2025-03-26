@@ -1,3 +1,4 @@
+import { parseCookie } from "@/utils/helperFunctions/cookie";
 import axios from "axios";
 
 export default async function handler(req, res) {
@@ -5,7 +6,8 @@ export default async function handler(req, res) {
   const method = req?.method;
   const { headers } = req;
   const apiName = req?.url.replace("/api/post/", "");
-
+  const parsedCookie = parseCookie(headers?.cookie);
+  const authToken = decodeURIComponent(parsedCookie?.auth_token);
   const ROOT_URL = process.env.API_BASE_URL;
   const url = `${ROOT_URL}/${apiName}`.replace(/'/g, "");
 
@@ -14,9 +16,12 @@ export default async function handler(req, res) {
       url: url,
       method,
       data: typeof payload === "string" ? JSON.parse(payload) : payload,
-      ...(headers?.authorization && {
-        headers: { Authorization: headers?.authorization },
+      ...(authToken && {
+        headers: { Authorization: `Bearer ${authToken}` },
       }),
+      // ...(headers?.authorization && {
+      //   headers: { Authorization: headers?.authorization },
+      // }),
     });
 
     return res.status(200).json(response?.data);

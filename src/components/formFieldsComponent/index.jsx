@@ -17,11 +17,14 @@ const FormFields = ({ formFields }) => {
                 mandatory={field?.mandatory}
                 selectedValue={field?.value}
                 labelClassName={field?.labelClassName}
+                searchable={field?.searchable}
                 disabled={field?.disabled}
                 onSelect={field?.onChange}
                 paddingClassName={field?.className} // Wider horizontal padding
               />
-            ) : field?.type === "text" || field?.type === "password" ? (
+            ) : field?.type === "text" ||
+              field?.type === "password" ||
+              field?.type === "email" ? (
               <FloatingLabelInput
                 id={field?.id}
                 name={field?.name}

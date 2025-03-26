@@ -5,7 +5,7 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import { fetchBankAccountDetails } from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
 
-const AddEditBankDetails = ({ onClose, type, data = {} }) => {
+const AddEditBankDetails = ({ onClose, type, data = {}, fetchCountries }) => {
   const {
     beneficiary_name = "",
     bank_name = "",
@@ -17,6 +17,7 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
     sort_code = "",
     currency = "",
     country = "",
+    country_id = "",
   } = data;
 
   const editType = type === "edit";
@@ -31,7 +32,7 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
     swift_code: swift_code,
     sort_code: sort_code,
     currency: currency,
-    country: country,
+    country: country_id,
   });
 
   const handleChange = (e, key, type) => {
@@ -39,6 +40,11 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
     const value = selectType ? e : e.target.value;
     setFormFieldValues({ ...formFieldValues, [key]: value });
   };
+
+  const countryList = fetchCountries?.map((list) => ({
+    value: list?.id,
+    label: list?.name,
+  }));
 
   const isFormValid = () => {
     const requiredFields = [
@@ -79,7 +85,6 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
       labelClassName: "font-medium text-gray-500 mb-1",
       placeholder: "Name of the bank",
     },
-
     {
       label: "Account Number",
       type: "text",
@@ -103,7 +108,6 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
       labelClassName: "font-medium text-gray-500 mb-1",
       placeholder: "International Bank Account Number (optional)",
     },
-
     {
       label: "SWIFT Code",
       type: "text",
@@ -126,7 +130,6 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
       labelClassName: "font-medium text-gray-500 mb-1",
       placeholder: "Bank sort code/routing number",
     },
-
     {
       label: "Currency",
       type: "select",
@@ -152,19 +155,13 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
       id: "country",
       name: "country",
       mandatory: true,
+      searchable: true,
       value: formFieldValues?.country,
       onChange: handleChange,
       className: `!py-2 !px-4 ${fieldStyle}`,
       labelClassName: "font-medium text-gray-500 mb-1",
-      options: [
-        { value: "100", label: "India" },
-        { value: "103", label: "United States" },
-        { value: "104", label: "Canada" },
-        { value: "105", label: "United Kingdom" },
-        { value: "106", label: "Germany" },
-      ],
+      options: countryList,
     },
-
     {
       label: "Beneficiary Address",
       type: "textarea",
@@ -224,7 +221,7 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
   return (
     <div className="w-full max-w-3xl mx-auto rounded-lg relative bg-white">
       <div className="flex p-4 border-b border-gray-200 justify-between items-center rounded-t-lg">
-        <h2 className="text-xl text-[#323A70] font-semibold">
+        <h2 className="text-lg sm:text-xl text-[#323A70] font-semibold">
           {editType ? "Edit" : "Add"} Bank Details
         </h2>
         <button
@@ -232,22 +229,22 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
           className="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
           aria-label="Close"
         >
-          <IconStore.close className="size-5 text-gray-600" />
+          <IconStore.close className="size-4 sm:size-5 text-gray-600" />
         </button>
       </div>
 
-      <div className="p-6 flex flex-col gap-6">
+      <div className="p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
         <FormFields formFields={bankFormFields} />
       </div>
 
-      <div className="fixed bottom-0 w-full px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end gap-3">
+      <div className="fixed bottom-0 w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end gap-2 sm:gap-3">
         <Button
           label="Cancel"
           type="secondary"
           onClick={onClose}
           classNames={{
-            root: "py-2 px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200",
-            label_: "text-sm font-medium text-gray-700",
+            root: "py-1 sm:py-2 px-3 sm:px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200",
+            label_: "text-xs sm:text-sm font-medium text-gray-700",
           }}
         />
         <Button
@@ -257,12 +254,12 @@ const AddEditBankDetails = ({ onClose, type, data = {} }) => {
           loading={loader}
           onClick={handleSubmit}
           classNames={{
-            root: `py-2 px-6 rounded-md transition-all duration-200 ${
+            root: `py-1 sm:py-2 px-4 sm:px-6 rounded-md transition-all duration-200 ${
               isFormValid()
                 ? "bg-indigo-600 hover:bg-indigo-700"
                 : "bg-indigo-200 cursor-not-allowed"
             }`,
-            label_: `text-sm font-medium ${
+            label_: `text-xs sm:text-sm font-medium ${
               isFormValid() ? "text-white" : "text-[#323A70]"
             }`,
           }}

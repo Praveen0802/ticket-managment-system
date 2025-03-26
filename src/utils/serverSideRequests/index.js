@@ -26,13 +26,20 @@ export const fetchSettingsPageDetails = async (profile, token) => {
         ]);
       return { addressDetails, profileDetails, fetchCountries };
     } else if (profile === "bankAccounts") {
-      const bankDetails = await fetchBankAccountDetails(token);
+      const [bankDetails, fetchCountries] = await Promise.all([
+        fetchBankAccountDetails(token),
+        fetchCountrieList(token),
+      ]);
       return {
         bankDetails,
+        fetchCountries,
       };
     } else if (profile == "myTeam") {
-      const userDetails = await fetchUserDetails(token);
-      return { userDetails };
+      const [userDetails, fetchCountries] = await Promise.all([
+        fetchUserDetails(token),
+        fetchCountrieList(token),
+      ]);
+      return { userDetails, fetchCountries };
     }
   } catch {}
 };

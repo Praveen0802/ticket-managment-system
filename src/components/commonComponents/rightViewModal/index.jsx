@@ -38,9 +38,23 @@ const RightViewModal = ({
       outSideClickClose={outSideClickClose}
     >
       <div
-        className={`bg-white h-full ${className} absolute top-0 right-0 transition-transform duration-300 ease-in-out ${
-          isAnimated ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`
+          bg-white 
+          w-full 
+          sm:w-[500px] 
+          h-full 
+          ${className} 
+          fixed 
+          top-0 
+          right-0 
+          z-50 
+          transition-transform 
+          duration-300 
+          ease-in-out 
+          ${isAnimated ? "translate-x-0" : "translate-x-full"}
+          shadow-2xl
+          overflow-hidden
+        `}
       >
         {children}
       </div>

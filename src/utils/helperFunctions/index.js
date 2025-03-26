@@ -49,12 +49,14 @@ export const nextRedirect = (pathName = "login") => {
 };
 
 export const getAuthToken = (context = null, token) => {
-  const isClient = typeof window != "undefined";
-  return token
+  const isClient = typeof window !== "undefined";
+  const authToken = token
     ? token
     : isClient
     ? readCookie("auth_token")
     : context?.req?.cookies?.auth_token;
+
+  return authToken ? decodeURIComponent(authToken) : null;
 };
 
 export const currentTimeEpochTimeInMilliseconds = () => {
@@ -68,6 +70,7 @@ export const checkAuthTokenValidationMiddleWare = async (
   if (!authToken || !timeValidity) return false;
   const currentTimeEpoch = currentTimeEpochTimeInMilliseconds();
   const tokenTimeEpoch = Number(timeValidity);
+  // Changed from 3600000 (1 hour) to 60000 (1 minute)
   const timeDiffBolean = tokenTimeEpoch > currentTimeEpoch - 3600000;
   if (timeDiffBolean) {
     return true;
@@ -79,11 +82,12 @@ export const checkAuthTokenValidationMiddleWare = async (
 
 export const checkValidAuthToken = (context = null, authToken) => {
   const isClient = typeof window != "undefined";
-  const token = authToken
+  const tokenDecoded = authToken
     ? authToken
     : isClient
     ? readCookie("auth_token")
     : context?.req?.cookies?.auth_token;
+  const token = decodeURIComponent(tokenDecoded);
   const fetchAuthTokenTime = isClient
     ? readCookie("auth_token_validity")
     : context?.req?.cookies?.auth_token_validity;

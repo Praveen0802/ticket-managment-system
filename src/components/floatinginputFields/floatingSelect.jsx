@@ -10,18 +10,21 @@ const FloatingSelect = ({
   placeholder = "",
   className = "",
   mandatory = false,
-  paddingClassName = "px-3 py-[14px]", // Default padding that can be overridden by parent
+  paddingClassName = "px-3 py-[14px]",
   error = "",
   id,
   name,
   required = false,
   labelClassName = "",
   disabled = false,
+  searchable = false, // New prop to enable search
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(selectedValue);
   const [isFocused, setIsFocused] = useState(selectedValue ? true : false);
+  const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
+  const inputRef = useRef(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -32,6 +35,7 @@ const FloatingSelect = ({
         if (!selected) {
           setIsFocused(false);
         }
+        setSearchTerm("");
       }
     };
 
@@ -49,10 +53,18 @@ const FloatingSelect = ({
     }
   }, [selectedValue]);
 
+  // Focus input when dropdown opens
+  useEffect(() => {
+    if (isOpen && searchable && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen, searchable]);
+
   const handleSelect = (option) => {
     setSelected(option);
     setIsOpen(false);
-    setIsFocused(true); // Keep label floating after selection
+    setIsFocused(true);
+    setSearchTerm("");
     if (onSelect) {
       onSelect(option, keyValue, "select");
     }
@@ -61,7 +73,7 @@ const FloatingSelect = ({
   const toggleDropdown = () => {
     if (!disabled) {
       setIsOpen(!isOpen);
-      setIsFocused(true); // Always float label when dropdown is opened
+      setIsFocused(true);
     }
   };
 
@@ -75,6 +87,12 @@ const FloatingSelect = ({
 
     return selectedOption ? selectedOption.label || selectedOption : "";
   };
+
+  // Filter options based on search term
+  const filteredOptions = options.filter((option) => {
+    const label = option.label !== undefined ? option.label : option;
+    return label.toString().toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   // Base classes without padding (which is now customizable)
   const baseClasses = `block w-full text-[14px] shadow-sm rounded border-[1px] focus:outline-none ${
@@ -115,9 +133,22 @@ const FloatingSelect = ({
         aria-labelledby={`${id}-label`}
         tabIndex={disabled ? -1 : 0}
       >
-        <span className={`block truncate ${!selected ? "text-gray-400" : ""}`}>
-          {getSelectedLabel() || (isFocused ? placeholder : "")}
-        </span>
+        {searchable && isOpen ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder={placeholder || "Search..."}
+            className="w-full outline-none bg-transparent"
+          />
+        ) : (
+          <span
+            className={`block truncate ${!selected ? "text-gray-400" : ""}`}
+          >
+            {getSelectedLabel() || (isFocused ? placeholder : "")}
+          </span>
+        )}
         <svg
           className={`w-5 h-5 ml-2 text-[#130061] transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""
@@ -141,54 +172,62 @@ const FloatingSelect = ({
             role="listbox"
             id={`${id}-listbox`}
           >
-            {options.map((option, index) => {
-              const value = option.value !== undefined ? option.value : option;
-              const label = option.label !== undefined ? option.label : option;
-              const isSelectedOption =
-                selected === value || selected === option;
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option, index) => {
+                const value =
+                  option.value !== undefined ? option.value : option;
+                const label =
+                  option.label !== undefined ? option.label : option;
+                const isSelectedOption =
+                  selected === value || selected === option;
 
-              return (
-                <li
-                  key={index}
-                  className={`cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50 ${
-                    isSelectedOption
-                      ? "bg-indigo-100 text-[#130061]"
-                      : "text-gray-900"
-                  }`}
-                  id={`option-${index}`}
-                  role="option"
-                  aria-selected={isSelectedOption}
-                  onClick={() =>
-                    handleSelect(value !== undefined ? value : option)
-                  }
-                >
-                  <span
-                    className={`block truncate ${
-                      isSelectedOption ? "font-medium" : "font-normal"
+                return (
+                  <li
+                    key={index}
+                    className={`cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50 ${
+                      isSelectedOption
+                        ? "bg-indigo-100 text-[#130061]"
+                        : "text-gray-900"
                     }`}
+                    id={`option-${index}`}
+                    role="option"
+                    aria-selected={isSelectedOption}
+                    onClick={() =>
+                      handleSelect(value !== undefined ? value : option)
+                    }
                   >
-                    {label}
-                  </span>
-
-                  {isSelectedOption && (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#323A70]">
-                      <svg
-                        className="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                    <span
+                      className={`block truncate ${
+                        isSelectedOption ? "font-medium" : "font-normal"
+                      }`}
+                    >
+                      {label}
                     </span>
-                  )}
-                </li>
-              );
-            })}
+
+                    {isSelectedOption && (
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#323A70]">
+                        <svg
+                          className="w-5 h-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    )}
+                  </li>
+                );
+              })
+            ) : (
+              <li className="cursor-default select-none relative py-2 pl-3 pr-9 text-gray-500">
+                No options found
+              </li>
+            )}
           </ul>
         </div>
       )}

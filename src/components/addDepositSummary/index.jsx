@@ -58,7 +58,6 @@ const AddDepositSummary = ({ onClose }) => {
       labelClassName: "font-medium text-gray-500 mb-1",
       placeholder: "Enter Your Deposit Amount",
     },
-
     {
       label: "Deposit Currency",
       type: "select",
@@ -145,30 +144,34 @@ const AddDepositSummary = ({ onClose }) => {
 
   return (
     <div className="w-full max-w-3xl mx-auto rounded-lg relative bg-white overflow-hidden">
-      <div className="flex px-5 py-2 justify-between border-b-[1px] border-gray-200 items-center rounded-t-lg">
-        <h2 className="text-xl text-[#323A70] font-semibold">Add Deposit</h2>
+      {/* Header */}
+      <div className="flex px-4 sm:px-5 py-2 justify-between border-b-[1px] border-gray-200 items-center rounded-t-lg">
+        <h2 className="text-lg sm:text-xl text-[#323A70] font-semibold">
+          Add Deposit
+        </h2>
         <button
           onClick={onClose}
           className="p-1.5 rounded-full cursor-pointer bg-white/10 hover:bg-white/20 transition-colors duration-200"
           aria-label="Close"
         >
-          <IconStore.close className="size-5 " />
+          <IconStore.close className="size-4 sm:size-5" />
         </button>
       </div>
 
-      <div className="p-6 flex flex-col gap-6 ">
+      {/* Form Content */}
+      <div className="p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 max-h-[70vh] overflow-y-auto">
         <FormFields formFields={depositFormFields} />
       </div>
 
-      {/* Enhanced footer with better separation */}
-      <div className="fixed bottom-0 w-full px-6 py-4 bg-gray-50 border-t-2 border-indigo-100 rounded-b-lg flex justify-end gap-3 shadow-inner">
+      {/* Footer */}
+      <div className="fixed bottom-0 left-0 w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t-2 border-indigo-100 rounded-b-lg flex justify-end gap-2 sm:gap-3 shadow-inner">
         <Button
           label="Cancel"
           type="secondary"
           onClick={onClose}
           classNames={{
-            root: "py-2 px-4 border-2 border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200 shadow-sm",
-            label_: "text-sm font-medium text-gray-700",
+            root: "py-2 px-3 sm:px-4 border-2 border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200 shadow-sm",
+            label_: "text-xs sm:text-sm font-medium text-gray-700",
           }}
         />
         <Button
@@ -178,12 +181,12 @@ const AddDepositSummary = ({ onClose }) => {
           loading={loader}
           onClick={handleSubmit}
           classNames={{
-            root: `py-2 px-6 rounded-md transition-all duration-200 shadow-sm ${
+            root: `py-2 px-4 sm:px-6 rounded-md transition-all duration-200 shadow-sm ${
               isFormValid()
                 ? "bg-[#130061] hover:bg-[#1a0080] border-2 border-[#130061]"
                 : "bg-[#130061]/70 cursor-not-allowed border-2 border-[#130061]/70"
             }`,
-            label_: `text-sm font-medium ${
+            label_: `text-xs sm:text-sm font-medium ${
               isFormValid() ? "text-white" : "text-white/90"
             }`,
           }}

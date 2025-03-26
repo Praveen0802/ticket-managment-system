@@ -1,3 +1,4 @@
+import { parseCookie } from "@/utils/helperFunctions/cookie";
 import axios from "axios";
 import FormData from "form-data"; // Ensure this package is installed
 import formidable from "formidable";
@@ -18,6 +19,8 @@ export default async function handler(req, res) {
   const url = `${ROOT_URL}/${apiName}`.replace(/'/g, "");
   let formPayload = {};
   const form = formidable({ multiples: true });
+  const parsedCookie = parseCookie(headers?.cookie);
+  const authToken = decodeURIComponent(parsedCookie?.auth_token);
   form.parse(req, async (err, fields, files) => {
     if (err) {
       console.error("Error parsing the files:", err);
@@ -58,8 +61,11 @@ export default async function handler(req, res) {
         url: url,
         method,
         data: hasFiles ? formData : formPayload,
-        ...(headers?.authorization && {
-          headers: { Authorization: headers?.authorization },
+        // ...(headers?.authorization && {
+        //   headers: { Authorization: headers?.authorization },
+        // }),
+        ...(authToken && {
+          headers: { Authorization: `Bearer ${authToken}` },
         }),
       });
 
