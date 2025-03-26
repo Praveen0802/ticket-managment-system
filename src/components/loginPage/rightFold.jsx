@@ -6,7 +6,9 @@ import AJAX from "@/utils/apiHandler";
 import { API_ROUTES } from "@/utils/apiHandler/apiRoutes";
 import { setCookie } from "@/utils/helperFunctions/cookie";
 import { currentTimeEpochTimeInMilliseconds } from "@/utils/helperFunctions";
+import logo from "../../../public/logo.svg";
 import { loginUser, sendResetRequest } from "@/utils/apiHandler/request";
+import Image from "next/image";
 
 const RightFold = () => {
   const [formData, setFormData] = useState({
@@ -127,7 +129,14 @@ const RightFold = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 px-6 md:px-8 justify-center items-center py-6 md:py-8 bg-white w-full md:w-1/2 rounded-b-xl md:rounded-bl-none md:rounded-r-xl">
+    <div className="flex flex-col gap-6 px-6 md:px-8 justify-center items-center py-6 md:py-8 bg-white w-full  rounded-xl ">
+      <Image
+        src={logo}
+        width={80}
+        height={80}
+        alt="image-logo"
+        className="w-20 h-20 md:w-28 md:h-28"
+      />
       <div className="text-center flex flex-col gap-2 md:gap-3">
         <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
           {isForgotPassword ? "Forgot Password" : "Login"}

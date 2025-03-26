@@ -14,6 +14,7 @@ import ticketStar from "../../../public/ticket-star.svg";
 import { Menu } from "lucide-react";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import { useRouter } from "next/router";
+import { setCookie } from "@/utils/helperFunctions/cookie";
 
 const LeftMenuBar = () => {
   const [showFullDisplay, setShowFullDisplay] = useState(false);
@@ -65,11 +66,11 @@ const LeftMenuBar = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  // Mobile bottom navigation - only show top 5 most important items
-  const mobileNavItems = leftPaneValues.filter(
-    (_, index) => index !== 0 && index !== 1 && index <= 6
-  );
-
+  const handleLogout = () => {
+    setCookie("auth_token", "");
+    setCookie("auth_token_validity", "");
+    router.push("/login");
+  };
   if (isMobile) {
     return (
       <>
@@ -131,7 +132,12 @@ const LeftMenuBar = () => {
           </div>
 
           <div className="absolute bottom-0 w-full p-4 border-t border-[#51428E]">
-            <div className="flex items-center gap-3 cursor-pointer p-3 hover:bg-[#5f6365] rounded-md">
+            <div
+              onClick={() => {
+                handleLogout();
+              }}
+              className="flex items-center gap-3 cursor-pointer p-3 hover:bg-[#5f6365] rounded-md"
+            >
               <Image src={logout} alt="logout" width={24} height={24} />
               <span className="text-white text-[14px]">Logout</span>
             </div>
@@ -197,7 +203,12 @@ const LeftMenuBar = () => {
           ))}
         </div>
       </div>
-      <div className="p-[10px]">
+      <div
+        onClick={() => {
+          handleLogout();
+        }}
+        className="p-[10px] cursor-pointer"
+      >
         <Image
           src={logout}
           alt="logo"

@@ -19,7 +19,7 @@ export async function middleware(request) {
     authToken,
     authTokenValidity
   );
-
+  console.log("validateAuthToken", authToken, validateAuthToken);
   if (validateAuthToken?.error) {
     const response = NextResponse.redirect(new URL(`/login`, request.url));
     response.cookies.set("auth_token", "");
