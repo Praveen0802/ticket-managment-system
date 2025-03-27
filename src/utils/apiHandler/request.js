@@ -292,7 +292,6 @@ export const sendDepositRequest = async (data) => {
 };
 
 export const refreshAuthToken = async (token) => {
-  console.log("hitting hereeeeee");
   try {
     const response = await makeRequest({
       url: API_ROUTES.REFRESH_AUTH_TOKEN,
@@ -346,6 +345,21 @@ export const fetchUserDetails = async (token, id, method = "GET", data) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in fetchUserDetails", error);
+    throw error;
+  }
+};
+
+export const resetPassword = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.RESET_PASSWORD,
+      method: "POST",
+      data: data,
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in sendResetRequest", error);
     throw error;
   }
 };

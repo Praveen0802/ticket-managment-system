@@ -182,7 +182,7 @@ const LatestBookingTable = ({ listValues, meta }) => {
                         .map((_, index) => (
                           <ShimmerRow key={index} isMobile={isMobile} />
                         ))
-                    : bookings.map((booking) => (
+                    : bookings?.map((booking) => (
                         <tr
                           key={booking?.booking_id}
                           className="border-t border-[#eaeaf1] hover:bg-gray-50"
@@ -230,7 +230,7 @@ const LatestBookingTable = ({ listValues, meta }) => {
                       .map((_, index) => (
                         <ShimmerRow key={index} isMobile={true} />
                       ))
-                  : bookings.map((booking) => (
+                  : bookings?.map((booking) => (
                       <div
                         key={booking?.booking_id}
                         className="border-t border-[#eaeaf1] p-3 flex flex-col"

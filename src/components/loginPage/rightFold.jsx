@@ -1,14 +1,12 @@
-import React, { useState } from "react";
-import FloatingLabelInput from "../floatinginputFields";
-import { useRouter } from "next/router";
-import Button from "../commonComponents/button";
-import AJAX from "@/utils/apiHandler";
-import { API_ROUTES } from "@/utils/apiHandler/apiRoutes";
-import { setCookie } from "@/utils/helperFunctions/cookie";
-import { currentTimeEpochTimeInMilliseconds } from "@/utils/helperFunctions";
-import logo from "../../../public/logo.svg";
 import { loginUser, sendResetRequest } from "@/utils/apiHandler/request";
+import { currentTimeEpochTimeInMilliseconds } from "@/utils/helperFunctions";
+import { setCookie } from "@/utils/helperFunctions/cookie";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import logo from "../../../public/logo.svg";
+import Button from "../commonComponents/button";
+import FloatingLabelInput from "../floatinginputFields";
 
 const RightFold = () => {
   const [formData, setFormData] = useState({

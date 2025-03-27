@@ -21,4 +21,5 @@ export const API_ROUTES = {
   FETCH_COUNTRIES: `/settings/countries`,
   FETCH_CITIES: `/settings/cities`,
   FETCH_USER_DETAILS: `/travelpartner/customer`,
+  RESET_PASSWORD: `/settings/reset-password`,
 };

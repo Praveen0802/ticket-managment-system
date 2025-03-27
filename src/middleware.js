@@ -4,6 +4,7 @@ import {
   checkAuthTokenValidationMiddleWare,
   currentTimeEpochTimeInMilliseconds,
 } from "./utils/helperFunctions";
+import { nonAuthRequiredAPI } from "./utils/constants/contants";
 
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -19,7 +20,6 @@ export async function middleware(request) {
     authToken,
     authTokenValidity
   );
-  console.log("validateAuthToken", authToken, validateAuthToken);
   if (validateAuthToken?.error) {
     const response = NextResponse.redirect(new URL(`/login`, request.url));
     response.cookies.set("auth_token", "");
@@ -27,10 +27,14 @@ export async function middleware(request) {
     return response;
   }
 
+  if (pathname.includes("/reset-password/token/") && !validateAuthToken) {
+    return;
+  }
+
   if (pathname.includes("/api")) {
     try {
       if (!validateAuthToken) {
-        if (pathname.includes("/auth/login")) {
+        if (nonAuthRequiredAPI.some((path) => pathname.includes(path))) {
           return;
         } else {
           return NextResponse.redirect(new URL(`/login`, request.url));

@@ -37,7 +37,7 @@ const DashboardPage = (props) => {
                 Orders
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {Object.entries(dashboardData?.orders)?.map(
+                {Object.entries(dashboardData?.orders || {})?.map(
                   ([key, value], index) => {
                     const title =
                       key === "completedOrders"
