@@ -26,11 +26,10 @@ const Header = () => {
       </p>
       <div className="flex gap-3 items-center self-end sm:self-auto">
         <Button
-          type="secondary"
           label={"Request Event"}
           classNames={{
-            root: "border-[1px] border-[#0137D5] py-[8px] sm:py-[11px] px-[10px] sm:px-[14px]",
-            label_: "text-[12px] sm:text-[14px] font-medium",
+            root: "border-[1px] border-[#0137D5] py-[8px] text-[#0137D5] sm:py-[11px] px-[10px] sm:px-[14px]",
+            label_: "text-[12px] sm:text-[14px] font-normal",
           }}
         />
         <Image

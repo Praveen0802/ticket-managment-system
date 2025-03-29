@@ -9,9 +9,10 @@ const PhoneInputComponent = ({
   placeholder = "Phone number",
   keyValue,
   className = "",
+  readOnly,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // Sample country codes - expand this list as needed
+
   const countryCodes = [
     { code: "+41", label: "CH +41" },
     { code: "+1", label: "US +1" },
@@ -20,7 +21,9 @@ const PhoneInputComponent = ({
     { code: "+91", label: "IN +91" },
   ];
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleDropdown = () => {
+    if (!readOnly) setIsOpen(!isOpen);
+  };
 
   const selectCountryCode = (code, label) => {
     if (onCountryCodeChange) {
@@ -35,8 +38,13 @@ const PhoneInputComponent = ({
       <div className="relative">
         <button
           type="button"
-          className="flex items-center justify-between w-fit px-3 py-2 border border-gray-300 rounded-l text-gray-700 bg-white"
+          className={`flex items-center justify-between w-fit px-3 py-2 border border-gray-300 rounded-l text-gray-700  ${
+            readOnly
+              ? "cursor-not-allowed bg-gray-100 text-gray-400"
+              : "bg-white"
+          }`}
           onClick={toggleDropdown}
+          disabled={readOnly}
         >
           <span className="truncate">
             {countryCodes.find((c) => c.code === countryCode)?.label ||
@@ -64,8 +72,11 @@ const PhoneInputComponent = ({
       {/* Phone number input */}
       <input
         type="tel"
-        className="flex-1 px-3 py-2 border border-l-0 border-gray-300 rounded-r focus:outline-none "
+        className={`flex-1 px-3 py-2 border border-l-0 border-gray-300 rounded-r focus:outline-none ${
+          readOnly ? "bg-gray-100 cursor-not-allowed text-gray-400" : ""
+        }`}
         value={value}
+        readOnly={readOnly}
         onChange={(e) => onChange && onChange(e, keyValue)}
         placeholder={placeholder}
       />

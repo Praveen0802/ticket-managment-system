@@ -135,98 +135,106 @@ const RightFold = () => {
         alt="image-logo"
         className="w-20 h-20 md:w-28 md:h-28"
       />
-      <div className="text-center flex flex-col gap-2 md:gap-3">
-        <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
-          {isForgotPassword ? "Forgot Password" : "Login"}
-        </p>
-        <p className="text-[#7D82A4] text-sm font-normal">
-          {isForgotPassword
-            ? "Enter your email address to receive a password reset link"
-            : "Connecting trusted ticket sellers together with our worldwide distribution network"}
-        </p>
-      </div>
+      <div className="max-w-xs mx-auto flex flex-col gap-6">
+        <div className="text-center flex flex-col gap-2 md:gap-3">
+          <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
+            {isForgotPassword ? "Forgot Password" : "Login"}
+          </p>
 
-      {resetRequestSent ? (
-        <div className="flex flex-col gap-4 items-center w-full max-w-xs mx-auto">
-          <div className="bg-green-50 p-4 rounded-lg text-center">
-            <p className="text-green-700 font-medium">Reset link sent!</p>
-            <p className="text-green-600 text-sm mt-1">
-              Please check your email for instructions to reset your password.
-            </p>
-          </div>
-          <Button
-            label={"Back to Login"}
-            type="secondary"
-            classNames={{
-              root: "justify-center items-center",
-              label_: "text-base text-center w-full font-medium",
-            }}
-            onClick={backToLogin}
-          />
+          <p className="text-[#7D82A4] text-sm font-normal">
+            {isForgotPassword
+              ? "Enter your email address to receive a password reset link"
+              : "Connecting trusted ticket sellers together with our worldwide distribution network"}
+          </p>
         </div>
-      ) : (
-        <form
-          className="flex flex-col gap-6 w-full max-w-xs mx-auto"
-          onSubmit={handleSubmit}
-        >
-          <div className="flex flex-col gap-4">
-            <div>
-              <FloatingLabelInput
-                id="email"
-                name="email"
-                keyValue={"email"}
-                type="email"
-                label="Email Address"
-                value={formData?.email}
-                onChange={handleChange}
-                error={errors.email}
-                autoComplete="off"
-                required
-              />
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-              )}
-            </div>
 
-            {!isForgotPassword && (
-              <div>
-                <FloatingLabelInput
-                  id="password"
-                  name="password"
-                  type="password"
-                  keyValue={"password"}
-                  label="Password"
-                  value={formData?.password}
-                  onChange={handleChange}
-                  error={errors.password}
-                  required
-                />
-                {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col gap-3">
+        {resetRequestSent ? (
+          <div className="flex flex-col gap-4 items-center w-full max-w-xs mx-auto">
+            <div className="bg-green-50 p-4 rounded-lg text-center">
+              <p className="text-green-700 font-medium">Reset link sent!</p>
+              <p className="text-green-600 text-sm mt-1">
+                Please check your email for instructions to reset your password.
+              </p>
+            </div>
             <Button
-              label={isForgotPassword ? "Send Reset Link" : "Login"}
-              type="primary"
+              label={"Back to Login"}
+              type="secondary"
               classNames={{
                 root: "justify-center items-center",
                 label_: "text-base text-center w-full font-medium",
               }}
-              submitButton={true}
-              loading={loader}
+              onClick={backToLogin}
             />
-            <p
-              className="text-sm cursor-pointer hover:underline text-center text-[#130061] font-medium"
-              onClick={toggleForgotPassword}
-            >
-              {isForgotPassword ? "Back to Login" : "Forgot Password?"}
-            </p>
           </div>
-        </form>
-      )}
+        ) : (
+          <form className="flex flex-col gap-6 w-full " onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4">
+              <div>
+                <FloatingLabelInput
+                  id="email"
+                  name="email"
+                  keyValue={"email"}
+                  type="email"
+                  label="Email Address"
+                  value={formData?.email}
+                  onChange={handleChange}
+                  error={errors.email}
+                  className={
+                    "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                  }
+                  autoComplete="off"
+                  required
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
+              </div>
+
+              {!isForgotPassword && (
+                <div>
+                  <FloatingLabelInput
+                    id="password"
+                    name="password"
+                    type="password"
+                    keyValue={"password"}
+                    className={
+                      "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                    }
+                    label="Password"
+                    value={formData?.password}
+                    onChange={handleChange}
+                    error={errors.password}
+                    required
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col gap-3">
+              <Button
+                label={isForgotPassword ? "Send Reset Link" : "Login"}
+                type="primary"
+                classNames={{
+                  root: "justify-center items-center",
+                  label_: "text-base text-center w-full font-medium",
+                }}
+                submitButton={true}
+                loading={loader}
+              />
+              <p
+                className="text-sm cursor-pointer hover:underline text-center text-[#130061] font-medium"
+                onClick={toggleForgotPassword}
+              >
+                {isForgotPassword ? "Back to Login" : "Forgot Password?"}
+              </p>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 };

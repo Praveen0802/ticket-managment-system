@@ -1,8 +1,9 @@
 import { fetchProfileDetails } from "@/utils/apiHandler/request";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Button from "../commonComponents/button";
 import AccounInfoForm from "./components/accounInfoForm";
 import { toast } from "react-toastify";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
 
 const MyAccountTeam = (props) => {
   const { profileDetails } = props;
@@ -16,6 +17,7 @@ const MyAccountTeam = (props) => {
 
   const [formData, setFormData] = useState(initialValues);
   const [submitLoader, setSubmitLoader] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const handleChange = (e, key) => {
     const { value } = e.target;
@@ -45,6 +47,7 @@ const MyAccountTeam = (props) => {
     try {
       const response = await fetchProfileDetails(null, "PUT", payload);
       toast.success("Profile Details Updated Successfully");
+      setEdit(false); // Close edit mode after successful update
     } catch (error) {
       toast.error("Failed to update profile details");
     } finally {
@@ -52,9 +55,13 @@ const MyAccountTeam = (props) => {
     }
   };
 
+  const handleEditClick = useCallback(() => {
+    setEdit(true);
+  }, []);
+
   return (
     <div className="h-[90%] max-w-full">
-      <p className="pb-4 text-base sm:text-lg md:text-xl p-3 md:p-4 font-semibold">
+      <p className="pb-4 text-base sm:text-lg md:text-xl p-3 md:p-4 font-medium">
         My Account
       </p>
       <div className="bg-white border-[1px] border-[#eaeaf1] h-full">
@@ -68,28 +75,47 @@ const MyAccountTeam = (props) => {
               handleChange={handleChange}
               countryCode={countryCode}
               handleCountryCodeChange={handleCountryCodeChange}
+              disabled={!edit}
             />
             <div className="flex max-md:w-[50%] gap-3 items-center">
-              <Button
-                type="secondary"
-                label="Cancel"
-                onClick={() => {
-                  setFormData(initialValues);
-                }}
-                classNames={{
-                  root: "w-full sm:w-auto border-[1px] justify-center border-[#022B50] py-1 px-3 md:px-[14px]",
-                  label_: "text-xs md:text-sm text-center font-medium",
-                }}
-              />
-              <Button
-                label="Submit"
-                onClick={updateProfileDetails}
-                loading={submitLoader}
-                classNames={{
-                  root: "w-full sm:w-auto bg-[#130061] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
-                  label_: "text-xs md:text-sm text-center text-white font-normal",
-                }}
-              />
+              {edit ? (
+                <>
+                  <Button
+                    type="secondary"
+                    label="Cancel"
+                    onClick={() => {
+                      setEdit(false);
+                      setFormData(initialValues);
+                    }}
+                    classNames={{
+                      root: "w-full sm:w-auto border-[1px] justify-center border-[#022B50] py-1 px-3 md:px-[14px]",
+                      label_: "text-xs md:text-sm text-center font-medium",
+                    }}
+                  />
+                  <Button
+                    label="Submit"
+                    onClick={updateProfileDetails}
+                    loading={submitLoader}
+                    classNames={{
+                      root: "w-full sm:w-auto bg-[#130061] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
+                      label_:
+                        "text-xs md:text-sm text-center text-white font-normal",
+                    }}
+                  />
+                </>
+              ) : (
+                <Button
+                  label="Edit"
+                  onClick={handleEditClick}
+                  // iconBefore={<IconStore.pencilEdit className="stroke-white" />}
+                  loading={submitLoader}
+                  classNames={{
+                    root: "w-full sm:w-auto bg-[#130061] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
+                    label_:
+                      "text-xs md:text-sm text-center text-white font-normal",
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

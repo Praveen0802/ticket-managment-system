@@ -10,11 +10,13 @@ import documentupload from "../../../public/document-upload.svg";
 import listing from "../../../public/listing.svg";
 import shopping from "../../../public/shopping-cart-02.svg";
 import logout from "../../../public/logout.svg";
+import leftArrow from "../../../public/leftArrow.jpg";
 import ticketStar from "../../../public/ticket-star.svg";
 import { Menu } from "lucide-react";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import { useRouter } from "next/router";
 import { setCookie } from "@/utils/helperFunctions/cookie";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
 
 const LeftMenuBar = () => {
   const [showFullDisplay, setShowFullDisplay] = useState(false);
@@ -22,7 +24,11 @@ const LeftMenuBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const leftPaneValues = [
-    { image: arrowRight, name: "Minimise" },
+    {
+      image: showFullDisplay ? "" : arrowRight,
+      icon: <IconStore.leftArrow className="size-4 stroke-white" />,
+      name: "Minimise",
+    },
     { text: "MJ", name: "MJ", key: "name", route: "settings/myAccount" },
     {
       image: category,
@@ -30,13 +36,14 @@ const LeftMenuBar = () => {
       route: "dashboard",
       key: "dashboard",
     },
-    { image: addSquare, name: "Add Listings", key: "addList" },
-    { image: listing, name: "My listings", key: "myList" },
-    { image: shopping, name: "document", key: "document" },
-    { image: diagram, name: "Reports", key: "reports", route: "reports" },
-    { image: ticketStar, name: "Sales", key: "sales" },
-    { image: ticket, name: "TX Pay", key: "tx-pay" },
-    { image: documentupload, name: "TX Trade", key: "tx-trade" },
+
+    {
+      image: diagram,
+      name: "My account,",
+      key: "my-account",
+      route: "reports",
+    },
+    { image: documentupload, name: "Lmt Trade", key: "lmt-trade" },
   ];
 
   const router = useRouter();
@@ -183,6 +190,7 @@ const LeftMenuBar = () => {
               {item?.image && (
                 <Image src={item?.image} alt="logo" width={24} height={24} />
               )}
+              {item?.icon && item?.icon}
               {item?.text && (
                 <p className="text-[18px] font-medium text-[#FFFFFF]">
                   {item?.text}

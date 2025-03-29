@@ -7,6 +7,7 @@ const AccounInfoForm = ({
   handleChange,
   countryCode,
   handleCountryCodeChange,
+  disabled,
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full md:w-[90%] lg:w-[80%]">
@@ -19,6 +20,7 @@ const AccounInfoForm = ({
         value={formData?.firstName}
         className="!p-2"
         onChange={handleChange}
+        readOnly={disabled}
         required
       />
       <FloatingLabelInput
@@ -30,6 +32,7 @@ const AccounInfoForm = ({
         value={formData?.lastName}
         className="!p-2"
         onChange={handleChange}
+        readOnly={disabled}
         required
       />
       <FloatingLabelInput
@@ -47,6 +50,7 @@ const AccounInfoForm = ({
       <PhoneInputComponent
         value={formData?.phoneNumber}
         onChange={handleChange}
+        readOnly={disabled}
         countryCode={countryCode}
         keyValue="phoneNumber"
         onCountryCodeChange={handleCountryCodeChange}

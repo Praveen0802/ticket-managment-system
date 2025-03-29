@@ -19,7 +19,7 @@ const SettingsPage = (props) => {
 
   const isMobile = useIsMobile();
 
-  const IconclassName = "size-6 stroke-[#130061]";
+  const IconclassName = "size-6";
   const profileValues = [
     {
       icon: <IconStore.profile className={IconclassName} />,
@@ -161,9 +161,7 @@ const SettingsPage = (props) => {
                 <li
                   key={index}
                   className={`flex ${
-                    activeTab == value?.key
-                      ? "text-[#130061] font-semibold"
-                      : "text-gray-600"
+                    activeTab == value?.key ? "text-[#130061]" : "text-gray-600"
                   } items-center gap-3 cursor-pointer`}
                   onClick={() => handleTabClick(value?.key)}
                 >

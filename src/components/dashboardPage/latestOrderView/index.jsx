@@ -3,6 +3,7 @@ import {
   fetchOrderHistory,
   fetchTransactionHistory,
 } from "@/utils/apiHandler/request";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import React, { useState, useEffect, useRef } from "react";
 
@@ -182,7 +183,8 @@ const LatestOrderView = ({ listItems, meta }) => {
                           <td className="p-3 text-sm text-gray-700">
                             {transaction?.reference_no}
                           </td>
-                          <td className="p-3 text-sm text-gray-700">
+                          <td className="p-3 text-sm flex gap-1 items-center text-gray-700">
+                            <IconStore.calendarDays className="size-4" />{" "}
                             {formatDateTime(transaction?.created_date_time)}
                           </td>
                           <td className="p-3 text-sm">
@@ -231,7 +233,8 @@ const LatestOrderView = ({ listItems, meta }) => {
                           <span className="text-sm text-gray-700 font-medium">
                             {transaction?.reference_no}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 flex items-center gap-1">
+                            <IconStore.calendarDays className="size-4" />
                             {formatDateTime(transaction?.created_date_time)}
                           </span>
                         </div>

@@ -1,5 +1,6 @@
 import CustomSelect from "@/components/commonComponents/customSelect";
 import { fetchOrderHistory } from "@/utils/apiHandler/request";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import { useEffect, useRef, useState } from "react";
 
@@ -18,7 +19,7 @@ const ShimmerRow = ({ isMobile }) => {
         <div className="flex justify-between mt-2">
           <div className="flex flex-col space-y-2 w-2/3">
             <div className="h-3 bg-gray-300 rounded w-full animate-pulse"></div>
-            <div className="h-3 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+            {/* <div className="h-3 bg-gray-300 rounded w-3/4 animate-pulse"></div> */}
             <div className="h-3 bg-gray-300 rounded w-1/2 animate-pulse"></div>
           </div>
           <div className="h-6 bg-gray-300 rounded w-1/4 animate-pulse"></div>
@@ -40,10 +41,11 @@ const ShimmerRow = ({ isMobile }) => {
         <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
       </td>
       <td className="p-3">
-        <div className="space-y-2">
+        <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse"></div>
+        {/* <div className="space-y-2">
           <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
           <div className="h-3 bg-gray-300 rounded w-1/2 animate-pulse"></div>
-        </div>
+        </div> */}
       </td>
       <td className="p-3 text-center">
         <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto animate-pulse"></div>
@@ -146,7 +148,7 @@ const LatestBookingTable = ({ listValues, meta }) => {
           <div className="flex flex-col gap-2">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-start sm:items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
               <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
-                Booking History
+                Purchase History
               </p>
               <CustomSelect
                 selectedValue={selectedFilter}
@@ -166,11 +168,14 @@ const LatestBookingTable = ({ listValues, meta }) => {
               <table className="min-w-full border-collapse hidden sm:table">
                 <thead className="sticky top-0 bg-white">
                   <tr className="text-gray-400">
+                    <th className="p-3 text-left text-sm font-medium">
+                      Order No
+                    </th>
                     <th className="p-3 text-left text-sm font-medium">Match</th>
                     <th className="p-3 text-left text-sm font-medium">
                       Date & Time
                     </th>
-                    <th className="p-3 text-left text-sm font-medium">Venue</th>
+                    {/* <th className="p-3 text-left text-sm font-medium">Venue</th> */}
                     <th className="p-3 text-left text-sm font-medium">Qty</th>
                     <th className="p-3 text-left text-sm font-medium">Price</th>
                   </tr>
@@ -187,7 +192,13 @@ const LatestBookingTable = ({ listValues, meta }) => {
                           key={booking?.booking_id}
                           className="border-t border-[#eaeaf1] hover:bg-gray-50"
                         >
-                          <td className="p-3 text-sm text-gray-700">
+                          <td className="p-3 text-sm text-gray-700 text-left">
+                            {booking?.booking_id}
+                          </td>
+                          <td
+                            title={booking?.match_name}
+                            className="p-3 truncate text-sm text-gray-700"
+                          >
                             <div className="flex flex-col">
                               <span className="font-medium">
                                 {booking?.match_name}
@@ -197,20 +208,21 @@ const LatestBookingTable = ({ listValues, meta }) => {
                               </span>
                             </div>
                           </td>
-                          <td className="p-3 text-sm text-gray-700">
+                          <td className="p-3 text-sm flex items-center gap-1 text-gray-700">
+                            <IconStore.calendarDays className="size-4" />{" "}
                             {formatDateTime(
                               booking?.match_date,
                               booking?.match_time
                             )}
                           </td>
-                          <td className="p-3 text-sm text-gray-700">
+                          {/* <td className="p-3 text-sm text-gray-700">
                             <div className="flex flex-col">
                               <span>{booking?.stadium_name}</span>
                               <span className="text-xs text-gray-500">
                                 {booking?.city_name}, {booking?.country_name}
                               </span>
                             </div>
-                          </td>
+                          </td> */}
                           <td className="p-3 text-sm text-gray-700 text-center">
                             {booking?.quantity}
                           </td>
