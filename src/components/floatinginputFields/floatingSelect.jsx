@@ -108,7 +108,7 @@ const FloatingSelect = ({
   return (
     <div className={`relative w-full ${className}`} ref={dropdownRef}>
       <FloatingPlaceholder
-        className={`${labelClassName}`}
+        className={`${labelClassName} ${disabled && '!bg-gray-100'}`}
         isFocused={isFocused || isOpen}
         hasError={!!error}
       >

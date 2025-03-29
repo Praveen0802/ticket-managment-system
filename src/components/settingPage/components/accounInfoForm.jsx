@@ -18,7 +18,7 @@ const AccounInfoForm = ({
         label="First Name"
         keyValue={"firstName"}
         value={formData?.firstName}
-        className="!p-2"
+        className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
         onChange={handleChange}
         readOnly={disabled}
         required
@@ -30,7 +30,7 @@ const AccounInfoForm = ({
         keyValue={"lastName"}
         label="Last Name"
         value={formData?.lastName}
-        className="!p-2"
+        className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
         onChange={handleChange}
         readOnly={disabled}
         required
@@ -39,11 +39,11 @@ const AccounInfoForm = ({
         id="email"
         name="email"
         type="email"
-        label="email"
+        label="email address"
         keyValue={"email"}
         readOnly
         value={formData?.email}
-        className="!p-2"
+        className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
         onChange={handleChange}
         required
       />

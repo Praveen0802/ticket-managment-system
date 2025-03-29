@@ -45,13 +45,13 @@ const FloatingLabelInput = ({
   return (
     <div className="relative w-full">
       <FloatingPlaceholder
-        className={`${labelClassName}`}
+        className={`${labelClassName} ${readOnly && "bg-gray-100"}`}
         isFocused={isFocused}
         hasError={!!error}
       >
         <span
           style={{ fontSize: isFocused ? "11px" : "13px" }}
-          className={`${labelClassName} ${
+          className={`${labelClassName} ${readOnly && "bg-gray-100"} ${
             error ? "text-red-500" : "text-[#808082]"
           } }`}
         >
@@ -80,7 +80,7 @@ const FloatingLabelInput = ({
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 focus:outline-none cursor-pointer"
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
-          {showPassword ? (
+          {!showPassword ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"

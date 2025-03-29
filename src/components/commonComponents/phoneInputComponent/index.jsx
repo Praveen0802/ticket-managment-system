@@ -38,7 +38,7 @@ const PhoneInputComponent = ({
       <div className="relative">
         <button
           type="button"
-          className={`flex items-center justify-between w-fit px-3 py-2 border border-gray-300 rounded-l text-gray-700  ${
+          className={`flex items-center justify-between w-fit !py-[6px] !px-[10px] text-[13px] border border-gray-300 rounded-l text-gray-700  ${
             readOnly
               ? "cursor-not-allowed bg-gray-100 text-gray-400"
               : "bg-white"
@@ -59,7 +59,7 @@ const PhoneInputComponent = ({
             {countryCodes.map((country) => (
               <button
                 key={country.code}
-                className="w-full px-3 py-2 text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                className="w-full !py-[6px] text-[13px] !px-[10px] text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                 onClick={() => selectCountryCode(country.code, country.label)}
               >
                 {country.label}
@@ -72,7 +72,7 @@ const PhoneInputComponent = ({
       {/* Phone number input */}
       <input
         type="tel"
-        className={`flex-1 px-3 py-2 border border-l-0 border-gray-300 rounded-r focus:outline-none ${
+        className={`flex-1 !py-[6px] !px-[10px] text-[13px] border border-l-0 border-gray-300 rounded-r focus:outline-none ${
           readOnly ? "bg-gray-100 cursor-not-allowed text-gray-400" : ""
         }`}
         value={value}

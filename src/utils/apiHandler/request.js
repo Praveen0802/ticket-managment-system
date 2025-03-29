@@ -94,7 +94,8 @@ export const fetchAddressBookDetails = async (
   token,
   id,
   method = "GET",
-  data
+  data,
+  params
 ) => {
   try {
     const response = await makeRequest({
@@ -102,6 +103,7 @@ export const fetchAddressBookDetails = async (
       method: method,
       ...(token && { token: token }),
       ...(data && { data: data }),
+      ...(params && { params: params }),
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
@@ -172,7 +174,8 @@ export const fetchBankAccountDetails = async (
   token,
   id,
   method = "GET",
-  data
+  data,
+  params
 ) => {
   try {
     const response = await makeRequest({
@@ -180,6 +183,7 @@ export const fetchBankAccountDetails = async (
       method: method,
       ...(token && { token: token }),
       ...(data && { data: data }),
+      ...(params && { params: params }),
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {

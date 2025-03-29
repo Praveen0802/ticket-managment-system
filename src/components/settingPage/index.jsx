@@ -27,12 +27,12 @@ const SettingsPage = (props) => {
       key: "myAccount",
     },
     {
-      icon: <IconStore.users className={IconclassName} />,
+      icon: <IconStore.password className={IconclassName} />,
       title: "Change Password",
       key: "changepassword",
     },
     {
-      icon: <IconStore.userPlus className={IconclassName} />,
+      icon: <IconStore.myContacts className={IconclassName} />,
       title: "Address Book",
       key: "addressBook",
     },

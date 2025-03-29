@@ -14,7 +14,7 @@ import {
 } from "../apiHandler/request";
 
 export const fetchSettingsPageDetails = async (profile, token) => {
-  const validProfiles = ["myAccount", "changepassword", "addressBook"];
+  const validProfiles = ["myAccount", "changepassword"];
 
   try {
     if (validProfiles?.includes(profile)) {
@@ -25,6 +25,19 @@ export const fetchSettingsPageDetails = async (profile, token) => {
           fetchCountrieList(token),
         ]);
       return { addressDetails, profileDetails, fetchCountries };
+    } else if (profile === "addressBook") {
+      const [primaryAddress, defaultAddress, profileDetails, fetchCountries] =
+        await Promise.all([
+          fetchAddressBookDetails(token, "", "GET", "", {
+            is_primary_address: 1,
+          }),
+          fetchAddressBookDetails(token, "", "GET", "", {
+            is_primary_address: 0,
+          }),
+          fetchProfileDetails(token, "GET"),
+          fetchCountrieList(token),
+        ]);
+      return { primaryAddress, defaultAddress, profileDetails, fetchCountries };
     } else if (profile === "bankAccounts") {
       const [bankDetails, fetchCountries] = await Promise.all([
         fetchBankAccountDetails(token),

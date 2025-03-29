@@ -11,13 +11,20 @@ const ChangePassword = (props) => {
     confirmPassword: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e, key) => {
     const value = e.target.value;
+    setError('')
     setPasswordData({ ...passwordData, [key]: value });
   };
 
   const handleSubmit = async () => {
+    if (passwordData?.newPassword != passwordData?.confirmPassword) {
+      setError("Password and confirm password does not match");
+      return;
+    }
+    setError("");
     setIsSubmitting(true);
     const payload = {
       user_name: profileDetails?.email,
@@ -36,7 +43,7 @@ const ChangePassword = (props) => {
       id: "newPassword",
       name: "newPassword",
       type: "password",
-      label: "New Password",
+      label: "Password",
       value: passwordData?.newPassword,
       onChange: handleChange,
       placeholder: "Enter new password",
@@ -68,26 +75,23 @@ const ChangePassword = (props) => {
       <div className="bg-white border-[1px] border-[#eaeaf1] h-full">
         <div className="p-3 md:p-6 flex flex-col gap-4 md:gap-6 border-[1px] border-[#eaeaf1]">
           <h3 className="text-base md:text-lg font-medium">Account password</h3>
-          <p className="text-gray-600 text-sm md:text-base">
+          <p className="text-gray-600 font-medium text-sm md:text-base">
             Change your account password
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-[60%]">
-            <FormFields formFields={formFields} className="w-full" />
+          <div>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-[60%]">
+              <FormFields formFields={formFields} className="w-full" />
+            </div>
+            {error && <p className="text-red-600 text-sm">{error}</p>}
           </div>
+
           <Button
             label="Submit"
             type="primary"
-            disabled={!enabled}
             onClick={handleSubmit}
             classNames={{
-              root: `py-1 px-3 md:px-[14px] w-fit transition-all duration-200 ${
-                enabled
-                  ? "bg-[#130061] hover:bg-[#0f0053]"
-                  : "bg-gray-300 opacity-50 cursor-not-allowed"
-              }`,
-              label_: `text-xs md:text-sm font-normal ${
-                enabled ? "text-white" : "text-gray-400"
-              }`,
+              root: `py-1 px-3 md:px-[14px] w-fit transition-all duration-200 ${"bg-[#130061] hover:bg-[#0f0053]"}`,
+              label_: `text-xs md:text-sm font-normal ${"text-white"}`,
             }}
           />
         </div>
