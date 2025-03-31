@@ -47,7 +47,7 @@ export const fetchSettingsPageDetails = async (profile, token) => {
         bankDetails,
         fetchCountries,
       };
-    } else if (profile == "myTeam") {
+    } else if (profile == "myCustomers") {
       const [userDetails, fetchCountries] = await Promise.all([
         fetchUserDetails(token),
         fetchCountrieList(token),
@@ -59,13 +59,19 @@ export const fetchSettingsPageDetails = async (profile, token) => {
 
 export const fetchWalletPageDetails = async (token) => {
   try {
-    const [walletBalance, depositHistory, transactionHistory] =
+    const [walletBalance, depositHistory, transactionHistory, countriesList] =
       await Promise.all([
         fetchWalletBalance(token),
         fetchDepositHistoryMonthly(token),
         fetchTransactionHistoryMonthly(token),
+        fetchCountrieList(token),
       ]);
-    return { ...transactionHistory, ...depositHistory, ...walletBalance };
+    return {
+      ...transactionHistory,
+      ...depositHistory,
+      ...walletBalance,
+      countriesList,
+    };
   } catch {}
 };
 

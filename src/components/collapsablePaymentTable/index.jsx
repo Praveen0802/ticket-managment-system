@@ -1,25 +1,43 @@
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React, { useState, useRef, useEffect } from "react";
+import StatusBadge from "../reportsPage/components/statusbadge";
+import TableShimmer from "./TableShimmer"; // Import the new TableShimmer component
 
-const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
+const CollapsablePaymentTable = ({
+  sections,
+  onRowClick,
+  selectedTab,
+  isLoading = false,
+}) => {
   const [expandedSections, setExpandedSections] = useState(
-    sections.map((_, index) => index === 0)
+    sections?.map((_, index) => index === 0) || []
   );
 
-  const contentRefs = useRef(sections.map(() => React.createRef()));
-  const [contentHeights, setContentHeights] = useState(sections.map(() => 0));
+  const contentRefs = useRef(sections?.map(() => React.createRef()) || []);
+  const [contentHeights, setContentHeights] = useState(
+    sections?.map(() => 0) || []
+  );
 
   useEffect(() => {
     // Calculate heights of all section contents
-    contentRefs.current.forEach((ref, index) => {
-      if (ref.current) {
-        setContentHeights((prev) => {
-          const newHeights = [...prev];
-          newHeights[index] = ref.current.scrollHeight;
-          return newHeights;
-        });
-      }
-    });
+    if (!isLoading && contentRefs.current.length > 0) {
+      contentRefs.current.forEach((ref, index) => {
+        if (ref.current) {
+          setContentHeights((prev) => {
+            const newHeights = [...prev];
+            newHeights[index] = ref.current.scrollHeight;
+            return newHeights;
+          });
+        }
+      });
+    }
+  }, [sections, isLoading]);
+
+  // Reset expanded sections when data changes
+  useEffect(() => {
+    if (!isLoading && sections?.length > 0) {
+      setExpandedSections(sections.map((_, index) => index === 0));
+    }
   }, [sections]);
 
   const toggleSection = (index) => {
@@ -28,13 +46,31 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
     setExpandedSections(newExpandedSections);
   };
 
+  // If loading is true, show shimmer effect
+  if (isLoading) {
+    return <TableShimmer rowCount={5} columnCount={6} />;
+  }
+
+  // If no sections are available
+  if (!sections || sections.length === 0) {
+    return (
+      <div className="w-full flex justify-center items-center p-6 bg-white border border-[#E0E1EA] rounded-[6px]">
+        <p className="text-[#7D82A4] text-sm">No data available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col gap-4 mobile:gap-2">
       {sections.map((section, sectionIndex) => (
         <div key={sectionIndex} className="mb-1 overflow-hidden">
           {/* Section Header */}
           <div
-            className="flex items-center justify-between bg-[#130061] rounded-t-xl text-white px-4 py-3 cursor-pointer mobile:px-3 mobile:py-2"
+            className={`flex items-center justify-between ${
+              !expandedSections[sectionIndex]
+                ? "rounded-[6px]"
+                : "rounded-t-[6px]"
+            } bg-[#130061]  text-white px-4 py-3 cursor-pointer mobile:px-3 mobile:py-2`}
             onClick={() => toggleSection(sectionIndex)}
           >
             <h3 className="text-[14px] font-semibold mobile:text-xs">
@@ -61,7 +97,7 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
           {/* Section Content with Animation */}
           <div
             ref={contentRefs.current[sectionIndex]}
-            className="overflow-hidden transition-all duration-300 ease-in-out"
+            className="overflow-hidden transition-all duration-300 ease-in-out rounded-b-[6px] border-b border-[#E0E1EA]"
             style={{
               maxHeight: expandedSections[sectionIndex]
                 ? `${contentHeights[sectionIndex]}px`
@@ -76,7 +112,13 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
                     {section.headers.map((header, idx) => (
                       <th
                         key={idx}
-                        className="p-3 mobile:p-2 text-left text-[12px] mobile:text-[10px] text-[#7D82A4] font-normal border border-[#E0E1EA]"
+                        className={`${
+                          idx === 0
+                            ? "border-l border-[#E0E1EA]"
+                            : idx === section.headers.length - 1
+                            ? "border-r border-[#E0E1EA]"
+                            : ""
+                        } p-3 mobile:p-2 text-left text-[12px] mobile:text-[10px] text-[#7D82A4] font-normal border-b-[1px] border-[#E0E1EA]`}
                       >
                         {header}
                       </th>
@@ -84,57 +126,111 @@ const CollapsablePaymentTable = ({ sections, onRowClick, selectedTab }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {section.data.map((row, rowIndex) => (
-                    <tr key={rowIndex} className="mobile:text-xs">
-                      {Object.entries(row).map(([key, values], cellIndex) => {
-                        if (key == "id") return null;
-                        const statusKey = key === "status";
-                        const eyeKey = key === "eye";
-                        return (
-                          <td
-                            onClick={() => {
-                              eyeKey &&
-                                onRowClick(
-                                  row,
-                                  selectedTab == "transaction"
-                                    ? "transaction"
-                                    : "wallet"
-                                );
-                            }}
-                            className={`py-3 pl-4 mobile:py-2 mobile:pl-2 ${
-                              key === "eye" && "w-[56px] hover:bg-gray-100"
-                            } text-left text-[12px] mobile:text-[10px] border-b border-[#E0E1EA] ${
-                              statusKey
-                                ? values?.toLowerCase() === "paid"
-                                  ? "!text-[#03BA8A] w-fit px-[6px] py-[4px] rounded-md"
-                                  : values?.toLowerCase() === "pending"
-                                  ? "text-[#F57B1B] w-fit px-[6px] py-[4px] rounded-md"
+                  {section.data.map((row, rowIndex) => {
+                    const isLastRow = rowIndex === section.data.length - 1;
+
+                    return (
+                      <tr key={rowIndex} className="mobile:text-xs">
+                        {Object.entries(row).map(([key, values], cellIndex) => {
+                          if (key == "id") return null;
+                          const statusKey = key === "status";
+                          const eyeKey = key === "eye";
+                          const isFirstCell = cellIndex === 0;
+                          const isLastCell =
+                            cellIndex ===
+                            Object.keys(row).filter((k) => k !== "id").length -
+                              1;
+
+                          // Format payment method to show credited/debited with appropriate sign
+                          let displayValue = values;
+                          let icon = null;
+
+                          if (key === "paymentMethod") {
+                            if (values?.toLowerCase() === "credit") {
+                              icon = (
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100 mr-1">
+                                  <p className="text-green-600">+</p>
+                                </span>
+                              );
+                              displayValue = "Credited";
+                            } else if (values?.toLowerCase() === "debit") {
+                              icon = (
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-100 mr-1">
+                                  <p className="text-red-600">-</p>
+                                </span>
+                              );
+                              displayValue = "Debited";
+                            }
+                          }
+
+                          return (
+                            <td
+                              onClick={() => {
+                                eyeKey &&
+                                  onRowClick(
+                                    row,
+                                    selectedTab == "transaction"
+                                      ? "transaction"
+                                      : "wallet"
+                                  );
+                              }}
+                              className={`py-3 pl-4 mobile:py-2 mobile:pl-2 ${
+                                key === "eye" && "w-[56px] hover:bg-gray-100"
+                              } text-left text-[12px] mobile:text-[10px] ${
+                                isLastRow ? "border-b-0" : "border-b"
+                              } border-[#E0E1EA] ${
+                                eyeKey && "border-l-[1px] cursor-pointer"
+                              } ${
+                                key === "paymentMethod" && values === "credit"
+                                  ? "text-green-500"
+                                  : key === "paymentMethod" &&
+                                    values === "debit"
+                                  ? "text-red-500"
+                                  : cellIndex === section.headers.length - 1 &&
+                                    (values === "Sent" || values === "Approved")
+                                  ? "text-green-400"
+                                  : "text-[#323A70]"
+                              } ${
+                                isFirstCell
+                                  ? `border-l border-[#E0E1EA] ${
+                                      isLastRow ? "rounded-bl-[6px]" : ""
+                                    }`
+                                  : isLastCell
+                                  ? `border-r border-[#E0E1EA] ${
+                                      isLastRow ? "rounded-br-[6px]" : ""
+                                    }`
                                   : ""
-                                : ""
-                            } ${eyeKey && "border-l-[1px] cursor-pointer"} ${
-                              cellIndex === section.headers.length - 1 &&
-                              (values === "Sent" || values === "Approved")
-                                ? "text-green-400"
-                                : "text-[#323A70]"
-                            } ${
-                              cellIndex === 0
-                                ? "border-l border-[#E0E1EA]"
-                                : cellIndex === section.headers.length - 1
-                                ? "border-r border-[#E0E1EA]"
-                                : ""
-                            }`}
-                            key={cellIndex}
-                          >
-                            {key === "eye" && values ? (
-                              <IconStore.eye className="stroke-black size-4 mobile:size-3" />
-                            ) : (
-                              values
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                              }`}
+                              key={cellIndex}
+                            >
+                              {key === "eye" && values ? (
+                                <IconStore.eye className="stroke-black size-4 mobile:size-3" />
+                              ) : statusKey ? (
+                                <StatusBadge status={values} />
+                              ) : key === "paymentMethod" ? (
+                                <div className="flex items-center">
+                                  {icon}
+                                  <span
+                                    className={`font-medium ${
+                                      values?.toLowerCase() === "credit"
+                                        ? "text-green-600"
+                                        : values?.toLowerCase() === "debit"
+                                        ? "text-red-600"
+                                        : ""
+                                    }`}
+                                  >
+                                    {displayValue}
+                                  </span>
+                                </div>
+                              ) : (
+                                displayValue
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

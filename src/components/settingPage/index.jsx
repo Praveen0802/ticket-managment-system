@@ -36,15 +36,15 @@ const SettingsPage = (props) => {
       title: "Address Book",
       key: "addressBook",
     },
+    // {
+    //   icon: <IconStore.profile className={IconclassName} />,
+    //   title: "Bank Accounts",
+    //   key: "bankAccounts",
+    // },
     {
       icon: <IconStore.profile className={IconclassName} />,
-      title: "Bank Accounts",
-      key: "bankAccounts",
-    },
-    {
-      icon: <IconStore.profile className={IconclassName} />,
-      title: "My Team",
-      key: "myTeam",
+      title: "My Customers",
+      key: "myCustomers",
     },
   ];
 
@@ -64,7 +64,7 @@ const SettingsPage = (props) => {
     changepassword: <ChangePassword {...apiData} />,
     addressBook: <AddressBook {...apiData} />,
     bankAccounts: <BankAccounts {...apiData} />,
-    myTeam: <MyTeamView {...apiData} />,
+    myCustomers: <MyTeamView {...apiData} />,
     // txPay: <TXPay />,
   };
 

@@ -20,32 +20,28 @@ const PaymentGateway = () => {
   // Load Adyen scripts and styles exactly like in your HTML version
   useEffect(() => {
     // First load CSS
-    const linkElement = document.createElement("link");
-    linkElement.rel = "stylesheet";
-    linkElement.href =
-      "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.css";
-    linkElement.integrity =
-      "sha384-zy4t7axSdzHBMGqwJAynlv3eFVNiWw68LMf7vgKXxl2zZ6A8FlpucOoA/J//GBaQ";
-    linkElement.crossOrigin = "anonymous";
+    const linkElement = document.createElement('link');
+    linkElement.rel = 'stylesheet';
+    linkElement.href = 'https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.css';
+    linkElement.integrity = 'sha384-zy4t7axSdzHBMGqwJAynlv3eFVNiWw68LMf7vgKXxl2zZ6A8FlpucOoA/J//GBaQ';
+    linkElement.crossOrigin = 'anonymous';
     document.head.appendChild(linkElement);
 
     // Then load JS
-    const scriptElement = document.createElement("script");
-    scriptElement.src =
-      "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.js";
-    scriptElement.integrity =
-      "sha384-eOf0O1MTPGB1DQpr+Yha0MrmJruQb5S82+tuyo4sLiyfo1hgbf6W+fNfLjjU7Sks";
-    scriptElement.crossOrigin = "anonymous";
-
+    const scriptElement = document.createElement('script');
+    scriptElement.src = 'https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.js';
+    scriptElement.integrity = 'sha384-eOf0O1MTPGB1DQpr+Yha0MrmJruQb5S82+tuyo4sLiyfo1hgbf6W+fNfLjjU7Sks';
+    scriptElement.crossOrigin = 'anonymous';
+    
     scriptElement.onload = () => {
-      console.log("Adyen JS loaded successfully");
+      console.log('Adyen JS loaded successfully');
       setAdyenLoaded(true);
     };
-
+    
     scriptElement.onerror = (error) => {
-      console.error("Error loading Adyen JS:", error);
+      console.error('Error loading Adyen JS:', error);
     };
-
+    
     document.head.appendChild(scriptElement);
 
     // Cleanup function
@@ -110,17 +106,16 @@ const PaymentGateway = () => {
     }
 
     setIsLoading(true);
-
+    
     try {
       // Clear any existing content
-      const container = document.getElementById("dropin-container");
+      const container = document.getElementById('dropin-container');
       if (container) {
-        container.innerHTML = "";
+        container.innerHTML = '';
       }
-
+      
       const config = await getPaymentDetails();
-      console.log("Payment Config:", config); // Log config to ensure it's valid
-
+      
       if (!config || !config.clientKey || !config.paymentMethods) {
         console.error("Invalid config received:", config);
         alert("Failed to initialize payment form: Invalid configuration");
@@ -129,20 +124,18 @@ const PaymentGateway = () => {
       }
 
       // Create checkout instance using window.AdyenCheckout like in your HTML code
-      if (typeof window.AdyenCheckout !== "function") {
-        throw new Error(
-          "AdyenCheckout not available. Make sure the script is loaded properly."
-        );
+      if (typeof window.AdyenCheckout !== 'function') {
+        throw new Error('AdyenCheckout not available. Make sure the script is loaded properly.');
       }
 
       const checkout = await window.AdyenCheckout({
-        environment: "test",
+        environment: 'test',
         clientKey: config.clientKey,
         paymentMethodsResponse: config.paymentMethods,
         merchantOrigin: window.location.origin,
         showPayButton: true,
         translations: {
-          en_US: { payButton: "Link Card" },
+          en_US: { "payButton": "Link Card" }
         },
         onSubmit: async (state, component) => {
           try {
@@ -156,7 +149,7 @@ const PaymentGateway = () => {
               },
               shopperReference: shopperReference,
             };
-
+            
             const result = await storePaymentMethod("", payload);
             if (result.success) {
               alert("Card linked successfully!");
@@ -170,17 +163,17 @@ const PaymentGateway = () => {
             console.error("Error in onSubmit:", error);
             component.setStatus("error");
           }
-        },
+        }
       });
-
+      
       // Mount the card component
-      checkout.create("card").mount("#dropin-container");
+      checkout.create('card').mount('#dropin-container');
     } catch (error) {
       console.error("Error initializing Adyen:", error);
       alert(`Failed to initialize payment form: ${error.message}`);
-
+      
       // Display error in the container
-      const container = document.getElementById("dropin-container");
+      const container = document.getElementById('dropin-container');
       if (container) {
         container.innerHTML = `
           <div style="text-align: center; padding: 20px; color: red;">

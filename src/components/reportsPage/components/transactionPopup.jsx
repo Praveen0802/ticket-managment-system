@@ -23,7 +23,7 @@ const TransactionPopup = ({ data, onClose }) => {
         </div>
         <button
           onClick={onClose}
-          className="hover:bg-gray-100 p-1 rounded-full"
+          className="hover:bg-gray-100 p-1 cursor-pointer rounded-full"
         >
           <IconStore.close className="size-5" />
         </button>
@@ -57,14 +57,7 @@ const TransactionPopup = ({ data, onClose }) => {
         </div>
       </div>
 
-      <div className="p-4 border-t border-gray-200 flex justify-end">
-        <button
-          onClick={onClose}
-          className="px-4 py-2 bg-[#323A70] text-white rounded-md text-sm hover:bg-[#252d57] transition-colors"
-        >
-          Close
-        </button>
-      </div>
+ 
 
       {/* Mobile-specific styling */}
       <style jsx>{`

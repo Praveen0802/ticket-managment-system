@@ -3,6 +3,8 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React from "react";
 
 const DepositPopup = ({ onClose, data }) => {
+  console.log(data, 'datadata');
+  
   const formatDescription = (desc) => {
     if (!desc) return "";
 
@@ -27,6 +29,40 @@ const DepositPopup = ({ onClose, data }) => {
     return desc.split(" - DATA -")[0] || desc;
   };
 
+  // Status helper functions
+  const getStatusText = (status) => {
+    switch (status) {
+      case 1:
+        return "Approved";
+      case 2:
+        return "Pending";
+      case 3:
+        return "Rejected";
+      default:
+        return "Unknown";
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 1:
+        return "bg-green-100 text-green-800"; // Green for Approved
+      case 2:
+        return "bg-blue-100 text-blue-800"; // Blue for Pending
+      case 3:
+        return "bg-red-100 text-red-800"; // Red for Rejected
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // Download proof function
+  const handleDownloadProof = () => {
+    if (data?.proof) {
+      window.open(data.proof, '_blank');
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -41,7 +77,7 @@ const DepositPopup = ({ onClose, data }) => {
         </div>
         <button
           onClick={onClose}
-          className="hover:bg-gray-100 p-2 rounded-full transition-colors"
+          className="hover:bg-gray-100 cursor-pointer p-2 rounded-full transition-colors"
         >
           <IconStore.close className="size-5 text-gray-500" />
         </button>
@@ -53,6 +89,11 @@ const DepositPopup = ({ onClose, data }) => {
         <div className="mx-6 my-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-3">
           <div className="flex justify-between mb-2">
             <span className="text-sm font-medium text-gray-600">Amount</span>
+            {data?.status && (
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(data.status)}`}>
+                {getStatusText(data.status)}
+              </span>
+            )}
           </div>
           <div className="flex items-baseline">
             <h1 className="text-2xl font-bold text-[#323A70]">
@@ -66,7 +107,7 @@ const DepositPopup = ({ onClose, data }) => {
 
         {/* Transaction Details */}
         <div className="mx-6 mb-4 bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <div className="px-4 py-3 border-b border-gray-200">
             <h3 className="font-medium text-gray-700">
               Transaction Information
             </h3>
@@ -91,6 +132,12 @@ const DepositPopup = ({ onClose, data }) => {
               </span>
             </div>
             <div className="flex justify-between items-center px-4 py-3">
+              <span className="text-sm text-gray-600">Status</span>
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(data?.status)}`}>
+                {getStatusText(data?.status)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center px-4 py-3">
               <span className="text-sm text-gray-600">Payment Method</span>
               <span className="text-sm font-medium text-gray-800">
                 {data?.payment_transfer_by}
@@ -99,9 +146,29 @@ const DepositPopup = ({ onClose, data }) => {
           </div>
         </div>
 
+        {/* Proof Document */}
+        {data?.proof && (
+          <div className="mx-6 mb-4 bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-200">
+              <h3 className="font-medium text-gray-700">
+                Payment Proof
+              </h3>
+            </div>
+            <div className="px-4 py-3">
+              <button
+                onClick={handleDownloadProof}
+                className="flex items-cente cursor-pointer justify-center w-full py-2 px-4 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors border border-blue-200"
+              >
+                <IconStore.download className="size-4 mr-2" />
+                <span className="text-sm font-medium">Download Proof Document</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Notes and Description */}
         <div className="mx-6 mb-4 bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <div className="px-4 py-3 border-b border-gray-200">
             <h3 className="font-medium text-gray-700">
               Additional Information
             </h3>

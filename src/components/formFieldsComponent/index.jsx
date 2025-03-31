@@ -7,58 +7,96 @@ const FormFields = ({ formFields }) => {
   return (
     <>
       {formFields?.map((field, index) => {
+        const {
+          type,
+          label,
+          id,
+          name,
+          value,
+          onChange,
+          className,
+          labelClassName,
+          mandatory,
+          disabled,
+          readOnly,
+          options,
+          searchable,
+          placeholder,
+          error,
+          rightIcon,
+          accept,
+          buttonText,
+          allowedFileTypes,
+          maxFileSize,
+          render,
+          customComponent,
+        } = field;
+
+        const keyValue = field?.name || field?.key || id;
+
         return (
-          <Fragment key={index}>
-            {field?.type === "select" ? (
+          <Fragment key={`${keyValue || index}`}>
+            {type === "select" ? (
               <FloatingSelect
-                label={field?.label}
-                keyValue={field?.name || field?.key}
-                options={field?.options}
-                mandatory={field?.mandatory}
-                selectedValue={field?.value}
-                labelClassName={field?.labelClassName}
-                searchable={field?.searchable}
-                disabled={field?.disabled}
-                onSelect={field?.onChange}
-                paddingClassName={field?.className} // Wider horizontal padding
+                label={label}
+                id={id}
+                name={name}
+                keyValue={keyValue}
+                options={options || []}
+                mandatory={mandatory}
+                selectedValue={value}
+                labelClassName={labelClassName}
+                searchable={searchable}
+                disabled={disabled}
+                onSelect={onChange}
+                placeholder={placeholder}
+                error={error}
+                paddingClassName={className} // Using className for padding
               />
-            ) : field?.type === "text" ||
-              field?.type === "password" ||
-              field?.type === "email" ? (
+            ) : type === "text" || type === "password" || type === "email" ? (
               <FloatingLabelInput
-                id={field?.id}
-                name={field?.name}
-                keyValue={field?.name}
-                type={field?.type}
-                label={field?.label}
-                labelClassName={field?.labelClassName}
-                mandatory={field?.mandatory}
-                readOnly={field?.disabled}
-                className={field?.className}
-                value={field?.value}
-                onChange={field?.onChange}
+                id={id}
+                name={name}
+                keyValue={keyValue}
+                type={type}
+                label={label}
+                labelClassName={labelClassName}
+                mandatory={mandatory}
+                readOnly={readOnly || disabled}
+                className={className}
+                value={value}
+                onChange={onChange}
                 autoComplete="off"
-                required
+                required={mandatory}
+                placeholder={placeholder}
+                error={error}
+                rightIcon={rightIcon}
               />
-            ) : field?.type === "file" ? (
+            ) : type === "file" ? (
               <FloatingFileUpload
-                id={field?.id}
-                name={field?.name}
-                keyValue={field?.name}
-                label={field?.label}
-                labelClassName={field?.labelClassName}
-                mandatory={field?.mandatory}
-                disabled={field?.disabled}
-                className={field?.className}
-                value={field?.value}
-                onChange={field?.onChange}
-                accept={field?.accept}
-                buttonText={field?.buttonText || "Upload File"}
-                allowedFileTypes={field?.allowedFileTypes}
-                maxFileSize={field?.maxFileSize || 5}
+                id={id}
+                name={name}
+                keyValue={keyValue}
+                label={label}
+                labelClassName={labelClassName}
+                mandatory={mandatory}
+                disabled={disabled}
+                className={className}
+                value={value}
+                onChange={onChange}
+                accept={accept}
+                buttonText={buttonText || "Upload File"}
+                allowedFileTypes={allowedFileTypes}
+                maxFileSize={maxFileSize || 5}
+                error={error}
               />
-            ) : field?.render ? (
-              field.render()
+            ) : type === "custom" && customComponent ? (
+              <div className="w-full">
+                
+                {customComponent}
+              </div>
+            ) : render ? (
+              render()
             ) : (
               <></>
             )}

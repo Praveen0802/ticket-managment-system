@@ -10,12 +10,14 @@ import DeleteConfirmation from "../commonComponents/deleteConfirmation";
 import { toast } from "react-toastify";
 
 const MyTeamView = (props) => {
+
   const { userDetails, fetchCountries } = props;
   const { travel_Customers = [], meta = {} } = userDetails || {};
 
   const [travelCustomerValues, setTravelCustomerValues] =
     useState(travel_Customers);
   const [deleteLoader, setDeleteLoader] = useState(false);
+  const [isLoading,setIsLoading] = useState(false);
   const selectOptions = {
     options: [
       { value: "today", label: "Today" },
@@ -80,8 +82,10 @@ const MyTeamView = (props) => {
 
   const handleClosePopup = async (submit) => {
     if (submit?.submit) {
+      setIsLoading(true);
       const response = await fetchUserDetails();
       setTravelCustomerValues(response?.travel_Customers);
+      setIsLoading(false);
     }
     setUserViewPopup({ show: false, type: "" });
     setEditUserValues();
@@ -105,9 +109,11 @@ const MyTeamView = (props) => {
     setDeleteLoader(true);
     await fetchUserDetails("", deleteId, "DELETE");
     toast.success("User deleted successfully");
+    setIsLoading(true);
     const response = await fetchUserDetails();
     setTravelCustomerValues(response?.travel_Customers);
     setDeleteConfirmPopup(false);
+    setIsLoading(false);
     setDeleteLoader(false);
   };
 
@@ -125,24 +131,24 @@ const MyTeamView = (props) => {
       <div className="bg-white p-3 sm:p-4 border-[1px] flex flex-col gap-3 sm:gap-4 border-[#eaeaf1] w-full h-full">
         <div className="border-[1px] border-[#eaeaf1] rounded-md">
           {/* Search and filter area */}
-          {/* <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="border-[1px] flex gap-2 items-center px-1 py-[4px] w-full sm:w-[40%] border-[#eaeaf1] rounded-md">
               <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="search by customer name, email or phone number"
                 className="outline-none placeholder:text-[#130061] text-xs sm:text-sm text-[#130061] w-full"
               />
             </div>
-            <CustomSelect
+            {/* <CustomSelect
               selectedValue={selectOptions.selectedOption}
               options={selectOptions.options}
               onSelect={selectOptions.onChange}
               textSize="text-xs sm:text-sm"
               buttonPadding="px-[10px] py-[4px]"
               dropdownItemPadding="py-1 pl-2 pr-6"
-            />
-          </div> */}
+            /> */}
+          </div>
 
           {/* User count and pagination controls */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
@@ -209,9 +215,10 @@ const MyTeamView = (props) => {
             currentUsers={travelCustomerValues}
             handleEditClick={handleEditClick}
             handleDeleteClick={handleDeleteClick}
+            loading={isLoading}
           />
           <Button
-            label="Invite User"
+            label="+ Add Users"
             onClick={() => {
               setUserViewPopup({
                 show: true,
@@ -228,7 +235,7 @@ const MyTeamView = (props) => {
         show={userViewPopup?.show}
         onClose={handleClosePopup}
         className={"w-[600px]"}
-        outSideClickClose={true}
+        outSideClickClose={false}
       >
         <AddEditUser
           type={userViewPopup?.type}

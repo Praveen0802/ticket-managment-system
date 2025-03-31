@@ -50,7 +50,8 @@ const AddEditUser = ({
   };
 
   const fetchCityDetails = async (id) => {
-    if (id) {
+    if (!id) return;
+    try {
       const response = await fetchCityBasedonCountry("", { country_id: id });
       const cityField =
         response?.length > 0
@@ -59,11 +60,16 @@ const AddEditUser = ({
             })
           : [];
       setCityOptions(cityField);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+      toast.error("Failed to load cities");
     }
   };
 
   useEffect(() => {
-    fetchCityDetails(formFieldValues?.country);
+    if (formFieldValues?.country) {
+      fetchCityDetails(formFieldValues?.country);
+    }
   }, [formFieldValues?.country]);
 
   const isFormValid = () => {
@@ -85,144 +91,191 @@ const AddEditUser = ({
     label: list?.name,
   }));
 
-  // Consistent field styling with mobile responsiveness
-  const fieldStyle =
-    "w-full rounded-md border border-gray-200 p-3 text-gray-700 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 focus:outline-none transition-all duration-200 mobile:text-sm";
+  // Updated field styling to match AddEditAddress component
+  const fieldStyle = 
+    "w-full rounded-md border border-gray-300 p-3 text-gray-700 focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:outline-none transition-all duration-200";
 
-  // Form fields configuration
+  // Form fields configuration - now with city and zipcode included
   const userFormFields = [
-    {
-      label: "First Name",
-      type: "text",
-      id: "first_name",
-      mandatory: true,
-      name: "first_name",
-      value: formFieldValues?.first_name,
-      onChange: handleChange,
-      className: `!py-2 !px-4 ${fieldStyle}`,
-      labelClassName: "font-medium text-gray-500 mb-1 mobile:text-sm",
-      placeholder: "Enter first name",
-    },
-    {
-      label: "Last Name",
-      type: "text",
-      id: "last_name",
-      mandatory: true,
-      name: "last_name",
-      value: formFieldValues?.last_name,
-      onChange: handleChange,
-      className: `!py-2 !px-4 ${fieldStyle}`,
-      labelClassName: "font-medium text-gray-500 mb-1 mobile:text-sm",
-      placeholder: "Enter last name",
-    },
-    {
-      label: "Email",
-      type: "email",
-      id: "email",
-      mandatory: true,
-      name: "email",
-      value: formFieldValues?.email,
-      onChange: handleChange,
-      className: `!py-2 !px-4 ${fieldStyle}`,
-      labelClassName: "font-medium text-gray-500 mb-1 mobile:text-sm",
-      placeholder: "Enter email address",
-    },
-    {
-      label: "Phone",
-      type: "custom",
-      id: "phone_section",
-      customComponent: (
-        <div className="flex space-x-2 w-full">
-          <div className="w-1/4">
-            <FormFields
-              formFields={[
-                {
-                  type: "select",
-                  id: "phone_code",
-                  name: "phone_code",
-                  value: formFieldValues?.phone_code,
-                  onChange: handleChange,
-                  className: `!py-2 !px-4 ${fieldStyle}`,
-                  labelClassName:
-                    "font-medium text-gray-500 mb-1 mobile:text-sm",
-                  options: [{ value: 91, label: "+91" }], // You can expand this list
-                },
-              ]}
-            />
-          </div>
-          <div className="w-3/4">
-            <FormFields
-              formFields={[
-                {
-                  type: "text",
-                  id: "mobile_number",
-                  mandatory: true,
-                  name: "mobile_number",
-                  value: formFieldValues?.mobile_number,
-                  onChange: handleChange,
-                  className: `!py-2 !px-4 ${fieldStyle}`,
-                  labelClassName:
-                    "font-medium text-gray-500 mb-1 mobile:text-sm",
-                  placeholder: "Enter mobile number",
-                },
-              ]}
-            />
-          </div>
-        </div>
-      ),
-    },
-    {
-      label: "Address",
-      type: "text",
-      id: "address",
-      name: "address",
-      value: formFieldValues?.address,
-      onChange: handleChange,
-      className: `!py-2 !px-4 ${fieldStyle}`,
-      labelClassName: "font-medium text-gray-500 mb-1 mobile:text-sm",
-      placeholder: "Enter address",
-    },
-    {
-      label: "Country",
-      type: "select",
-      searchable: true,
-      mandatory: true,
-      id: "country",
-      name: "country",
-      value: formFieldValues?.country,
-      onChange: handleChange,
-      className: `!py-2 !px-4 ${fieldStyle}`,
-      labelClassName: "font-medium text-gray-500 mb-1 mobile:text-sm",
-      options: countryList,
-    },
-    {
-      label: "City",
-      type: "select",
-      id: "city",
-      name: "city",
-      searchable: true,
-      mandatory: true,
-      value: formFieldValues?.city,
-      onChange: handleChange,
-      disabled: !formFieldValues?.country,
-      className: `!py-2 !px-4 ${fieldStyle} ${
-        !formFieldValues?.country ? "opacity-60" : ""
-      }`,
-      labelClassName: "font-medium text-gray-500 mb-1 mobile:text-sm",
-      options: cityOptions,
-    },
-    {
-      label: "Zip Code",
-      type: "text",
-      mandatory: true,
-      id: "zipCode",
-      name: "zipCode",
-      value: formFieldValues?.zipCode,
-      onChange: handleChange,
-      className: `!py-2 !px-4 ${fieldStyle}`,
-      labelClassName: "font-medium text-gray-500 mb-1 mobile:text-sm",
-      placeholder: "Enter postal code",
-    },
+    [
+      {
+        label: "First Name",
+        type: "text",
+        id: "first_name",
+        mandatory: true,
+        name: "first_name",
+        value: formFieldValues?.first_name,
+        onChange: (e) => handleChange(e, "first_name"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        placeholder: "Enter first name",
+        rightIcon: formFieldValues?.first_name ? () => (
+          <span className="text-green-500">
+            <IconStore.circleTick className="size-5" />
+          </span>
+        ) : null,
+      },
+    ],
+    [
+      {
+        label: "Last Name",
+        type: "text",
+        id: "last_name",
+        mandatory: true,
+        name: "last_name",
+        value: formFieldValues?.last_name,
+        onChange: (e) => handleChange(e, "last_name"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        placeholder: "Enter last name",
+        rightIcon: formFieldValues?.last_name ? () => (
+          <span className="text-green-500">
+            <IconStore.circleTick className="size-5" />
+          </span>
+        ) : null,
+      },
+    ],
+    [
+      {
+        label: "Email",
+        type: "email",
+        id: "email",
+        mandatory: true,
+        name: "email",
+        value: formFieldValues?.email,
+        onChange: (e) => handleChange(e, "email"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        placeholder: "Enter email address",
+        rightIcon: formFieldValues?.email ? () => (
+          <span className="text-green-500">
+            <IconStore.circleTick className="size-5" />
+          </span>
+        ) : null,
+      },
+    ],
+    [
+      {
+        label: "Phone",
+        type: "custom",
+        id: "phone_section",
+        customComponent: (
+            <div className="flex space-x-2 w-full">
+              <div className="w-1/4">
+                <FormFields
+                  formFields={[
+                    {
+                      type: "select",
+                      id: "phone_code",
+                      name: "phone_code",
+                      value: formFieldValues?.phone_code,
+                      onChange: (e) => handleChange(e, "phone_code", "select"),
+                      className: `!py-2 !px-4 ${fieldStyle}`,
+                      options: [{ value: 91, label: "+91" }],
+                    },
+                  ]}
+                />
+              </div>
+              <div className="w-3/4">
+                <FormFields
+                  formFields={[
+                    {
+                      type: "text",
+                      id: "mobile_number",
+                      label:'Phone Number',
+                      name: "mobile_number",
+                      value: formFieldValues?.mobile_number,
+                      onChange: (e) => handleChange(e, "mobile_number"),
+                      className: `!py-2 !px-4 ${fieldStyle}`,
+                      placeholder: "Enter mobile number",
+                      rightIcon: formFieldValues?.mobile_number ? () => (
+                        <span className="text-green-500">
+                          <IconStore.circleTick className="size-5" />
+                        </span>
+                      ) : null,
+                    },
+                  ]}
+                />
+              </div>
+            </div>
+        ),
+      },
+    ],
+    [
+      {
+        label: "Address",
+        type: "text",
+        id: "address",
+        name: "address",
+        value: formFieldValues?.address,
+        onChange: (e) => handleChange(e, "address"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        placeholder: "Enter address",
+        rightIcon: formFieldValues?.address ? () => (
+          <span className="text-green-500">
+            <IconStore.circleTick className="size-5" />
+          </span>
+        ) : null,
+      },
+    ],
+    [
+      {
+        label: "Country",
+        type: "select",
+        searchable: true,
+        mandatory: true,
+        id: "country",
+        name: "country",
+        value: formFieldValues?.country,
+        onChange: (e) => handleChange(e, "country", "select"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        options: countryList?.length
+          ? countryList
+          : [{ value: "", label: "Select Country" }],
+      },
+    ],
+    [
+      {
+        label: "City",
+        type: "select",
+        id: "city",
+        name: "city",
+        searchable: true,
+        mandatory: true,
+        value: formFieldValues?.city,
+        onChange: (e) => handleChange(e, "city", "select"),
+        disabled: !formFieldValues?.country,
+        className: `!py-2 !px-4 ${fieldStyle} ${
+          !formFieldValues?.country ? "opacity-60" : ""
+        }`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        options: cityOptions,
+        rightIcon: formFieldValues?.city ? () => (
+          <span className="text-green-500">
+            <IconStore.circleTick className="size-5" />
+          </span>
+        ) : null,
+      },
+      {
+        label: "Zip Code",
+        type: "text",
+        mandatory: true,
+        id: "zipCode",
+        name: "zipCode",
+        value: formFieldValues?.zipCode,
+        onChange: (e) => handleChange(e, "zipCode"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        placeholder: "Enter postal code",
+        rightIcon: formFieldValues?.zipCode ? () => (
+          <span className="text-green-500">
+            <IconStore.circleTick className="size-5" />
+          </span>
+        ) : null,
+      },
+    ],
   ];
 
   const handleSubmit = async () => {
@@ -246,9 +299,7 @@ const AddEditUser = ({
         editType ? "PUT" : "POST",
         payload
       );
-      await toast.success(
-        `User ${editType ? "updated" : "added"} successfully`
-      );
+      toast.success(`User ${editType ? "updated" : "added"} successfully`);
       onClose({ submit: true });
     } catch (error) {
       toast.error(`Error in ${editType ? "updating" : "adding"} user`);
@@ -258,32 +309,56 @@ const AddEditUser = ({
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto rounded-lg relative bg-white mobile:w-[95%] mobile:mx-auto">
-      <div className="flex p-4 border-b border-gray-200 justify-between items-center rounded-t-lg mobile:p-3">
-        <h2 className="text-xl text-[#323A70] font-semibold mobile:text-lg">
-          {editType ? "Edit" : "Add"} User
+    <div className="w-full max-w-3xl flex flex-col gap-2 h-full mx-auto rounded-lg relative bg-white shadow-lg">
+      <div className="flex px-4 py-2 border-b border-gray-200 justify-between items-center">
+        <h2 className="text-[15px] font-semibold text-gray-800">
+          {editType ? "Edit User" : "Add New User"}
         </h2>
         <button
-          onClick={onClose}
-          className="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+          onClick={() => onClose({ submit: false })}
+          className="p-1 rounded-full hover:bg-gray-100 cursor-pointer transition-colors duration-200"
           aria-label="Close"
         >
-          <IconStore.close className="size-5 text-gray-600 mobile:size-4" />
+          <IconStore.close className="size-5 text-gray-600" />
         </button>
       </div>
 
-      <div className="p-6 flex flex-col gap-6 mobile:p-4 mobile:gap-4">
-        <FormFields formFields={userFormFields} />
+      <div className="p-6 flex flex-col gap-5 overflow-y-auto h-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormFields formFields={[userFormFields[0][0]]} />
+          <FormFields formFields={[userFormFields[1][0]]} />
+        </div>
+
+        <div className="w-full">
+          <FormFields formFields={[userFormFields[2][0]]} />
+        </div>
+
+        <div className="w-full">
+          <FormFields formFields={[userFormFields[3][0]]} />
+        </div>
+
+        <div className="w-full">
+          <FormFields formFields={[userFormFields[4][0]]} />
+        </div>
+
+        <div className="w-full">
+          <FormFields formFields={[userFormFields[5][0]]} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormFields formFields={[userFormFields[6][0]]} />
+          <FormFields formFields={[userFormFields[6][1]]} />
+        </div>
       </div>
 
-      <div className="fixed bottom-0 w-full px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end gap-3 mobile:px-4 mobile:py-3">
+      <div className="fixed bottom-0 w-full p-4 bg-white border-t border-gray-200 flex justify-end gap-3">
         <Button
           label="Cancel"
           type="secondary"
-          onClick={onClose}
+          onClick={() => onClose({ submit: false })}
           classNames={{
-            root: "py-2 px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200 mobile:px-3 mobile:py-2",
-            label_: "text-sm font-medium text-gray-700 mobile:text-xs",
+            root: "py-2 px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200",
+            label_: "text-sm font-medium text-gray-700",
           }}
         />
         <Button
@@ -293,14 +368,12 @@ const AddEditUser = ({
           loading={loader}
           onClick={handleSubmit}
           classNames={{
-            root: `py-2 px-6 rounded-md transition-all duration-200 mobile:px-4 mobile:py-2 ${
+            root: `py-2 px-5 rounded-md transition-all duration-200 ${
               isFormValid()
-                ? "bg-indigo-600 hover:bg-indigo-700"
-                : "bg-indigo-200 cursor-not-allowed"
+                ? "bg-green-500 hover:bg-green-600"
+                : "bg-green-300 cursor-not-allowed"
             }`,
-            label_: `text-sm font-medium mobile:text-xs ${
-              isFormValid() ? "text-white" : "text-[#323A70]"
-            }`,
+            label_: "text-sm font-medium text-white",
           }}
         />
       </div>

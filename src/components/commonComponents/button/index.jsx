@@ -37,7 +37,7 @@ const Button = (props) => {
   const { eventName, screen, custom } = tracking;
 
   const rootStyle = twMerge(
-    `font-medium text-[14px] rounded-[4px] flex items-center gap-[5px] bg-[none] p-[7px] px-[10px] relative overflow-hidden`,
+    `font-medium text-[14px]  rounded-[4px] flex items-center gap-[5px] bg-[none] p-[7px] px-[10px] relative overflow-hidden`,
     classNameMapping[type] || "border-[#E6EAEE] border-[1px]",
     root,
     tracking ? "event-track" : "",

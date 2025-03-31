@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const ROOT_URL = process.env.API_BASE_URL;
   const url = `${ROOT_URL}/${apiName}`.replace(/'/g, "");
   const authToken = decodeURIComponent(parsedCookie?.auth_token);
-
+console.log(url,'urlurl')
   await axios({
     url: url,
     method,
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       const responseData = err?.response?.data || {
         message: "Internal Server Error",
       };
-
+// console.log(err?.response,'errerrerr')
       res.status(statusCode).json(responseData);
     });
 }

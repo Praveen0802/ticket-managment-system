@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FloatingPlaceholder from "./floatingplaceolder";
 
 const FloatingSelect = ({
@@ -17,7 +17,8 @@ const FloatingSelect = ({
   required = false,
   labelClassName = "",
   disabled = false,
-  searchable = false, // New prop to enable search
+  searchable = false,
+  rightIcon = null,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(selectedValue);
@@ -101,7 +102,7 @@ const FloatingSelect = ({
     error
       ? "border-red-500"
       : isFocused
-      ? "border-[#DADBE5]"
+      ? "border-[#DADBE5] focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300"
       : "border-[#DADBE5]"
   } ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white cursor-pointer"}`;
 
@@ -149,20 +150,28 @@ const FloatingSelect = ({
             {getSelectedLabel() || (isFocused ? placeholder : "")}
           </span>
         )}
-        <svg
-          className={`w-5 h-5 ml-2 text-[#130061] transition-transform duration-200 ${
-            isOpen ? "transform rotate-180" : ""
-          } ${disabled ? "text-gray-400" : ""}`}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
+        
+        <div className="flex items-center">
+          {rightIcon && (
+            <div className="mr-2">
+              {typeof rightIcon === 'function' ? rightIcon() : rightIcon}
+            </div>
+          )}
+          <svg
+            className={`w-5 h-5 text-[#130061] transition-transform duration-200 ${
+              isOpen ? "transform rotate-180" : ""
+            } ${disabled ? "text-gray-400" : ""}`}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
       </div>
 
       {isOpen && !disabled && (

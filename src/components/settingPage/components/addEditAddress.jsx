@@ -97,7 +97,7 @@ const AddEditAddress = ({
         // Adding validation icons similar to the image
         rightIcon: formFieldValues?.address_title ? () => (
           <span className="text-green-500">
-            <IconStore.check className="size-4" />
+            <IconStore.circleTick className="size-5" />
           </span>
         ) : null,
       },
@@ -116,7 +116,7 @@ const AddEditAddress = ({
         placeholder: "Downtown Dubai",
         rightIcon: formFieldValues?.address_line_1 ? () => (
           <span className="text-green-500">
-            <IconStore.check className="size-4" />
+            <IconStore.circleTick className="size-5" />
           </span>
         ) : null,
       },
@@ -134,7 +134,7 @@ const AddEditAddress = ({
         placeholder: "Dubai",
         rightIcon: formFieldValues?.address_line_2 ? () => (
           <span className="text-green-500">
-            <IconStore.check className="size-4" />
+            <IconStore.circleTick className="size-5" />
           </span>
         ) : null,
       },
@@ -152,7 +152,7 @@ const AddEditAddress = ({
         placeholder: "",
         rightIcon: formFieldValues?.address_line_3 ? () => (
           <span className="text-green-500">
-            <IconStore.check className="size-4" />
+            <IconStore.circleTick className="size-5" />
           </span>
         ) : null,
       },
@@ -190,7 +190,7 @@ const AddEditAddress = ({
         options: cityOptions,
         rightIcon: formFieldValues?.city ? () => (
           <span className="text-green-500">
-            <IconStore.check className="size-4" />
+            <IconStore.circleTick className="size-5" />
           </span>
         ) : null,
       },
@@ -207,7 +207,7 @@ const AddEditAddress = ({
         placeholder: "12345",
         rightIcon: formFieldValues?.zipCode ? () => (
           <span className="text-green-500">
-            <IconStore.check className="size-4" />
+            <IconStore.circleTick className="size-5" />
           </span>
         ) : null,
       },
@@ -246,9 +246,9 @@ const AddEditAddress = ({
   };
 
   return (
-    <div className="w-full max-w-3xl h-full mx-auto rounded-lg relative bg-white shadow-lg">
-      <div className="flex p-4 border-b border-gray-200 justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-800">
+    <div className="w-full max-w-3x flex flex-col gap-2 h-full mx-auto rounded-lg relative bg-white shadow-lg">
+      <div className="flex px-4 py-2 border-b border-gray-200 justify-between items-center">
+        <h2 className="text-[15px] font-semibold text-gray-800">
           {editType ? "Edit address" : "Add new address"}
         </h2>
         <button
@@ -256,12 +256,12 @@ const AddEditAddress = ({
           className="p-1 rounded-full hover:bg-gray-100 cursor-pointer transition-colors duration-200"
           aria-label="Close"
         >
-          <IconStore.close className="size-4 text-gray-600" />
+          <IconStore.close className="size-5 text-gray-600" />
         </button>
       </div>
 
-      <div className="p-6 flex flex-col gap-6 overflow-y-auto h-full">
-        <div className="w-full">
+      <div className="p-6 flex flex-col gap-5 overflow-y-auto h-full">
+        <div className="w-1/2">
           <FormFields formFields={addressFormFields[0]} />
         </div>
 

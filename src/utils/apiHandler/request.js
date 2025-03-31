@@ -367,3 +367,49 @@ export const resetPassword = async (token, data) => {
     throw error;
   }
 };
+
+export const getPaymentDetails = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.GET_PAYMENT_CONFIG,
+      method: "GET",
+      ...(token && { token: token }),
+      ...(params && { params: params }),
+    });
+    return response?.data;
+  } catch (error) {
+    console.log("ERROR in getPaymentDetails", error);
+    throw error;
+  }
+};
+
+export const storePaymentMethod = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.STORE_PAYMENT_METHOD,
+      method: "POST",
+      data: data,
+      ...(token && { token: token }),
+    });
+    console.log(response, "responseresponseresponse");
+    return response?.data;
+  } catch (error) {
+    console.log("ERROR in storePaymentMethod", error);
+    throw error;
+  }
+};
+
+export const getLinkedCards = async (token, params, id) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.GET_PAYMENT_CONFIG}${id ? `/${id}` : ""}`,
+      method: "GET",
+      ...(token && { token: token }),
+      ...(params && { params: params }),
+    });
+    return response?.data;
+  } catch (error) {
+    console.log("ERROR in getLinkedCards", error);
+    throw error;
+  }
+};

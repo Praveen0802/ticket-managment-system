@@ -8,7 +8,7 @@ const ViewComponent = ({ item, onClick }) => {
     { key: "Confirmed Orders", value: item?.keys?.confirmedOrder },
     // { key: "On Hold", value: item?.keys?.onHold, hold: true },""
     { key: "Pending Delivery", value: item?.keys?.pendingDelivery },
-    { key: "Pending Payout", value: item?.keys?.pendingPayment },
+    { key: "Pending Payment", value: item?.keys?.pendingPayment },
   ];
   return (
     <div className="p-4 border-[1px] border-[#eaeaf1] rounded-md flex flex-col gap-2">
@@ -37,7 +37,10 @@ const ViewComponent = ({ item, onClick }) => {
                 <p className={`text-[#6A7097] text-[12px] font-normal`}>
                   {item?.key}
                 </p>
-                <IconStore.exclamatory className="size-4 stroke-[#6A7097]" />
+
+                <button title={`${item?.key}-${item?.value}`} className="cursor-text">
+                  <IconStore.exclamatory className="size-4 stroke-[#6A7097]" />
+                </button>
               </div>
               <p
                 className={`${
