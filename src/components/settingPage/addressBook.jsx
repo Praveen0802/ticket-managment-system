@@ -8,16 +8,51 @@ import AddressList from "./components/addressView/addressList";
 import AddressView from "./components/addressView";
 
 // Shimmer loader component
+// Shimmer loader component
 const ShimmerLoader = () => {
   return (
-    <div className="animate-pulse">
-      <div className="h-6 w-48 bg-gray-200 rounded mb-4"></div>
-      <div className="space-y-4">
-        <div className="h-4 w-36 bg-gray-200 rounded"></div>
-        <div className="h-24 bg-gray-200 rounded"></div>
-        <div className="h-4 w-36 bg-gray-200 rounded"></div>
-        <div className="h-24 bg-gray-200 rounded"></div>
-        <div className="h-8 w-36 bg-gray-200 rounded"></div>
+    <div className="animate-pulse flex flex-col gap-4 md:gap-6">
+      {/* Primary Address Section */}
+      <div>
+        <div className="h-6 w-48 bg-gray-200 rounded mb-4"></div>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="border-[1px] w-[50%] border-[#eaeaf1] rounded-lg">
+            <div className="flex justify-between items-center p-3 md:p-4 border-b-[1px] border-[#eaeaf1]">
+              <div className="h-5 w-36 bg-gray-200 rounded"></div>
+              <div className="h-4 w-4 bg-gray-200 rounded-full"></div>
+            </div>
+            <div className="p-3 md:p-4 min-h-[120px]">
+              <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+              <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
+            </div>
+            <div className="p-3 md:p-4 border-t-[1px] border-[#eaeaf1]">
+              <div className="h-4 w-32 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Default Address Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <div className="h-6 w-48 bg-gray-200 rounded"></div>
+          <div className="h-8 w-36 bg-gray-200 rounded"></div>
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="border-[1px] w-[50%] border-[#eaeaf1] rounded-lg">
+            <div className="flex justify-between items-center p-3 md:p-4 border-b-[1px] border-[#eaeaf1]">
+              <div className="h-5 w-36 bg-gray-200 rounded"></div>
+              <div className="h-4 w-4 bg-gray-200 rounded-full"></div>
+            </div>
+            <div className="p-3 md:p-4 min-h-[120px]">
+              <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+              <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
+            </div>
+            <div className="p-3 md:p-4 border-t-[1px] border-[#eaeaf1]">
+              <div className="h-4 w-32 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -36,7 +71,9 @@ const AddressBook = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const addressValues = addressBookDetails?.map((item) => {
-    const title = `Address - ${item.zip_code || "N/A"}`;
+    const title = `${item?.address_type ? item?.address_type : "Address"} - ${
+      item.zip_code || "N/A"
+    }`;
     const address = [
       item?.address || "N/A",
       item?.city || "N/A",
@@ -61,7 +98,9 @@ const AddressBook = (props) => {
   });
 
   const primaryValues = primaryAddressData?.map((item) => {
-    const title = `Address - ${item.zip_code || "N/A"}`;
+    const title = `${item?.address_type ? item?.address_type : "Address"} - ${
+      item.zip_code || "N/A"
+    }`;
     const address = [
       item?.address || "N/A",
       item?.city || "N/A",
@@ -88,8 +127,10 @@ const AddressBook = (props) => {
   const handleEditClick = async (item) => {
     setIsLoading(true);
     try {
-      const response = await fetchAddressBookDetails("", item?.id);
-      setEditAdressValues({ id: item?.id, ...response });
+      const response = await fetchAddressBookDetails("", "", "GET", "", {
+        id: item?.id,
+      });
+      setEditAdressValues({ id: item?.id, ...response[0] });
       setAddressViewPopup({
         show: true,
         type: "edit",
@@ -104,7 +145,7 @@ const AddressBook = (props) => {
       setIsLoading(true);
       try {
         const primaryAddress = await fetchAddressBookDetails(
-          '',
+          "",
           "",
           "GET",
           "",
@@ -113,7 +154,7 @@ const AddressBook = (props) => {
           }
         );
         const defaultAddress = await fetchAddressBookDetails(
-          '',
+          "",
           "",
           "GET",
           "",
@@ -152,20 +193,21 @@ const AddressBook = (props) => {
                 title="Default address"
                 handleEditClick={handleEditClick}
                 addressValues={addressValues}
-              />
-
-              <Button
-                label="+ Add New Address"
-                onClick={() => {
-                  setAddressViewPopup({
-                    show: true,
-                    type: "add",
-                  });
-                }}
-                classNames={{
-                  root: "bg-[#130061] py-1 px-3 w-fit md:px-[14px]",
-                  label_: "text-xs md:text-sm text-white font-normal",
-                }}
+                component={
+                  <Button
+                    label="+ Add New Address"
+                    onClick={() => {
+                      setAddressViewPopup({
+                        show: true,
+                        type: "add",
+                      });
+                    }}
+                    classNames={{
+                      root: "bg-[#130061] py-1 px-3 w-fit md:px-[14px]",
+                      label_: "text-xs md:text-sm text-white font-normal",
+                    }}
+                  />
+                }
               />
             </>
           )}

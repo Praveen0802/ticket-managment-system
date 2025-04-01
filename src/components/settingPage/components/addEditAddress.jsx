@@ -21,19 +21,21 @@ const AddEditAddress = ({
     country_id = "",
     city_id = "",
     zip_code = "",
+    address_type = "",
+    primary_address = "",
   } = addressDetails;
   const editType = type === "edit";
   const [loader, setLoader] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
   const [formFieldValues, setFormFieldValues] = useState({
-    address_title: "",
+    address_type: address_type,
     address_line_1: address,
     address_line_2: "",
     address_line_3: "",
     country: country_id,
     city: city_id,
     zipCode: zip_code,
-    is_default: false,
+    is_default: primary_address == 1 ? true : false,
   });
 
   const fetchCityDetails = async (id) => {
@@ -79,7 +81,7 @@ const AddEditAddress = ({
   });
 
   // Updated field style to match the design in the image
-  const fieldStyle = 
+  const fieldStyle =
     "w-full rounded-md border border-gray-300 p-3 text-gray-700 focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:outline-none transition-all duration-200";
 
   const addressFormFields = [
@@ -87,19 +89,21 @@ const AddEditAddress = ({
       {
         label: "Address title",
         type: "text",
-        id: "address_title",
-        name: "address_title",
-        value: formFieldValues?.address_title,
-        onChange: (e) => handleChange(e, "address_title"),
+        id: "address_type",
+        name: "address_type",
+        value: formFieldValues?.address_type,
+        onChange: (e) => handleChange(e, "address_type"),
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Downtown Dubai - 12345",
         // Adding validation icons similar to the image
-        rightIcon: formFieldValues?.address_title ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.address_type
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -114,11 +118,13 @@ const AddEditAddress = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Downtown Dubai",
-        rightIcon: formFieldValues?.address_line_1 ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.address_line_1
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -132,11 +138,13 @@ const AddEditAddress = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Dubai",
-        rightIcon: formFieldValues?.address_line_2 ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.address_line_2
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -150,11 +158,13 @@ const AddEditAddress = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "",
-        rightIcon: formFieldValues?.address_line_3 ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.address_line_3
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -188,11 +198,13 @@ const AddEditAddress = ({
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Dubai",
         options: cityOptions,
-        rightIcon: formFieldValues?.city ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.city
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
       {
         label: "Postcode/Zip",
@@ -205,11 +217,13 @@ const AddEditAddress = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "12345",
-        rightIcon: formFieldValues?.zipCode ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.zipCode
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
   ];
@@ -224,7 +238,7 @@ const AddEditAddress = ({
       zip_code: formFieldValues?.zipCode,
       country: formFieldValues?.country,
       is_default: formFieldValues?.is_default,
-      address_type: formFieldValues?.address_title || "",
+      address_type: formFieldValues?.address_type || "",
       ...(formFieldValues?.is_default && { primary_address: 1 }),
     };
 
@@ -276,11 +290,11 @@ const AddEditAddress = ({
         <div className="w-full">
           <FormFields formFields={addressFormFields[3]} />
         </div>
-        
+
         <div className="w-full">
           <FormFields formFields={addressFormFields[4]} />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormFields formFields={[addressFormFields[5][0]]} />
           <FormFields formFields={[addressFormFields[5][1]]} />

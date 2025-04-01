@@ -10,28 +10,20 @@ import DeleteConfirmation from "../commonComponents/deleteConfirmation";
 import { toast } from "react-toastify";
 
 const MyTeamView = (props) => {
-
   const { userDetails, fetchCountries } = props;
   const { travel_Customers = [], meta = {} } = userDetails || {};
 
   const [travelCustomerValues, setTravelCustomerValues] =
     useState(travel_Customers);
   const [deleteLoader, setDeleteLoader] = useState(false);
-  const [isLoading,setIsLoading] = useState(false);
-  const selectOptions = {
-    options: [
-      { value: "today", label: "Today" },
-      { value: "yesterday", label: "Yesterday" },
-    ],
-    selectedOption: "today",
-    onChange: () => {},
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const [userViewPopup, setUserViewPopup] = useState({
     show: false,
     type: "",
   });
   const [editUserValues, setEditUserValues] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   const [currentPage, setCurrentPage] = useState(meta.current_page);
   const [itemsPerPage, setItemsPerPage] = useState(meta.per_page);
@@ -52,20 +44,40 @@ const MyTeamView = (props) => {
     },
   };
 
+  const handleApiCAll = async (params) => {
+    setIsLoading(true);
+    const response = await fetchUserDetails("", "", "GET", "", params);
+    console.log(response, "responseresponse");
+    setTravelCustomerValues(response?.travel_Customers);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     setTotalPages(meta.last_page);
     setCurrentPage(meta.current_page);
   }, [meta.last_page, meta.current_page]);
 
+  useEffect(() => {
+    if (currentPage) {
+      handleApiCAll({
+        page: currentPage,
+        per_page: itemsPerPage,
+        search: searchText,
+      });
+    }
+  }, [currentPage, itemsPerPage]);
+
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      // API call will be triggered by the useEffect
     }
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+      // API call will be triggered by the useEffect
     }
   };
 
@@ -73,31 +85,46 @@ const MyTeamView = (props) => {
     const page = parseInt(e.target.value) || 1;
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
+      // API call will be triggered by the useEffect
     } else if (page > totalPages) {
       setCurrentPage(totalPages);
+      // API call will be triggered by the useEffect
     } else {
       setCurrentPage(1);
+      // API call will be triggered by the useEffect
     }
   };
 
   const handleClosePopup = async (submit) => {
     if (submit?.submit) {
-      setIsLoading(true);
-      const response = await fetchUserDetails();
-      setTravelCustomerValues(response?.travel_Customers);
-      setIsLoading(false);
+      handleApiCAll({
+        page: currentPage,
+        per_page: itemsPerPage,
+        search: searchText,
+      });
     }
     setUserViewPopup({ show: false, type: "" });
     setEditUserValues();
   };
 
   const handleEditClick = async (item) => {
-    const response = await fetchUserDetails("", item?.id);
-    setEditUserValues({ id: item?.id, ...response[0] });
+    setIsLoading(true);
+    const response = await fetchUserDetails("", "", "GET", "", {
+      id: item?.id,
+    });
+    setEditUserValues({ id: item?.id, ...response?.travel_Customers[0] });
     setUserViewPopup({
       show: true,
       type: "edit",
     });
+    setIsLoading(false);
+  };
+
+  const handleInputBlurOrEnter = (e, isBlur = false) => {
+    if (isBlur || e.key === "Enter") {
+      handleApiCAll({ page: 1, per_page: itemsPerPage, search: searchText });
+      setCurrentPage(1);
+    }
   };
 
   const handleDeleteClick = async (item) => {
@@ -109,11 +136,12 @@ const MyTeamView = (props) => {
     setDeleteLoader(true);
     await fetchUserDetails("", deleteId, "DELETE");
     toast.success("User deleted successfully");
-    setIsLoading(true);
-    const response = await fetchUserDetails();
-    setTravelCustomerValues(response?.travel_Customers);
+    handleApiCAll({
+      page: currentPage,
+      per_page: itemsPerPage,
+      search: searchText,
+    });
     setDeleteConfirmPopup(false);
-    setIsLoading(false);
     setDeleteLoader(false);
   };
 
@@ -136,7 +164,11 @@ const MyTeamView = (props) => {
               <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
               <input
                 type="text"
-                placeholder="search by customer name, email or phone number"
+                placeholder="search by customer name or phone number"
+                onChange={(e) => setSearchText(e.target.value)}
+                value={searchText}
+                onBlur={(e) => handleInputBlurOrEnter(e, true)}
+                onKeyPress={(e) => handleInputBlurOrEnter(e)}
                 className="outline-none placeholder:text-[#130061] text-xs sm:text-sm text-[#130061] w-full"
               />
             </div>

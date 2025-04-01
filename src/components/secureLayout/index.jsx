@@ -10,6 +10,8 @@ import RightViewModal from "../commonComponents/rightViewModal";
 import { updateWalletPopupFlag } from "@/utils/redux/common/action";
 import { ADD_WALLET_POPUP } from "@/utils/redux/common/type";
 import AddDepositSummary from "../addDepositSummary";
+import { fetchProfileDetails } from "@/utils/apiHandler/request";
+import { updateCurrentUser } from "@/utils/redux/currentUser/action";
 
 const SecureLayout = ({ children }) => {
   const router = useRouter();
@@ -34,6 +36,17 @@ const SecureLayout = ({ children }) => {
       router.events.off("routeChangeError", handleComplete);
     };
   }, [router]);
+
+  const fetchUserName = async () => {
+    const response = await fetchProfileDetails();
+    dispatch(updateCurrentUser(response));
+  };
+
+  useEffect(() => {
+    if (!router?.pathname?.includes("/login")) {
+      fetchUserName();
+    }
+  }, []);
 
   const closeAddWalletPopup = () => {
     dispatch(

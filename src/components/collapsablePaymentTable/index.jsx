@@ -1,7 +1,8 @@
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React, { useState, useRef, useEffect } from "react";
 import StatusBadge from "../reportsPage/components/statusbadge";
-import TableShimmer from "./TableShimmer"; // Import the new TableShimmer component
+import TableShimmer from "./tableShimmer";
+
 
 const CollapsablePaymentTable = ({
   sections,

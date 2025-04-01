@@ -1,15 +1,14 @@
 import React from "react";
 import AddressList from "./addressList";
 
-const AddressView = ({
-  title,
-  handleEditClick,
-  addressValues,
-}) => {
+const AddressView = ({ title, handleEditClick, addressValues, component }) => {
   return (
     <>
-      <p className="text-sm font-medium md:text-base">{title}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="flex justify-between items-center">
+        <p className="text-sm font-medium md:text-base">{title}</p>
+        {component && component}
+      </div>
+      <div className="grid grid-cols-1 gap-4">
         {addressValues?.map((item, index) => {
           return (
             <AddressList

@@ -338,13 +338,20 @@ export const fetchCityBasedonCountry = async (token, params) => {
   }
 };
 
-export const fetchUserDetails = async (token, id, method = "GET", data) => {
+export const fetchUserDetails = async (
+  token,
+  id,
+  method = "GET",
+  data,
+  params
+) => {
   try {
     const response = await makeRequest({
       url: `${API_ROUTES.FETCH_USER_DETAILS}${id ? `/${id}` : ""}`,
       method: method,
       ...(token && { token: token }),
       ...(data && { data: data }),
+      ...(params && { params: params }),
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
@@ -402,7 +409,7 @@ export const storePaymentMethod = async (token, data) => {
 export const getLinkedCards = async (token, params, id) => {
   try {
     const response = await makeRequest({
-      url: `${API_ROUTES.GET_PAYMENT_CONFIG}${id ? `/${id}` : ""}`,
+      url: `${API_ROUTES.GET_LINKED_CARDS}${id ? `/${id}` : ""}`,
       method: "GET",
       ...(token && { token: token }),
       ...(params && { params: params }),

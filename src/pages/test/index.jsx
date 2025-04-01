@@ -10,71 +10,44 @@ const PaymentGateway = () => {
   const [savedCards, setSavedCards] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [adyenLoaded, setAdyenLoaded] = useState(false);
+  const [showAddCard, setShowAddCard] = useState(false);
+  const adyenInitializedRef = useRef(false);
+  const shopperReference = "2258";
 
-  const getAuthToken = () => {
-    return `Bearer ${readCookie("auth_token")}`;
-  };
+  const getAuthToken = () => `Bearer ${readCookie("auth_token")}`;
 
-  const shopperReference = "2258"; // This should be dynamic in a real application
-
-  // Load Adyen scripts and styles exactly like in your HTML version
   useEffect(() => {
-    // First load CSS
-    const linkElement = document.createElement("link");
-    linkElement.rel = "stylesheet";
-    linkElement.href =
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
       "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.css";
-    linkElement.integrity =
-      "sha384-zy4t7axSdzHBMGqwJAynlv3eFVNiWw68LMf7vgKXxl2zZ6A8FlpucOoA/J//GBaQ";
-    linkElement.crossOrigin = "anonymous";
-    document.head.appendChild(linkElement);
+    document.head.appendChild(link);
 
-    // Then load JS
-    const scriptElement = document.createElement("script");
-    scriptElement.src =
+    const script = document.createElement("script");
+    script.src =
       "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.js";
-    scriptElement.integrity =
-      "sha384-eOf0O1MTPGB1DQpr+Yha0MrmJruQb5S82+tuyo4sLiyfo1hgbf6W+fNfLjjU7Sks";
-    scriptElement.crossOrigin = "anonymous";
+    script.onload = () => setAdyenLoaded(true);
+    script.onerror = (err) => console.error("Adyen load error", err);
+    document.head.appendChild(script);
 
-    scriptElement.onload = () => {
-      console.log("Adyen JS loaded successfully");
-      setAdyenLoaded(true);
-    };
-
-    scriptElement.onerror = (error) => {
-      console.error("Error loading Adyen JS:", error);
-    };
-
-    document.head.appendChild(scriptElement);
-
-    // Cleanup function
     return () => {
-      if (document.head.contains(linkElement)) {
-        document.head.removeChild(linkElement);
-      }
-      if (document.head.contains(scriptElement)) {
-        document.head.removeChild(scriptElement);
-      }
+      document.head.removeChild(link);
+      document.head.removeChild(script);
     };
   }, []);
 
   const fetchSavedCards = useCallback(async () => {
     try {
       const cards = await getLinkedCards("", "", shopperReference);
-      if (cards.success) {
-        setSavedCards(cards.data);
-      } else {
-        alert("Failed to fetch saved cards: " + cards.message);
-      }
-    } catch (error) {
-      console.error("Error fetching saved cards:", error);
+      if (cards.success) setSavedCards(cards.data);
+    } catch (err) {
+      console.error("Error fetching cards", err);
     }
   }, []);
 
   const removeSavedCard = async (recurringDetailReference) => {
     try {
-      const response = await fetch(
+      const res = await fetch(
         "https://api2.listmyticket.com/b2b/linkedcard/remove-saved-card",
         {
           method: "POST",
@@ -82,58 +55,31 @@ const PaymentGateway = () => {
             "Content-Type": "application/json",
             Authorization: getAuthToken(),
           },
-          body: JSON.stringify({
-            recurringDetailReference: recurringDetailReference,
-            shopperReference: shopperReference,
-          }),
+          body: JSON.stringify({ recurringDetailReference, shopperReference }),
         }
       );
-
-      const result = await response.json();
+      const result = await res.json();
       if (result.success) {
         fetchSavedCards();
         alert("Card removed successfully!");
-      } else {
-        alert("Failed to remove card: " + result.message);
       }
-    } catch (error) {
-      console.error("Error removing saved card:", error);
+    } catch (err) {
+      console.error("Remove card error", err);
     }
   };
 
   const initializeAdyen = useCallback(async () => {
-    if (isLoading || !adyenLoaded) {
-      if (!adyenLoaded) {
-        alert("Adyen is still loading. Please try again in a moment.");
-      }
-      return;
-    }
-
+    if (isLoading || !adyenLoaded || adyenInitializedRef.current) return;
     setIsLoading(true);
+    adyenInitializedRef.current = true;
 
     try {
-      // Clear any existing content
       const container = document.getElementById("dropin-container");
-      if (container) {
-        container.innerHTML = "";
-      }
+      if (container) container.innerHTML = "";
 
       const config = await getPaymentDetails();
-      console.log("Payment Config:", config); // Log config to ensure it's valid
-
-      if (!config || !config.clientKey || !config.paymentMethods) {
-        console.error("Invalid config received:", config);
-        alert("Failed to initialize payment form: Invalid configuration");
-        setIsLoading(false);
-        return;
-      }
-
-      // Create checkout instance using window.AdyenCheckout like in your HTML code
-      if (typeof window.AdyenCheckout !== "function") {
-        throw new Error(
-          "AdyenCheckout not available. Make sure the script is loaded properly."
-        );
-      }
+      if (!config?.clientKey || !config?.paymentMethods)
+        throw new Error("Invalid config");
 
       const checkout = await window.AdyenCheckout({
         environment: "test",
@@ -141,9 +87,7 @@ const PaymentGateway = () => {
         paymentMethodsResponse: config.paymentMethods,
         merchantOrigin: window.location.origin,
         showPayButton: true,
-        translations: {
-          en_US: { payButton: "Link Card" },
-        },
+        translations: { en_US: { payButton: "Link Card" } },
         onSubmit: async (state, component) => {
           try {
             const payload = {
@@ -151,98 +95,145 @@ const PaymentGateway = () => {
                 ...state.data.paymentMethod,
                 holderName: state.data.paymentMethod.holderName || "Unknown",
                 billingAddress: {
-                  country: state.data.paymentMethod.billingAddress?.country || "US",
+                  country:
+                    state.data.paymentMethod.billingAddress?.country || "US",
                 },
               },
-              shopperReference: shopperReference,
+              shopperReference,
             };
-
             const result = await storePaymentMethod("", payload);
             if (result.success) {
               alert("Card linked successfully!");
               component.setStatus("success");
               fetchSavedCards();
+              setShowAddCard(false);
+              adyenInitializedRef.current = false;
             } else {
-              alert("Failed to link card: " + result.message);
+              alert("Failed to link card");
               component.setStatus("error");
             }
-          } catch (error) {
-            console.error("Error in onSubmit:", error);
+          } catch (err) {
+            console.error("onSubmit error", err);
             component.setStatus("error");
           }
         },
       });
 
-      // Mount the card component
       checkout.create("card").mount("#dropin-container");
-    } catch (error) {
-      console.error("Error initializing Adyen:", error);
-      alert(`Failed to initialize payment form: ${error.message}`);
-
-      // Display error in the container
-      const container = document.getElementById("dropin-container");
-      if (container) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 20px; color: red;">
-            <p>Error: ${error.message}</p>
-            <p>Please try again later.</p>
-          </div>
-        `;
-      }
+    } catch (err) {
+      console.error("Adyen init error", err);
     } finally {
       setIsLoading(false);
     }
-  }, [fetchSavedCards, isLoading, adyenLoaded]);
+  }, [adyenLoaded, fetchSavedCards, isLoading]);
 
   useEffect(() => {
     fetchSavedCards();
   }, [fetchSavedCards]);
 
-  return (
-    <div>
-      <div className="container">
-        <div id="dropin-container" style={{ minHeight: "200px" }}></div>
-        <button
-          onClick={initializeAdyen}
-          className="pay-button"
-          style={{ width: "100px", height: "40px" }}
-          disabled={isLoading || !adyenLoaded}
-        >
-          {isLoading ? "Loading..." : !adyenLoaded ? "Adyen Loading..." : "Link Card"}
-        </button>
-      </div>
+  useEffect(() => {
+    if (showAddCard && adyenLoaded && !adyenInitializedRef.current) {
+      initializeAdyen();
+    }
+  }, [showAddCard, adyenLoaded, initializeAdyen]);
 
-      <div className="container saved-cards">
-        <h3>Saved Cards</h3>
-        {savedCards.length === 0 ? (
-          <p>No saved cards found.</p>
-        ) : (
-          savedCards.map((card, index) => {
-            const cardInfo = card.RecurringDetail;
+  const handleCancelClick = () => {
+    setShowAddCard(false);
+    adyenInitializedRef.current = false;
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto p-6 font-sans">
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">Credit card</h2>
+
+      {savedCards.length > 0 ? (
+        <div className="mb-6">
+          {savedCards.map((card, index) => {
+            const info = card.RecurringDetail;
+            const cardType = info.variant || "Mastercard";
+            const lastFour = info.card.number || "XXXX";
+
             return (
-              <div key={index} className="card-item">
-                <p>
-                  Card:
-                  <img
-                    src={`https://cdf6519016.cdn.adyen.com/checkoutshopper/images/logos/${cardInfo.variant}.svg`}
-                    alt="Card Image"
-                    style={{ width: "50px", height: "auto", margin: "0 10px" }}
-                  />
-                  **** **** **** {cardInfo.card.number}
-                </p>
-                <p>Holder: {cardInfo.card.holderName}</p>
-                <button
-                  onClick={() =>
-                    removeSavedCard(cardInfo.recurringDetailReference)
-                  }
-                >
-                  Remove
-                </button>
+              <div
+                key={index}
+                className="border border-gray-200 rounded-md p-4 mb-2"
+              >
+                <div className="font-medium mb-2">{cardType}</div>
+                <div className="text-gray-600 text-sm">
+                  <div>Card details</div>
+                  <div>•••• •••• •••• {lastFour}</div>
+                </div>
               </div>
             );
-          })
-        )}
-      </div>
+          })}
+        </div>
+      ) : (
+        <div className="border border-gray-200 rounded-md p-4 mb-6 text-gray-600">
+          <p>No saved cards</p>
+        </div>
+      )}
+
+      <button
+        onClick={() => {
+          adyenInitializedRef.current = false;
+          setShowAddCard(true);
+        }}
+        className="flex items-center cursor-pointer justify-center gap-2 bg-purple-700 text-white py-2 px-4 rounded-md text-sm"
+        disabled={isLoading || !adyenLoaded}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        Add card
+      </button>
+
+      {/* Keep the rest of your code for adding a new card */}
+      {showAddCard && (
+        <div className="bg-white border border-gray-200 rounded-lg p-6 mt-6">
+          <div className="flex justify-between items-center mb-5">
+            <h3 className="text-lg font-medium text-gray-800 m-0">
+              Add Payment Method
+            </h3>
+            <button
+              className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"
+              onClick={() => {
+                setShowAddCard(false);
+                adyenInitializedRef.current = false;
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div id="dropin-container" className="mb-6"></div>
+
+          {/* Keep existing cancel button and encryption message */}
+        </div>
+      )}
     </div>
   );
 };

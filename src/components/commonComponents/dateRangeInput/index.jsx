@@ -4,6 +4,7 @@ import FloatingPlaceholder from "@/components/floatinginputFields/floatingplaceo
 
 const FloatingDateRange = ({
   label,
+  value = { startDate: "", endDate: "" }, // Add value prop with default
   onChange,
   id,
   keyValue,
@@ -17,12 +18,27 @@ const FloatingDateRange = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(value.startDate || "");
+  const [endDate, setEndDate] = useState(value.endDate || "");
   const [displayValue, setDisplayValue] = useState("");
   const dropdownRef = useRef(null);
 
-  // Update focus state when value changes
+  // Format and set display value when value prop changes
+  useEffect(() => {
+    if (value?.startDate && value?.endDate) {
+      const formattedStart = new Date(value.startDate).toLocaleDateString();
+      const formattedEnd = new Date(value.endDate).toLocaleDateString();
+      setDisplayValue(`${formattedStart} - ${formattedEnd}`);
+      setStartDate(value.startDate);
+      setEndDate(value.endDate);
+    } else {
+      setDisplayValue("");
+      setStartDate("");
+      setEndDate("");
+    }
+  }, [value]);
+
+  // Update focus state when display value changes
   useEffect(() => {
     setIsFocused(displayValue ? true : false);
   }, [displayValue]);
@@ -53,7 +69,7 @@ const FloatingDateRange = ({
       const formattedStart = new Date(startDate).toLocaleDateString();
       const formattedEnd = new Date(endDate).toLocaleDateString();
       setDisplayValue(`${formattedStart} - ${formattedEnd}`);
-      
+
       if (onChange) {
         onChange({ startDate, endDate }, keyValue);
       }
@@ -97,7 +113,7 @@ const FloatingDateRange = ({
           {mandatory ? "*" : ""}
         </span>
       </FloatingPlaceholder>
-      
+
       <div className="relative">
         <input
           id={id}
@@ -106,26 +122,30 @@ const FloatingDateRange = ({
           value={displayValue}
           readOnly
           onClick={handleInputClick}
-          className={`${baseClasses} ${readOnly && "bg-gray-100"} pr-10 cursor-pointer ${className}`}
+          className={`${baseClasses} ${
+            readOnly && "bg-gray-100"
+          } pr-10 cursor-pointer ${className}`}
           placeholder=""
           required={required}
         />
-        
-        <div 
+
+        <div
           className="absolute right-3 z-[10] bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
           onClick={handleInputClick}
         >
           <IconStore.calendar className="h-5 w-5" />
         </div>
       </div>
-      
+
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
-      
+
       {isOpen && (
         <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg w-full p-3">
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-600 mb-1">Start Date</label>
+              <label className="block text-xs text-gray-600 mb-1">
+                Start Date
+              </label>
               <input
                 type="date"
                 value={startDate}
@@ -134,7 +154,9 @@ const FloatingDateRange = ({
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-600 mb-1">End Date</label>
+              <label className="block text-xs text-gray-600 mb-1">
+                End Date
+              </label>
               <input
                 type="date"
                 value={endDate}

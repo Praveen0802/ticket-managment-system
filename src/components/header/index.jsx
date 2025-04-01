@@ -2,9 +2,11 @@ import React from "react";
 import Button from "../commonComponents/button";
 import botIcon from "../../../public/bot.svg";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   // Function to get the appropriate greeting based on the current time
+  const { currentUser } = useSelector((state) => state.currentUser);
   const getGreeting = () => {
     const currentHour = new Date().getHours();
 
@@ -18,20 +20,20 @@ const Header = () => {
       return "Good Night";
     }
   };
-
   return (
     <div className="px-4 sm:px-[24px] h-auto min-h-[60px] sm:h-[80px] py-3 sm:py-0 bg-white border-b-[1px] flex flex-col sm:flex-row w-full justify-between items-start sm:items-center border-[#eaeaf1] gap-3 sm:gap-0">
       <p className="text-[18px] sm:text-[24px] font-semibold text-[#323A70]">
-        {getGreeting()}, Ahmad
+        {getGreeting()}
+        {currentUser?.first_name ? `, ${currentUser?.first_name}` : ""}
       </p>
       <div className="flex gap-3 items-center self-end sm:self-auto">
-        <Button
+        {/* <Button
           label={"Request Event"}
           classNames={{
             root: "border-[1px] border-[#0137D5] py-[8px] text-[#0137D5] sm:py-[11px] px-[10px] sm:px-[14px]",
             label_: "text-[12px] sm:text-[14px] font-normal",
           }}
-        />
+        /> */}
         <Image
           src={botIcon}
           width={36}

@@ -13,6 +13,8 @@ import AddPayOutPopup from "./components/addPayOutPopup";
 import OrderViewPopup from "./components/orderViewPopup";
 import {
   fetchBankAccountDetails,
+  fetchDepositHistoryMonthly,
+  fetchTransactionHistoryMonthly,
   getDepositDetails,
   getTransactionDetails,
 } from "@/utils/apiHandler/request";
@@ -45,7 +47,6 @@ const ReportsPage = (props) => {
     dateRange: "",
   });
 
-  // Convert to the desired format
   const values = account_data?.map((item) => {
     return {
       icon: flagMap[item.currency],
@@ -64,6 +65,11 @@ const ReportsPage = (props) => {
   const [payOutPopup, setPayOutPopup] = useState({ flag: false, data: "" });
   const [eyeViewPopup, setEyeViewPopup] = useState({ flag: false, data: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const [transactionType, setTransactionType] = useState("");
+  const [paymentReference, setPaymentReference] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
+
   const tabValues = [
     { key: "Transactions", value: "transaction" },
     { key: "Wallet History", value: "wallet" },
@@ -71,6 +77,10 @@ const ReportsPage = (props) => {
 
   const handleSelectTab = (value) => {
     setTabSwitchLoader(true);
+    setDateRange({ startDate: "", endDate: "" });
+    setStatusFilter("");
+    setTransactionType("");
+    setPaymentReference("");
     setTimeout(() => {
       setTabSwitchLoader(false);
     }, 1000);
@@ -108,7 +118,6 @@ const ReportsPage = (props) => {
     });
   };
 
-  // Helper function to convert status code to text
   const getStatusText = (statusCode) => {
     switch (statusCode) {
       case 1:
@@ -150,7 +159,7 @@ const ReportsPage = (props) => {
   const transactionData = transactionHistory?.map((list) => {
     return {
       title: list?.month,
-      headers: ["Reference No", "Amount",  "Type", "Date", ""],
+      headers: ["Reference No", "Amount", "Type", "Date", ""],
       data: list?.transactions?.map((listItems) => {
         return {
           referenceNo: listItems?.reference_no,
@@ -164,67 +173,79 @@ const ReportsPage = (props) => {
     };
   });
 
-console.log(transactionHistory,'transactionHistorytransactionHistory')
   const [selectedTab, setSelectedTab] = useState("transaction");
+  const transactionTab = selectedTab == "transaction";
 
   const filterChange = async (params) => {
     setIsLoading(true);
-    const transactionTab = selectedTab == "transaction";
     const response = transactionTab
-      ? await getTransactionDetails("", params)
-      : await getDepositDetails("", params);
-    console.log(response, "responseresponse");
+      ? await fetchTransactionHistoryMonthly("", params)
+      : await fetchDepositHistoryMonthly("", params);
     if (transactionTab) {
-      setTransactionHistory(response);
+      setTransactionHistory(response?.transaction_history);
     } else {
-      setDepositHistory(response);
+      setDepositHistory(response?.deposit_history);
     }
     setIsLoading(false);
   };
 
-  // Update these functions in your ReportsPage component
-
-  // State for tracking filter parameters
-  const [filterParams, setFilterParams] = useState({});
-
   const handleDateChange = (range) => {
-    setFilterValues({ ...filterValues, dateRange: range });
-    let updatedParams = { ...filterParams };
-    if (range && range.startDate && range.endDate) {
-      updatedParams.start_date = range.startDate;
-      updatedParams.end_date = range.endDate;
-    } else {
-      delete updatedParams.start_date;
-      delete updatedParams.end_date;
-    }
-    setFilterParams(updatedParams);
-    filterChange(updatedParams);
-  };
-
-  const handleChange = (e, key, type) => {
-    const selectType = type === "select";
-    const value = selectType ? e : e.target.value;
-
-    setFilterValues({ ...filterValues, [key]: value });
-
-    const paramKeyMap = {
-      paymentReference: "reference_no",
-      transactionType: "payment_type",
+    setDateRange(range);
+    const params = {
+      ...(paymentReference && { reference_no: paymentReference }),
+      ...(transactionTab &&
+        transactionType && { payment_type: transactionType }),
+      ...(!transactionTab && statusFilter && { status: statusFilter }),
+      ...(range?.startDate && { start_date: range?.startDate }),
+      ...(range?.endDate && { end_date: range?.endDate }),
     };
 
-    let updatedParams = { ...filterParams };
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([_, v]) => v != null)
+    );
 
-    const apiParamKey = paramKeyMap[key] || key;
+    filterChange(filteredParams);
+  };
+  const handleInputChange = (e, key, type) => {
+    const value = e.target.value;
+    setPaymentReference(value);
+  };
 
-    if (value) {
-      updatedParams[apiParamKey] = value;
-    } else {
-      delete updatedParams[apiParamKey];
-    }
+  // Add this new function to handle blur and Enter key press
+  const handleInputBlurOrEnter = (e, isBlur = false) => {
+    if (!isBlur && e.key !== "Enter") return;
 
-    setFilterParams(updatedParams);
+    const params = {
+      ...(paymentReference && { reference_no: paymentReference }),
+      ...(transactionTab &&
+        transactionType && { payment_type: transactionType }),
+      ...(!transactionTab && statusFilter && { status: statusFilter }),
+      ...(dateRange?.startDate && { start_date: dateRange?.startDate }),
+      ...(dateRange?.endDate && { end_date: dateRange?.endDate }),
+    };
 
-    filterChange(updatedParams);
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([_, v]) => v != null)
+    );
+
+    filterChange(filteredParams);
+  };
+
+  const handleSelectChange = (e, key, type) => {
+    const value = e;
+    transactionTab ? setTransactionType(value) : setStatusFilter(value);
+    const params = {
+      ...(paymentReference && { reference_no: paymentReference }),
+      ...(transactionTab && value && { payment_type: value }),
+      ...(!transactionTab && value && { status: value }),
+      ...(dateRange?.startDate && { start_date: dateRange?.startDate }),
+      ...(dateRange?.endDate && { end_date: dateRange?.endDate }),
+    };
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([_, v]) => v != null)
+    );
+
+    filterChange(filteredParams);
   };
 
   return (
@@ -303,20 +324,33 @@ console.log(transactionHistory,'transactionHistorytransactionHistory')
                 keyValue={"paymentReference"}
                 label="Payment Reference"
                 className="!py-[6px] !px-[12px] w-full mobile:text-sm"
-                value={filterValues?.paymentReference}
-                onChange={handleChange}
+                value={paymentReference}
+                onChange={handleInputChange}
+                onBlur={(e) => handleInputBlurOrEnter(e, true)}
+                onKeyDown={(e) => handleInputBlurOrEnter(e, false)}
                 autoComplete="off"
                 required
               />
+
               <FloatingSelect
-                label="Transaction Type"
-                options={[
-                  { value: "CREDIT", label: "CREDIT" },
-                  { value: "DEBIT", label: "DEBIT" },
-                ]}
-                selectedValue={filterValues?.transactionType}
+                label={
+                  !transactionTab ? "Transaction Status" : "Transaction Type"
+                }
+                options={
+                  !transactionTab
+                    ? [
+                        { value: "1", label: "Approved" },
+                        { value: "2", label: "Pending" },
+                        { value: "3", label: "Rejected" },
+                      ]
+                    : [
+                        { value: "CREDIT", label: "CREDIT" },
+                        { value: "DEBIT", label: "DEBIT" },
+                      ]
+                }
+                selectedValue={transactionTab ? statusFilter : transactionType}
                 keyValue="transactionType"
-                onSelect={handleChange}
+                onSelect={handleSelectChange}
                 paddingClassName="!py-[6px] !px-[12px] w-full md:w-auto mobile:text-sm"
               />
               <FloatingDateRange
@@ -325,6 +359,7 @@ console.log(transactionHistory,'transactionHistorytransactionHistory')
                 keyValue="transactionDate"
                 label="Transaction Date"
                 className="!py-[6px] !px-[16px] w-full mobile:text-sm"
+                value={dateRange} // Pass the dateRange state to control the component
                 onChange={handleDateChange}
               />
             </div>

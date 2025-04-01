@@ -65,14 +65,14 @@ const CustomSelect = ({
       <button
         type="button"
         onClick={toggleDropdown}
-        className={`flex items-center justify-between  ${buttonPadding} ${textSize} text-left text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none`}
+        className={`flex items-center justify-between  ${buttonPadding} ${textSize} text-left text-gray-700 bg-white border-[1px] border-[#DADBE5] rounded-[4px] focus:outline-none`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
         <span
           className={`${
-            viewingValue?.placeholder ? "text-gray-400" : "text-[#130061]"
-          } font-medium"`}
+            viewingValue?.placeholder ? "text-gray-400" : "text-[#323A70]"
+          } font-normal text-[12px]`}
         >
           {viewingValue?.placeholder ? viewingValue?.placeholder : viewingValue}
         </span>

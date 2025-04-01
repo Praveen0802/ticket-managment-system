@@ -6,6 +6,8 @@ const FloatingLabelInput = ({
   type = "text",
   value = "",
   onChange,
+  onBlur = null,
+  onKeyDown = null,
   id,
   keyValue,
   name,
@@ -28,10 +30,22 @@ const FloatingLabelInput = ({
   }, [value]);
 
   const handleFocus = () => setIsFocused(true);
-  
+
   const handleBlur = (e) => {
     if (e.target.value === "") {
       setIsFocused(false);
+    }
+
+    // Call the onBlur callback if provided
+    if (onBlur) {
+      onBlur(e, true);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    // Call the onKeyDown callback if provided
+    if (onKeyDown && e.key === "Enter") {
+      onKeyDown(e, false);
     }
   };
 
@@ -52,7 +66,7 @@ const FloatingLabelInput = ({
   return (
     <div className="relative w-full">
       <FloatingPlaceholder
-        className={`${labelClassName} ${readOnly && "bg-gray-100"}`}
+        className={`${labelClassName} ${readOnly && "!bg-gray-100"}`}
         isFocused={isFocused}
         hasError={!!error}
       >
@@ -66,7 +80,7 @@ const FloatingLabelInput = ({
           {mandatory ? "*" : ""}
         </span>
       </FloatingPlaceholder>
-      
+
       <div className="relative">
         <input
           id={id}
@@ -76,6 +90,7 @@ const FloatingLabelInput = ({
           onChange={(e) => onChange(e, keyValue)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
           autoComplete={autoComplete}
           required={required}
           readOnly={readOnly}
@@ -84,7 +99,7 @@ const FloatingLabelInput = ({
           } ${className}`}
           placeholder={isFocused ? placeholder : ""}
         />
-        
+
         {type === "password" && (
           <button
             type="button"
@@ -131,14 +146,14 @@ const FloatingLabelInput = ({
             )}
           </button>
         )}
-        
+
         {rightIcon && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            {typeof rightIcon === 'function' ? rightIcon() : rightIcon}
+            {typeof rightIcon === "function" ? rightIcon() : rightIcon}
           </div>
         )}
       </div>
-      
+
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   );
