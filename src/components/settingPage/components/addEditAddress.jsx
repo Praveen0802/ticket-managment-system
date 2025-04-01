@@ -23,11 +23,17 @@ const AddEditAddress = ({
     zip_code = "",
     address_type = "",
     primary_address = "",
+    first_name = "",
+    last_name = "",
+    company_name = "",
   } = addressDetails;
   const editType = type === "edit";
   const [loader, setLoader] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
   const [formFieldValues, setFormFieldValues] = useState({
+    first_name: first_name,
+    last_name: last_name,
+    company_name: company_name,
     address_type: address_type,
     address_line_1: address,
     address_line_2: "",
@@ -72,7 +78,14 @@ const AddEditAddress = ({
   };
 
   const isFormValid = () => {
-    const requiredFields = ["address_line_1", "country", "city", "zipCode"];
+    const requiredFields = [
+      "first_name",
+      "last_name",
+      "address_line_1",
+      "country",
+      "city",
+      "zipCode",
+    ];
     return requiredFields.every((field) => formFieldValues[field]);
   };
 
@@ -80,11 +93,67 @@ const AddEditAddress = ({
     return { value: list?.id, label: list?.name };
   });
 
-  // Updated field style to match the design in the image
   const fieldStyle =
     "w-full rounded-md border border-gray-300 p-3 text-gray-700 focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:outline-none transition-all duration-200";
 
   const addressFormFields = [
+    [
+      {
+        label: "First name",
+        type: "text",
+        id: "first_name",
+        name: "first_name",
+        mandatory: true,
+        value: formFieldValues?.first_name,
+        onChange: (e) => handleChange(e, "first_name"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        rightIcon: formFieldValues?.first_name
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
+      },
+      {
+        label: "Last name",
+        type: "text",
+        id: "last_name",
+        name: "last_name",
+        mandatory: true,
+        value: formFieldValues?.last_name,
+        onChange: (e) => handleChange(e, "last_name"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        rightIcon: formFieldValues?.last_name
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
+      },
+    ],
+    [
+      {
+        label: "Company name",
+        type: "text",
+        id: "company_name",
+        name: "company_name",
+        value: formFieldValues?.company_name,
+        onChange: (e) => handleChange(e, "company_name"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        rightIcon: formFieldValues?.company_name
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
+      },
+    ],
     [
       {
         label: "Address title",
@@ -96,7 +165,6 @@ const AddEditAddress = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Downtown Dubai - 12345",
-        // Adding validation icons similar to the image
         rightIcon: formFieldValues?.address_type
           ? () => (
               <span className="text-green-500">
@@ -231,6 +299,9 @@ const AddEditAddress = ({
   const handleSubmit = async () => {
     setLoader(true);
     const payload = {
+      first_name: formFieldValues.first_name,
+      last_name: formFieldValues.last_name,
+      company_name: formFieldValues.company_name,
       address: `${formFieldValues?.address_line_1 || ""} ${
         formFieldValues?.address_line_2 || ""
       } ${formFieldValues?.address_line_3 || ""}`.trim(),
@@ -275,29 +346,46 @@ const AddEditAddress = ({
       </div>
 
       <div className="p-6 flex flex-col gap-5 overflow-y-auto h-full">
-        <div className="w-1/2">
-          <FormFields formFields={addressFormFields[0]} />
+        {/* First Name and Last Name */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormFields formFields={[addressFormFields[0][0]]} />
+          <FormFields formFields={[addressFormFields[0][1]]} />
         </div>
 
+        {/* Company Name */}
         <div className="w-full">
           <FormFields formFields={addressFormFields[1]} />
         </div>
 
-        <div className="w-full">
+        {/* Address Title */}
+        <div className="w-1/2">
           <FormFields formFields={addressFormFields[2]} />
         </div>
 
+        {/* Address Line 1 */}
         <div className="w-full">
           <FormFields formFields={addressFormFields[3]} />
         </div>
 
+        {/* Address Line 2 */}
         <div className="w-full">
           <FormFields formFields={addressFormFields[4]} />
         </div>
 
+        {/* Address Line 3 */}
+        <div className="w-full">
+          <FormFields formFields={addressFormFields[5]} />
+        </div>
+
+        {/* Country */}
+        <div className="w-full">
+          <FormFields formFields={addressFormFields[6]} />
+        </div>
+
+        {/* City and Zip Code */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormFields formFields={[addressFormFields[5][0]]} />
-          <FormFields formFields={[addressFormFields[5][1]]} />
+          <FormFields formFields={[addressFormFields[7][0]]} />
+          <FormFields formFields={[addressFormFields[7][1]]} />
         </div>
 
         <div className="flex items-center mt-2 cursor-pointer">

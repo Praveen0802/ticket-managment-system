@@ -55,9 +55,9 @@ const MyAccountTeam = (props) => {
     }
   };
 
-  const handleEditClick = useCallback(() => {
+  const handleEditClick = () => {
     setEdit(true);
-  }, []);
+  };
 
   return (
     <div className="h-[90%] max-w-full">
@@ -106,7 +106,9 @@ const MyAccountTeam = (props) => {
               ) : (
                 <Button
                   label="Edit"
-                  onClick={handleEditClick}
+                  onClick={() => {
+                    handleEditClick();
+                  }}
                   // iconBefore={<IconStore.pencilEdit className="stroke-white" />}
                   loading={submitLoader}
                   classNames={{

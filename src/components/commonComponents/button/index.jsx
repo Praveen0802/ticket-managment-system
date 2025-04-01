@@ -51,7 +51,6 @@ const Button = (props) => {
       className={rootStyle}
       type={submitButton ? "submit" : "button"}
       onClick={(e) => (!disabled && !loading ? onClick(e) : undefined)}
-      onMouseDown={(e) => (!disabled && !loading ? onClick(e) : undefined)}
       data-track={JSON.stringify({ name: eventName, screen, custom })}
       {...rest}
     >

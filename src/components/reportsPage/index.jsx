@@ -36,7 +36,7 @@ const ReportsPage = (props) => {
   };
 
   const dispatch = useDispatch();
-  const [toggleDropDown, setToggleDropDown] = useState(false);
+  const [toggleDropDown, setToggleDropDown] = useState(true);
   const [transactionHistory, setTransactionHistory] =
     useState(transaction_history);
   const [depositHistory, setDepositHistory] = useState(deposit_history);
@@ -102,7 +102,7 @@ const ReportsPage = (props) => {
     });
     setPayOutPopup({
       flag: true,
-      data: response[0],
+      data: { ...response[0], currency: currency },
     });
   };
 
@@ -317,7 +317,7 @@ const ReportsPage = (props) => {
           {/* Content Area */}
           <div className="p-3 md:p-4 mobile:p-2 flex flex-col gap-4 h-full overflow-hidden">
             {/* Search and Filter Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full md:w-[40%] mobile:gap-2 flex-shrink-0">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full md:w-[60%] mobile:gap-2 flex-shrink-0">
               <FloatingLabelInput
                 id="paymentReference"
                 name="paymentReference"

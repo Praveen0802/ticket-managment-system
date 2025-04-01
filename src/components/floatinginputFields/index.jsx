@@ -66,13 +66,13 @@ const FloatingLabelInput = ({
   return (
     <div className="relative w-full">
       <FloatingPlaceholder
-        className={`${labelClassName} ${readOnly && "!bg-gray-100"}`}
+        className={`${labelClassName} `}
         isFocused={isFocused}
         hasError={!!error}
       >
         <span
           style={{ fontSize: isFocused ? "11px" : "13px" }}
-          className={`${labelClassName} ${readOnly && "bg-gray-100"} ${
+          className={`${labelClassName}  ${
             error ? "text-red-500" : "text-[#808082]"
           }`}
         >

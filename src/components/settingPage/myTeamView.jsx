@@ -13,6 +13,8 @@ const MyTeamView = (props) => {
   const { userDetails, fetchCountries } = props;
   const { travel_Customers = [], meta = {} } = userDetails || {};
 
+  const [metaDetails, setMetaDetails] = useState(meta);
+
   const [travelCustomerValues, setTravelCustomerValues] =
     useState(travel_Customers);
   const [deleteLoader, setDeleteLoader] = useState(false);
@@ -25,9 +27,9 @@ const MyTeamView = (props) => {
   const [editUserValues, setEditUserValues] = useState("");
   const [searchText, setSearchText] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(meta.current_page);
-  const [itemsPerPage, setItemsPerPage] = useState(meta.per_page);
-  const [totalPages, setTotalPages] = useState(meta.last_page);
+  const [currentPage, setCurrentPage] = useState(metaDetails?.current_page);
+  const [itemsPerPage, setItemsPerPage] = useState(metaDetails?.per_page);
+  const [totalPages, setTotalPages] = useState(metaDetails?.last_page);
   const [deleteConfirmPopup, setDeleteConfirmPopup] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
@@ -49,13 +51,14 @@ const MyTeamView = (props) => {
     const response = await fetchUserDetails("", "", "GET", "", params);
     console.log(response, "responseresponse");
     setTravelCustomerValues(response?.travel_Customers);
+    setMetaDetails(response?.meta);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    setTotalPages(meta.last_page);
-    setCurrentPage(meta.current_page);
-  }, [meta.last_page, meta.current_page]);
+    setTotalPages(metaDetails?.last_page);
+    setCurrentPage(metaDetails?.current_page);
+  }, [metaDetails?.last_page, metaDetails?.current_page]);
 
   useEffect(() => {
     if (currentPage) {
@@ -185,7 +188,7 @@ const MyTeamView = (props) => {
           {/* User count and pagination controls */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <p className="p-3 sm:p-4 text-xs sm:text-sm text-[#323A70] border-b-[1px] sm:border-b-0 sm:border-r-[1px] border-[#eaeaf1] font-medium w-full sm:w-auto">
-              {meta.total} users
+              {metaDetails?.total} users
             </p>
 
             <div className="flex flex-wrap sm:flex-nowrap justify-between w-full sm:w-auto border-t-[1px] sm:border-t-0 sm:border-l-[1px] p-3 sm:pl-4 border-[#eaeaf1] items-center text-[#323A70] text-xs sm:text-sm">

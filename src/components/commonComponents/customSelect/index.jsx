@@ -95,7 +95,7 @@ const CustomSelect = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
+        <div className="absolute z-[999] w-full mt-1 bg-white rounded-md shadow-lg">
           <ul
             className={`py-1 overflow-auto ${textSize} rounded-md max-h-60 focus:outline-none`}
             role="listbox"

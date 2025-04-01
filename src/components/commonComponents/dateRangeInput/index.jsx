@@ -4,7 +4,7 @@ import FloatingPlaceholder from "@/components/floatinginputFields/floatingplaceo
 
 const FloatingDateRange = ({
   label,
-  value = { startDate: "", endDate: "" }, // Add value prop with default
+  value = { startDate: "", endDate: "" },
   onChange,
   id,
   keyValue,
@@ -21,16 +21,20 @@ const FloatingDateRange = ({
   const [startDate, setStartDate] = useState(value.startDate || "");
   const [endDate, setEndDate] = useState(value.endDate || "");
   const [displayValue, setDisplayValue] = useState("");
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [tempStartDate, setTempStartDate] = useState(null);
+  const [tempEndDate, setTempEndDate] = useState(null);
   const dropdownRef = useRef(null);
 
   // Format and set display value when value prop changes
   useEffect(() => {
     if (value?.startDate && value?.endDate) {
-      const formattedStart = new Date(value.startDate).toLocaleDateString();
-      const formattedEnd = new Date(value.endDate).toLocaleDateString();
+      const formattedStart = formatDate(value.startDate);
+      const formattedEnd = formatDate(value.endDate);
       setDisplayValue(`${formattedStart} - ${formattedEnd}`);
       setStartDate(value.startDate);
       setEndDate(value.endDate);
+      setCurrentMonth(new Date(value.startDate));
     } else {
       setDisplayValue("");
       setStartDate("");
@@ -57,21 +61,43 @@ const FloatingDateRange = ({
     };
   }, []);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date
+      .toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      })
+      .replace(/\//g, "/");
+  };
+
   const handleInputClick = () => {
     if (!readOnly) {
       setIsOpen(!isOpen);
       setIsFocused(true);
+      // Reset temp dates when opening
+      setTempStartDate(startDate ? new Date(startDate) : null);
+      setTempEndDate(endDate ? new Date(endDate) : null);
     }
   };
 
   const handleApply = () => {
-    if (startDate && endDate) {
-      const formattedStart = new Date(startDate).toLocaleDateString();
-      const formattedEnd = new Date(endDate).toLocaleDateString();
-      setDisplayValue(`${formattedStart} - ${formattedEnd}`);
+    if (tempStartDate && tempEndDate) {
+      const formattedStart = tempStartDate.toISOString().split("T")[0];
+      const formattedEnd = tempEndDate.toISOString().split("T")[0];
+      setStartDate(formattedStart);
+      setEndDate(formattedEnd);
+      setDisplayValue(
+        `${formatDate(formattedStart)} - ${formatDate(formattedEnd)}`
+      );
 
       if (onChange) {
-        onChange({ startDate, endDate }, keyValue);
+        onChange(
+          { startDate: formattedStart, endDate: formattedEnd },
+          keyValue
+        );
       }
     }
     setIsOpen(false);
@@ -80,13 +106,160 @@ const FloatingDateRange = ({
   const handleClear = () => {
     setStartDate("");
     setEndDate("");
+    setTempStartDate(null);
+    setTempEndDate(null);
     setDisplayValue("");
     if (onChange) {
       onChange({ startDate: "", endDate: "" }, keyValue);
     }
+    setIsOpen(false);
   };
 
-  const baseClasses = `block w-full px-3 py-[14px] text-[14px] shadow-sm rounded border-[1px] focus:outline-none ${
+  const handleDateClick = (date) => {
+    if (!tempStartDate || (tempStartDate && tempEndDate)) {
+      // If no start date selected or both are selected, start new selection
+      setTempStartDate(date);
+      setTempEndDate(null);
+    } else if (date < tempStartDate) {
+      // If selected date is before start date, make it the new start date
+      setTempStartDate(date);
+      setTempEndDate(null);
+    } else {
+      // Otherwise set as end date
+      setTempEndDate(date);
+    }
+  };
+
+  const navigateMonth = (direction) => {
+    const newMonth = new Date(currentMonth);
+    newMonth.setMonth(newMonth.getMonth() + direction);
+    setCurrentMonth(newMonth);
+  };
+
+  const renderCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+
+    const startingDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Adjust for Monday start
+
+    const prevMonthDays = new Date(year, month, 0).getDate();
+    const nextMonthDays = 42 - (daysInMonth + startingDay); // 6 weeks display
+
+    const days = [];
+
+    // Previous month days
+    for (let i = 0; i < startingDay; i++) {
+      const day = prevMonthDays - startingDay + i + 1;
+      const date = new Date(year, month - 1, day);
+      days.push({
+        date,
+        day,
+        isCurrentMonth: false,
+        isSelected: false,
+        isInRange: false,
+      });
+    }
+
+    // Current month days
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(year, month, i);
+      const isSelected =
+        tempStartDate && tempEndDate
+          ? date >= tempStartDate && date <= tempEndDate
+          : tempStartDate
+          ? date.getTime() === tempStartDate.getTime()
+          : false;
+
+      days.push({
+        date,
+        day: i,
+        isCurrentMonth: true,
+        isSelected: isSelected,
+        isInRange:
+          tempStartDate &&
+          tempEndDate &&
+          date > tempStartDate &&
+          date < tempEndDate,
+      });
+    }
+
+    // Next month days
+    for (let i = 1; i <= nextMonthDays; i++) {
+      const date = new Date(year, month + 1, i);
+      days.push({
+        date,
+        day: i,
+        isCurrentMonth: false,
+        isSelected: false,
+        isInRange: false,
+      });
+    }
+
+    return (
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-1">
+          <button
+            onClick={() => navigateMonth(-1)}
+            className="p-0.5 text-xs rounded hover:bg-gray-100"
+          >
+            &lt;
+          </button>
+          <div className="text-xs font-medium">
+            {currentMonth.toLocaleDateString("default", {
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
+          <button
+            onClick={() => navigateMonth(1)}
+            className="p-0.5 text-xs rounded hover:bg-gray-100"
+          >
+            &gt;
+          </button>
+        </div>
+
+        <div className="grid grid-cols-7 gap-0.5 text-[10px] text-center mb-1">
+          {["M", "T", "W", "T", "F", "S", "S"].map((day) => (
+            <div key={day} className="font-medium text-gray-500 py-0.5">
+              {day}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-0.5">
+          {days.map((dayObj, index) => {
+            const isSelected = dayObj.isSelected;
+            const isInRange = dayObj.isInRange;
+            const isToday =
+              dayObj.date.toDateString() === new Date().toDateString();
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleDateClick(dayObj.date)}
+                className={`h-6 rounded text-[10px]
+                  ${dayObj.isCurrentMonth ? "text-gray-800" : "text-gray-400"}
+                  ${isSelected ? "bg-blue-600 text-white" : ""}
+                  ${isInRange ? "bg-blue-100" : ""}
+                  ${isToday ? "border border-blue-400" : ""}
+                  hover:bg-blue-200
+                `}
+                disabled={!dayObj.isCurrentMonth}
+              >
+                {dayObj.day}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const baseClasses = `block w-full px-2 py-2 text-xs shadow-sm rounded border-[1px] focus:outline-none ${
     error ? "border-red-500" : "border-[#DADBE5]"
   } text-[#231F20] caret-[#022B50] ${
     error
@@ -104,7 +277,7 @@ const FloatingDateRange = ({
         hasError={!!error}
       >
         <span
-          style={{ fontSize: isFocused ? "11px" : "13px" }}
+          style={{ fontSize: isFocused ? "10px" : "11px" }}
           className={`${labelClassName} ${readOnly && "bg-gray-100"} ${
             error ? "text-red-500" : "text-[#808082]"
           }`}
@@ -124,61 +297,58 @@ const FloatingDateRange = ({
           onClick={handleInputClick}
           className={`${baseClasses} ${
             readOnly && "bg-gray-100"
-          } pr-10 cursor-pointer ${className}`}
+          } pr-8 cursor-pointer ${className}`}
           placeholder=""
           required={required}
         />
 
         <div
-          className="absolute right-3 z-[10] bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+          className="absolute right-2 z-[10] bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
           onClick={handleInputClick}
         >
-          <IconStore.calendar className="h-5 w-5" />
+          <IconStore.calendar className="h-4 w-4" />
         </div>
       </div>
 
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      {error && <p className="mt-0.5 text-xs text-red-500">{error}</p>}
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg w-full p-3">
-          <div className="space-y-3">
-            <div>
-              <label className="block text-xs text-gray-600 mb-1">
-                Start Date
-              </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full border border-gray-300 rounded-md text-sm p-2"
-              />
+        <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded shadow w-full p-2">
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-gray-700">
+              {tempStartDate && tempEndDate
+                ? `${formatDate(tempStartDate.toISOString())} - ${formatDate(
+                    tempEndDate.toISOString()
+                  )}`
+                : tempStartDate
+                ? `${formatDate(tempStartDate.toISOString())} - Select end date`
+                : "Select start date"}
             </div>
-            <div>
-              <label className="block text-xs text-gray-600 mb-1">
-                End Date
-              </label>
-              <input
-                type="date"
-                value={endDate}
-                min={startDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full border border-gray-300 rounded-md text-sm p-2"
-              />
-            </div>
-            <div className="flex gap-2 pt-2">
+
+            {renderCalendar()}
+
+            <div className="flex justify-between pt-2">
               <button
                 onClick={handleClear}
-                className="flex-1 py-1.5 px-3 border border-gray-300 rounded-md text-sm hover:bg-gray-50"
+                className="px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 rounded"
               >
-                Clear
+                Reset
               </button>
-              <button
-                onClick={handleApply}
-                className="flex-1 py-1.5 px-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
-                disabled={!startDate || !endDate}
-              >
-                Apply
-              </button>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleApply}
+                  className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                  disabled={!tempStartDate || !tempEndDate}
+                >
+                  Confirm
+                </button>
+              </div>
             </div>
           </div>
         </div>

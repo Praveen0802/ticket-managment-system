@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import FloatingPlaceholder from "./floatingplaceolder";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
 
 const FloatingSelect = ({
   options = [],
@@ -109,7 +110,7 @@ const FloatingSelect = ({
   return (
     <div className={`relative w-full ${className}`} ref={dropdownRef}>
       <FloatingPlaceholder
-        className={`${labelClassName} ${disabled && '!bg-gray-100'}`}
+        className={`${labelClassName} ${disabled && "!bg-gray-100"}`}
         isFocused={isFocused || isOpen}
         hasError={!!error}
       >
@@ -150,11 +151,11 @@ const FloatingSelect = ({
             {getSelectedLabel() || (isFocused ? placeholder : "")}
           </span>
         )}
-        
+
         <div className="flex items-center">
           {rightIcon && (
             <div className="mr-2">
-              {typeof rightIcon === 'function' ? rightIcon() : rightIcon}
+              {typeof rightIcon === "function" ? rightIcon() : rightIcon}
             </div>
           )}
           <svg
@@ -193,7 +194,7 @@ const FloatingSelect = ({
                 return (
                   <li
                     key={index}
-                    className={`cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50 ${
+                    className={`cursor-pointer flex justify-between items-center select-none relative py-2 px-3 hover:bg-indigo-50 ${
                       isSelectedOption
                         ? "bg-indigo-100 text-[#130061]"
                         : "text-gray-900"
@@ -214,20 +215,28 @@ const FloatingSelect = ({
                     </span>
 
                     {isSelectedOption && (
-                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#323A70]">
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelect("");
+                        }}
+                        className="rounded-full cursor-pointer hover:bg-gray-200 p-2"
+                      >
                         <svg
-                          className="w-5 h-5"
                           xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="size-4"
                         >
                           <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18 18 6M6 6l12 12"
                           />
                         </svg>
-                      </span>
+                      </div>
                     )}
                   </li>
                 );

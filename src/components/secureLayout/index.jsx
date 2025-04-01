@@ -71,7 +71,7 @@ const SecureLayout = ({ children }) => {
           onClose={() => {
             closeAddWalletPopup();
           }}
-          className={"w-[500px]"}
+          className={"!w-[600px]"}
           outSideClickClose={true}
         >
           <AddDepositSummary

@@ -22,7 +22,7 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
       country: item.country_id || "",
     };
   });
-  
+
   useEffect(() => {
     setFormData({
       beneficiary_name: item.beneficiary_name || "",
@@ -136,6 +136,7 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
     {
       label: "Country",
       type: "select",
+      name: "country",
       options: countryList,
       value: formData?.country,
       searchable: true,
@@ -154,7 +155,7 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
 
   const handleSubmit = async () => {
     setSubmitLoader(true);
-    const bankId = item?.bank_id ? item?.bank_id : ''
+    const bankId = item?.bank_id ? item?.bank_id : "";
     const response = await fetchBankAccountDetails(
       "",
       bankId,
@@ -163,9 +164,8 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
     );
     toast.success("Payout Account Added Successfully");
     setSubmitLoader(false);
-    onClose()
+    onClose();
   };
-
   return (
     <CustomModal show={show} onClose={onClose} outSideClickClose={false}>
       <div className="bg-white rounded-lg w-full md:w-[600px] max-w-full">

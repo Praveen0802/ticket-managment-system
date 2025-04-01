@@ -15,7 +15,7 @@ const ChangePassword = (props) => {
 
   const handleChange = (e, key) => {
     const value = e.target.value;
-    setError('')
+    setError("");
     setPasswordData({ ...passwordData, [key]: value });
   };
 
@@ -38,7 +38,7 @@ const ChangePassword = (props) => {
 
   const formFields = [
     {
-      className: "!py-[10px] !px-[12px] rounded-md w-full", // Added w-full for mobile
+      className: "!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]", // Added w-full for mobile
       autoComplete: "new-password",
       id: "newPassword",
       name: "newPassword",
@@ -49,7 +49,7 @@ const ChangePassword = (props) => {
       placeholder: "Enter new password",
     },
     {
-      className: "!py-[10px] !px-[12px] rounded-md w-full", // Added w-full for mobile
+      className: "!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]", // Added w-full for mobile
       autoComplete: "new-password",
       id: "confirmPassword",
       name: "confirmPassword",

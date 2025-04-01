@@ -92,7 +92,7 @@ const AddEditUser = ({
   }));
 
   // Updated field styling to match AddEditAddress component
-  const fieldStyle = 
+  const fieldStyle =
     "w-full rounded-md border border-gray-300 p-3 text-gray-700 focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:outline-none transition-all duration-200";
 
   // Form fields configuration - now with city and zipcode included
@@ -109,11 +109,13 @@ const AddEditUser = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Enter first name",
-        rightIcon: formFieldValues?.first_name ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.first_name
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -128,11 +130,13 @@ const AddEditUser = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Enter last name",
-        rightIcon: formFieldValues?.last_name ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.last_name
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -147,11 +151,13 @@ const AddEditUser = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Enter email address",
-        rightIcon: formFieldValues?.email ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.email
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -160,44 +166,46 @@ const AddEditUser = ({
         type: "custom",
         id: "phone_section",
         customComponent: (
-            <div className="flex space-x-2 w-full">
-              <div className="w-1/4">
-                <FormFields
-                  formFields={[
-                    {
-                      type: "select",
-                      id: "phone_code",
-                      name: "phone_code",
-                      value: formFieldValues?.phone_code,
-                      onChange: (e) => handleChange(e, "phone_code", "select"),
-                      className: `!py-2 !px-4 ${fieldStyle}`,
-                      options: [{ value: 91, label: "+91" }],
-                    },
-                  ]}
-                />
-              </div>
-              <div className="w-3/4">
-                <FormFields
-                  formFields={[
-                    {
-                      type: "text",
-                      id: "mobile_number",
-                      label:'Phone Number',
-                      name: "mobile_number",
-                      value: formFieldValues?.mobile_number,
-                      onChange: (e) => handleChange(e, "mobile_number"),
-                      className: `!py-2 !px-4 ${fieldStyle}`,
-                      placeholder: "Enter mobile number",
-                      rightIcon: formFieldValues?.mobile_number ? () => (
-                        <span className="text-green-500">
-                          <IconStore.circleTick className="size-5" />
-                        </span>
-                      ) : null,
-                    },
-                  ]}
-                />
-              </div>
+          <div className="flex space-x-2 w-full">
+            <div className="w-1/4">
+              <FormFields
+                formFields={[
+                  {
+                    type: "select",
+                    id: "phone_code",
+                    name: "phone_code",
+                    value: formFieldValues?.phone_code,
+                    onChange: (e) => handleChange(e, "phone_code", "select"),
+                    className: `!py-2 !px-4 ${fieldStyle}`,
+                    options: [{ value: 91, label: "+91" }],
+                  },
+                ]}
+              />
             </div>
+            <div className="w-3/4">
+              <FormFields
+                formFields={[
+                  {
+                    type: "text",
+                    id: "mobile_number",
+                    label: "Phone Number",
+                    name: "mobile_number",
+                    value: formFieldValues?.mobile_number,
+                    onChange: (e) => handleChange(e, "mobile_number"),
+                    className: `!py-2 !px-4 ${fieldStyle}`,
+                    placeholder: "Enter mobile number",
+                    rightIcon: formFieldValues?.mobile_number
+                      ? () => (
+                          <span className="text-green-500">
+                            <IconStore.circleTick className="size-5" />
+                          </span>
+                        )
+                      : null,
+                  },
+                ]}
+              />
+            </div>
+          </div>
         ),
       },
     ],
@@ -212,11 +220,13 @@ const AddEditUser = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Enter address",
-        rightIcon: formFieldValues?.address ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.address
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
     [
@@ -252,11 +262,13 @@ const AddEditUser = ({
         }`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         options: cityOptions,
-        rightIcon: formFieldValues?.city ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.city
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
       {
         label: "Zip Code",
@@ -269,11 +281,13 @@ const AddEditUser = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         placeholder: "Enter postal code",
-        rightIcon: formFieldValues?.zipCode ? () => (
-          <span className="text-green-500">
-            <IconStore.circleTick className="size-5" />
-          </span>
-        ) : null,
+        rightIcon: formFieldValues?.zipCode
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
       },
     ],
   ];
@@ -299,9 +313,11 @@ const AddEditUser = ({
         editType ? "PUT" : "POST",
         payload
       );
+      console.log(response, "responseresponseresponseresponseresponseresponse");
       toast.success(`User ${editType ? "updated" : "added"} successfully`);
       onClose({ submit: true });
     } catch (error) {
+      console.log(error,'errorerrorerror')
       toast.error(`Error in ${editType ? "updating" : "adding"} user`);
     } finally {
       setLoader(false);

@@ -139,7 +139,7 @@ const LatestOrderView = ({ listItems, meta }) => {
       <div className="w-full h-full flex flex-col gap-4 md:gap-5 bg-[#F5F7FA]">
         <div className="bg-white border border-[#eaeaf1] h-full flex flex-col gap-3 md:gap-5 rounded-md">
           <div className="flex flex-col gap-2">
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-start sm:items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
+            <div className="flex flex-col sm:flex-row justify-between sm:gap-5 items-start sm:items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
               <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 Transaction History
               </p>

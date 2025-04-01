@@ -3,8 +3,8 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React from "react";
 
 const DepositPopup = ({ onClose, data }) => {
-  console.log(data, 'datadata');
-  
+  console.log(data, "datadata");
+
   const formatDescription = (desc) => {
     if (!desc) return "";
 
@@ -48,18 +48,18 @@ const DepositPopup = ({ onClose, data }) => {
       case 1:
         return "bg-green-100 text-green-800"; // Green for Approved
       case 2:
-        return "bg-blue-100 text-blue-800"; // Blue for Pending
+        return "text-[#F5A623] bg-[#FFF8EC]"; // Blue for Pending
       case 3:
-        return "bg-red-100 text-red-800"; // Red for Rejected
+        return "text-[#FF3B30] bg-[#FFEFED]"; // Red for Rejected
       default:
-        return "bg-gray-100 text-gray-800";
+        return "text-gray-500 bg-gray-100";
     }
   };
 
   // Download proof function
   const handleDownloadProof = () => {
     if (data?.proof) {
-      window.open(data.proof, '_blank');
+      window.open(data.proof, "_blank");
     }
   };
 
@@ -90,7 +90,11 @@ const DepositPopup = ({ onClose, data }) => {
           <div className="flex justify-between mb-2">
             <span className="text-sm font-medium text-gray-600">Amount</span>
             {data?.status && (
-              <span className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(data.status)}`}>
+              <span
+                className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(
+                  data.status
+                )}`}
+              >
                 {getStatusText(data.status)}
               </span>
             )}
@@ -133,7 +137,11 @@ const DepositPopup = ({ onClose, data }) => {
             </div>
             <div className="flex justify-between items-center px-4 py-3">
               <span className="text-sm text-gray-600">Status</span>
-              <span className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(data?.status)}`}>
+              <span
+                className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(
+                  data?.status
+                )}`}
+              >
                 {getStatusText(data?.status)}
               </span>
             </div>
@@ -150,9 +158,7 @@ const DepositPopup = ({ onClose, data }) => {
         {data?.proof && (
           <div className="mx-6 mb-4 bg-white rounded-lg border border-gray-200 overflow-hidden">
             <div className="px-4 py-3 border-b border-gray-200">
-              <h3 className="font-medium text-gray-700">
-                Payment Proof
-              </h3>
+              <h3 className="font-medium text-gray-700">Payment Proof</h3>
             </div>
             <div className="px-4 py-3">
               <button
@@ -160,7 +166,9 @@ const DepositPopup = ({ onClose, data }) => {
                 className="flex items-cente cursor-pointer justify-center w-full py-2 px-4 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors border border-blue-200"
               >
                 <IconStore.download className="size-4 mr-2" />
-                <span className="text-sm font-medium">Download Proof Document</span>
+                <span className="text-sm font-medium">
+                  Download Proof Document
+                </span>
               </button>
             </div>
           </div>

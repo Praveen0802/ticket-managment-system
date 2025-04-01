@@ -6,7 +6,6 @@ import Subheader from "./subheader";
 const DashboardPage = (props) => {
   const { apiData } = props;
   const { dashboardData, orderHistory, transactionHistory } = apiData;
-
   return (
     <div className="flex flex-col h-full">
       <Subheader />
@@ -26,10 +25,10 @@ const DashboardPage = (props) => {
                     desc={
                       <div className="flex gap-2 items-center">
                         <p className="text-[#0137D5] bg-[#F2F5FD] font-normal p-[8px] rounded-[4px] text-xs md:text-sm">
-                          {wallet?.currency}
+                          {wallet?.icon}
                         </p>
                         <p className="text-[#323A70] text-sm md:text-base font-normal">
-                          {wallet?.amount}
+                          {wallet?.price_with_currency}
                         </p>
                       </div>
                     }

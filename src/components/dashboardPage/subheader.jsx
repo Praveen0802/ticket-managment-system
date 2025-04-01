@@ -32,7 +32,7 @@ const Subheader = () => {
         onClick={() => {
           handleOpenAddWalletPopup();
         }}
-        label="Add Deposit"
+        label="+ Add Deposit"
       />
     </div>
   );
