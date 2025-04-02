@@ -211,7 +211,6 @@ const ReportsPage = (props) => {
     setPaymentReference(value);
   };
 
-  // Add this new function to handle blur and Enter key press
   const handleInputBlurOrEnter = (e, isBlur = false) => {
     if (!isBlur && e.key !== "Enter") return;
 
@@ -249,7 +248,7 @@ const ReportsPage = (props) => {
   };
 
   return (
-    <div className="bg-[#F5F7FA] w-full h-full flex flex-col overflow-hidden">
+    <div className="bg-[#F5F7FA] w-full h-full flex flex-col overflow-auto">
       {/* Account Balance Section */}
       <div className="bg-white flex border-b-[1px] border-[#eaeaf1] justify-end px-3 flex-shrink-0">
         <div className="flex gap-2 items-center">
@@ -294,9 +293,9 @@ const ReportsPage = (props) => {
         </div>
       </div>
 
-      {/* Transactions Section - This should be scrollable */}
-      <div className="p-3 md:p-4 mobile:p-2 flex-grow overflow-hidden">
-        <div className="flex flex-col h-full bg-white overflow-hidden">
+      {/* Transactions Section - Now scrollable as part of the main page */}
+      <div className="p-3 md:p-4 mobile:p-2 flex-grow">
+        <div className="flex flex-col h-full bg-white">
           {/* Tab Navigation */}
           <div className="flex items-center gap-3 md:gap-4 px-3 md:px-4 pt-3 md:pt-4 border-b-[1px] border-[#eaeaf1] overflow-x-auto mobile:gap-2 mobile:px-2 flex-shrink-0">
             {tabValues?.map((item, index) => (
@@ -315,22 +314,21 @@ const ReportsPage = (props) => {
           </div>
 
           {/* Content Area */}
-          <div className="p-3 md:p-4 mobile:p-2 flex flex-col gap-4 h-full overflow-hidden">
+          <div className="p-3 md:p-4 mobile:p-2 flex flex-col gap-4">
             {/* Search and Filter Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full md:w-[60%] mobile:gap-2 flex-shrink-0">
-              <FloatingLabelInput
-                id="paymentReference"
-                name="paymentReference"
-                keyValue={"paymentReference"}
-                label="Payment Reference"
-                className="!py-[6px] !px-[12px] w-full mobile:text-sm"
-                value={paymentReference}
-                onChange={handleInputChange}
-                onBlur={(e) => handleInputBlurOrEnter(e, true)}
-                onKeyDown={(e) => handleInputBlurOrEnter(e, false)}
-                autoComplete="off"
-                required
-              />
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-[60%] mobile:gap-2 flex-shrink-0">
+              <div className="border-[1px] flex gap-2 items-center px-2 py-[6px] w-[50%] border-[#DADBE5] rounded-md">
+                <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
+                <input
+                  type="text"
+                  placeholder="search Transactions"
+                  onChange={(e) => setPaymentReference(e.target.value)}
+                  value={paymentReference}
+                  onBlur={(e) => handleInputBlurOrEnter(e, true)}
+                  onKeyPress={(e) => handleInputBlurOrEnter(e)}
+                  className="outline-none placeholder:text-[#130061] placeholder:font-[300] placeholder:opacity-50 text-xs sm:text-sm text-[#130061] w-full"
+                />
+              </div>
 
               <FloatingSelect
                 label={
@@ -350,22 +348,24 @@ const ReportsPage = (props) => {
                 }
                 selectedValue={transactionTab ? statusFilter : transactionType}
                 keyValue="transactionType"
+                className="!w-[25%]"
                 onSelect={handleSelectChange}
-                paddingClassName="!py-[6px] !px-[12px] w-full md:w-auto mobile:text-sm"
+                paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-sm w-full"
               />
               <FloatingDateRange
                 id="transactionDate"
                 name="transactionDate"
                 keyValue="transactionDate"
+                parentClassName="!w-[25%]"
                 label="Transaction Date"
-                className="!py-[6px] !px-[16px] w-full mobile:text-sm"
-                value={dateRange} // Pass the dateRange state to control the component
+                className="!py-[6px] !px-[16px] mobile:text-sm "
+                value={dateRange}
                 onChange={handleDateChange}
               />
             </div>
 
-            {/* Table Section - This is where we need scrolling */}
-            <div className="flex-grow h-0 overflow-auto">
+            {/* Table Section */}
+            <div className="flex-grow">
               {tabSwitchLoader ? (
                 <div className="flex w-full h-full justify-center items-center">
                   <Spinner />

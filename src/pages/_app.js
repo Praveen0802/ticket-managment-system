@@ -13,27 +13,16 @@ const roboto = Roboto({
   display: "swap",
 });
 
-// axios.interceptors.request.use(
-//   (config) => {
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
-// axios.interceptors.response.use(
-//   (response) => {
-//     console.log(response, "oooooooooooooo");
-//     return response;
-//   },
-//   (error) => {
-//     if (error.code === "ECONNABORTED" && error.message.includes("timeout")) {
-//       // handleTimeoutError();
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.code === "401") {
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default function App({ Component, pageProps }) {
   return (

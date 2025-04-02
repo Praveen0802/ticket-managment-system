@@ -22,7 +22,10 @@ export const API_ROUTES = {
   FETCH_CITIES: `/settings/cities`,
   FETCH_USER_DETAILS: `/travelpartner/customer`,
   RESET_PASSWORD: `/settings/reset-password`,
-  GET_PAYMENT_CONFIG:'/linkedcard/get-payment-config',
-  STORE_PAYMENT_METHOD:'/linkedcard/store-payment-method',
-  GET_LINKED_CARDS:'/linkedcard/get-linked-cards'
+  GET_PAYMENT_CONFIG: "/linkedcard/get-payment-config",
+  STORE_PAYMENT_METHOD: "/linkedcard/store-payment-method",
+  GET_LINKED_CARDS: "/linkedcard/get-linked-cards",
+  GET_CURRENCY: "/settings/currency",
+  GET_DIALING_CODE: "/settings/dialing-code",
+  REMOVE_SAVED_CARD: "/linkedcard/remove-saved-card",
 };

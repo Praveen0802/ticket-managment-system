@@ -77,7 +77,6 @@ const ResetPasswordFold = ({ token }) => {
           token: token,
         };
         const response = await resetPassword("", body);
-        console.log(response, "responseresponse");
         setResetSuccess(true);
         setLoader(false);
       } catch (error) {

@@ -3,8 +3,6 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React from "react";
 
 const DepositPopup = ({ onClose, data }) => {
-  console.log(data, "datadata");
-
   const formatDescription = (desc) => {
     if (!desc) return "";
 

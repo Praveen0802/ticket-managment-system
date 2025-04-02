@@ -83,7 +83,7 @@ const LatestOrderView = ({ listItems, meta }) => {
     setCurrentPage(1);
     try {
       const response = await fetchTransactionHistory("", {
-        days: option,
+        ...(option && { days: option }),
         page: 1,
       });
       setTransactions(response?.transaction_history || []);
@@ -147,8 +147,9 @@ const LatestOrderView = ({ listItems, meta }) => {
                 selectedValue={selectedFilter}
                 options={filterValues?.options}
                 onSelect={handleFilterChange}
+                className="!w-[170px]"
                 textSize="text-xs md:text-sm"
-                buttonPadding="px-2 md:px-3 py-1 md:py-[2px]"
+                buttonPadding="px-2 md:px-3 py-1 md:py-[2px] !w-[170px]"
                 dropdownItemPadding="py-[6px] pl-2 pr-4 md:pr-6"
               />
             </div>

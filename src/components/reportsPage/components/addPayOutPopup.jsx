@@ -23,6 +23,8 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
     };
   });
 
+  const editType = item?.account_number;
+
   useEffect(() => {
     setFormData({
       beneficiary_name: item.beneficiary_name || "",
@@ -171,7 +173,7 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
       <div className="bg-white rounded-lg w-full md:w-[600px] max-w-full">
         <div className="flex px-4 md:px-[24px] py-3 md:py-[16px] border-b-[1px] border-[#E0E1EA] justify-between items-center">
           <p className="text-[16px] md:text-[18px] text-[#323A70] font-semibold">
-            Add Payout Accounts
+            {editType ? "Update" : "Add"} Accounts
           </p>
           <div onClick={onClose} className="cursor-pointer">
             <IconStore.close className="size-5 stroke-[#323A70]" />
@@ -186,14 +188,14 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
               type="secondary"
               label="Cancel"
               onClick={onClose}
-              classNames={{ root: "px-[10px] py-[8px]" }}
+              classNames={{ root: "px-[10px] justify-center w-[80px] py-[8px]" }}
             />
             <Button
               type="primary"
-              label="Add"
+              label={editType ? "Update" : "Add"}
               loading={submitLoader}
               onClick={handleSubmit}
-              classNames={{ root: "px-[14px] py-[8px] bg-[#0137D5]" }}
+              classNames={{ root: "w-[80px] justify-center py-[8px] bg-[#0137D5]" }}
             />
           </div>
         </div>

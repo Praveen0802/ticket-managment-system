@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/commonComponents/button";
 import FormFields from "@/components/formFieldsComponent";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
-import { sendDepositRequest } from "@/utils/apiHandler/request";
+import {
+  getCurrencyDetails,
+  sendDepositRequest,
+} from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
 import TopPopupModal from "../walletPage/components/topPopupModal";
 import FooterButton from "../footerButton";
 
 const AddDepositSummary = ({ onClose }) => {
   const [loader, setLoader] = useState(false);
+  const [currencyDetails, setCurrencyDetails] = useState([]);
   const [formFieldValues, setFormFieldValues] = useState({
     deposit_amount: "",
     currency: "",
@@ -31,6 +35,19 @@ const AddDepositSummary = ({ onClose }) => {
 
     setFormFieldValues({ ...formFieldValues, [key]: value });
   };
+
+  const fetchCurrencies = async () => {
+    const response = await getCurrencyDetails();
+    const options = response?.data?.map((item) => ({
+      label: item?.currency,
+      value: item?.currency,
+    }));
+    setCurrencyDetails(options);
+  };
+
+  useEffect(() => {
+    fetchCurrencies();
+  }, []);
 
   const isFormValid = () => {
     const requiredFields = [
@@ -70,12 +87,7 @@ const AddDepositSummary = ({ onClose }) => {
         onChange: handleChange,
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "font-medium text-gray-500 mb-1",
-        options: [
-          { value: "USD", label: "USD - US Dollar" },
-          { value: "EUR", label: "EUR - Euro" },
-          { value: "GBP", label: "GBP - British Pound" },
-          { value: "INR", label: "INR - Indian Rupee" },
-        ],
+        options: currencyDetails,
       },
     ],
     [

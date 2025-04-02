@@ -99,12 +99,14 @@ const RightFold = () => {
             router.push("/dashboard");
           } else {
             setErrors({
+              email: "Invalid email or password",
               password: "Invalid email or password",
             });
             setLoader(false);
           }
         } catch {
           setErrors({
+            email: "Invalid email or password",
             password: "Invalid email or password",
           });
           setLoader(false);
@@ -185,9 +187,9 @@ const RightFold = () => {
                   autoComplete="off"
                   required
                 />
-                {errors.email && (
+                {/* {errors.email && (
                   <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
+                )} */}
               </div>
 
               {!isForgotPassword && (
@@ -203,7 +205,7 @@ const RightFold = () => {
                     label="Password"
                     value={formData?.password}
                     onChange={handleChange}
-                    // error={errors.password}
+                    error={errors.password}
                     required
                   />
                   {errors.password && (

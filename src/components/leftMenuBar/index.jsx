@@ -17,19 +17,21 @@ import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import { useRouter } from "next/router";
 import { setCookie } from "@/utils/helperFunctions/cookie";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
+import { useSelector } from "react-redux";
 
 const LeftMenuBar = () => {
   const [showFullDisplay, setShowFullDisplay] = useState(false);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const { currentUser } = useSelector((state) => state.currentUser);
+  const name = currentUser?.first_name?.slice(0, 2).toUpperCase();
   const leftPaneValues = [
     {
       image: showFullDisplay ? "" : arrowRight,
       icon: <IconStore.leftArrow className="size-4 stroke-white" />,
       name: "Minimise",
     },
-    { text: "MJ", name: "MJ", key: "name", route: "settings/myAccount" },
+    { text: name, name: name, key: "name", route: "settings/myAccount" },
     {
       image: category,
       name: "Dashboard",
@@ -39,7 +41,7 @@ const LeftMenuBar = () => {
 
     {
       image: diagram,
-      name: "My account,",
+      name: "My account",
       key: "my-account",
       route: "reports",
     },

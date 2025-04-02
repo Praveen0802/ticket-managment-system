@@ -420,3 +420,48 @@ export const getLinkedCards = async (token, params, id) => {
     throw error;
   }
 };
+
+export const getCurrencyDetails = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.GET_CURRENCY}`,
+      method: "GET",
+      ...(token && { token: token }),
+      ...(params && { params: params }),
+    });
+    return response?.data;
+  } catch (error) {
+    console.log("ERROR in getCurrencyDetails", error);
+    throw error;
+  }
+};
+
+export const getDialingCode = async (token, params) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.GET_DIALING_CODE}`,
+      method: "GET",
+      ...(token && { token: token }),
+      ...(params && { params: params }),
+    });
+    return response?.data;
+  } catch (error) {
+    console.log("ERROR in getDialingCode", error);
+    throw error;
+  }
+};
+
+export const removeLinkedCard = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.REMOVE_SAVED_CARD}`,
+      method: "POST",
+      data: data,
+      ...(token && { token: token }),
+    });
+    return response?.data;
+  } catch (error) {
+    console.log("ERROR in removeLinkedCard", error);
+    throw error;
+  }
+};

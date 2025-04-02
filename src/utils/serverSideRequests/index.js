@@ -16,7 +16,6 @@ import {
 
 export const fetchSettingsPageDetails = async (profile, token, ctx) => {
   const validProfiles = ["myAccount", "changepassword"];
-
   try {
     if (validProfiles?.includes(profile)) {
       const [addressDetails, profileDetails, fetchCountries] =
@@ -55,7 +54,7 @@ export const fetchSettingsPageDetails = async (profile, token, ctx) => {
       ]);
       return { userDetails, fetchCountries };
     } else if (profile == "linkedCards") {
-      const shopperRefernce = context?.req?.cookies?.user_token;
+      const shopperRefernce = ctx?.req?.cookies?.user_token;
       const linkedCards = await getLinkedCards(token, "", shopperRefernce);
       return { linkedCards, shopperRefernce };
     }

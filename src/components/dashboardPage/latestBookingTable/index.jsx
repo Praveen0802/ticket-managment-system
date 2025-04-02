@@ -99,7 +99,10 @@ const LatestBookingTable = ({ listValues, meta }) => {
     setBookings([]);
 
     try {
-      const response = await handleApiCall({ days: option, page: 1 });
+      const response = await handleApiCall({
+        ...(option && { days: option }),
+        page: 1,
+      });
       setBookings(response?.order_history);
     } catch (error) {
       console.error("Error fetching filtered data:", error);
@@ -184,9 +187,10 @@ const LatestBookingTable = ({ listValues, meta }) => {
                 selectedValue={selectedFilter}
                 options={filterValues?.options}
                 onSelect={handleFilterChange}
+                className="!w-[170px]"
                 textSize="text-xs md:text-sm"
-                buttonPadding="px-2 md:px-3 py-1 md:py-[2px]"
-                dropdownItemPadding="py-[6px] pl-2 pr-4 md:pr-6"
+                buttonPadding="px-2 md:px-3 py-1 md:py-[2px] !w-[170px]"
+                dropdownItemPadding="py-[6px] px-2 "
               />
             </div>
 

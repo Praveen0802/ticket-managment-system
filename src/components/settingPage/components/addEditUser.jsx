@@ -5,6 +5,7 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import {
   fetchCityBasedonCountry,
   fetchUserDetails,
+  getDialingCode,
 } from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
 import FooterButton from "@/components/footerButton";
@@ -31,6 +32,7 @@ const AddEditUser = ({
   const editType = type === "edit";
   const [loader, setLoader] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
+  const [phoneCodeOptions, setPhoneCodeOptions] = useState([]);
 
   const [formFieldValues, setFormFieldValues] = useState({
     first_name: first_name,
@@ -72,6 +74,21 @@ const AddEditUser = ({
       fetchCityDetails(formFieldValues?.country);
     }
   }, [formFieldValues?.country]);
+
+  const fetchPhoneCodeOptions = async () => {
+    const response = await getDialingCode();
+    const phoneCodeField = response?.data?.map((item) => {
+      return {
+        value: item?.phone_code,
+        label: item?.country_code,
+      };
+    });
+    setPhoneCodeOptions(phoneCodeField);
+  };
+
+  useEffect(() => {
+    fetchPhoneCodeOptions();
+  }, []);
 
   const isFormValid = () => {
     const requiredFields = [
@@ -178,23 +195,8 @@ const AddEditUser = ({
                     value: formFieldValues?.phone_code,
                     onChange: (e) => handleChange(e, "phone_code", "select"),
                     className: `!py-2 !px-4 ${fieldStyle}`,
-                    options: [
-                      { value: 1, label: "+1" }, // US & Canada
-                      { value: 44, label: "+44" }, // UK
-                      { value: 91, label: "+91" }, // India
-                      { value: 61, label: "+61" }, // Australia
-                      { value: 64, label: "+64" }, // New Zealand
-                      { value: 49, label: "+49" }, // Germany
-                      { value: 33, label: "+33" }, // France
-                      { value: 81, label: "+81" }, // Japan
-                      { value: 86, label: "+86" }, // China
-                      { value: 82, label: "+82" }, // South Korea
-                      { value: 7, label: "+7" }, // Russia
-                      { value: 39, label: "+39" }, // Italy
-                      { value: 34, label: "+34" }, // Spain
-                      { value: 55, label: "+55" }, // Brazil
-                      { value: 52, label: "+52" }, // Mexico
-                    ],
+                    searchable: true,
+                    options: phoneCodeOptions,
                   },
                 ]}
               />
@@ -330,11 +332,9 @@ const AddEditUser = ({
         editType ? "PUT" : "POST",
         payload
       );
-      console.log(response, "responseresponseresponseresponseresponseresponse");
       toast.success(`User ${editType ? "updated" : "added"} successfully`);
       onClose({ submit: true });
     } catch (error) {
-      console.log(error, "errorerrorerror");
       toast.error(`Error in ${editType ? "updating" : "adding"} user`);
     } finally {
       setLoader(false);

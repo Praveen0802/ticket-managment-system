@@ -6,7 +6,6 @@ export default async function handler(req, res) {
   const method = req?.method;
   const { headers } = req;
   const apiName = req?.url.replace("/api/post/", "");
-  console.log(headers?.cookie, "headers?.cookieheaders?.cookie");
   const parsedCookie = headers?.cookie ? parseCookie(headers?.cookie) : {};
   const authToken = decodeURIComponent(parsedCookie?.auth_token);
   const ROOT_URL = process.env.API_BASE_URL;

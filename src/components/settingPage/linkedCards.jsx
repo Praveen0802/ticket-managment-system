@@ -2,9 +2,12 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   getLinkedCards,
   getPaymentDetails,
+  removeLinkedCard,
   storePaymentMethod,
 } from "@/utils/apiHandler/request";
 import { readCookie } from "@/utils/helperFunctions/cookie";
+import { toast } from "react-toastify";
+import Image from "next/image";
 
 const LinkedCards = (props) => {
   const [savedCards, setSavedCards] = useState(props?.linkedCards?.data);
@@ -47,21 +50,14 @@ const LinkedCards = (props) => {
 
   const removeSavedCard = async (recurringDetailReference) => {
     try {
-      const res = await fetch(
-        "https://api2.listmyticket.com/b2b/linkedcard/remove-saved-card",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: getAuthToken(),
-          },
-          body: JSON.stringify({ recurringDetailReference, shopperReference }),
-        }
-      );
-      const result = await res.json();
+      const result = await removeLinkedCard("", {
+        recurringDetailReference,
+        shopperReference,
+      });
+
       if (result.success) {
         fetchSavedCards();
-        alert("Card removed successfully!");
+        toast.success("Card removed successfully!");
       }
     } catch (err) {
       console.error("Remove card error", err);
@@ -151,17 +147,50 @@ const LinkedCards = (props) => {
                 const info = card.RecurringDetail;
                 const cardType = info.variant || "Mastercard";
                 const lastFour = info.card.number || "XXXX";
-
                 return (
                   <div
                     key={index}
                     className="border border-gray-200 rounded-md p-4 mb-2"
                   >
-                    <div className="font-medium mb-2">{cardType}</div>
+                    <div className="font-medium mb-2 flex gap-2 items-center">
+                      <Image
+                        src={`https://cdf6519016.cdn.adyen.com/checkoutshopper/images/logos/${card?.RecurringDetail?.variant}.svg`}
+                        alt="Card Image"
+                        width={50}
+                        height={50}
+                        className="h-full"
+                      />
+                      {cardType}
+                    </div>
                     <div className="text-gray-600 text-sm">
                       <div>Card details</div>
                       <div>•••• •••• •••• {lastFour}</div>
                     </div>
+                    <button
+                      onClick={() =>
+                        removeSavedCard(
+                          card?.RecurringDetail?.recurringDetailReference
+                        )
+                      }
+                      className="mt-2 text-sm text-red-600 cursor-pointer hover:text-red-800 flex items-center gap-1 transition-colors duration-200"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                      Remove
+                    </button>
                   </div>
                 );
               })}

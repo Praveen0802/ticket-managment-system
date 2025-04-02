@@ -34,11 +34,22 @@ const CustomSelect = ({
   }, [selectedValue]);
 
   const handleSelect = (option) => {
-    setSelected(option);
-    setIsOpen(false);
-    if (onSelect) {
-      onSelect(option);
+    // If clicking the already selected option, clear the selection
+    if (
+      selected === option ||
+      (option.value !== undefined && selected === option.value)
+    ) {
+      setSelected(null);
+      if (onSelect) {
+        onSelect(null);
+      }
+    } else {
+      setSelected(option.value !== undefined ? option.value : option);
+      if (onSelect) {
+        onSelect(option.value !== undefined ? option.value : option);
+      }
     }
+    setIsOpen(false);
   };
 
   const toggleDropdown = () => {
@@ -61,11 +72,11 @@ const CustomSelect = ({
   const viewingValue = getSelectedLabel();
 
   return (
-    <div className={`relative  w-fit ${className}`} ref={dropdownRef}>
+    <div className={`relative w-fit ${className}`} ref={dropdownRef}>
       <button
         type="button"
         onClick={toggleDropdown}
-        className={`flex items-center justify-between  ${buttonPadding} ${textSize} text-left text-gray-700 bg-white border-[1px] border-[#DADBE5] rounded-[4px] focus:outline-none`}
+        className={`flex items-center justify-between ${buttonPadding} ${textSize} text-left text-gray-700 bg-white border-[1px] border-[#DADBE5] rounded-[4px] focus:outline-none`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
@@ -109,7 +120,7 @@ const CustomSelect = ({
               return (
                 <li
                   key={index}
-                  className={`cursor-pointer select-none relative ${dropdownItemPadding} hover:bg-indigo-50 ${
+                  className={`cursor-pointer select-none flex justify-between items-center relative ${dropdownItemPadding} hover:bg-indigo-50 ${
                     isSelectedOption
                       ? "bg-indigo-100 text-[#130061]"
                       : "text-gray-900"
@@ -117,9 +128,7 @@ const CustomSelect = ({
                   id={`option-${index}`}
                   role="option"
                   aria-selected={isSelectedOption}
-                  onClick={() =>
-                    handleSelect(value !== undefined ? value : option)
-                  }
+                  onClick={() => handleSelect(option)}
                 >
                   <span
                     className={`block truncate ${
@@ -130,20 +139,28 @@ const CustomSelect = ({
                   </span>
 
                   {isSelectedOption && (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#323A70]">
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelect("");
+                      }}
+                      className="rounded-full cursor-pointer hover:bg-gray-200 p-2"
+                    >
                       <svg
-                        className="w-5 h-5"
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-4"
                       >
                         <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M6 18 18 6M6 6l12 12"
                         />
                       </svg>
-                    </span>
+                    </div>
                   )}
                 </li>
               );

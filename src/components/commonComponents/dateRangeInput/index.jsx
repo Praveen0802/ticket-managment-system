@@ -12,6 +12,7 @@ const FloatingDateRange = ({
   required = false,
   mandatory = false,
   labelClassName = "",
+  parentClassName = "",
   readOnly,
   className = "",
   error = "",
@@ -200,7 +201,7 @@ const FloatingDateRange = ({
     }
 
     return (
-      <div className="w-full">
+      <div className={`w-full`}>
         <div className="flex justify-between items-center mb-1">
           <button
             onClick={() => navigateMonth(-1)}
@@ -259,7 +260,7 @@ const FloatingDateRange = ({
     );
   };
 
-  const baseClasses = `block w-full px-2 py-2 text-xs shadow-sm rounded border-[1px] focus:outline-none ${
+  const baseClasses = `block w-full px-2 py-2 text-xs  rounded border-[1px] focus:outline-none ${
     error ? "border-red-500" : "border-[#DADBE5]"
   } text-[#231F20] caret-[#022B50] ${
     error
@@ -270,9 +271,9 @@ const FloatingDateRange = ({
   }`;
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div className={`${parentClassName}  relative w-full`} ref={dropdownRef}>
       <FloatingPlaceholder
-        className={`${labelClassName} ${readOnly && "bg-gray-100"}`}
+        className={`${labelClassName} !pl-5 ${readOnly && "bg-gray-100 "}`}
         isFocused={isFocused}
         hasError={!!error}
       >
@@ -288,6 +289,12 @@ const FloatingDateRange = ({
       </FloatingPlaceholder>
 
       <div className="relative">
+        <div
+          className="absolute left-2 z-[10] bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+          onClick={handleInputClick}
+        >
+          <IconStore.calendar className="h-4 w-4" />
+        </div>
         <input
           id={id}
           type="text"
@@ -295,19 +302,12 @@ const FloatingDateRange = ({
           value={displayValue}
           readOnly
           onClick={handleInputClick}
-          className={`${baseClasses} ${
+          className={`!pl-8 ${baseClasses} ${
             readOnly && "bg-gray-100"
-          } pr-8 cursor-pointer ${className}`}
+          }  cursor-pointer ${className}`}
           placeholder=""
           required={required}
         />
-
-        <div
-          className="absolute right-2 z-[10] bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-          onClick={handleInputClick}
-        >
-          <IconStore.calendar className="h-4 w-4" />
-        </div>
       </div>
 
       {error && <p className="mt-0.5 text-xs text-red-500">{error}</p>}
