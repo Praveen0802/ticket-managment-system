@@ -28,4 +28,5 @@ export const API_ROUTES = {
   GET_CURRENCY: "/settings/currency",
   GET_DIALING_CODE: "/settings/dialing-code",
   REMOVE_SAVED_CARD: "/linkedcard/remove-saved-card",
+  ACCOUNT_REFERENCE: "/wallet/account-reference",
 };

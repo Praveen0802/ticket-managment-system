@@ -3,6 +3,7 @@ import Button from "@/components/commonComponents/button";
 import FormFields from "@/components/formFieldsComponent";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import {
+  accountReference,
   getCurrencyDetails,
   sendDepositRequest,
 } from "@/utils/apiHandler/request";
@@ -13,6 +14,7 @@ import FooterButton from "../footerButton";
 const AddDepositSummary = ({ onClose }) => {
   const [loader, setLoader] = useState(false);
   const [currencyDetails, setCurrencyDetails] = useState([]);
+  const [bankAccountDetails, setBankAccountDetails] = useState();
   const [formFieldValues, setFormFieldValues] = useState({
     deposit_amount: "",
     currency: "",
@@ -45,8 +47,14 @@ const AddDepositSummary = ({ onClose }) => {
     setCurrencyDetails(options);
   };
 
+  const fetchAccountDetails = async () => {
+    const response = await accountReference();
+    setBankAccountDetails(response?.data);
+  };
+
   useEffect(() => {
     fetchCurrencies();
+    fetchAccountDetails();
   }, []);
 
   const isFormValid = () => {
@@ -164,7 +172,7 @@ const AddDepositSummary = ({ onClose }) => {
       {/* Header */}
       <div className="flex px-4 sm:px-5 py-2 justify-between border-b-[1px] border-gray-200 items-center rounded-t-lg">
         <h2 className="text-lg sm:text-[20px] text-[#323A70] font-semibold">
-          Top up your TX pay Account
+          Top up your LMT pay Account
         </h2>
         <button
           onClick={onClose}
@@ -177,7 +185,7 @@ const AddDepositSummary = ({ onClose }) => {
 
       {/* Scrollable content area - added flex-grow to ensure it takes available space */}
       <div className=" flex flex-col gap-1 overflow-y-auto">
-        <TopPopupModal />
+        <TopPopupModal bankAccountDetails={bankAccountDetails} />
 
         {/* Form Content */}
         <div className="flex flex-col gap-4 p-4 sm:px-6 pb-6">

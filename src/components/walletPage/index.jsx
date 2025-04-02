@@ -13,7 +13,7 @@ const WalletPage = () => {
     iban: "HSGHSGAYATY989898I",
     swift: "MOYPGS",
     refernce: "22VSTS",
-    note: "Please include the reference when making the bank transfer. This ensures your funds are transferred directly to your TX pay wallet",
+    note: "Please include the reference when making the bank transfer. This ensures your funds are transferred directly to your LMT pay wallet",
     fundingAccount: {
       name: "first Abu Dhabi Bank",
       ticket: "Ticket Services DMCCC",

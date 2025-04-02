@@ -107,7 +107,7 @@ const Overview = () => {
       <div className="flex flex-col md:flex-row gap-4">
         <ComponentWrapper className="w-full md:w-1/2">
           <div className="flex flex-col gap-4">
-            <EyeHeader title="TX Pay" />
+            <EyeHeader title="LMT Pay" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {txPayValues.map((item, index) => (
                 <ListView

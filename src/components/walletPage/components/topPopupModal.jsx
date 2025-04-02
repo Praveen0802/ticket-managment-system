@@ -2,7 +2,7 @@ import CustomModal from "@/components/commonComponents/customModal";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React, { useState } from "react";
 
-const TopPopupModal = () => {
+const TopPopupModal = ({ bankAccountDetails }) => {
   // State to track which item has been recently copied
   const [copiedItem, setCopiedItem] = useState(null);
 
@@ -11,11 +11,11 @@ const TopPopupModal = () => {
   // };
 
   const accountDetails = {
-    accountName: "Tixstock SA Re:Seller Fund in",
-    iban: "HSGHSGAYATY989898I",
-    swift: "MOYPGS",
-    refernce: "22VSTS",
-    note: "Please include the reference when making the bank transfer. This ensures your funds are transferred directly to your TX pay wallet",
+    accountName: bankAccountDetails?.bank_account_details?.account_name,
+    iban: bankAccountDetails?.bank_account_details?.iban,
+    swift: bankAccountDetails?.bank_account_details?.swiftcode || "-",
+    refernce: bankAccountDetails?.reference,
+    note: "Please include the reference when making the bank transfer. This ensures your funds are transferred directly to your LMT pay wallet",
     fundingAccount: {
       name: "first Abu Dhabi Bank",
       ticket: "Ticket Services DMCCC",
@@ -48,11 +48,11 @@ const TopPopupModal = () => {
       <div className="p-4 flex flex-col gap-3 border-b-[1px] border-[#F0F0F5]">
         <p className="text-[13px] text-[#323A70] text-left font-medium">
           Top up by bank transfer from your funding account. Payments can take
-          up to 24 hours to appear in your TX Pay account
+          up to 24 hours to appear in your LMT Pay account
         </p>
         <div className="flex flex-col gap-4">
           <p className="text-[13px] text-[#323A70] text-left font-medium">
-            TX Pay
+            LMT Pay
           </p>
           <div className="grid grid-cols-2 gap-4">
             {accountValues?.map((list, listIndex) => {
