@@ -76,6 +76,7 @@ const LeftMenuBar = () => {
   const handleLogout = () => {
     setCookie("auth_token", "");
     setCookie("auth_token_validity", "");
+    setCookie("user_token", "");
     router.push("/login");
   };
   if (isMobile) {

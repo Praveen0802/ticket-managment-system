@@ -11,9 +11,10 @@ import {
   fetchTransactionHistoryMonthly,
   fetchUserDetails,
   fetchWalletBalance,
+  getLinkedCards,
 } from "../apiHandler/request";
 
-export const fetchSettingsPageDetails = async (profile, token) => {
+export const fetchSettingsPageDetails = async (profile, token, ctx) => {
   const validProfiles = ["myAccount", "changepassword"];
 
   try {
@@ -53,6 +54,10 @@ export const fetchSettingsPageDetails = async (profile, token) => {
         fetchCountrieList(token),
       ]);
       return { userDetails, fetchCountries };
+    } else if (profile == "linkedCards") {
+      const shopperRefernce = context?.req?.cookies?.user_token;
+      const linkedCards = await getLinkedCards(token, "", shopperRefernce);
+      return { linkedCards, shopperRefernce };
     }
   } catch {}
 };

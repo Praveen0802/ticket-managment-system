@@ -9,6 +9,7 @@ import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import ChangePassword from "./changePassword";
 import AddressBook from "./addressBook";
 import BankAccounts from "./bankAccounts";
+import LinkedCards from "./linkedCards";
 
 const SettingsPage = (props) => {
   const { profile, apiData } = props;
@@ -46,6 +47,11 @@ const SettingsPage = (props) => {
       title: "My Customers",
       key: "myCustomers",
     },
+    {
+      icon: <IconStore.cards className={IconclassName} />,
+      title: "Linked Cards",
+      key: "linkedCards",
+    },
   ];
 
   const handleTabClick = (tab) => {
@@ -65,6 +71,7 @@ const SettingsPage = (props) => {
     addressBook: <AddressBook {...apiData} />,
     bankAccounts: <BankAccounts {...apiData} />,
     myCustomers: <MyTeamView {...apiData} />,
+    linkedCards: <LinkedCards {...apiData} />,
     // txPay: <TXPay />,
   };
 

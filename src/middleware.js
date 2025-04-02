@@ -75,6 +75,7 @@ export async function middleware(request) {
     const response = NextResponse.redirect(new URL(`/login`, request.url));
     response.cookies.set("auth_token", "");
     response.cookies.set("auth_token_validity", "");
+    response.cookies.set("user_token", "");
     return response;
   } else if (validateAuthToken) {
     if (validateAuthToken?.token) {

@@ -180,10 +180,10 @@ const LatestOrderView = ({ listItems, meta }) => {
                           key={transaction?.id}
                           className="border-t border-[#eaeaf1]"
                         >
-                          <td className="p-3 text-sm text-gray-700">
+                          <td className="p-3 text-sm text-[#323A70]">
                             {transaction?.reference_no}
                           </td>
-                          <td className="p-3 text-sm flex gap-1 items-center text-gray-700">
+                          <td className="p-3 text-sm flex gap-1 items-center text-[#323A70]">
                             <IconStore.calendarDays className="size-4" />{" "}
                             {formatDateTime(transaction?.created_date_time)}
                           </td>
@@ -230,7 +230,7 @@ const LatestOrderView = ({ listItems, meta }) => {
                         className="border-t border-[#eaeaf1] p-3 flex justify-between items-center"
                       >
                         <div className="flex flex-col">
-                          <span className="text-sm text-gray-700 font-medium">
+                          <span className="text-sm text-[#323A70] font-medium">
                             {transaction?.reference_no}
                           </span>
                           <span className="text-xs text-gray-500 flex items-center gap-1">

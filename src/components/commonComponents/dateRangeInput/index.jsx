@@ -204,7 +204,7 @@ const FloatingDateRange = ({
         <div className="flex justify-between items-center mb-1">
           <button
             onClick={() => navigateMonth(-1)}
-            className="p-0.5 text-xs rounded hover:bg-gray-100"
+            className="p-0.5 text-xs rounded cursor-pointer hover:bg-gray-100"
           >
             &lt;
           </button>
@@ -216,7 +216,7 @@ const FloatingDateRange = ({
           </div>
           <button
             onClick={() => navigateMonth(1)}
-            className="p-0.5 text-xs rounded hover:bg-gray-100"
+            className="p-0.5 cursor-pointer text-xs rounded hover:bg-gray-100"
           >
             &gt;
           </button>
@@ -241,7 +241,7 @@ const FloatingDateRange = ({
               <button
                 key={index}
                 onClick={() => handleDateClick(dayObj.date)}
-                className={`h-6 rounded text-[10px]
+                className={`h-6 rounded cursor-pointer text-[10px]
                   ${dayObj.isCurrentMonth ? "text-gray-800" : "text-gray-400"}
                   ${isSelected ? "bg-blue-600 text-white" : ""}
                   ${isInRange ? "bg-blue-100" : ""}
@@ -330,20 +330,20 @@ const FloatingDateRange = ({
             <div className="flex justify-between pt-2">
               <button
                 onClick={handleClear}
-                className="px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 rounded"
+                className="px-2 py-1 cursor-pointer text-xs text-gray-700 hover:bg-gray-100 rounded"
               >
                 Reset
               </button>
               <div className="flex gap-1">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 rounded"
+                  className="px-2 py-1 cursor-pointer text-xs text-gray-700 hover:bg-gray-100 rounded"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleApply}
-                  className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="px-2 py-1 text-xs cursor-pointer bg-blue-600 text-white rounded hover:bg-blue-700"
                   disabled={!tempStartDate || !tempEndDate}
                 >
                   Confirm

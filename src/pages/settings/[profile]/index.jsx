@@ -20,7 +20,7 @@ export async function getServerSideProps(ctx) {
   if (!validToken) {
     return nextRedirect("login");
   }
-  const response = await fetchSettingsPageDetails(profile, authToken);
+  const response = await fetchSettingsPageDetails(profile, authToken, ctx);
   return {
     props: { profile, apiData: response ?? {} },
   };

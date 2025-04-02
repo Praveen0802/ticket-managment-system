@@ -88,23 +88,23 @@ const RightFold = () => {
         try {
           const response = await loginUser(null, body);
           const authToken = response?.token;
+
           if (authToken) {
             setCookie("auth_token", authToken);
             setCookie(
               "auth_token_validity",
               currentTimeEpochTimeInMilliseconds()
             );
+            setCookie("user_token", response?.user_id);
             router.push("/dashboard");
           } else {
             setErrors({
-              email: "Invalid email or password",
               password: "Invalid email or password",
             });
             setLoader(false);
           }
         } catch {
           setErrors({
-            email: "Invalid email or password",
             password: "Invalid email or password",
           });
           setLoader(false);
@@ -203,7 +203,7 @@ const RightFold = () => {
                     label="Password"
                     value={formData?.password}
                     onChange={handleChange}
-                    error={errors.password}
+                    // error={errors.password}
                     required
                   />
                   {errors.password && (
