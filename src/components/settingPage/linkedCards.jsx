@@ -172,24 +172,42 @@ const LinkedCards = (props) => {
                           card?.RecurringDetail?.recurringDetailReference
                         )
                       }
-                      className="mt-2 text-sm text-red-600 cursor-pointer hover:text-red-800 flex items-center gap-1 transition-colors duration-200"
+                      className="mt-2 text-sm  cursor-pointer  flex items-center gap-1 transition-colors duration-200"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        width="10"
+                        height="12.5"
+                        viewBox="0 0 10 12.5"
+                        className="w-2.5 h-[.8125rem]"
                       >
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        <g
+                          id="Group_24"
+                          data-name="Group 24"
+                          transform="translate(-433.5 -128.5)"
+                        >
+                          <path
+                            id="Rectangle_71"
+                            data-name="Rectangle 71"
+                            d="M0,0H9A0,0,0,0,1,9,0V8A1,1,0,0,1,8,9H1A1,1,0,0,1,0,8V0A0,0,0,0,1,0,0Z"
+                            transform="translate(434 132)"
+                          ></path>
+                          <rect
+                            id="Rectangle_72"
+                            data-name="Rectangle 72"
+                            width="10"
+                            height="1.5"
+                            transform="translate(433.5 129.5)"
+                          ></rect>
+                          <rect
+                            id="Rectangle_73"
+                            data-name="Rectangle 73"
+                            width="5"
+                            height="2"
+                            transform="translate(436 128.5)"
+                          ></rect>
+                        </g>
                       </svg>
-                      Remove
                     </button>
                   </div>
                 );

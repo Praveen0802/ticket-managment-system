@@ -2,10 +2,15 @@ import LatestBookingTable from "./latestBookingTable";
 import LatestOrderView from "./latestOrderView";
 import OrderList from "./orderList";
 import Subheader from "./subheader";
+import pendingOrder from "../../../public/pendingOrders.svg";
+import completedOrder from "../../../public/completedOrders.svg";
+import pendingTickets from "../../../public/pendingTickets.svg";
+import Image from "next/image";
 
 const DashboardPage = (props) => {
   const { apiData } = props;
   const { dashboardData, orderHistory, transactionHistory } = apiData;
+  console.log(dashboardData, "dashboardDatadashboardData");
   return (
     <div className="flex flex-col h-full">
       <Subheader />
@@ -53,7 +58,33 @@ const DashboardPage = (props) => {
                         : key === "pendingOrders"
                         ? "Pending Orders"
                         : "Pending Tickets";
-                    return <OrderList key={index} title={title} desc={value} />;
+                    return (
+                      <OrderList
+                        key={index}
+                        title={title}
+                        desc={
+                          <div className="flex gap-2 items-center">
+                            <div className="text-[#0137D5] bg-[#F2F5FD] font-normal p-[8px] rounded-[4px] text-xs md:text-sm">
+                              <Image
+                                src={
+                                  key === "completedOrders"
+                                    ? completedOrder
+                                    : key === "pendingOrders"
+                                    ? pendingOrder
+                                    : pendingTickets
+                                }
+                                width={18}
+                                height={18}
+                                alt="logo"
+                              />
+                            </div>
+                            <p className="text-[#323A70] text-sm md:text-base font-normal">
+                              {value}
+                            </p>
+                          </div>
+                        }
+                      />
+                    );
                   }
                 )}
               </div>

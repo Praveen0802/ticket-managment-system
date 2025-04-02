@@ -5,7 +5,7 @@ const AddressList = ({ handleEditClick, item, index }) => {
   return (
     <div
       key={index}
-      className="border-[1px] w-[50%] border-[#eaeaf1] rounded-lg"
+      className="border-[1px] md:w-[50%] border-[#eaeaf1] rounded-lg"
     >
       <div className="flex justify-between items-center p-3 md:p-4 border-b-[1px] border-[#eaeaf1]">
         <p className="text-sm md:text-base text-[#323A70] font-medium">

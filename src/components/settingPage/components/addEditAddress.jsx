@@ -5,6 +5,7 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import {
   fetchAddressBookDetails,
   fetchCityBasedonCountry,
+  getDialingCode,
 } from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
 import FooterButton from "@/components/footerButton";
@@ -25,20 +26,29 @@ const AddEditAddress = ({
     address_type = "",
     primary_address = "",
     first_name = "",
+    address_line2 = "",
+    address_line1 = "",
+    address_line3 = "",
     last_name = "",
+    mobile_number = "",
     company_name = "",
+    phone_code = "",
   } = addressDetails;
+
   const editType = type === "edit";
   const [loader, setLoader] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
+  const [phoneCodeOptions, setPhoneCodeOptions] = useState([]);
   const [formFieldValues, setFormFieldValues] = useState({
     first_name: first_name,
     last_name: last_name,
     company_name: company_name,
     address_type: address_type,
-    address_line_1: address,
-    address_line_2: "",
-    address_line_3: "",
+    mobile_number: mobile_number,
+    phone_code: phone_code,
+    address_line_1: address_line1,
+    address_line_2: address_line2,
+    address_line_3: address_line3,
     country: country_id,
     city: city_id,
     zipCode: zip_code,
@@ -62,6 +72,21 @@ const AddEditAddress = ({
     }
   };
 
+  const fetchPhoneCodeOptions = async () => {
+    const response = await getDialingCode();
+    const phoneCodeField = response?.data?.map((item) => {
+      return {
+        value: item?.phone_code,
+        label: item?.country_code,
+      };
+    });
+    setPhoneCodeOptions(phoneCodeField);
+  };
+
+  useEffect(() => {
+    fetchPhoneCodeOptions();
+  }, []);
+
   useEffect(() => {
     if (formFieldValues?.country) {
       fetchCityDetails(formFieldValues?.country);
@@ -83,6 +108,8 @@ const AddEditAddress = ({
       "first_name",
       "last_name",
       "address_line_1",
+      "mobile_number",
+      "phone_code",
       "country",
       "city",
       "zipCode",
@@ -154,6 +181,57 @@ const AddEditAddress = ({
               </span>
             )
           : null,
+      },
+    ],
+    [
+      {
+        label: "Phone",
+        type: "custom",
+        id: "phone_section",
+        customComponent: (
+          <div className="flex space-x-2 w-full">
+            <div className="w-1/4">
+              <FormFields
+                formFields={[
+                  {
+                    type: "select",
+                    label: "Phone Code",
+                    id: "phone_code",
+                    name: "phone_code",
+                    value: formFieldValues?.phone_code,
+                    onChange: (e) => handleChange(e, "phone_code", "select"),
+                    className: `!py-2 !px-4 ${fieldStyle}`,
+                    searchable: true,
+                    options: phoneCodeOptions,
+                  },
+                ]}
+              />
+            </div>
+            <div className="w-3/4">
+              <FormFields
+                formFields={[
+                  {
+                    type: "text",
+                    id: "mobile_number",
+                    label: "Phone Number",
+                    name: "mobile_number",
+                    value: formFieldValues?.mobile_number,
+                    onChange: (e) => handleChange(e, "mobile_number"),
+                    className: `!py-2 !px-4 ${fieldStyle}`,
+                    placeholder: "Enter mobile number",
+                    rightIcon: formFieldValues?.mobile_number
+                      ? () => (
+                          <span className="text-green-500">
+                            <IconStore.circleTick className="size-5" />
+                          </span>
+                        )
+                      : null,
+                  },
+                ]}
+              />
+            </div>
+          </div>
+        ),
       },
     ],
     [
@@ -382,11 +460,14 @@ const AddEditAddress = ({
         <div className="w-full">
           <FormFields formFields={addressFormFields[6]} />
         </div>
+        <div className="w-full">
+          <FormFields formFields={addressFormFields[7]} />
+        </div>
 
         {/* City and Zip Code */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormFields formFields={[addressFormFields[7][0]]} />
-          <FormFields formFields={[addressFormFields[7][1]]} />
+          <FormFields formFields={[addressFormFields[8][0]]} />
+          <FormFields formFields={[addressFormFields[8][1]]} />
         </div>
 
         <div className="flex items-center mt-2 cursor-pointer">

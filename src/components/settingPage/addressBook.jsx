@@ -61,6 +61,7 @@ const ShimmerLoader = () => {
 const AddressBook = (props) => {
   const { primaryAddress, defaultAddress, profileDetails, fetchCountries } =
     props;
+  console.log(props, "propsprops");
   const [primaryAddressData, setPrimaryAddressData] = useState(primaryAddress);
   const [addressBookDetails, setAddressBookDetails] = useState(defaultAddress);
   const [addressViewPopup, setAddressViewPopup] = useState({
@@ -75,7 +76,9 @@ const AddressBook = (props) => {
       item.zip_code || "N/A"
     }`;
     const address = [
-      item?.address || "N/A",
+      item?.address_line1 || "N/A",
+      item?.address_line2 || "",
+      item?.address_line3 || "",
       item?.city || "N/A",
       item?.state || "N/A",
       item?.country || "N/A",
@@ -102,7 +105,9 @@ const AddressBook = (props) => {
       item.zip_code || "N/A"
     }`;
     const address = [
-      item?.address || "N/A",
+      item?.address_line1 || "N/A",
+      item?.address_line2 || "N/A",
+      item?.address_line3 || "N/A",
       item?.city || "N/A",
       item?.state || "N/A",
       item?.country || "N/A",

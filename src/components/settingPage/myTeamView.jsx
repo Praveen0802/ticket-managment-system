@@ -155,11 +155,11 @@ const MyTeamView = (props) => {
     "px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-b border-r border-[#eaeaf1]";
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full min-h-screen flex flex-col">
       <p className="pb-2 sm:pb-4 text-base sm:text-lg md:text-xl p-3 sm:p-4 font-semibold">
         My Team
       </p>
-      <div className="bg-white p-3 sm:p-4 border-[1px] flex flex-col gap-3 sm:gap-4 border-[#eaeaf1] w-full h-full">
+      <div className="bg-white p-3 sm:p-4 border-[1px] flex flex-col gap-3 sm:gap-4 border-[#eaeaf1] w-full flex-grow overflow-hidden">
         <div className="border-[1px] border-[#eaeaf1] rounded-md">
           {/* Search and filter area */}
           <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
@@ -175,14 +175,6 @@ const MyTeamView = (props) => {
                 className="outline-none placeholder:text-[#130061] placeholder:font-[300] placeholder:opacity-50 text-xs sm:text-sm text-[#130061] w-full"
               />
             </div>
-            {/* <CustomSelect
-              selectedValue={selectOptions.selectedOption}
-              options={selectOptions.options}
-              onSelect={selectOptions.onChange}
-              textSize="text-xs sm:text-sm"
-              buttonPadding="px-[10px] py-[4px]"
-              dropdownItemPadding="py-1 pl-2 pr-6"
-            /> */}
           </div>
 
           {/* User count and pagination controls */}
@@ -243,15 +235,17 @@ const MyTeamView = (props) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-3 sm:gap-4">
-          <TableView
-            headerClassName={headerClassName}
-            rowClassName={rowClassName}
-            currentUsers={travelCustomerValues}
-            handleEditClick={handleEditClick}
-            handleDeleteClick={handleDeleteClick}
-            loading={isLoading}
-          />
+        <div className="flex flex-col gap-3 sm:gap-4 flex-grow max-md:pb-10 overflow-auto">
+          <div className="min-h-0 flex-grow overflow-auto">
+            <TableView
+              headerClassName={headerClassName}
+              rowClassName={rowClassName}
+              currentUsers={travelCustomerValues}
+              handleEditClick={handleEditClick}
+              handleDeleteClick={handleDeleteClick}
+              loading={isLoading}
+            />
+          </div>
           <Button
             label="+ Add Users"
             onClick={() => {

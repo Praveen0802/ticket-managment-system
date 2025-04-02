@@ -131,8 +131,8 @@ const SettingsPage = (props) => {
           </div>
 
           {/* Mobile Tab Bar - Alternative Navigation */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 z-10">
-            {profileValues.slice(0, 4).map((value, index) => (
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t overflow-x-auto border-gray-200 flex justify-around items-center py-2 z-10">
+            {profileValues?.map((value, index) => (
               <div
                 key={index}
                 className={`flex flex-col justify-center items-center p-2 ${
@@ -146,13 +146,13 @@ const SettingsPage = (props) => {
             ))}
 
             {/* More menu for additional items */}
-            <div
+            {/* <div
               className="flex flex-col items-center p-2 text-gray-500"
               onClick={toggleMobileMenu}
             >
               <IconStore.menu className="size-6 stroke-current" />
               <span className="text-xs mt-1">More</span>
-            </div>
+            </div> */}
           </div>
 
           {/* Bottom padding to account for the fixed tab bar */}
