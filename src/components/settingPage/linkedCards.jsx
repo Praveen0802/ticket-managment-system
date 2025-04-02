@@ -140,7 +140,7 @@ const LinkedCards = (props) => {
         Linked Cards
       </p>
       <div className="bg-white p-3 sm:p-4 border-[1px] flex flex-col gap-3 sm:gap-4 border-[#eaeaf1] w-full h-full">
-        <div className="w-[40%]">
+        <div className="md:w-[40%]">
           {savedCards?.length > 0 ? (
             <div className="mb-6">
               {savedCards?.map((card, index) => {
