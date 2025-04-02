@@ -269,7 +269,7 @@ const MyTeamView = (props) => {
       <RightViewModal
         show={userViewPopup?.show}
         onClose={handleClosePopup}
-        className={"!w-[600px]"}
+        className={"md:!w-[600px]"}
         outSideClickClose={false}
       >
         <AddEditUser

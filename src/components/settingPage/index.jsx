@@ -135,13 +135,13 @@ const SettingsPage = (props) => {
             {profileValues.slice(0, 4).map((value, index) => (
               <div
                 key={index}
-                className={`flex flex-col items-center p-2 ${
+                className={`flex flex-col justify-center items-center p-2 ${
                   activeTab === value?.key ? "text-[#130061]" : "text-gray-500"
                 }`}
                 onClick={() => handleTabClick(value?.key)}
               >
                 {value?.icon}
-                <span className="text-xs mt-1">{value.title}</span>
+                <span className="text-xs mt-1 text-center">{value.title}</span>
               </div>
             ))}
 

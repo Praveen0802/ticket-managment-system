@@ -315,9 +315,10 @@ const ReportsPage = (props) => {
 
           {/* Content Area */}
           <div className="p-3 md:p-4 mobile:p-2 flex flex-col gap-4">
-            {/* Search and Filter Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-[60%] mobile:gap-2 flex-shrink-0">
-              <div className="border-[1px] flex gap-2 items-center px-2 py-[6px] w-[50%] border-[#DADBE5] rounded-md">
+            {/* Search and Filter Section - Improved mobile responsiveness */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-[60%] mobile:gap-2 flex-shrink-0">
+              {/* Search input - Full width on mobile */}
+              <div className="border-[1px] flex gap-2 items-center px-2 py-[6px] w-full sm:w-[50%] border-[#DADBE5] rounded-md">
                 <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
                 <input
                   type="text"
@@ -326,42 +327,47 @@ const ReportsPage = (props) => {
                   value={paymentReference}
                   onBlur={(e) => handleInputBlurOrEnter(e, true)}
                   onKeyPress={(e) => handleInputBlurOrEnter(e)}
-                  className="outline-none placeholder:text-[#130061] placeholder:font-[300] placeholder:opacity-50 text-xs sm:text-sm text-[#130061] w-full"
+                  className="outline-none text-[#808082] placeholder:text-[#808082]  text-xs sm:text-sm  w-full"
                 />
               </div>
 
-              <FloatingSelect
-                label={
-                  !transactionTab ? "Transaction Status" : "Transaction Type"
-                }
-                options={
-                  !transactionTab
-                    ? [
-                        { value: "1", label: "Approved" },
-                        { value: "2", label: "Pending" },
-                        { value: "3", label: "Rejected" },
-                      ]
-                    : [
-                        { value: "CREDIT", label: "CREDIT" },
-                        { value: "DEBIT", label: "DEBIT" },
-                      ]
-                }
-                selectedValue={transactionTab ? statusFilter : transactionType}
-                keyValue="transactionType"
-                className="!w-[25%]"
-                onSelect={handleSelectChange}
-                paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-sm w-full"
-              />
-              <FloatingDateRange
-                id="transactionDate"
-                name="transactionDate"
-                keyValue="transactionDate"
-                parentClassName="!w-[25%]"
-                label="Transaction Date"
-                className="!py-[6px] !px-[16px] mobile:text-sm "
-                value={dateRange}
-                onChange={handleDateChange}
-              />
+              {/* Select and Date Range - Full width containers on mobile */}
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <FloatingSelect
+                  label={
+                    !transactionTab ? "Transaction Status" : "Transaction Type"
+                  }
+                  options={
+                    !transactionTab
+                      ? [
+                          { value: "1", label: "Approved" },
+                          { value: "2", label: "Pending" },
+                          { value: "3", label: "Rejected" },
+                        ]
+                      : [
+                          { value: "CREDIT", label: "CREDIT" },
+                          { value: "DEBIT", label: "DEBIT" },
+                        ]
+                  }
+                  selectedValue={
+                    transactionTab ? transactionType : statusFilter
+                  }
+                  keyValue="transactionType"
+                  className="!w-full sm:!w-[50%]"
+                  onSelect={handleSelectChange}
+                  paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-xs"
+                />
+                <FloatingDateRange
+                  id="transactionDate"
+                  name="transactionDate"
+                  keyValue="transactionDate"
+                  parentClassName="!w-full sm:!w-[50%]"
+                  label="Transaction Date"
+                  className="!py-[8px] !px-[16px] mobile:text-xs"
+                  value={dateRange}
+                  onChange={handleDateChange}
+                />
+              </div>
             </div>
 
             {/* Table Section */}
