@@ -7,6 +7,7 @@ import {
   fetchUserDetails,
 } from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
+import FooterButton from "@/components/footerButton";
 
 const AddEditUser = ({
   onClose,
@@ -177,7 +178,23 @@ const AddEditUser = ({
                     value: formFieldValues?.phone_code,
                     onChange: (e) => handleChange(e, "phone_code", "select"),
                     className: `!py-2 !px-4 ${fieldStyle}`,
-                    options: [{ value: 91, label: "+91" }],
+                    options: [
+                      { value: 1, label: "+1" }, // US & Canada
+                      { value: 44, label: "+44" }, // UK
+                      { value: 91, label: "+91" }, // India
+                      { value: 61, label: "+61" }, // Australia
+                      { value: 64, label: "+64" }, // New Zealand
+                      { value: 49, label: "+49" }, // Germany
+                      { value: 33, label: "+33" }, // France
+                      { value: 81, label: "+81" }, // Japan
+                      { value: 86, label: "+86" }, // China
+                      { value: 82, label: "+82" }, // South Korea
+                      { value: 7, label: "+7" }, // Russia
+                      { value: 39, label: "+39" }, // Italy
+                      { value: 34, label: "+34" }, // Spain
+                      { value: 55, label: "+55" }, // Brazil
+                      { value: 52, label: "+52" }, // Mexico
+                    ],
                   },
                 ]}
               />
@@ -317,7 +334,7 @@ const AddEditUser = ({
       toast.success(`User ${editType ? "updated" : "added"} successfully`);
       onClose({ submit: true });
     } catch (error) {
-      console.log(error,'errorerrorerror')
+      console.log(error, "errorerrorerror");
       toast.error(`Error in ${editType ? "updating" : "adding"} user`);
     } finally {
       setLoader(false);
@@ -339,7 +356,7 @@ const AddEditUser = ({
         </button>
       </div>
 
-      <div className="p-6 flex flex-col gap-5 overflow-y-auto h-full">
+      <div className="p-6 flex flex-col gap-6 overflow-y-auto h-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormFields formFields={[userFormFields[0][0]]} />
           <FormFields formFields={[userFormFields[1][0]]} />
@@ -367,32 +384,12 @@ const AddEditUser = ({
         </div>
       </div>
 
-      <div className="fixed bottom-0 w-full p-4 bg-white border-t border-gray-200 flex justify-end gap-3">
-        <Button
-          label="Cancel"
-          type="secondary"
-          onClick={() => onClose({ submit: false })}
-          classNames={{
-            root: "py-2 px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200",
-            label_: "text-sm font-medium text-gray-700",
-          }}
-        />
-        <Button
-          label={`${editType ? "Update" : "Save"} User`}
-          type="primary"
-          disabled={!isFormValid()}
-          loading={loader}
-          onClick={handleSubmit}
-          classNames={{
-            root: `py-2 px-5 rounded-md transition-all duration-200 ${
-              isFormValid()
-                ? "bg-green-500 hover:bg-green-600"
-                : "bg-green-300 cursor-not-allowed"
-            }`,
-            label_: "text-sm font-medium text-white",
-          }}
-        />
-      </div>
+      <FooterButton
+        isFormValid={isFormValid}
+        onClose={() => onClose({ submit: false })}
+        handleSubmit={handleSubmit}
+        loader={loader}
+      />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {
   fetchCityBasedonCountry,
 } from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
+import FooterButton from "@/components/footerButton";
 
 const AddEditAddress = ({
   onClose,
@@ -405,32 +406,12 @@ const AddEditAddress = ({
         </div>
       </div>
 
-      <div className="fixed bottom-0 w-full p-4 bg-white border-t border-gray-200 flex justify-end gap-3">
-        <Button
-          label="Cancel"
-          type="secondary"
-          onClick={() => onClose({ submit: false })}
-          classNames={{
-            root: "py-2 px-4 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-all duration-200",
-            label_: "text-sm font-medium text-gray-700",
-          }}
-        />
-        <Button
-          label="Save changes"
-          type="primary"
-          disabled={!isFormValid()}
-          loading={loader}
-          onClick={handleSubmit}
-          classNames={{
-            root: `py-2 px-5 rounded-md transition-all duration-200 ${
-              isFormValid()
-                ? "bg-green-500 hover:bg-green-600"
-                : "bg-green-300 cursor-not-allowed"
-            }`,
-            label_: "text-sm font-medium text-white",
-          }}
-        />
-      </div>
+      <FooterButton
+        isFormValid={isFormValid}
+        onClose={() => onClose({ submit: false })}
+        handleSubmit={handleSubmit}
+        loader={loader}
+      />
     </div>
   );
 };
