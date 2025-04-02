@@ -20,12 +20,11 @@ const AddDepositSummary = ({ onClose }) => {
   const handleChange = (e, key, type) => {
     const selectType = type === "select";
     const fileType = type === "file";
-
     let value;
     if (selectType) {
       value = e;
     } else if (fileType) {
-      value = e.target.files[0]; // Change this to get the file object
+      value = e.target.value; // Change this to get the file object
     } else {
       value = e.target.value;
     }
@@ -45,7 +44,7 @@ const AddDepositSummary = ({ onClose }) => {
   };
 
   const fieldStyle =
-    "w-full rounded-md border border-gray-200 p-3 text-gray-700 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 focus:outline-none transition-all duration-200";
+    "w-full rounded-md border border-gray-200 p-3 text-gray-700 transition-all duration-200";
 
   const depositFormFields = [
     [

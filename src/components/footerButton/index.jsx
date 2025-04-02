@@ -3,7 +3,7 @@ import Button from "../commonComponents/button";
 
 const FooterButton = ({ isFormValid, onClose, handleSubmit, loader }) => {
   return (
-    <div className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-white border-t border-gray-200 rounded-b-lg flex justify-end gap-3 sm:gap-4 mt-auto">
+    <div className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-white border-t border-gray-200 rounded-b-lg flex justify-start gap-3 sm:gap-4 mt-auto">
       <Button
         label="Cancel"
         type="secondary"

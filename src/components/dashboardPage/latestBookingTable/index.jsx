@@ -216,32 +216,34 @@ const LatestBookingTable = ({ listValues, meta }) => {
                       className="border-t border-[#eaeaf1] hover:bg-gray-50"
                     >
                       <td className="p-3 text-sm text-[#323A70] text-left">
-                        {booking?.booking_id}
+                        {booking?.booking_no}
                       </td>
                       <td
                         title={booking?.match_name}
-                        className="p-3 truncate text-sm text-[#323A70]"
+                        className="p-3 max-w-[200px] text-sm text-[#323A70]"
                       >
                         <div className="flex flex-col">
-                          <span className="font-medium">
+                          <span className="font-medium truncate">
                             {booking?.match_name}
                           </span>
-                          <span className="text-xs text-[#323A70]">
+                          <span className="text-xs text-[#323A70] truncate">
                             {booking?.tournament_name}
                           </span>
                         </div>
                       </td>
-                      <td className="p-3 text-sm flex items-center gap-1 text-[#323A70]">
-                        <IconStore.calendarDays className="size-4" />{" "}
-                        {formatDateTime(
-                          booking?.match_date,
-                          booking?.match_time
-                        )}
+                      <td className="p-3 text-sm text-[#323A70] whitespace-nowrap">
+                        <div className="flex items-center gap-1">
+                          <IconStore.calendarDays className="size-4 flex-shrink-0" />
+                          {formatDateTime(
+                            booking?.match_date,
+                            booking?.match_time
+                          )}
+                        </div>
                       </td>
                       <td className="p-3 text-sm text-[#323A70] text-center">
                         {booking?.quantity}
                       </td>
-                      <td className="p-3 text-sm text-[#323A70] whitespace-nowrap truncate">
+                      <td className="p-3 text-sm text-[#323A70] whitespace-nowrap">
                         {booking?.price_with_currency}
                       </td>
                     </tr>

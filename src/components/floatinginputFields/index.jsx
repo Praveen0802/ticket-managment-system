@@ -53,7 +53,7 @@ const FloatingLabelInput = ({
 
   const actualType = type === "password" && showPassword ? "text" : type;
 
-  const baseClasses = `block w-full px-3 py-[14px] text-[14px] shadow-sm rounded border-[1px] focus:outline-none ${
+  const baseClasses = `block w-full px-3 py-[14px] text-[14px]  rounded border-[1px] focus:outline-none ${
     error ? "border-red-500" : "border-[#DADBE5]"
   } text-[#231F20] caret-[#022B50] ${
     error

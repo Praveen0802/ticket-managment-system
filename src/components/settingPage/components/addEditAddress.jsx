@@ -100,6 +100,26 @@ const AddEditAddress = ({
   const addressFormFields = [
     [
       {
+        label: "Address title",
+        type: "text",
+        id: "address_type",
+        name: "address_type",
+        value: formFieldValues?.address_type,
+        onChange: (e) => handleChange(e, "address_type"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        placeholder: "Downtown Dubai - 12345",
+        rightIcon: formFieldValues?.address_type
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
+      },
+    ],
+    [
+      {
         label: "First name",
         type: "text",
         id: "first_name",
@@ -155,26 +175,7 @@ const AddEditAddress = ({
           : null,
       },
     ],
-    [
-      {
-        label: "Address title",
-        type: "text",
-        id: "address_type",
-        name: "address_type",
-        value: formFieldValues?.address_type,
-        onChange: (e) => handleChange(e, "address_type"),
-        className: `!py-2 !px-4 ${fieldStyle}`,
-        labelClassName: "text-sm text-gray-600 mb-1 block",
-        placeholder: "Downtown Dubai - 12345",
-        rightIcon: formFieldValues?.address_type
-          ? () => (
-              <span className="text-green-500">
-                <IconStore.circleTick className="size-5" />
-              </span>
-            )
-          : null,
-      },
-    ],
+
     [
       {
         label: "Address Line 1",
@@ -347,19 +348,18 @@ const AddEditAddress = ({
       </div>
 
       <div className="p-6 flex flex-col gap-5 overflow-y-auto h-full">
+        {/* Address Title */}
+        <div className="w-full">
+          <FormFields formFields={addressFormFields[0]} />
+        </div>
         {/* First Name and Last Name */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormFields formFields={[addressFormFields[0][0]]} />
-          <FormFields formFields={[addressFormFields[0][1]]} />
+          <FormFields formFields={[addressFormFields[1][0]]} />
+          <FormFields formFields={[addressFormFields[1][1]]} />
         </div>
 
         {/* Company Name */}
         <div className="w-full">
-          <FormFields formFields={addressFormFields[1]} />
-        </div>
-
-        {/* Address Title */}
-        <div className="w-1/2">
           <FormFields formFields={addressFormFields[2]} />
         </div>
 

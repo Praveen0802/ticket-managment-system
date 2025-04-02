@@ -7,7 +7,6 @@ import {
 import { readCookie } from "@/utils/helperFunctions/cookie";
 
 const LinkedCards = (props) => {
-  console.log(props, "propspropsprops");
   const [savedCards, setSavedCards] = useState(props?.linkedCards?.data);
   const [isLoading, setIsLoading] = useState(false);
   const [adyenLoaded, setAdyenLoaded] = useState(false);

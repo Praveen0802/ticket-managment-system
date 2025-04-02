@@ -97,7 +97,7 @@ const FloatingSelect = ({
   });
 
   // Base classes without padding (which is now customizable)
-  const baseClasses = `block w-full text-[14px] shadow-sm rounded border-[1px] focus:outline-none ${
+  const baseClasses = `block w-full text-[14px] rounded border-[1px] focus:outline-none ${
     error ? "border-red-500" : "border-[#DADBE5]"
   } text-[#231F20] ${
     error

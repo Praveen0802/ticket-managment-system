@@ -172,7 +172,7 @@ const MyTeamView = (props) => {
                 value={searchText}
                 onBlur={(e) => handleInputBlurOrEnter(e, true)}
                 onKeyPress={(e) => handleInputBlurOrEnter(e)}
-                className="outline-none placeholder:text-[#130061] text-xs sm:text-sm text-[#130061] w-full"
+                className="outline-none placeholder:text-[#130061] placeholder:font-[300] placeholder:opacity-50 text-xs sm:text-sm text-[#130061] w-full"
               />
             </div>
             {/* <CustomSelect
