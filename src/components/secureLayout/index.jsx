@@ -43,10 +43,8 @@ const SecureLayout = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!router?.pathname?.includes("/login")) {
-      fetchUserName();
-    }
-  }, []);
+    fetchUserName();
+  }, [router]);
 
   const closeAddWalletPopup = () => {
     dispatch(

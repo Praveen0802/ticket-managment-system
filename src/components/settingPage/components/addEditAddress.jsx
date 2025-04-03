@@ -27,10 +27,10 @@ const AddEditAddress = ({
     primary_address = "",
     first_name = "",
     address_line2 = "",
-    address_line1 = "",
     address_line3 = "",
     last_name = "",
     mobile_number = "",
+    address_line1 = "",
     company_name = "",
     phone_code = "",
   } = addressDetails;
@@ -76,13 +76,13 @@ const AddEditAddress = ({
     const response = await getDialingCode();
     const phoneCodeField = response?.data?.map((item) => {
       return {
-        value: item?.phone_code,
+        value: `${item?.phone_code}`,
         label: item?.country_code,
       };
     });
     setPhoneCodeOptions(phoneCodeField);
   };
-
+  console.log(phoneCodeOptions, "pppppppppp");
   useEffect(() => {
     fetchPhoneCodeOptions();
   }, []);
@@ -382,9 +382,12 @@ const AddEditAddress = ({
       first_name: formFieldValues.first_name,
       last_name: formFieldValues.last_name,
       company_name: formFieldValues.company_name,
-      address: `${formFieldValues?.address_line_1 || ""} ${
-        formFieldValues?.address_line_2 || ""
-      } ${formFieldValues?.address_line_3 || ""}`.trim(),
+      address_line1: formFieldValues?.address_line_1,
+      address_line2: formFieldValues?.address_line_2,
+      address_line3: formFieldValues?.address_line_3,
+      mobile_number: formFieldValues?.mobile_number,
+      company_name: formFieldValues?.company_name,
+      phone_code: formFieldValues?.phone_code,
       city: formFieldValues?.city,
       zip_code: formFieldValues?.zipCode,
       country: formFieldValues?.country,

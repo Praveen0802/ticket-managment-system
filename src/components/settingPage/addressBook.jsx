@@ -72,6 +72,7 @@ const AddressBook = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const addressValues = addressBookDetails?.map((item) => {
+    console.log(item, "itemitem");
     const title = `${item?.address_type ? item?.address_type : "Address"} - ${
       item.zip_code || "N/A"
     }`;
@@ -88,8 +89,8 @@ const AddressBook = (props) => {
       .join(" ");
 
     const phoneNumber =
-      profileDetails?.phone_code && profileDetails?.mobile_number
-        ? `+${profileDetails.phone_code} ${profileDetails.mobile_number}`
+      item?.phone_code && item?.mobile_number
+        ? `+${item?.phone_code} ${item?.mobile_number}`
         : "N/A";
 
     return {
@@ -117,8 +118,8 @@ const AddressBook = (props) => {
       .join(" ");
 
     const phoneNumber =
-      profileDetails?.phone_code && profileDetails?.mobile_number
-        ? `+${profileDetails.phone_code} ${profileDetails.mobile_number}`
+      item?.phone_code && item?.mobile_number
+        ? `+${item?.phone_code} ${item?.mobile_number}`
         : "N/A";
 
     return {
