@@ -4,11 +4,13 @@ import {
   checkAuthTokenValidationMiddleWare,
   currentTimeEpochTimeInMilliseconds,
 } from "./utils/helperFunctions";
-import { nonAuthRequiredAPI } from "./utils/constants/contants";
+import {
+  nonAuthRequiredAPI,
+  nonAuthRequiredPages,
+} from "./utils/constants/contants";
 
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
-
   const authToken = decodeURIComponent(
     getMiddlewareCookieValue(request.headers.get("cookie"), "auth_token")
   );
@@ -27,7 +29,10 @@ export async function middleware(request) {
     return response;
   }
 
-  if (pathname.includes("/reset-password/token/") && !validateAuthToken) {
+  if (
+    nonAuthRequiredPages.some((path) => pathname.includes(path)) &&
+    !validateAuthToken
+  ) {
     return;
   }
 
@@ -64,7 +69,6 @@ export async function middleware(request) {
     }
   }
 
-  // if (pathname.startsWith("/login")) {
   if (!authToken || !authTokenValidity) {
     if (pathname.startsWith("/login")) {
       return;
@@ -95,26 +99,6 @@ export async function middleware(request) {
       return;
     }
   }
-  // }
-
-  // try {
-  //   if (validateAuthToken) {
-  //     if (validateAuthToken?.token) {
-  //       const response = NextResponse.next();
-  //       response.cookies.set("auth_token", validateAuthToken.token);
-  //       response.cookies.set(
-  //         "auth_token_validity",
-  //         currentTimeEpochTimeInMilliseconds().toString()
-  //       );
-  //       return response;
-  //     }
-  //   } else if (!validateAuthToken) {
-  //     return NextResponse.redirect(new URL(`/login`, request.url));
-  //   }
-  // } catch (error) {
-  //   console.error("Token validation error:", error);
-  //   return NextResponse.redirect(new URL(`/login`, request.url));
-  // }
 }
 
 export const config = {

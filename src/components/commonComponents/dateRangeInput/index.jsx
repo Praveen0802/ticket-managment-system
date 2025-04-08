@@ -16,6 +16,7 @@ const FloatingDateRange = ({
   readOnly,
   className = "",
   error = "",
+  singleDateMode = false, // New prop to control single date selection mode
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -29,19 +30,33 @@ const FloatingDateRange = ({
 
   // Format and set display value when value prop changes
   useEffect(() => {
-    if (value?.startDate && value?.endDate) {
-      const formattedStart = formatDate(value.startDate);
-      const formattedEnd = formatDate(value.endDate);
-      setDisplayValue(`${formattedStart} - ${formattedEnd}`);
-      setStartDate(value.startDate);
-      setEndDate(value.endDate);
-      setCurrentMonth(new Date(value.startDate));
+    if (singleDateMode) {
+      // For single date mode
+      if (value?.startDate) {
+        const formattedDate = formatDate(value.startDate);
+        setDisplayValue(formattedDate);
+        setStartDate(value.startDate);
+        setCurrentMonth(new Date(value.startDate));
+      } else {
+        setDisplayValue("");
+        setStartDate("");
+      }
     } else {
-      setDisplayValue("");
-      setStartDate("");
-      setEndDate("");
+      // For date range mode
+      if (value?.startDate && value?.endDate) {
+        const formattedStart = formatDate(value.startDate);
+        const formattedEnd = formatDate(value.endDate);
+        setDisplayValue(`${formattedStart} - ${formattedEnd}`);
+        setStartDate(value.startDate);
+        setEndDate(value.endDate);
+        setCurrentMonth(new Date(value.startDate));
+      } else {
+        setDisplayValue("");
+        setStartDate("");
+        setEndDate("");
+      }
     }
-  }, [value]);
+  }, [value, singleDateMode]);
 
   // Update focus state when display value changes
   useEffect(() => {
@@ -85,20 +100,35 @@ const FloatingDateRange = ({
   };
 
   const handleApply = () => {
-    if (tempStartDate && tempEndDate) {
-      const formattedStart = tempStartDate.toISOString().split("T")[0];
-      const formattedEnd = tempEndDate.toISOString().split("T")[0];
-      setStartDate(formattedStart);
-      setEndDate(formattedEnd);
-      setDisplayValue(
-        `${formatDate(formattedStart)} - ${formatDate(formattedEnd)}`
-      );
+    if (singleDateMode) {
+      if (tempStartDate) {
+        const formattedDate = tempStartDate.toISOString().split("T")[0];
+        setStartDate(formattedDate);
+        setDisplayValue(formatDate(formattedDate));
 
-      if (onChange) {
-        onChange(
-          { startDate: formattedStart, endDate: formattedEnd },
-          keyValue
+        if (onChange) {
+          onChange(
+            { startDate: formattedDate, endDate: formattedDate }, // In single mode, startDate and endDate are the same
+            keyValue
+          );
+        }
+      }
+    } else {
+      if (tempStartDate && tempEndDate) {
+        const formattedStart = tempStartDate.toISOString().split("T")[0];
+        const formattedEnd = tempEndDate.toISOString().split("T")[0];
+        setStartDate(formattedStart);
+        setEndDate(formattedEnd);
+        setDisplayValue(
+          `${formatDate(formattedStart)} - ${formatDate(formattedEnd)}`
         );
+
+        if (onChange) {
+          onChange(
+            { startDate: formattedStart, endDate: formattedEnd },
+            keyValue
+          );
+        }
       }
     }
     setIsOpen(false);
@@ -117,17 +147,39 @@ const FloatingDateRange = ({
   };
 
   const handleDateClick = (date) => {
-    if (!tempStartDate || (tempStartDate && tempEndDate)) {
-      // If no start date selected or both are selected, start new selection
+    if (singleDateMode) {
+      // In single date mode, just set the start date and auto-apply
       setTempStartDate(date);
-      setTempEndDate(null);
-    } else if (date < tempStartDate) {
-      // If selected date is before start date, make it the new start date
-      setTempStartDate(date);
-      setTempEndDate(null);
+      setTempEndDate(date); // Set end date same as start for consistent data format
+
+      const formattedDate = date.toISOString().split("T")[0];
+      setStartDate(formattedDate);
+      setEndDate(formattedDate);
+      setDisplayValue(formatDate(formattedDate));
+
+      if (onChange) {
+        onChange(
+          { startDate: formattedDate, endDate: formattedDate },
+          keyValue
+        );
+      }
+
+      // Auto close in single date mode
+      setIsOpen(false);
     } else {
-      // Otherwise set as end date
-      setTempEndDate(date);
+      // Original date range selection logic
+      if (!tempStartDate || (tempStartDate && tempEndDate)) {
+        // If no start date selected or both are selected, start new selection
+        setTempStartDate(date);
+        setTempEndDate(null);
+      } else if (date < tempStartDate) {
+        // If selected date is before start date, make it the new start date
+        setTempStartDate(date);
+        setTempEndDate(null);
+      } else {
+        // Otherwise set as end date
+        setTempEndDate(date);
+      }
     }
   };
 
@@ -168,12 +220,19 @@ const FloatingDateRange = ({
     // Current month days
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(year, month, i);
-      const isSelected =
-        tempStartDate && tempEndDate
-          ? date >= tempStartDate && date <= tempEndDate
-          : tempStartDate
-          ? date.getTime() === tempStartDate.getTime()
-          : false;
+      let isSelected;
+
+      if (singleDateMode) {
+        isSelected =
+          tempStartDate && date.getTime() === tempStartDate.getTime();
+      } else {
+        isSelected =
+          tempStartDate && tempEndDate
+            ? date >= tempStartDate && date <= tempEndDate
+            : tempStartDate
+            ? date.getTime() === tempStartDate.getTime()
+            : false;
+      }
 
       days.push({
         date,
@@ -181,6 +240,7 @@ const FloatingDateRange = ({
         isCurrentMonth: true,
         isSelected: isSelected,
         isInRange:
+          !singleDateMode &&
           tempStartDate &&
           tempEndDate &&
           date > tempStartDate &&
@@ -293,7 +353,7 @@ const FloatingDateRange = ({
           className="absolute left-2 z-[10] bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
           onClick={handleInputClick}
         >
-          <IconStore.calendar className="h-4 w-4" />
+          <IconStore.calendar className="size-4" />
         </div>
         <input
           id={id}
@@ -316,7 +376,11 @@ const FloatingDateRange = ({
         <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded shadow w-full p-2">
           <div className="space-y-2">
             <div className="text-xs font-medium text-gray-700">
-              {tempStartDate && tempEndDate
+              {singleDateMode
+                ? tempStartDate
+                  ? `${formatDate(tempStartDate.toISOString())}`
+                  : "Select date"
+                : tempStartDate && tempEndDate
                 ? `${formatDate(tempStartDate.toISOString())} - ${formatDate(
                     tempEndDate.toISOString()
                   )}`
@@ -334,21 +398,17 @@ const FloatingDateRange = ({
               >
                 Reset
               </button>
-              <div className="flex gap-1">
-                {/* <button
-                  onClick={() => setIsOpen(false)}
-                  className="px-2 py-1 cursor-pointer text-xs text-gray-700 hover:bg-gray-100 rounded"
-                >
-                  Cancel
-                </button> */}
-                <button
-                  onClick={handleApply}
-                  className="px-2 py-1 text-xs cursor-pointer bg-blue-600 text-white rounded hover:bg-blue-700"
-                  disabled={!tempStartDate || !tempEndDate}
-                >
-                  Confirm
-                </button>
-              </div>
+              {!singleDateMode && (
+                <div className="flex gap-1">
+                  <button
+                    onClick={handleApply}
+                    className="px-2 py-1 text-xs cursor-pointer bg-blue-600 text-white rounded hover:bg-blue-700"
+                    disabled={!tempStartDate || !tempEndDate}
+                  >
+                    Confirm
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

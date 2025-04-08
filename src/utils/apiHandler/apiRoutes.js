@@ -2,6 +2,9 @@ const ROOT_URL = process.env.API_BASE_URL;
 
 export const API_ROUTES = {
   LOGIN: `/auth/login`,
+  REGISTER_USER: "/auth/register",
+  VERIFY_EMAIL: "/auth/verify-email",
+  RESEND_VERIFICATION_REQUEST: "/auth/resend-verify-email",
   DASHBOARD: `/wallet/dashboard`,
   PROFILE_DETAILS: `/settings/profile`,
   GET_ORDER_HISTORY: `/wallet/get-order-history`,

@@ -225,3 +225,4 @@ const DashboardPage = (props) => {
     </div>
   );
 };
+type="primary"

@@ -8,7 +8,8 @@ const Trade = (props) => {
 export default Trade;
 
 export async function getServerSideProps(context) {
+  const { profile } = context?.query;
   return {
-    props: {},
+    props: { profile },
   };
 }
