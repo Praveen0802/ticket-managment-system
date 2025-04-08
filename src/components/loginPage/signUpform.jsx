@@ -264,7 +264,7 @@ const SignupForm = () => {
                     name="phone_code"
                     keyValue={"phone_code"}
                     type="text"
-                    label="Phone Code"
+                    label="Country Code"
                     value={formData?.phone_code}
                     onSelect={handleChange}
                     searchable={true}

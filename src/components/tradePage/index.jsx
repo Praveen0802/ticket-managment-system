@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import SelectListItem from "./components/selectListItem";
 import TradeHome from "./tradeFolders/home";
 import TrackingPage from "./trackingFolder";
+import PurchaseFolder from "./purchaseFolder";
+import InventoryFolder from "./inventoryFolder";
 
 const TradePage = (props) => {
   const { profile } = props;
@@ -23,11 +25,13 @@ const TradePage = (props) => {
   const selectedSubComponents = {
     home: <TradeHome {...props} />,
     tracking: <TrackingPage {...props} />,
+    purchase: <PurchaseFolder {...props} />,
+    inventory: <InventoryFolder {...props} />,
   };
 
   return (
-    <div className="bg-[#ECEDF2] w-full h-full overflow-auto p-[24px]">
-      <div className="flex gap-[4px] w-[70%]">
+    <div className="bg-[#ECEDF2] w-full h-full overflow-auto ">
+      <div className="flex gap-[4px] w-[70%] px-[24px] pt-[24px]">
         {tabFields?.map((item, index) => {
           const selectedIndex = item?.key == selectedTab;
           return (

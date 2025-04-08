@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-import StickyDataTable from "../components/stickyDataTable";
 import AvailableList from "../components/availableList";
-import FloatingLabelInput from "@/components/floatinginputFields";
-import attachSquare from "../../../../public/attach-square.svg";
-import oneHand from "../../../../public/One-hand.svg";
-import star from "../../../../public/Star.svg";
-import documentText from "../../../../public/document-text.svg";
-import Image from "next/image";
 import FloatingSelect from "@/components/floatinginputFields/floatingSelect";
 import FloatingDateRange from "@/components/commonComponents/dateRangeInput";
-import Button from "@/components/commonComponents/button";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
+import StickyDataTable from "../components/stickyDataTable";
 
-const TrackingPage = () => {
+const PurchaseFolder = () => {
   const [selectedMatch, setSelectedMatch] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
+  const [eventDate, setEventDate] = useState("");
+  const [orderDate, setOrderDate] = useState("");
+
   const headers = [
     { key: "status", label: "Status", sortable: true },
     { key: "event", label: "Event", sortable: true },
@@ -86,42 +82,16 @@ const TrackingPage = () => {
 
   const rightStickyColumns = [
     {
-      icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
+      icon: <IconStore.eye className="size-5" />,
       className: " cursor-pointer",
-      key: "attach",
-    },
-    {
-      icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
-      className: " cursor-pointer",
-      key: "oneHand",
-    },
-    {
-      icon: <Image width={20} height={20} src={star} alt="star" />,
-      className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
-      key: "star",
-    },
-    {
-      icon: <Image width={20} height={20} src={documentText} alt="document" />,
-      className: "cursor-pointer",
-      key: "document",
-    },
-    {
-      icon: (
-        <Button
-          label="Buy"
-          classNames={{
-            label_: "text-white text-xs sm:text-sm",
-            root: "bg-[#0137D5]  py-1 px-2 rounded-md  hover:bg-[#0137D5] transition-colors whitespace-nowrap",
-          }}
-        />
-      ),
     },
   ];
 
   const listItems = [
-    { name: "Tracking", value: 1 },
-    { name: "Available", value: 0 },
-    { name: "Sold", value: 0 },
+    { name: "Purchases", value: 1 },
+    { name: "Upcomming Event", value: 0 },
+    { name: "Past Events", value: 0 },
+    { name: "Details Required", value: 0 },
   ];
 
   const handleSelectChange = (e, key, type) => {
@@ -132,15 +102,15 @@ const TrackingPage = () => {
   return (
     <div className="flex flex-col gap-[24px]">
       <div className="bg-white">
-        <div className="py-[20px] px-[24px] border-b-[1px] border-[#E0E1EA]">
-          <div className=" flex gap-4 w-[70%]">
+        <div className="px-[24px] py-[20px] border-b-[1px] border-[#E0E1EA]">
+          <div className=" flex gap-4">
             {listItems?.map((item, index) => {
               return <AvailableList key={index} list={item} />;
             })}
           </div>
         </div>
-        <div className="py-[20px] px-[24px] border-b-[1px] border-[#E0E1EA]">
-          <div className="flex gap-4 items-center w-[50%]">
+        <div className="px-[24px] py-[20px] border-b-[1px] border-[#E0E1EA]">
+          <div className="flex gap-4 items-center w-[70%]">
             <FloatingSelect
               label={"Choose Match Event"}
               options={[
@@ -151,7 +121,7 @@ const TrackingPage = () => {
               selectedValue={selectedMatch}
               keyValue="selectedMatch"
               selectedClassName="!text-[#323A70] text-[14px] font-medium"
-              className="!w-[80%]"
+              className="!w-[60%]"
               onSelect={handleSelectChange}
               paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-xs"
             />
@@ -162,9 +132,20 @@ const TrackingPage = () => {
               parentClassName="!w-fit"
               label="Event Date"
               className="!py-[8px] !px-[16px] mobile:text-xs"
-              value={selectedDate}
+              value={eventDate}
               singleDateMode={true}
-              onChange={(dateValue) => setSelectedDate(dateValue)}
+              onChange={(dateValue) => setEventDate(dateValue)}
+            />
+            <FloatingDateRange
+              id="orderDate"
+              name="orderDate"
+              keyValue="orderDate"
+              parentClassName="!w-fit"
+              label="Order Date"
+              className="!py-[8px] !px-[16px] mobile:text-xs"
+              value={orderDate}
+              singleDateMode={true}
+              onChange={(dateValue) => setOrderDate(dateValue)}
             />
           </div>
         </div>
@@ -189,4 +170,4 @@ const TrackingPage = () => {
   );
 };
 
-export default TrackingPage;
+export default PurchaseFolder;

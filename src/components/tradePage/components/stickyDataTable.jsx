@@ -146,7 +146,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
                     <td
                       key={`${rowIndex}-${header.key}`}
                       className={`
-                      py-2 px-4 text-[13px]  align-middle
+                      py-4 px-4 text-[13px]  align-middle
                       ${
                         header.key === "status"
                           ? "text-green-500"
