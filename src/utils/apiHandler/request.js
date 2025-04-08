@@ -480,3 +480,50 @@ export const accountReference = async (token, params) => {
     throw error;
   }
 };
+
+export const RegisterUser = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.REGISTER_USER,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    console.log(response, "responseresponse");
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in RegisterUser", error?.response, error);
+    return error?.response?.data;
+    // throw error;
+  }
+};
+
+export const VerifyEmail = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.VERIFY_EMAIL,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in VerifyEmail", error);
+    throw error;
+  }
+};
+
+export const ResendVerificationRequest = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.RESEND_VERIFICATION_REQUEST,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in ResendVerificationRequest", error);
+    throw error;
+  }
+};

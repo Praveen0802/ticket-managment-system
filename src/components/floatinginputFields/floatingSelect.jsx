@@ -11,6 +11,7 @@ const FloatingSelect = ({
   placeholder = "",
   className = "",
   mandatory = false,
+  selectedClassName = "",
   paddingClassName = "px-3 py-[14px]",
   error = "",
   id,
@@ -146,7 +147,9 @@ const FloatingSelect = ({
           />
         ) : (
           <span
-            className={`block truncate ${!selected ? "text-gray-400" : ""}`}
+            className={`block truncate ${selectedClassName} ${
+              !selected ? "text-gray-400" : ""
+            }`}
           >
             {getSelectedLabel() || (isFocused ? placeholder : "")}
           </span>

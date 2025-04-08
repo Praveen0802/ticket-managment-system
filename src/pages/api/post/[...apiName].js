@@ -18,14 +18,11 @@ export default async function handler(req, res) {
       ...(authToken && {
         headers: { Authorization: `Bearer ${authToken}` },
       }),
-      // ...(headers?.authorization && {
-      //   headers: { Authorization: headers?.authorization },
-      // }),
     });
 
     return res.status(200).json(response?.data);
   } catch (err) {
-    console.error("API Error:", {
+    console.error("API Error:",{
       message: err.message,
       code: err.code,
       url: url,

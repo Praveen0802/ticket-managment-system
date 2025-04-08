@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Design from "../../../public/design.svg";
 import Image from "next/image";
 import LeftFold from "./leftFold";
 import RightFold from "./rightFold";
 
 const LoginPage = () => {
+  const [signUpForm, setSignUpForm] = useState(false);
+
   return (
     <div className="bg-[#130061] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
-      {/* <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row min-h-[432px] z-10 relative"> */}
-      {/* <LeftFold /> */}
-      <div className="w-[500px] z-[10]">
-        <RightFold />
+      <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row min-h-[432px] z-10 relative">
+        <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
+        <RightFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
       </div>
-      {/* </div> */}
       <Image
         src={Design}
         className="w-full absolute bottom-0 left-0"

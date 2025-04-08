@@ -45,7 +45,12 @@ const LeftMenuBar = () => {
       key: "my-account",
       route: "reports",
     },
-    { image: documentupload, name: "Lmt Trade", key: "lmt-trade" },
+    {
+      image: documentupload,
+      name: "Lmt Trade",
+      key: "lmt-trade",
+      route: "trade/home",
+    },
   ];
 
   const router = useRouter();
