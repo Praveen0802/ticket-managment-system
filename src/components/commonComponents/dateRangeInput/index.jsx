@@ -8,13 +8,14 @@ const FloatingDateRange = ({
   onChange,
   id,
   keyValue,
+  hideCalendarIcon = false,
   name,
   required = false,
   mandatory = false,
-  labelClassName = "",
   parentClassName = "",
   readOnly,
   className = "",
+  labelClassName = "",
   error = "",
   singleDateMode = false, // New prop to control single date selection mode
 }) => {
@@ -333,7 +334,9 @@ const FloatingDateRange = ({
   return (
     <div className={`${parentClassName}  relative w-full`} ref={dropdownRef}>
       <FloatingPlaceholder
-        className={`${labelClassName} !pl-5 ${readOnly && "bg-gray-100 "}`}
+        className={`${labelClassName} ${!hideCalendarIcon && "!pl-5"} ${
+          readOnly && "bg-gray-100 "
+        }`}
         isFocused={isFocused}
         hasError={!!error}
       >
@@ -349,12 +352,15 @@ const FloatingDateRange = ({
       </FloatingPlaceholder>
 
       <div className="relative">
-        <div
-          className="absolute left-2 z-[10] bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-          onClick={handleInputClick}
-        >
-          <IconStore.calendar className="size-4" />
-        </div>
+        {!hideCalendarIcon && (
+          <div
+            className="absolute left-2 z-10 bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            onClick={handleInputClick}
+          >
+            <IconStore.calendar className="size-4" />
+          </div>
+        )}
+
         <input
           id={id}
           type="text"
@@ -362,7 +368,7 @@ const FloatingDateRange = ({
           value={displayValue}
           readOnly
           onClick={handleInputClick}
-          className={`!pl-8 ${baseClasses} ${
+          className={`${!hideCalendarIcon && "!pl-8"} ${baseClasses} ${
             readOnly && "bg-gray-100"
           }  cursor-pointer ${className}`}
           placeholder=""
@@ -373,7 +379,7 @@ const FloatingDateRange = ({
       {error && <p className="mt-0.5 text-xs text-red-500">{error}</p>}
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded shadow w-full p-2">
+        <div className="absolute z-[99] mt-1 bg-white border border-gray-200 rounded shadow w-full p-2">
           <div className="space-y-2">
             <div className="text-xs font-medium text-gray-700">
               {singleDateMode

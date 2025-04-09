@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import chevronDown from "../../../../public/chevron-down.svg";
 import Image from "next/image";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
+import ChevronRight from "@/components/commonComponents/filledChevron/chevronRight";
 
 const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
   // Calculate the width of sticky columns
-  const stickyColumnsWidth = rightStickyColumns.length * 50; // 80px for Buy button
+  const stickyColumnsWidth = rightStickyColumns.length * 50; // 50px per column
 
   // Split headers into regular and sticky columns
   const regularHeaders = headers.filter(
@@ -17,8 +19,10 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
   const mainTableRef = useRef(null);
   const stickyTableRef = useRef(null);
 
-  // Track scroll position for shadow effect
+  // Track scroll position for shadow effect and navigation
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   // Synchronize row heights on load and resize
   useEffect(() => {
@@ -80,25 +84,58 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
     };
   }, [data]);
 
-  // Handle scroll events for shadow effect
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollContainerRef.current) {
-        const scrollLeft = scrollContainerRef.current.scrollLeft;
-        setHasScrolled(scrollLeft > 0);
-      }
-    };
-
+  // Check if can scroll left/right and handle scroll events
+  const checkScrollability = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.addEventListener("scroll", handleScroll);
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
+
+      // Can scroll left if scrolled at least 1px
+      setCanScrollLeft(scrollLeft > 0);
+
+      // Can scroll right if there's more content to scroll to
+      // Adding a small buffer (1px) to account for rounding errors
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
+
+      // Shadow effect
+      setHasScrolled(scrollLeft > 0);
+    }
+  };
+
+  // Handle scroll events
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      // Initial check
+      checkScrollability();
+
+      // Set up event listener
+      scrollContainerRef.current.addEventListener("scroll", checkScrollability);
     }
 
     return () => {
       if (scrollContainerRef.current) {
-        scrollContainerRef.current.removeEventListener("scroll", handleScroll);
+        scrollContainerRef.current.removeEventListener(
+          "scroll",
+          checkScrollability
+        );
       }
     };
   }, []);
+
+  // Navigation handlers
+  const scrollLeft = () => {
+    if (scrollContainerRef.current && canScrollLeft) {
+      // Scroll left by a reasonable amount (e.g., 200px)
+      scrollContainerRef.current.scrollBy({ left: -200, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current && canScrollRight) {
+      // Scroll right by a reasonable amount (e.g., 200px)
+      scrollContainerRef.current.scrollBy({ left: 200, behavior: "smooth" });
+    }
+  };
 
   return (
     <div ref={containerRef} className="w-full relative">
@@ -146,7 +183,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
                     <td
                       key={`${rowIndex}-${header.key}`}
                       className={`
-                      py-4 px-4 text-[13px]  align-middle
+                      py-4 px-4 text-[13px] align-middle
                       ${
                         header.key === "status"
                           ? "text-green-500"
@@ -166,7 +203,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
         </table>
       </div>
 
-      {/* Sticky right columns */}
+      {/* Sticky right columns with navigation controls */}
       <div
         className={`absolute top-0 right-0 h-full bg-white border-l border-[#E0E1EA] ${
           hasScrolled ? "shadow-md" : ""
@@ -177,12 +214,41 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
           <table ref={stickyTableRef} className="w-full h-full border-collapse">
             <thead>
               <tr className="bg-white border-b border-[#E0E1EA]">
-                {/* Icon columns headers */}
-                {rightStickyColumns.map((column, index) => (
-                  <th key={index} className="py-2 text-sm text-center">
-                    {column?.label || ""}
-                  </th>
-                ))}
+                {/* Navigation arrows in header */}
+                <th colSpan={rightStickyColumns.length} className="py-2 px-2">
+                  <div className="flex justify-end items-center">
+                    {/* Left arrow */}
+                    <button
+                      onClick={scrollLeft}
+                      disabled={!canScrollLeft}
+                      className={`p-1 rounded cursor-pointer ${
+                        canScrollLeft
+                          ? "text-[#323A70] hover:bg-gray-100"
+                          : "text-gray-300 cursor-not-allowed"
+                      }`}
+                      aria-label="Scroll left"
+                    >
+                      <ChevronRight
+                        className="rotate-180"
+                        color={canScrollLeft ? "" : "#B4B7CB"}
+                      />
+                    </button>
+
+                    {/* Right arrow */}
+                    <button
+                      onClick={scrollRight}
+                      disabled={!canScrollRight}
+                      className={`p-1 rounded cursor-pointer ${
+                        canScrollRight
+                          ? "text-[#323A70] hover:bg-gray-100"
+                          : "text-gray-300 cursor-not-allowed"
+                      }`}
+                      aria-label="Scroll right"
+                    >
+                      <ChevronRight color={canScrollRight ? "" : "#B4B7CB"} />
+                    </button>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>

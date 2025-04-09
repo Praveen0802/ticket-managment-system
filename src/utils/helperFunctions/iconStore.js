@@ -37,6 +37,36 @@ export const IconStore = {
       />
     </svg>
   )),
+  plus: withMerger((props) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="size-4"
+      {...props}
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 4.5v15m7.5-7.5h-15"
+      />
+    </svg>
+  )),
+  minus: withMerger((props) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      {...props}
+      class="size-4"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+    </svg>
+  )),
   reload: withMerger((props) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +75,7 @@ export const IconStore = {
       stroke-width="1.5"
       stroke="currentColor"
       {...props}
-      class="size-6"
+      class="size-4"
     >
       <path
         stroke-linecap="round"
@@ -512,7 +542,7 @@ export const IconStore = {
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      class="size-6"
+      class="size-4"
     >
       <path
         stroke-linecap="round"
@@ -521,6 +551,7 @@ export const IconStore = {
       />
     </svg>
   )),
+
   copy: withMerger((props) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

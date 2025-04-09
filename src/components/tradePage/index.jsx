@@ -47,32 +47,34 @@ const TradePage = (props) => {
           );
         })}
       </div>
-      <div className="relative flex">
-        <div
-          // onClick={() => setShowEventSearch(!showEventSearch)}
-          className={`absolute top-10 ${
-            showEventSearch ? "left-[265px]" : "-left-11"
-          } cursor-pointer -translate-y-1/2 -rotate-90 transform origin-center transition-all duration-300`}
-        >
-          <div className="px-3 flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
-            <p className="text-white text-xs font-medium">Event Search</p>
-            <IconStore.chevronDown
-              className={`stroke-white text-white size-3 transition-transform duration-300 ${
-                showEventSearch ? "rotate-180" : ""
-              }`}
-            />
+      <div className="relative h-full flex">
+        {!showEventSearch && (
+          <div
+            onClick={() => setShowEventSearch(!showEventSearch)}
+            className={`absolute top-10 ${
+              showEventSearch ? "left-[265px]" : "-left-11"
+            } cursor-pointer -translate-y-1/2 -rotate-90 transform origin-center transition-all duration-300`}
+          >
+            <div className="px-3 flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
+              <p className="text-white text-xs font-medium">Event Search</p>
+              <IconStore.chevronDown
+                className={`stroke-white text-white size-3 transition-transform duration-300 ${
+                  showEventSearch ? "rotate-180" : ""
+                }`}
+              />
+            </div>
           </div>
-        </div>
+        )}
+
         <div
-          className={`transition-all duration-300 overflow-hidden ${
-            showEventSearch ? "w-[300px]" : "w-0"
-          }`}
+          className={`transition-all duration-300 
+ overflow-hidden ${showEventSearch ? "w-[300px]" : "w-0"}`}
         >
           <EventSearch onClose={() => setShowEventSearch(false)} />
         </div>
         <div
-          className={`transition-all w-full duration-300 ${
-            showEventSearch ? "ml-[0px]" : "ml-0"
+          className={`transition-all duration-300 ${
+            showEventSearch ? "w-[calc(100%-300px)] ml-[0px]" : "w-full ml-0"
           }`}
         >
           {selectedSubComponents?.[selectedTab]}

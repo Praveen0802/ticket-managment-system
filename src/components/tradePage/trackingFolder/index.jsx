@@ -164,7 +164,9 @@ const TrackingPage = () => {
               className="!py-[8px] !px-[16px] mobile:text-xs"
               value={selectedDate}
               singleDateMode={true}
-              onChange={(dateValue) => setSelectedDate(dateValue)}
+              onChange={(dateValue) => {
+                setSelectedDate(dateValue);
+              }}
             />
           </div>
         </div>

@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import FloatingSelect from "../floatinginputFields/floatingSelect";
 import FloatingLabelInput from "../floatinginputFields";
 import FloatingFileUpload from "../floatinginputFields/floatingFIleUpload";
+import FloatingDateRange from "../commonComponents/dateRangeInput";
+import FloatingCheckbox from "../floatinginputFields/floatingCheckBox";
 
 const FormFields = ({ formFields }) => {
   return (
@@ -21,6 +23,7 @@ const FormFields = ({ formFields }) => {
           readOnly,
           options,
           searchable,
+          hideCalendarIcon = false,
           placeholder,
           error,
           rightIcon,
@@ -30,6 +33,13 @@ const FormFields = ({ formFields }) => {
           maxFileSize,
           render,
           customComponent,
+          parentClassName = "",
+          singleDateMode = false,
+          beforeIcon,
+          afterIcon,
+          checked,
+          icon,
+          count,
         } = field;
 
         const keyValue = field?.name || field?.key || id;
@@ -51,7 +61,23 @@ const FormFields = ({ formFields }) => {
                 onSelect={onChange}
                 placeholder={placeholder}
                 error={error}
-                paddingClassName={className} // Using className for padding
+                paddingClassName={className}
+                className={parentClassName}
+              />
+            ) : type === "checkbox" ? (
+              <FloatingCheckbox
+                id={id}
+                name={name}
+                keyValue={keyValue}
+                label={label}
+                checked={checked || value}
+                onChange={onChange}
+                className={className}
+                labelClassName={labelClassName}
+                disabled={disabled}
+                beforeIcon={beforeIcon}
+                afterIcon={afterIcon}
+                count={count}
               />
             ) : type === "text" || type === "password" || type === "email" ? (
               <FloatingLabelInput
@@ -90,11 +116,22 @@ const FormFields = ({ formFields }) => {
                 maxFileSize={maxFileSize || 5}
                 error={error}
               />
+            ) : type === "date" ? (
+              <FloatingDateRange
+                id={name}
+                name={name}
+                keyValue={name}
+                parentClassName={parentClassName}
+                label={label}
+                className={className}
+                value={value}
+                hideCalendarIcon={hideCalendarIcon}
+                labelClassName={labelClassName}
+                onChange={onChange}
+                singleDateMode={singleDateMode}
+              />
             ) : type === "custom" && customComponent ? (
-              <div className="w-full">
-                
-                {customComponent}
-              </div>
+              <div className="w-full">{customComponent}</div>
             ) : render ? (
               render()
             ) : (
