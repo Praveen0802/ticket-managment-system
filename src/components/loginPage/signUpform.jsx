@@ -16,6 +16,7 @@ const SignupForm = () => {
     last_name: "",
     email: "",
     password: "",
+    confirm_password: "",
     mobile_number: "",
     phone_code: "",
   });
@@ -27,6 +28,7 @@ const SignupForm = () => {
     last_name: "",
     email: "",
     password: "",
+    confirm_password: "",
     mobile_number: "",
     phone_code: "",
   });
@@ -60,6 +62,7 @@ const SignupForm = () => {
       last_name: "",
       email: "",
       password: "",
+      confirm_password: "",
       mobile_number: "",
       phone_code: "",
     };
@@ -90,6 +93,14 @@ const SignupForm = () => {
       valid = false;
     }
 
+    if (!formData.confirm_password.trim()) {
+      newErrors.confirm_password = "Please confirm your password";
+      valid = false;
+    } else if (formData.password !== formData.confirm_password) {
+      newErrors.confirm_password = "Passwords do not match";
+      valid = false;
+    }
+
     // Optional fields don't need validation
     // if phone_code is provided, mobile_number is required and vice versa
     if (formData.phone_code && !formData.mobile_number) {
@@ -113,7 +124,10 @@ const SignupForm = () => {
       setLoader(true);
 
       try {
-        const response = await RegisterUser(null, formData);
+        // Remove confirm_password before sending to API
+        const { confirm_password, ...dataToSend } = formData;
+
+        const response = await RegisterUser(null, dataToSend);
         if (response?.id) {
           setLoader(false);
           setEmailVerificationSent(true);
@@ -168,7 +182,9 @@ const SignupForm = () => {
             </p>
           </div>
           {resendVerificationLinkSent ? (
-            <p className="text-center text-sm text-green-500">Verification Link sent</p>
+            <p className="text-center text-sm text-green-500">
+              Verification Link sent
+            </p>
           ) : (
             <p
               className="text-sm cursor-pointer hover:underline text-center text-[#130061] font-medium"
@@ -254,6 +270,28 @@ const SignupForm = () => {
                 />
                 {errors.password && (
                   <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                )}
+              </div>
+
+              <div>
+                <FloatingLabelInput
+                  id="confirm_password"
+                  name="confirm_password"
+                  type="password"
+                  keyValue={"confirm_password"}
+                  className={
+                    "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                  }
+                  label="Confirm Password"
+                  value={formData?.confirm_password}
+                  onChange={handleChange}
+                  error={errors.confirm_password}
+                  required
+                />
+                {errors.confirm_password && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.confirm_password}
+                  </p>
                 )}
               </div>
 
