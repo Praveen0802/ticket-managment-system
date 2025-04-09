@@ -5,11 +5,14 @@ import TradeHome from "./tradeFolders/home";
 import TrackingPage from "./trackingFolder";
 import PurchaseFolder from "./purchaseFolder";
 import InventoryFolder from "./inventoryFolder";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
+import EventSearch from "./components/eventSearch";
 
 const TradePage = (props) => {
   const { profile } = props;
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
+  const [showEventSearch, setShowEventSearch] = useState(false);
   const tabFields = [
     { name: "Home", key: "home", icon: "", route: "/home" },
     { name: "Inventory", icon: "", key: "inventory", route: "/inventory" },
@@ -30,8 +33,8 @@ const TradePage = (props) => {
   };
 
   return (
-    <div className="bg-[#ECEDF2] w-full h-full overflow-auto ">
-      <div className="flex gap-[4px] w-[70%] px-[24px] pt-[24px]">
+    <div className="bg-[#ECEDF2] w-full h-full overflow-auto">
+      <div className={`flex gap-[4px] w-[70%] px-[24px] pt-[24px]`}>
         {tabFields?.map((item, index) => {
           const selectedIndex = item?.key == selectedTab;
           return (
@@ -44,7 +47,37 @@ const TradePage = (props) => {
           );
         })}
       </div>
-      <div>{selectedSubComponents?.[selectedTab]}</div>
+      <div className="relative flex">
+        <div
+          // onClick={() => setShowEventSearch(!showEventSearch)}
+          className={`absolute top-10 ${
+            showEventSearch ? "left-[265px]" : "-left-11"
+          } cursor-pointer -translate-y-1/2 -rotate-90 transform origin-center transition-all duration-300`}
+        >
+          <div className="px-3 flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
+            <p className="text-white text-xs font-medium">Event Search</p>
+            <IconStore.chevronDown
+              className={`stroke-white text-white size-3 transition-transform duration-300 ${
+                showEventSearch ? "rotate-180" : ""
+              }`}
+            />
+          </div>
+        </div>
+        <div
+          className={`transition-all duration-300 overflow-hidden ${
+            showEventSearch ? "w-[300px]" : "w-0"
+          }`}
+        >
+          <EventSearch onClose={() => setShowEventSearch(false)} />
+        </div>
+        <div
+          className={`transition-all w-full duration-300 ${
+            showEventSearch ? "ml-[0px]" : "ml-0"
+          }`}
+        >
+          {selectedSubComponents?.[selectedTab]}
+        </div>
+      </div>
     </div>
   );
 };
