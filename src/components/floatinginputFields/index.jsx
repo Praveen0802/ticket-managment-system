@@ -10,11 +10,13 @@ const FloatingLabelInput = ({
   onKeyDown = null,
   id,
   keyValue,
+  showDropdown = false,
   name,
   required = false,
   autoComplete = "on",
   mandatory = false,
   labelClassName = "",
+  dropDownComponent,
   readOnly,
   className = "",
   placeholder = "",
@@ -23,8 +25,8 @@ const FloatingLabelInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   // Update focus state when value changes
+  console.log(showDropdown && dropDownComponent, "showDropdown");
   useEffect(() => {
     setIsFocused(value ? true : false);
   }, [value]);
@@ -152,6 +154,7 @@ const FloatingLabelInput = ({
             {typeof rightIcon === "function" ? rightIcon() : rightIcon}
           </div>
         )}
+        {showDropdown && dropDownComponent && <div className="absolute z-[999] shadow-md w-full bg-white">{dropDownComponent}</div>}
       </div>
 
       {/* {error && <p className="mt-1 text-sm text-red-500">{error}</p>} */}

@@ -4,7 +4,6 @@ import EventListView from "./eventListView";
 import { formatDate, formatDateTime } from "@/utils/helperFunctions";
 
 const TradeHome = (props) => {
-  console.log(props, "pppppppppppppp");
   const { profile, response = {} } = props;
   const { hotEvents = {}, lastMinuteEvents = [] } = response;
 

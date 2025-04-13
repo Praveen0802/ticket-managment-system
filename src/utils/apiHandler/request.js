@@ -572,3 +572,38 @@ export const LastMinuteEvents = async (token, params = {}) => {
     throw error;
   }
 };
+
+export const FetchEventSearch = async (token, params = {}) => {
+  const queryParams = {
+    ...params,
+    lang: "en",
+    currency: "GBP",
+  };
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.FETCH_EVENT_SEARCH,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in FetchEventSearch", error);
+    throw error;
+  }
+};
+
+export const FetchVenue = async (token, params = {}) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.FETCH_VENUE,
+      method: "GET",
+      ...(token && { token: token }),
+      params: params,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in FetchVenue", error);
+    throw error;
+  }
+};

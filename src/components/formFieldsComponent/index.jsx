@@ -4,6 +4,7 @@ import FloatingLabelInput from "../floatinginputFields";
 import FloatingFileUpload from "../floatinginputFields/floatingFIleUpload";
 import FloatingDateRange from "../commonComponents/dateRangeInput";
 import FloatingCheckbox from "../floatinginputFields/floatingCheckBox";
+import SearchableDropdown from "../floatinginputFields/searchableDropdown";
 
 const FormFields = ({ formFields }) => {
   return (
@@ -24,6 +25,7 @@ const FormFields = ({ formFields }) => {
           options,
           searchable,
           hideCalendarIcon = false,
+          onBlur,
           placeholder,
           error,
           rightIcon,
@@ -38,6 +40,8 @@ const FormFields = ({ formFields }) => {
           beforeIcon,
           afterIcon,
           checked,
+          showDropdown,
+          dropDownComponent,
           icon,
           count,
         } = field;
@@ -85,9 +89,12 @@ const FormFields = ({ formFields }) => {
                 name={name}
                 keyValue={keyValue}
                 type={type}
+                onBlur={onBlur}
                 label={label}
+                showDropdown={showDropdown}
                 labelClassName={labelClassName}
                 mandatory={mandatory}
+                dropDownComponent={dropDownComponent}
                 readOnly={readOnly || disabled}
                 className={className}
                 value={value}
