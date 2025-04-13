@@ -24,6 +24,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [activeTooltipKey, setActiveTooltipKey] = useState(null);
 
   // Synchronize row heights on load and resize
   useEffect(() => {
@@ -263,15 +264,20 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
                       className={`py-2 text-sm align-middle text-center ${column?.className}`}
                     >
                       <div className="flex justify-center">
-                        {column?.icon && (
+                        {column?.icon && column.tooltipText ? (
                           <TooltipWrapper
                             text={
                               column.tooltipText || `${column.key} information`
                             }
                             position={column.tooltipPosition || "top"}
+                            tooltipKey={`${rowIndex}-${column.key}`}
+                            activeKey={activeTooltipKey}
+                            setActiveKey={setActiveTooltipKey}
                           >
                             <div className="cursor-pointer">{column.icon}</div>
                           </TooltipWrapper>
+                        ) : (
+                          <div className="cursor-pointer">{column.icon}</div>
                         )}
                         {column?.cta && <button>{column?.cta}</button>}
                       </div>

@@ -89,29 +89,21 @@ const TrackingPage = () => {
       icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
       className: "cursor-pointer",
       key: "attach",
-      tooltipText: "Attach files",
-      tooltipPosition: "top",
     },
     {
       icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
       className: "cursor-pointer",
       key: "oneHand",
-      tooltipText: "Raise hand",
-      tooltipPosition: "top",
     },
     {
       icon: <Image width={20} height={20} src={star} alt="star" />,
       className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
       key: "star",
-      tooltipText: "Add to favorites",
-      tooltipPosition: "top",
     },
     {
       icon: <Image width={20} height={20} src={documentText} alt="document" />,
       className: "cursor-pointer",
       key: "document",
-      tooltipText: "View document",
-      tooltipPosition: "top",
     },
     {
       icon: (

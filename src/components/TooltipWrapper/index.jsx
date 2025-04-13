@@ -1,10 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-export default function TooltipWrapper({ children, text, position = "top" }) {
-  const [showTooltip, setShowTooltip] = useState(false);
+export default function TooltipWrapper({
+  children,
+  text,
+  position = "top",
+  tooltipKey,
+  activeKey,
+  setActiveKey,
+}) {
   const tooltipRef = useRef(null);
+  const isActive = activeKey === tooltipKey;
 
-  // Map of position configurations
   const positionConfigs = {
     top: {
       tooltipClass: "bottom-full left-1/2 -translate-x-1/2 mb-1",
@@ -28,31 +34,28 @@ export default function TooltipWrapper({ children, text, position = "top" }) {
     },
   };
 
-  // Get configuration for current position
   const config = positionConfigs[position] || positionConfigs.top;
 
-  // Toggle tooltip on click
   const handleClick = (e) => {
     e.stopPropagation();
-    setShowTooltip(!showTooltip);
+    setActiveKey(isActive ? null : tooltipKey);
   };
 
-  // Close tooltip when clicking outside
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (tooltipRef.current && !tooltipRef.current.contains(e.target)) {
-        setShowTooltip(false);
+        setActiveKey(null);
       }
     };
 
-    if (showTooltip) {
+    if (isActive) {
       document.addEventListener("click", handleOutsideClick);
     }
 
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
-  }, [showTooltip]);
+  }, [isActive]);
 
   return (
     <div
@@ -61,7 +64,7 @@ export default function TooltipWrapper({ children, text, position = "top" }) {
       onClick={handleClick}
     >
       {children}
-      {showTooltip && (
+      {isActive && (
         <div
           className={`absolute z-50 ${config.tooltipClass} bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap`}
         >
