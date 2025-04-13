@@ -7,10 +7,11 @@ import PurchaseFolder from "./purchaseFolder";
 import InventoryFolder from "./inventoryFolder";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventSearch from "./components/eventSearch";
+import roundedChevron from "../../../public/rounded-chevron.svg";
+import Image from "next/image";
 
 const TradePage = (props) => {
   const { profile, allCategories, fetchTabCount } = props;
-  console.log(fetchTabCount, "fetchTabCountfetchTabCount");
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);
@@ -70,7 +71,17 @@ const TradePage = (props) => {
   };
 
   return (
-    <div className="bg-[#ECEDF2] w-full h-full overflow-auto">
+    <div className="bg-[#ECEDF2] w-full h-full relative overflow-auto">
+      <div className="absolute top-0 flex gap-3 items-center right-0 bg-white p-4">
+        <div className="flex flex-col">
+          <p className="text-[#7D82A4] text-[12px]">Available funds</p>
+          <p className="text-[14px] text-[#323A70]">£1,915.75</p>
+        </div>
+        <div className="flex gap-2 bg-[#F0F1F5] cursor-pointer rounded-md p-[8px] items-center">
+          <Image src={roundedChevron} width={16} height={16} alt="logo" />
+          <p className="text-[14px] font-normal">Deposit</p>
+        </div>
+      </div>
       <div className={`flex gap-[4px] w-[70%] px-[24px] pt-[24px]`}>
         {tabFields?.map((item, index) => {
           const selectedIndex = item?.key == selectedTab;
