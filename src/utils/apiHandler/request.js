@@ -37,7 +37,10 @@ const makeRequest = async ({
       : await axios({
           url: modifiedUrl,
           method,
-          headers: { ...fetchAuthorizationKey(token) },
+          headers: {
+            ...fetchAuthorizationKey(token),
+            domainkey: process.env.DOMAIN_KEY,
+          },
           ...(data && { data: data }),
         });
     return response;
@@ -524,6 +527,48 @@ export const ResendVerificationRequest = async (token, data) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in ResendVerificationRequest", error);
+    throw error;
+  }
+};
+
+export const FetchHotEvents = async (token, params = {}) => {
+  const queryParams = {
+    ...params,
+    lang: "en",
+    currency: "GBP",
+    client_country: "IN",
+  };
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.HOT_EVENTS,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in FetchHotEvent", error);
+    throw error;
+  }
+};
+
+export const LastMinuteEvents = async (token, params = {}) => {
+  const queryParams = {
+    ...params,
+    lang: "en",
+    currency: "GBP",
+    client_country: "IN",
+  };
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.LAST_MINUTE_EVENTS,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in LastMinuteEvents", error);
     throw error;
   }
 };

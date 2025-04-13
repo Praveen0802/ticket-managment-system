@@ -66,6 +66,7 @@ export default async function handler(req, res) {
         // }),
         ...(authToken && {
           headers: { Authorization: `Bearer ${authToken}` },
+          domainkey: process.env.DOMAIN_KEY,
         }),
       });
 

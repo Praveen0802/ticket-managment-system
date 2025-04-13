@@ -5,6 +5,7 @@ import {
   fetchDashboardData,
   fetchDepositHistory,
   fetchDepositHistoryMonthly,
+  FetchHotEvents,
   fetchOrderHistory,
   fetchProfileDetails,
   fetchTransactionHistory,
@@ -12,6 +13,7 @@ import {
   fetchUserDetails,
   fetchWalletBalance,
   getLinkedCards,
+  LastMinuteEvents,
 } from "../apiHandler/request";
 
 export const fetchSettingsPageDetails = async (profile, token, ctx) => {
@@ -90,4 +92,19 @@ export const fetchDashboardPageDetails = async (token) => {
     );
     return { dashboardData, orderHistory, transactionHistory };
   } catch {}
+};
+
+export const fetchTradePageData = async (tradeType, token) => {
+  if (tradeType === "home") {
+    const [hotEvents, lastMinuteEvents] = await Promise.all([
+      FetchHotEvents(token),
+      LastMinuteEvents(token),
+    ]);
+    console.log(hotEvents,lastMinuteEvents, "hotEventshotEvents");
+    return { hotEvents, lastMinuteEvents };
+  }
+  try {
+  } catch {
+    return {};
+  }
 };

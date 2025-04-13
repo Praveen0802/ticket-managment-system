@@ -1,8 +1,26 @@
 import React, { useState } from "react";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventListView from "./eventListView";
+import { formatDate, formatDateTime } from "@/utils/helperFunctions";
 
-const EventList = () => {
+const TradeHome = (props) => {
+  console.log(props, "pppppppppppppp");
+  const { profile, response = {} } = props;
+  const { hotEvents = {}, lastMinuteEvents = [] } = response;
+
+  const constructViewDataType = (array) => {
+    return array?.map((item) => {
+      return {
+        id: item?.m_id,
+        name: item?.match_name,
+        date: formatDateTime(item?.match_date),
+        time: item?.match_time,
+        listing: item?.listings,
+        availableTickets: item?.available_tickets,
+        priceFrom: `${item?.price_type} ${item?.price_start_from}`,
+      };
+    });
+  };
   // Sample data based on the image
   const sections = [
     {
@@ -50,32 +68,12 @@ const EventList = () => {
     {
       name: "Hot Events",
       icon: "flame",
-      events: [
-        {
-          league: "UEFA Champions League",
-          name: "Inter Milan vs RB Leipzig - Champions League 2024-2025",
-          date: "Tue, 26 Nov 2024",
-          time: "20:00",
-          listing: "71",
-          availableTickets: "£34.40",
-          priceFrom: "£34.40",
-        },
-      ],
+      events: constructViewDataType(hotEvents?.top_matchs),
     },
     {
       name: "Last-minute Events",
       icon: "clock",
-      events: [
-        {
-          league: "UEFA Champions League",
-          name: "Inter Milan vs RB Leipzig - Champions League 2024-2025",
-          date: "Tue, 26 Nov 2024",
-          time: "20:00",
-          listing: "71",
-          availableTickets: "£34.40",
-          priceFrom: "£34.40",
-        },
-      ],
+      events: constructViewDataType(lastMinuteEvents),
     },
   ];
 
@@ -119,12 +117,12 @@ const EventList = () => {
           <div
             className={`bg-white rounded-b shadow overflow-hidden transition-max-height duration-300 ease-in-out ${
               expandedSections[index]
-                ? "max-h-[2000px] opacity-100"
+                ? "max-h-[500px]"
                 : "max-h-0 opacity-0"
             }`}
           >
             <div className="overflow-y-auto max-h-[500px]">
-              {section.events.map((event, eventIndex) => {
+              {section?.events?.map((event, eventIndex) => {
                 return <EventListView key={eventIndex} event={event} />;
               })}
             </div>
@@ -135,4 +133,4 @@ const EventList = () => {
   );
 };
 
-export default EventList;
+export default TradeHome;

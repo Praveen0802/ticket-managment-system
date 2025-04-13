@@ -13,7 +13,10 @@ export default async function handler(req, res) {
     url: url,
     method,
     ...(authToken && {
-      headers: { Authorization: `Bearer ${authToken}` },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        domainkey: process.env.DOMAIN_KEY,
+      },
     }),
   })
     .then((response) => {
