@@ -10,6 +10,7 @@ import FloatingLabelInput from "../floatinginputFields";
 import FloatingSelect from "../floatinginputFields/floatingSelect";
 import {
   fetchCountrieList,
+  getDialingCode,
   RegisterUser,
   ResendVerificationRequest,
 } from "@/utils/apiHandler/request";
@@ -185,14 +186,16 @@ const SignupForm = () => {
   useEffect(() => {
     const fetchCountryCodes = async () => {
       try {
-        const response = await fetchCountrieList();
+        const response = await getDialingCode();
         const isCountryNull = isEmptyObject(response);
         const formattedCodes = isCountryNull
           ? fallbackCountryCode
-          : response?.map((country) => ({
-              label: `${country?.id} (${country?.name})`,
-              value: country?.id,
-            }));
+          : response?.data?.map((item) => {
+              return {
+                value: `${item?.phone_code}`,
+                label: item?.country_code,
+              };
+            });
         setCountryCodes(formattedCodes);
       } catch (error) {
         console.error("Error fetching country codes:", error);
