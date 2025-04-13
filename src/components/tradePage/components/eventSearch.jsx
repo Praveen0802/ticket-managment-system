@@ -20,7 +20,7 @@ const ShimmerItem = () => (
   </div>
 );
 
-const EventSearch = ({ onClose }) => {
+const EventSearch = ({ onClose, allCategories }) => {
   const [formFieldValues, setFormFieldValues] = React.useState({
     event_date: "",
     country: "",
@@ -57,13 +57,19 @@ const EventSearch = ({ onClose }) => {
     };
   };
 
-  // Define the debounced function that accepts the parameters directly
   const debouncedFetchEventSearch = debounce((fetchFunction, params) => {
     fetchFunction(params);
   }, 500);
 
-  const handleChange = async (e, key, type) => {
-    console.log("Event Search Key", e, key);
+  const categoriesList = allCategories?.map((item) => {
+    return {
+      value: item?.id,
+      label: item?.name,
+      tournament: item?.is_tournament,
+    };
+  });
+
+  const handleChange = async (e, key, type, selectedObject) => {
     const selectType = type === "select";
     const dateType = type === "date"; // Fixed equality check
     const value = selectType || dateType ? e : e.target.value;
@@ -79,6 +85,15 @@ const EventSearch = ({ onClose }) => {
     }
     if (key === "venue" && !value) {
       debouncedFetchEventSearch(venueSearch, { params: value });
+    }
+    if (key == "event_categories") {
+      const updatedQueryValues = {
+        ...filtersApplied,
+        is_tournament: selectedObject?.is_tournament,
+        category_id: selectedObject?.id,
+      };
+      setFiltersApplied(updatedQueryValues);
+      fetchApiCall(updatedQueryValues);
     }
   };
 
@@ -195,7 +210,7 @@ const EventSearch = ({ onClose }) => {
       onChange: (e) => handleChange(e, "event_categories", "select"),
       className: `!py-2 !px-4`,
       labelClassName: "text-sm text-gray-600  block",
-      options: [{ value: "", label: "Select Event" }],
+      options: categoriesList,
     },
     {
       label: "Any Date",

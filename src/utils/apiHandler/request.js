@@ -607,3 +607,18 @@ export const FetchVenue = async (token, params = {}) => {
     throw error;
   }
 };
+
+export const FetchAllCategories = async (token, params = {}) => {
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.FETCH_ALL_CATEGORIES,
+      method: "GET",
+      ...(token && { token: token }),
+      ...(params && {params: params,})
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in FetchAllCategories", error);
+    throw error;
+  }
+};

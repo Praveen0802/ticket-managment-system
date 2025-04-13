@@ -64,13 +64,13 @@ const FloatingSelect = ({
     }
   }, [isOpen, searchable]);
 
-  const handleSelect = (option) => {
+  const handleSelect = (option, objectType) => {
     setSelected(option);
     setIsOpen(false);
     setIsFocused(true);
     setSearchTerm("");
     if (onSelect) {
-      onSelect(option, keyValue, "select");
+      onSelect(option, keyValue, "select", objectType);
     }
   };
 
@@ -194,7 +194,6 @@ const FloatingSelect = ({
                   option.label !== undefined ? option.label : option;
                 const isSelectedOption =
                   selected === value || selected === option;
-
                 return (
                   <li
                     key={index}
@@ -207,7 +206,7 @@ const FloatingSelect = ({
                     role="option"
                     aria-selected={isSelectedOption}
                     onClick={() =>
-                      handleSelect(value !== undefined ? value : option)
+                      handleSelect(value !== undefined ? value : option, option)
                     }
                   >
                     <span

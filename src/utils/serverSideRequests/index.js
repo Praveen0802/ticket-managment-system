@@ -1,5 +1,6 @@
 import {
   fetchAddressBookDetails,
+  FetchAllCategories,
   fetchBankAccountDetails,
   fetchCountrieList,
   fetchDashboardData,
@@ -96,12 +97,12 @@ export const fetchDashboardPageDetails = async (token) => {
 
 export const fetchTradePageData = async (tradeType, token) => {
   if (tradeType === "home") {
-    const [hotEvents, lastMinuteEvents] = await Promise.all([
+    const [hotEvents, lastMinuteEvents, allCategories] = await Promise.all([
       FetchHotEvents(token),
       LastMinuteEvents(token),
+      FetchAllCategories(token),
     ]);
-    console.log(hotEvents,lastMinuteEvents, "hotEventshotEvents");
-    return { hotEvents, lastMinuteEvents };
+    return { hotEvents, lastMinuteEvents, allCategories };
   }
   try {
   } catch {

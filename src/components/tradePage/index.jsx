@@ -9,7 +9,8 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventSearch from "./components/eventSearch";
 
 const TradePage = (props) => {
-  const { profile } = props;
+  const { profile, response } = props;
+  const { allCategories = {} } = response;
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);
@@ -70,7 +71,10 @@ const TradePage = (props) => {
           className={`transition-all duration-300 
  overflow-hidden ${showEventSearch ? "w-[300px]" : "w-0"}`}
         >
-          <EventSearch onClose={() => setShowEventSearch(false)} />
+          <EventSearch
+            onClose={() => setShowEventSearch(false)}
+            allCategories={allCategories}
+          />
         </div>
         <div
           className={`transition-all duration-300 ${

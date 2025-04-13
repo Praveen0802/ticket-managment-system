@@ -13,7 +13,6 @@ export async function getServerSideProps(context) {
   const { profile } = context?.query;
   const authToken = getAuthToken(context);
   const response = await fetchTradePageData(profile, authToken);
-  console.log(response, "responseresponse");
   return {
     props: { profile, response: response || {} },
   };
