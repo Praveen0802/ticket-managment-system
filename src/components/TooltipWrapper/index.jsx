@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TooltipWrapper({ children, text, position = "top" }) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const tooltipRef = useRef(null);
 
   // Map of position configurations
   const positionConfigs = {
@@ -30,21 +31,39 @@ export default function TooltipWrapper({ children, text, position = "top" }) {
   // Get configuration for current position
   const config = positionConfigs[position] || positionConfigs.top;
 
-  // Event handlers
-  const showTooltipHandlers = {
-    onMouseEnter: () => setShowTooltip(true),
-    onMouseLeave: () => setShowTooltip(false),
-    onFocus: () => setShowTooltip(true),
-    onBlur: () => setShowTooltip(false),
+  // Toggle tooltip on click
+  const handleClick = (e) => {
+    e.stopPropagation();
+    setShowTooltip(!showTooltip);
   };
 
-  return (
-    <div className="relative inline-block" {...showTooltipHandlers}>
-      {children}
+  // Close tooltip when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (tooltipRef.current && !tooltipRef.current.contains(e.target)) {
+        setShowTooltip(false);
+      }
+    };
 
+    if (showTooltip) {
+      document.addEventListener("click", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [showTooltip]);
+
+  return (
+    <div
+      ref={tooltipRef}
+      className="relative inline-block"
+      onClick={handleClick}
+    >
+      {children}
       {showTooltip && (
         <div
-          className={`absolute z-10 ${config.tooltipClass} bg-gray-800 text-white text-sm px-2 py-1 rounded whitespace-nowrap`}
+          className={`absolute z-50 ${config.tooltipClass} bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap`}
         >
           {text}
           <div

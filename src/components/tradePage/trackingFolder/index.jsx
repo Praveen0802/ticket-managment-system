@@ -87,23 +87,31 @@ const TrackingPage = () => {
   const rightStickyColumns = [
     {
       icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
-      className: " cursor-pointer",
+      className: "cursor-pointer",
       key: "attach",
+      tooltipText: "Attach files",
+      tooltipPosition: "top",
     },
     {
       icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
-      className: " cursor-pointer",
+      className: "cursor-pointer",
       key: "oneHand",
+      tooltipText: "Raise hand",
+      tooltipPosition: "top",
     },
     {
       icon: <Image width={20} height={20} src={star} alt="star" />,
       className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
       key: "star",
+      tooltipText: "Add to favorites",
+      tooltipPosition: "top",
     },
     {
       icon: <Image width={20} height={20} src={documentText} alt="document" />,
       className: "cursor-pointer",
       key: "document",
+      tooltipText: "View document",
+      tooltipPosition: "top",
     },
     {
       icon: (
@@ -111,10 +119,11 @@ const TrackingPage = () => {
           label="Buy"
           classNames={{
             label_: "text-white text-xs sm:text-sm",
-            root: "bg-[#0137D5]  py-1 px-2 rounded-md  hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
           }}
         />
       ),
+      key: "buy",
     },
   ];
 
