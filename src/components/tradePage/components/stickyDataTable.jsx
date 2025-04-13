@@ -155,9 +155,9 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
               {regularHeaders.map((header) => (
                 <th
                   key={header.key}
-                  className="p-4 text-[13px] text-left text-[#7D82A4] font-medium whitespace-nowrap"
+                  className="px-4 py-3  text-left text-[#7D82A4] font-medium whitespace-nowrap"
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex text-[13px] justify-between items-center">
                     {header.label}
                     {header.sortable && (
                       <Image
@@ -183,7 +183,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
                     <td
                       key={`${rowIndex}-${header.key}`}
                       className={`
-                      py-4 px-4 text-[13px] align-middle
+                      py-2 px-4 text-[12px] whitespace-nowrap overflow-hidden text-ellipsis align-middle
                       ${
                         header.key === "status"
                           ? "text-green-500"
@@ -191,9 +191,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
                       }   
                     `}
                     >
-                      <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                        {row[header?.key]}
-                      </div>
+                      {row[header?.key]}
                     </td>
                   ))}
                 </tr>

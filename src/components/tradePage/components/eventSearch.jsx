@@ -45,6 +45,22 @@ const EventSearch = ({ onClose, allCategories }) => {
     setLoading(false);
   };
 
+  const handleClickReset = () => {
+    setLoading(true);
+    const initialValues = {
+      event_date: "",
+      country: "",
+      venue: "",
+      event_categories: "",
+      any_date: "",
+    };
+    setFormFieldValues(initialValues);
+    setDisplayEventValues([]);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
   const venueSearch = async (params) => {
     const response = await FetchVenue("", params);
     setVenueOptions(response);
@@ -213,20 +229,6 @@ const EventSearch = ({ onClose, allCategories }) => {
       labelClassName: "text-sm text-gray-600  block",
       options: categoriesList,
     },
-    {
-      label: "Any Date",
-      type: "custom",
-      id: "any_date",
-      customComponent: (
-        <div className="flex w-full">
-          <SelectDateComponent
-            label="Date Range"
-            onChange={(value) => console.log(value, "vvvvvvvv")}
-            id="date-picker"
-          />
-        </div>
-      ),
-    },
   ];
 
   const renderContent = () => {
@@ -252,12 +254,40 @@ const EventSearch = ({ onClose, allCategories }) => {
     return null;
   };
 
+  const handleDateChange = (key, dateRange) => {
+    let updatedParams = {};
+    if (key === "custom_range") {
+      updatedParams = {
+        start_date: dateRange?.startDate,
+        end_date: dateRange?.endDate,
+        date_format: "",
+        any_date: "",
+      };
+    } else if (key === "any_date") {
+      updatedParams = {
+        start_date: "",
+        end_date: "",
+        date_format: "",
+        any_date: dateRange?.date,
+      };
+    } else {
+      updatedParams = {
+        start_date: "",
+        end_date: "",
+        date_format: key,
+        any_date: "",
+      };
+    }
+    setFiltersApplied({ ...filtersApplied, ...updatedParams });
+    fetchApiCall(updatedParams);
+  };
+
   return (
-    <div className="bg-white w-[300px] h-full shadow-md border-r-[1px] border-[#E0E1EA] flex flex-col">
+    <div className="bg-white w-full h-full shadow-md border-r-[1px] border-[#E0E1EA] flex flex-col">
       <div className="flex justify-between items-center border-b-[1px] border-[#E0E1EA] p-4">
         <p className="text-[#323A70] text-[18px] font-semibold">Event Search</p>
         <div className="flex gap-2 items-center">
-          <button className="cursor-pointer">
+          <button onClick={handleClickReset} className="cursor-pointer">
             <IconStore.reload className="stroke-[#3E2E7E] size-4" />
           </button>
           <button className="cursor-pointer" onClick={onClose}>
@@ -267,6 +297,12 @@ const EventSearch = ({ onClose, allCategories }) => {
       </div>
       <div className="p-6 flex flex-col gap-[16px]">
         <FormFields formFields={formValues} />
+        <SelectDateComponent
+          label="Date Range"
+          onChange={handleDateChange}
+          selectedValue=""
+          id="date-picker"
+        />
       </div>
       <div className="overflow-y-auto flex-1">{renderContent()}</div>
     </div>

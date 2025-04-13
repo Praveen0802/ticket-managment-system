@@ -21,7 +21,6 @@ const ConfirmEmailFold = ({ token }) => {
         token: token,
       };
       const response = await VerifyEmail("", body);
-      console.log(response, "responseresponse");
       setVerifySuccess(true);
       setLoader(false);
     } catch (error) {

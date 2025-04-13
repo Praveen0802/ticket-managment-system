@@ -22,7 +22,6 @@ const FloatingSelect = ({
   searchable = false,
   rightIcon = null,
 }) => {
-  console.log(className, "classNameclassName");
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(selectedValue);
   const [isFocused, setIsFocused] = useState(selectedValue ? true : false);
