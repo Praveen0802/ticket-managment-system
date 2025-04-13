@@ -36,5 +36,6 @@ export const API_ROUTES = {
   LAST_MINUTE_EVENTS: "/purchase/events/last-minute",
   FETCH_EVENT_SEARCH:'/purchase/events/search',
   FETCH_VENUE:`/settings/stadium`,
-  FETCH_ALL_CATEGORIES:'/settings/allcategories'
+  FETCH_ALL_CATEGORIES:'/settings/allcategories',
+  FETCH_TAB_TOTAL:'/purchase/tab-total'
 };

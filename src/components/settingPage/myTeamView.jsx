@@ -49,7 +49,6 @@ const MyTeamView = (props) => {
   const handleApiCAll = async (params) => {
     setIsLoading(true);
     const response = await fetchUserDetails("", "", "GET", "", params);
-    console.log(response, "responseresponse");
     setTravelCustomerValues(response?.travel_Customers);
     setMetaDetails(response?.meta);
     setIsLoading(false);

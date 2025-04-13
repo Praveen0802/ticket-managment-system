@@ -10,7 +10,6 @@ import Image from "next/image";
 const DashboardPage = (props) => {
   const { apiData } = props;
   const { dashboardData, orderHistory, transactionHistory } = apiData;
-  console.log(dashboardData, "dashboardDatadashboardData");
   return (
     <div className="flex flex-col h-full">
       <Subheader />

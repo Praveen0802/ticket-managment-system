@@ -8,6 +8,7 @@ const FloatingCheckbox = ({
   onChange,
   className = "",
   labelClassName = "",
+  parentClassName = "",
   disabled = false,
   beforeIcon = "",
   afterIcon = "",
@@ -17,15 +18,15 @@ const FloatingCheckbox = ({
       className={` flex border-[1px] w-full border-[#DADBE5] rounded-[6px] items-center ${className}`}
     >
       {beforeIcon && (
-        <div className="p-[10px] border-r-[1px] border-[#DADBE5]">
+        <div className="p-[8px] border-r-[1px] border-[#DADBE5]">
           {beforeIcon}
         </div>
       )}
-      <div className="flex gap-4 justify-between w-full px-[10px] py-[8px] items-center">
+      <div className={"flex gap-4 justify-between w-full px-[10px] py-[6px] items-center"}>
         <div className=" flex items-center gap-2">
           <p
             title={label}
-            className={`${labelClassName} text-[14px] truncate text-[#323A70] font-normal`}
+            className={`${labelClassName} text-[12px] truncate text-[#323A70] font-normal`}
           >
             {label}
           </p>

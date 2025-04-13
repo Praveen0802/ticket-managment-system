@@ -1,5 +1,5 @@
 import TradePage from "@/components/tradePage";
-import { FetchAllCategories } from "@/utils/apiHandler/request";
+import { FetchAllCategories, FetchTabTotal } from "@/utils/apiHandler/request";
 import { getAuthToken } from "@/utils/helperFunctions";
 import { fetchTradePageData } from "@/utils/serverSideRequests";
 import React from "react";
@@ -15,11 +15,13 @@ export async function getServerSideProps(context) {
   const authToken = getAuthToken(context);
   const response = await fetchTradePageData(profile, authToken);
   const allCategories = await FetchAllCategories(authToken);
+  const fetchTabCount = await FetchTabTotal(authToken);
   return {
     props: {
       profile,
       response: response || {},
       allCategories: allCategories || [],
+      fetchTabCount: fetchTabCount || {},
     },
   };
 }

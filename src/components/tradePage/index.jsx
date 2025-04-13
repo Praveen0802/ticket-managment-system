@@ -9,15 +9,52 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventSearch from "./components/eventSearch";
 
 const TradePage = (props) => {
-  const { profile, allCategories } = props;
+  const { profile, allCategories, fetchTabCount } = props;
+  console.log(fetchTabCount, "fetchTabCountfetchTabCount");
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);
   const tabFields = [
-    { name: "Home", key: "home", icon: "", route: "/home" },
-    { name: "Inventory", icon: "", key: "inventory", route: "/inventory" },
-    { name: "Tracking", icon: "", key: "tracking", route: "/tracking" },
-    { name: "Purchase", icon: "", key: "purchase", route: "/purchase" },
+    {
+      name: "Home",
+      key: "home",
+      icon: "",
+      route: "/home",
+      icon: (
+        <IconStore.homeIcon className="text-[#3E2E7E] stroke-[#3E2E7E] size-4" />
+      ),
+    },
+    {
+      name: "Inventory",
+      icon: "",
+      key: "inventory",
+      route: "/inventory",
+      icon: (
+        <IconStore.search className="text-[#3E2E7E] stroke-[#3E2E7E] size-4" />
+      ),
+    },
+    {
+      name: "Tracking",
+      icon: "",
+      key: "tracking",
+      route: "/tracking",
+      icon: (
+        <p className="text-white bg-[#130061] text-[10px] px-[6px] py-[2px] rounded-md">
+          {fetchTabCount?.trackerCount}
+        </p>
+      ),
+    },
+    {
+      name: "Purchase",
+      icon: "",
+      key: "purchase",
+      route: "/purchase",
+      icon: (
+        <p className="text-white bg-[#130061] text-[10px] px-[6px] py-[2px] rounded-md">
+          {fetchTabCount?.purchaseCount}
+        </p>
+      ),
+    },
   ];
 
   const handleSelectItemClick = (item) => {
@@ -51,7 +88,7 @@ const TradePage = (props) => {
         {!showEventSearch && (
           <div
             onClick={() => setShowEventSearch(!showEventSearch)}
-            className={`absolute top-10 ${
+            className={`absolute z-[999] top-10 ${
               showEventSearch ? "left-[265px]" : "-left-11"
             } cursor-pointer -translate-y-1/2 -rotate-90 transform origin-center transition-all duration-300`}
           >
@@ -68,7 +105,7 @@ const TradePage = (props) => {
 
         <div
           className={`transition-all duration-300 
- overflow-hidden ${showEventSearch ? "w-[300px]" : "w-0"}`}
+             ${showEventSearch ? "w-[300px]" : "w-0"}`}
         >
           <EventSearch
             onClose={() => setShowEventSearch(false)}
@@ -76,7 +113,7 @@ const TradePage = (props) => {
           />
         </div>
         <div
-          className={`transition-all duration-300 ${
+          className={`transition-all duration-300 z-[99] ${
             showEventSearch ? "w-[calc(100%-300px)] ml-[0px]" : "w-full ml-0"
           }`}
         >

@@ -26,7 +26,6 @@ const FloatingLabelInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   // Update focus state when value changes
-  console.log(showDropdown && dropDownComponent, "showDropdown");
   useEffect(() => {
     setIsFocused(value ? true : false);
   }, [value]);

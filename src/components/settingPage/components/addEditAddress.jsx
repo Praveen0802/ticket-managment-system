@@ -82,7 +82,6 @@ const AddEditAddress = ({
     });
     setPhoneCodeOptions(phoneCodeField);
   };
-  console.log(phoneCodeOptions, "pppppppppp");
   useEffect(() => {
     fetchPhoneCodeOptions();
   }, []);

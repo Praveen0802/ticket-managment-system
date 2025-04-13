@@ -61,7 +61,6 @@ const ShimmerLoader = () => {
 const AddressBook = (props) => {
   const { primaryAddress, defaultAddress, profileDetails, fetchCountries } =
     props;
-  console.log(props, "propsprops");
   const [primaryAddressData, setPrimaryAddressData] = useState(primaryAddress);
   const [addressBookDetails, setAddressBookDetails] = useState(defaultAddress);
   const [addressViewPopup, setAddressViewPopup] = useState({
@@ -72,7 +71,6 @@ const AddressBook = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const addressValues = addressBookDetails?.map((item) => {
-    console.log(item, "itemitem");
     const title = `${item?.address_type ? item?.address_type : "Address"} - ${
       item.zip_code || "N/A"
     }`;

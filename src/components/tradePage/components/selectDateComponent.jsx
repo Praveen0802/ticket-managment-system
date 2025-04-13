@@ -7,24 +7,31 @@ const SelectDateComponent = ({
   onChange,
   className = "",
   mandatory = false,
-  paddingClassName = "px-3 py-[14px]",
+  paddingClassName = "px-3 py-[8px]",
   error = "",
   id,
   labelClassName = "",
   disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(selectedValue || "Any date");
+  const [selected, setSelected] = useState(selectedValue);
   const [isFocused, setIsFocused] = useState(selectedValue ? true : false);
+  const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
+  const [showSingleDatePicker, setShowSingleDatePicker] = useState(false);
+  const [customDateRange, setCustomDateRange] = useState({
+    startDate: "",
+    endDate: "",
+  });
+  const [singleDate, setSingleDate] = useState("");
   const dropdownRef = useRef(null);
 
   const dateOptions = [
-    { value: "any", label: "Any date" },
+    { value: "any", label: "Any Date" },
     { value: "today", label: "Today" },
-    { value: "next7", label: "Next 7 days" },
-    { value: "next30", label: "Next 30 days" },
-    { value: "next60", label: "Next 60 days" },
-    { value: "custom", label: "Custom range" },
+    { value: "next_7days", label: "Next 7 Days" },
+    { value: "next_30days", label: "Next 30 Days" },
+    { value: "next_60days", label: "Next 60 Days" },
+    { value: "custom_range", label: "Custom Range" },
   ];
 
   // Close dropdown when clicking outside
@@ -36,6 +43,9 @@ const SelectDateComponent = ({
         if (!selected) {
           setIsFocused(false);
         }
+        // Also hide date pickers when clicking outside
+        setShowCustomDatePicker(false);
+        setShowSingleDatePicker(false);
       }
     };
 
@@ -55,16 +65,107 @@ const SelectDateComponent = ({
 
   const handleSelect = (option) => {
     setSelected(option.label);
-    setIsOpen(false);
+
+    if (option.value === "custom_range") {
+      // Show ONLY custom date range picker
+      setShowCustomDatePicker(true);
+      setShowSingleDatePicker(false);
+    } else if (option.value === "any") {
+      // Show ONLY single date picker for "any" option
+      setShowSingleDatePicker(true);
+      setShowCustomDatePicker(false);
+    } else {
+      // Handle other predefined options - hide all pickers
+      setShowCustomDatePicker(false);
+      setShowSingleDatePicker(false);
+      setIsOpen(false);
+
+      if (onChange) {
+        onChange(option.value);
+      }
+    }
+
     setIsFocused(true);
-    if (onChange) {
-      onChange(option.value);
+  };
+
+  const handleCustomDateChange = (dateRange) => {
+    // Format the custom date range for display
+    const startFormatted = dateRange.startDate
+      ? new Date(dateRange.startDate)
+          .toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+          })
+          .replace(/\//g, "/")
+      : "";
+
+    const endFormatted = dateRange.endDate
+      ? new Date(dateRange.endDate)
+          .toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+          })
+          .replace(/\//g, "/")
+      : "";
+
+    // Update the displayed value
+    if (startFormatted && endFormatted) {
+      setSelected(`${startFormatted} - ${endFormatted}`);
+      setCustomDateRange(dateRange);
+
+      // Call parent onChange with the custom date value
+      if (onChange) {
+        onChange("custom_range", dateRange);
+      }
+
+      // Hide all pickers and close dropdown
+      setShowCustomDatePicker(false);
+      setShowSingleDatePicker(false);
+      setIsOpen(false);
+    }
+  };
+
+  const handleSingleDateChange = (date) => {
+    // Format the single date for display
+    const formatted = date
+      ? new Date(date)
+          .toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+          })
+          .replace(/\//g, "/")
+      : "";
+
+    if (formatted) {
+      setSelected(formatted);
+      setSingleDate(date);
+
+      // Call parent onChange with the single date value
+      if (onChange) {
+        onChange("any", { date });
+      }
+
+      // Hide all pickers and close dropdown
+      setShowSingleDatePicker(false);
+      setShowCustomDatePicker(false);
+      setIsOpen(false);
     }
   };
 
   const toggleDropdown = () => {
     if (!disabled) {
-      setIsOpen(!isOpen);
+      const newIsOpen = !isOpen;
+      setIsOpen(newIsOpen);
+
+      // Hide ALL date pickers when reopening main dropdown
+      if (newIsOpen) {
+        setShowCustomDatePicker(false);
+        setShowSingleDatePicker(false);
+      }
+
       setIsFocused(true);
     }
   };
@@ -109,14 +210,6 @@ const SelectDateComponent = ({
         tabIndex={disabled ? -1 : 0}
       >
         <div className="flex items-center">
-          <svg 
-            className="w-5 h-5 text-purple-800 mr-2" 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 24 24" 
-            fill="currentColor"
-          >
-            <path d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z" />
-          </svg>
           <span>{selected}</span>
         </div>
 
@@ -140,23 +233,463 @@ const SelectDateComponent = ({
 
       {isOpen && !disabled && (
         <div className="absolute z-50 w-full mt-1 bg-white rounded-md shadow-lg">
-          <div className="grid grid-cols-2 gap-2 p-2">
-            {dateOptions.map((option, index) => (
-              <button
-                key={index}
-                className={`text-left p-3 rounded hover:bg-indigo-50 ${
-                  selected === option.label ? "bg-indigo-100 text-purple-800" : "text-gray-900"
-                }`}
-                onClick={() => handleSelect(option)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+          {/* Show options only when neither date picker is active */}
+          {!showCustomDatePicker && !showSingleDatePicker && (
+            <div className="grid grid-cols-2 gap-2 p-2">
+              {dateOptions.map((option, index) => (
+                <button
+                  key={index}
+                  className={`text-left px-3 py-2 text-[12px] cursor-pointer rounded hover:bg-indigo-50 ${
+                    selected === option.label
+                      ? "bg-indigo-100 text-purple-800"
+                      : "text-gray-900"
+                  }`}
+                  onClick={() => handleSelect(option)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Only ONE of these pickers should be visible at any time */}
+          {showSingleDatePicker && (
+            <div className="p-2 border-t border-gray-200">
+              <div className="mb-1 text-xs font-medium text-gray-700">
+                Select date
+              </div>
+
+              {/* Single date calendar */}
+              <div className="inline-block w-full">
+                <SingleDatePicker
+                  value={singleDate}
+                  onChange={handleSingleDateChange}
+                />
+              </div>
+            </div>
+          )}
+
+          {showCustomDatePicker && (
+            <div className="p-2 border-t border-gray-200">
+              <div className="mb-1 text-xs font-medium text-gray-700">
+                Select date range
+              </div>
+
+              {/* Custom date range calendar */}
+              <div className="inline-block w-full">
+                <CustomCalendarPicker
+                  value={customDateRange}
+                  onChange={handleCustomDateChange}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+    </div>
+  );
+};
+
+// Single Date Picker component
+const SingleDatePicker = ({ value, onChange }) => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [tempSelectedDate, setTempSelectedDate] = useState(
+    value ? new Date(value) : null
+  );
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date
+      .toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      })
+      .replace(/\//g, "/");
+  };
+
+  const handleClear = () => {
+    setTempSelectedDate(null);
+  };
+
+  const handleConfirm = () => {
+    if (tempSelectedDate) {
+      const formattedDate = tempSelectedDate.toISOString().split("T")[0];
+      if (onChange) {
+        onChange(formattedDate);
+      }
+    }
+  };
+
+  const handleDateClick = (date) => {
+    setTempSelectedDate(date);
+    // Auto apply date on click (optional)
+    const formattedDate = date.toISOString().split("T")[0];
+    if (onChange) {
+      onChange(formattedDate);
+    }
+  };
+
+  const navigateMonth = (direction) => {
+    const newMonth = new Date(currentMonth);
+    newMonth.setMonth(newMonth.getMonth() + direction);
+    setCurrentMonth(newMonth);
+  };
+
+  const renderCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+
+    const startingDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Adjust for Monday start
+
+    const prevMonthDays = new Date(year, month, 0).getDate();
+    const nextMonthDays = 42 - (daysInMonth + startingDay); // 6 weeks display
+
+    const days = [];
+
+    // Previous month days
+    for (let i = 0; i < startingDay; i++) {
+      const day = prevMonthDays - startingDay + i + 1;
+      const date = new Date(year, month - 1, day);
+      days.push({
+        date,
+        day,
+        isCurrentMonth: false,
+        isSelected: false,
+      });
+    }
+
+    // Current month days
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(year, month, i);
+      const isSelected = tempSelectedDate
+        ? date.toDateString() === tempSelectedDate.toDateString()
+        : false;
+
+      days.push({
+        date,
+        day: i,
+        isCurrentMonth: true,
+        isSelected: isSelected,
+      });
+    }
+
+    // Next month days
+    for (let i = 1; i <= nextMonthDays; i++) {
+      const date = new Date(year, month + 1, i);
+      days.push({
+        date,
+        day: i,
+        isCurrentMonth: false,
+        isSelected: false,
+      });
+    }
+
+    return (
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-1">
+          <button
+            onClick={() => navigateMonth(-1)}
+            className="p-0.5 text-xs rounded cursor-pointer hover:bg-gray-100"
+          >
+            &lt;
+          </button>
+          <div className="text-xs font-medium">
+            {currentMonth.toLocaleDateString("default", {
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
+          <button
+            onClick={() => navigateMonth(1)}
+            className="p-0.5 cursor-pointer text-xs rounded hover:bg-gray-100"
+          >
+            &gt;
+          </button>
+        </div>
+
+        <div className="grid grid-cols-7 gap-0.5 text-[10px] text-center mb-1">
+          {["M", "T", "W", "T", "F", "S", "S"].map((day) => (
+            <div key={day} className="font-medium text-gray-500 py-0.5">
+              {day}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-0.5">
+          {days.map((dayObj, index) => {
+            const isSelected = dayObj.isSelected;
+            const isToday =
+              dayObj.date.toDateString() === new Date().toDateString();
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleDateClick(dayObj.date)}
+                className={`h-6 rounded cursor-pointer text-[10px]
+                  ${dayObj.isCurrentMonth ? "text-gray-800" : "text-gray-400"}
+                  ${isSelected ? "bg-blue-600 text-white" : ""}
+                  ${isToday ? "border border-blue-400" : ""}
+                  hover:bg-blue-200
+                `}
+                disabled={!dayObj.isCurrentMonth}
+              >
+                {dayObj.day}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="text-xs font-medium text-gray-700">
+        {tempSelectedDate
+          ? formatDate(tempSelectedDate.toISOString())
+          : "Select a date"}
+      </div>
+
+      {renderCalendar()}
+
+      <div className="flex justify-between pt-2">
+        <button
+          onClick={handleClear}
+          className="px-2 py-1 cursor-pointer text-xs text-gray-700 hover:bg-gray-100 rounded"
+        >
+          Reset
+        </button>
+        <button
+          onClick={handleConfirm}
+          className="px-2 py-1 text-xs cursor-pointer bg-blue-600 text-white rounded hover:bg-blue-700"
+          disabled={!tempSelectedDate}
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Custom Date Range Picker component
+const CustomCalendarPicker = ({ value, onChange }) => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [tempStartDate, setTempStartDate] = useState(
+    value.startDate ? new Date(value.startDate) : null
+  );
+  const [tempEndDate, setTempEndDate] = useState(
+    value.endDate ? new Date(value.endDate) : null
+  );
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date
+      .toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      })
+      .replace(/\//g, "/");
+  };
+
+  const handleApply = () => {
+    if (tempStartDate && tempEndDate) {
+      const formattedStart = tempStartDate.toISOString().split("T")[0];
+      const formattedEnd = tempEndDate.toISOString().split("T")[0];
+
+      if (onChange) {
+        onChange({ startDate: formattedStart, endDate: formattedEnd });
+      }
+    }
+  };
+
+  const handleClear = () => {
+    setTempStartDate(null);
+    setTempEndDate(null);
+  };
+
+  const handleDateClick = (date) => {
+    if (!tempStartDate || (tempStartDate && tempEndDate)) {
+      // If no start date selected or both are selected, start new selection
+      setTempStartDate(date);
+      setTempEndDate(null);
+    } else if (date < tempStartDate) {
+      // If selected date is before start date, make it the new start date
+      setTempStartDate(date);
+      setTempEndDate(null);
+    } else {
+      // Otherwise set as end date
+      setTempEndDate(date);
+    }
+  };
+
+  const navigateMonth = (direction) => {
+    const newMonth = new Date(currentMonth);
+    newMonth.setMonth(newMonth.getMonth() + direction);
+    setCurrentMonth(newMonth);
+  };
+
+  const renderCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+
+    const startingDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Adjust for Monday start
+
+    const prevMonthDays = new Date(year, month, 0).getDate();
+    const nextMonthDays = 42 - (daysInMonth + startingDay); // 6 weeks display
+
+    const days = [];
+
+    // Previous month days
+    for (let i = 0; i < startingDay; i++) {
+      const day = prevMonthDays - startingDay + i + 1;
+      const date = new Date(year, month - 1, day);
+      days.push({
+        date,
+        day,
+        isCurrentMonth: false,
+        isSelected: false,
+        isInRange: false,
+      });
+    }
+
+    // Current month days
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(year, month, i);
+      const isSelected =
+        tempStartDate && tempEndDate
+          ? date >= tempStartDate && date <= tempEndDate
+          : tempStartDate
+          ? date.getTime() === tempStartDate.getTime()
+          : false;
+
+      days.push({
+        date,
+        day: i,
+        isCurrentMonth: true,
+        isSelected: isSelected,
+        isInRange:
+          tempStartDate &&
+          tempEndDate &&
+          date > tempStartDate &&
+          date < tempEndDate,
+      });
+    }
+
+    // Next month days
+    for (let i = 1; i <= nextMonthDays; i++) {
+      const date = new Date(year, month + 1, i);
+      days.push({
+        date,
+        day: i,
+        isCurrentMonth: false,
+        isSelected: false,
+        isInRange: false,
+      });
+    }
+
+    return (
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-1">
+          <button
+            onClick={() => navigateMonth(-1)}
+            className="p-0.5 text-xs rounded cursor-pointer hover:bg-gray-100"
+          >
+            &lt;
+          </button>
+          <div className="text-xs font-medium">
+            {currentMonth.toLocaleDateString("default", {
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
+          <button
+            onClick={() => navigateMonth(1)}
+            className="p-0.5 cursor-pointer text-xs rounded hover:bg-gray-100"
+          >
+            &gt;
+          </button>
+        </div>
+
+        <div className="grid grid-cols-7 gap-0.5 text-[10px] text-center mb-1">
+          {["M", "T", "W", "T", "F", "S", "S"].map((day) => (
+            <div key={day} className="font-medium text-gray-500 py-0.5">
+              {day}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-0.5">
+          {days.map((dayObj, index) => {
+            const isSelected = dayObj.isSelected;
+            const isInRange = dayObj.isInRange;
+            const isToday =
+              dayObj.date.toDateString() === new Date().toDateString();
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleDateClick(dayObj.date)}
+                className={`h-6 rounded cursor-pointer text-[10px]
+                  ${dayObj.isCurrentMonth ? "text-gray-800" : "text-gray-400"}
+                  ${isSelected ? "bg-blue-600 text-white" : ""}
+                  ${isInRange ? "bg-blue-100" : ""}
+                  ${isToday ? "border border-blue-400" : ""}
+                  hover:bg-blue-200
+                `}
+                disabled={!dayObj.isCurrentMonth}
+              >
+                {dayObj.day}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="text-xs font-medium text-gray-700">
+        {tempStartDate && tempEndDate
+          ? `${formatDate(tempStartDate.toISOString())} - ${formatDate(
+              tempEndDate.toISOString()
+            )}`
+          : tempStartDate
+          ? `${formatDate(tempStartDate.toISOString())} - Select end date`
+          : "Select start date"}
+      </div>
+
+      {renderCalendar()}
+
+      <div className="flex justify-between pt-2">
+        <button
+          onClick={handleClear}
+          className="px-2 py-1 cursor-pointer text-xs text-gray-700 hover:bg-gray-100 rounded"
+        >
+          Reset
+        </button>
+        <button
+          onClick={handleApply}
+          className="px-2 py-1 text-xs cursor-pointer bg-blue-600 text-white rounded hover:bg-blue-700"
+          disabled={!tempStartDate || !tempEndDate}
+        >
+          Confirm
+        </button>
+      </div>
     </div>
   );
 };

@@ -19,9 +19,9 @@ const InventoryFilterForm = (props) => {
       name: "category",
       value: formFieldValues?.category,
       onChange: (e) => handleChange(e, "category", "select"),
-      className: "py-2 px-4",
-      parentClassName: "w-full md:w-55",
-      labelClassName: "text-sm text-gray-600 mb-1 block",
+      className: "py-[4px] px-4",
+      parentClassName: "w-full md:w-40",
+      labelClassName: "!text-[13px] text-gray-600  block",
       options: [{ value: "", label: "Select category" }],
     },
     {
@@ -33,9 +33,9 @@ const InventoryFilterForm = (props) => {
       name: "quantity",
       value: formFieldValues?.quantity,
       onChange: (e) => handleChange(e, "quantity", "select"),
-      className: "py-2 px-4",
-      parentClassName: "w-full md:w-55",
-      labelClassName: "text-sm text-gray-600 mb-1 block",
+      className: "py-[4px] px-4",
+      parentClassName: "w-full md:w-40",
+      labelClassName: "!text-[13px] text-gray-600  block",
       options: [{ value: "", label: "Select quantity" }],
     },
     {
@@ -47,49 +47,49 @@ const InventoryFilterForm = (props) => {
       name: "ticket_type",
       value: formFieldValues?.ticket_type,
       onChange: (e) => handleChange(e, "ticket_type", "select"),
-      className: "py-2 px-4",
-      parentClassName: "w-full md:w-55",
-      labelClassName: "text-sm text-gray-600 mb-1 block",
+      className: "py-[4px] px-4",
+      parentClassName: "w-full md:w-40",
+      labelClassName: "!text-[13px] text-gray-600 block",
       options: [{ value: "", label: "Select ticket_type" }],
     },
     {
       type: "checkbox",
       label: "Tickets in hand",
-      beforeIcon: <Image width={16} height={16} src={oneHand} alt="hand" />,
+      beforeIcon: <Image width={13} height={13} src={oneHand} alt="hand" />,
       afterIcon: (
-        <Image width={16} height={16} src={grayExclamatory} alt="hand" />
+        <Image width={13} height={13} src={grayExclamatory} alt="hand" />
       ),
       id: "ticketsInHand",
       name: "ticketsInHand",
       checked: formFieldValues?.ticketsInHand,
       onChange: (e) => handleChange(e, "ticketsInHand", "checkbox"),
-      className: "md:w-55",
+      className: "md:w-40",
       parentClassName: "w-full md:w-auto flex items-center",
     },
     {
       type: "checkbox",
       label: "Instant Download",
       beforeIcon: (
-        <Image width={16} height={16} src={download} alt="download" />
+        <Image width={13} height={13} src={download} alt="download" />
       ),
       id: "instantDownload",
       name: "instantDownload",
       checked: formFieldValues?.instantDownload,
       onChange: (e) => handleChange(e, "instantDownload", "checkbox"),
-      className: "md:w-55",
+      className: "md:w-40",
       parentClassName: "w-full md:w-auto flex items-center",
     },
     {
       type: "checkbox",
       label: "New Listings",
       afterIcon: (
-        <Image width={16} height={16} src={grayQuestion} alt="question" />
+        <Image width={13} height={13} src={grayQuestion} alt="question" />
       ),
       id: "newListings",
       name: "newListings",
       checked: formFieldValues?.newListings,
       onChange: (e) => handleChange(e, "newListings", "checkbox"),
-      className: "md:w-55",
+      className: "md:w-40",
       parentClassName: "w-full md:w-auto flex items-center",
     },
   ];

@@ -18,7 +18,7 @@ import PinPatchMap from "./pinPatchMap";
 
 const InventoryFolder = () => {
   const [selectedItem, setSelectedItem] = useState("all");
-  const [showMap, setShowMap] = useState(false);
+  const [showMap, setShowMap] = useState(true);
   const [formFieldValues, setFormFieldValues] = useState({
     category: "",
     quantity: "",
@@ -38,7 +38,7 @@ const InventoryFolder = () => {
     return (
       <div className="flex gap-[8px] items-center">
         {icon}
-        <p className="text-[14px] font-normal text-[#323A70]">{text}</p>
+        <p className="text-[12px] font-normal text-[#323A70]">{text}</p>
       </div>
     );
   };
@@ -74,7 +74,7 @@ const InventoryFolder = () => {
     return (
       <div className="flex gap-2 items-center">
         {icon && icon}
-        <p className="text-[#323A70] text-[14px] font-normal">{text}</p>
+        <p className="text-[#323A70] text-[12px] font-normal">{text}</p>
       </div>
     );
   };
@@ -175,7 +175,7 @@ const InventoryFolder = () => {
     {
       icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
       className: " cursor-pointer",
-      key: "attach",
+      key: "attach",   
     },
     {
       icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
@@ -209,24 +209,24 @@ const InventoryFolder = () => {
     <div className="flex flex-col gap-6 h-[calc(100%-100px)]">
       <div className="bg-white w-full">
         <div className="px-[30px] border-b-[1px] border-[#E0E1EA] flex gap-4 items-center">
-          <p className="py-[20px] pr-[20px] text-[14px] font-medium text-[#323A70] border-r-[1px] border-[#E0E1EA]">
+          <p className="py-[12px] pr-[20px] text-[12px] font-medium text-[#323A70] border-r-[1px] border-[#E0E1EA]">
             {selectedMatchData?.match}
           </p>
-          <div className="py-[20px] flex gap-4 items-center">
+          <div className="py-[10px] flex gap-4 items-center">
             <div className="pr-[20px] border-r-[1px] border-[#E0E1EA]">
               {renderListValue(
                 <Image
                   src={blueCalendar}
                   alt="location"
-                  width={18}
-                  height={18}
+                  width={14}
+                  height={14}
                 />,
                 selectedMatchData?.eventDate
               )}
             </div>
             <div className="pr-[20px] border-r-[1px] border-[#E0E1EA]">
               {renderListValue(
-                <Image src={blueClock} alt="location" width={18} height={18} />,
+                <Image src={blueClock} alt="location" width={14} height={14} />,
 
                 selectedMatchData?.eventTime
               )}
@@ -235,15 +235,15 @@ const InventoryFolder = () => {
               <Image
                 src={blueLocation}
                 alt="location"
-                width={18}
-                height={18}
+                width={14}
+                height={14}
               />,
 
               selectedMatchData?.Venue
             )}
           </div>
         </div>
-        <div className="px-[24px] py-[20px] border-b-[1px] border-[#E0E1EA]">
+        <div className="px-[24px] py-[10px] border-b-[1px] border-[#E0E1EA]">
           <div className="w-[250px]">
             <ToggleStatus
               listItems={listItems}
@@ -252,14 +252,14 @@ const InventoryFolder = () => {
             />
           </div>
         </div>
-        <div className="px-[24px] py-[20px] border-b-[1px] border-[#E0E1EA]">
+        <div className="px-[24px] py-[10px] border-b-[1px] border-[#E0E1EA]">
           <InventoryFilterForm
             formFieldValues={formFieldValues}
             handleChange={handleChange}
           />
         </div>
         <div className="border-b-[1px] border-[#E0E1EA]">
-          <div className="px-[24px] flex gap-3 items-center w-fit border-r-[1px] py-[12px] border-[#E0E1EA] ">
+          <div className="px-[21px] flex gap-3 items-center w-fit border-r-[1px] py-[10px] border-[#E0E1EA] ">
             {renderListItem(
               <Image src={hamburger} width={18} height={18} alt="logo" />,
               162
