@@ -1,11 +1,15 @@
-import { currentTimeEpochTimeInMilliseconds } from "@/utils/helperFunctions";
+import {
+  currentTimeEpochTimeInMilliseconds,
+  isEmptyObject,
+} from "@/utils/helperFunctions";
 import { setCookie } from "@/utils/helperFunctions/cookie";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../commonComponents/button";
 import FloatingLabelInput from "../floatinginputFields";
 import FloatingSelect from "../floatinginputFields/floatingSelect";
 import {
+  fetchCountrieList,
   RegisterUser,
   ResendVerificationRequest,
 } from "@/utils/apiHandler/request";
@@ -37,6 +41,7 @@ const SignupForm = () => {
 
   const [loader, setLoader] = useState(false);
   const [resendVerificationLinkSent, setResetRequestSent] = useState(false);
+  const [countryCodes, setCountryCodes] = useState([]);
   const router = useRouter();
 
   const handleChange = (e, key, type) => {
@@ -158,6 +163,44 @@ const SignupForm = () => {
     const response = await ResendVerificationRequest("", body);
     setResetRequestSent(true);
   };
+
+  const fallbackCountryCode = [
+    { label: "+1", value: "+1" }, // USA, Canada
+    { label: "+44", value: "+44" }, // UK
+    { label: "+61", value: "+61" }, // Australia
+    { label: "+81", value: "+81" }, // Japan
+    { label: "+91", value: "+91" }, // India
+    { label: "+49", value: "+49" }, // Germany
+    { label: "+33", value: "+33" }, // France
+    { label: "+86", value: "+86" }, // China
+    { label: "+971", value: "+971" }, // UAE
+    { label: "+65", value: "+65" }, // Singapore
+    { label: "+94", value: "+94" }, // Sri Lanka
+    { label: "+880", value: "+880" }, // Bangladesh
+    { label: "+92", value: "+92" }, // Pakistan
+    { label: "+82", value: "+82" }, // South Korea
+    { label: "+34", value: "+34" }, // Spain
+  ];
+
+  useEffect(() => {
+    const fetchCountryCodes = async () => {
+      try {
+        const response = await fetchCountrieList();
+        const isCountryNull = isEmptyObject(response);
+        const formattedCodes = isCountryNull
+          ? fallbackCountryCode
+          : response?.map((country) => ({
+              label: `${country?.id} (${country?.name})`,
+              value: country?.id,
+            }));
+        setCountryCodes(formattedCodes);
+      } catch (error) {
+        console.error("Error fetching country codes:", error);
+      }
+    };
+
+    fetchCountryCodes();
+  }, []);
 
   return (
     <>
@@ -307,23 +350,7 @@ const SignupForm = () => {
                     onSelect={handleChange}
                     searchable={true}
                     error={errors.phone_code}
-                    options={[
-                      { label: "+1", value: "+1" }, // USA, Canada
-                      { label: "+44", value: "+44" }, // UK
-                      { label: "+61", value: "+61" }, // Australia
-                      { label: "+81", value: "+81" }, // Japan
-                      { label: "+91", value: "+91" }, // India
-                      { label: "+49", value: "+49" }, // Germany
-                      { label: "+33", value: "+33" }, // France
-                      { label: "+86", value: "+86" }, // China
-                      { label: "+971", value: "+971" }, // UAE
-                      { label: "+65", value: "+65" }, // Singapore
-                      { label: "+94", value: "+94" }, // Sri Lanka
-                      { label: "+880", value: "+880" }, // Bangladesh
-                      { label: "+92", value: "+92" }, // Pakistan
-                      { label: "+82", value: "+82" }, // South Korea
-                      { label: "+34", value: "+34" }, // Spain
-                    ]}
+                    options={countryCodes}
                     paddingClassName="!py-[10px] !px-[12px]"
                     placeholder="+1"
                     className={" !text-[#323A70] !text-[14px]"}
