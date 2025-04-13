@@ -97,12 +97,11 @@ export const fetchDashboardPageDetails = async (token) => {
 
 export const fetchTradePageData = async (tradeType, token) => {
   if (tradeType === "home") {
-    const [hotEvents, lastMinuteEvents, allCategories] = await Promise.all([
+    const [hotEvents, lastMinuteEvents] = await Promise.all([
       FetchHotEvents(token),
       LastMinuteEvents(token),
-      FetchAllCategories(token),
     ]);
-    return { hotEvents, lastMinuteEvents, allCategories };
+    return { hotEvents, lastMinuteEvents };
   }
   try {
   } catch {

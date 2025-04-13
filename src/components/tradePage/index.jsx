@@ -9,8 +9,7 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventSearch from "./components/eventSearch";
 
 const TradePage = (props) => {
-  const { profile, response } = props;
-  const { allCategories = {} } = response;
+  const { profile, allCategories } = props;
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);

@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import SearchedList from "./searchedList";
 import { FetchEventSearch, FetchVenue } from "@/utils/apiHandler/request";
+import SelectDateComponent from "./selectDateComponent";
 
 // Shimmer Effect Component
 const ShimmerItem = () => (
@@ -214,17 +215,17 @@ const EventSearch = ({ onClose, allCategories }) => {
     },
     {
       label: "Any Date",
-      type: "date",
+      type: "custom",
       id: "any_date",
-      mandatory: true,
-      singleDateMode: true,
-      hideCalendarIcon: true,
-      name: "any_date",
-      value: formFieldValues?.any_date,
-      onChange: (e) => handleChange(e, "any_date", "date"),
-      className: `!py-2 !px-4`,
-      labelClassName: "text-sm text-gray-600  block",
-      placeholder: "Select Date",
+      customComponent: (
+        <div className="flex w-full">
+          <SelectDateComponent
+            label="Date Range"
+            onChange={(value) => console.log(value, "vvvvvvvv")}
+            id="date-picker"
+          />
+        </div>
+      ),
     },
   ];
 
