@@ -87,12 +87,12 @@ const TrackingPage = () => {
   const rightStickyColumns = [
     {
       icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
-      className: " cursor-pointer",
+      className: "cursor-pointer",
       key: "attach",
     },
     {
       icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
-      className: " cursor-pointer",
+      className: "cursor-pointer",
       key: "oneHand",
     },
     {
@@ -111,18 +111,28 @@ const TrackingPage = () => {
           label="Buy"
           classNames={{
             label_: "text-white text-xs sm:text-sm",
-            root: "bg-[#0137D5]  py-1 px-2 rounded-md  hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
           }}
         />
       ),
+      key: "buy",
     },
   ];
 
-  const listItems = [
-    { name: "Tracking", value: 1 },
-    { name: "Available", value: 0 },
-    { name: "Sold", value: 0 },
-  ];
+  const [items, setItems] = useState([
+    { name: "Tracking", value: 1, showCheckbox: false },
+    { name: "Available", value: 0, showCheckbox: true, isChecked: false },
+    { name: "Sold", value: 0, showCheckbox: true, isChecked: false },
+  ]);
+
+  // Toggle checkbox for specific item
+  const toggleItem = (index) => {
+    setItems(
+      items.map((item, i) =>
+        i === index ? { ...item, isChecked: !item.isChecked } : item
+      )
+    );
+  };
 
   const handleSelectChange = (e, key, type) => {
     const value = e;
@@ -134,9 +144,21 @@ const TrackingPage = () => {
       <div className="bg-white">
         <div className="py-[20px] px-[24px] border-b-[1px] border-[#E0E1EA]">
           <div className=" flex gap-4 w-[70%]">
-            {listItems?.map((item, index) => {
-              return <AvailableList key={index} list={item} />;
-            })}
+            {items.map((item, index) => (
+              <AvailableList
+                key={index}
+                list={{
+                  name: item.name,
+                  value: item.value,
+                  showCheckbox: item.showCheckbox,
+                  isChecked: item.isChecked,
+                  onCheckChange: () => toggleItem(index),
+                  onClick: item.showCheckbox
+                    ? () => toggleItem(index)
+                    : undefined,
+                }}
+              />
+            ))}
           </div>
         </div>
         <div className="py-[20px] px-[24px] border-b-[1px] border-[#E0E1EA]">
