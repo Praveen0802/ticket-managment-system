@@ -130,3 +130,17 @@ export function isEmptyObject(obj) {
     Object.keys(obj).length === 0
   );
 }
+
+export const desiredFormatDate = (dateString) => {
+  const date = new Date(dateString);
+
+  const options = {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  };
+  const formattedDate = date.toLocaleDateString("en-US", options);
+
+  return formattedDate;
+};

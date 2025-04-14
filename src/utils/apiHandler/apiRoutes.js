@@ -34,8 +34,9 @@ export const API_ROUTES = {
   ACCOUNT_REFERENCE: "/wallet/account-reference",
   HOT_EVENTS: "/purchase/events/hot",
   LAST_MINUTE_EVENTS: "/purchase/events/last-minute",
-  FETCH_EVENT_SEARCH:'/purchase/events/search',
-  FETCH_VENUE:`/settings/stadium`,
-  FETCH_ALL_CATEGORIES:'/settings/allcategories',
-  FETCH_TAB_TOTAL:'/purchase/tab-total'
+  FETCH_EVENT_SEARCH: "/purchase/events/search",
+  FETCH_VENUE: `/settings/stadium`,
+  FETCH_ALL_CATEGORIES: "/settings/allcategories",
+  FETCH_TAB_TOTAL: "/purchase/tab-total",
+  RECENTLY_VIEWED_EVENTS: `/purchase/events/recently-viewed`,
 };

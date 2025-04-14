@@ -637,3 +637,22 @@ export const FetchTabTotal = async (token, params = {}) => {
     throw error;
   }
 };
+
+export const fetchRecentlyViewedList = async (token, params) => {
+  const queryParams = {
+    ...params,
+    lang: "en",
+  };
+  try {
+    const response = await makeRequest({
+      url: API_ROUTES.RECENTLY_VIEWED_EVENTS,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in fetchRecentlyViewedList", error);
+    throw error;
+  }
+};

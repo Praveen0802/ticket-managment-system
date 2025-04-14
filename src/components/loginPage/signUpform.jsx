@@ -193,7 +193,7 @@ const SignupForm = () => {
           : response?.data?.map((item) => {
               return {
                 value: `${item?.phone_code}`,
-                label: item?.country_code,
+                label: `${item?.country_short_name}-${item?.phone_code}`,
               };
             });
         setCountryCodes(formattedCodes);
@@ -342,13 +342,13 @@ const SignupForm = () => {
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
-                <div className="md:w-1/3">
+                <div className="md:w-1/4">
                   <FloatingSelect
                     id="phone_code"
                     name="phone_code"
                     keyValue={"phone_code"}
                     type="text"
-                    label="Country Code"
+                    label=""
                     value={formData?.phone_code}
                     onSelect={handleChange}
                     searchable={true}
@@ -359,7 +359,7 @@ const SignupForm = () => {
                     className={" !text-[#323A70] !text-[14px]"}
                   />
                 </div>
-                <div className="md:w-2/3">
+                <div className="md:w-3/4">
                   <FloatingLabelInput
                     id="mobile_number"
                     name="mobile_number"

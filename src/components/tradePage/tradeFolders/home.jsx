@@ -1,20 +1,29 @@
 import React, { useState } from "react";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventListView from "./eventListView";
-import { formatDate, formatDateTime } from "@/utils/helperFunctions";
+import {
+  desiredFormatDate,
+  formatDate,
+  formatDateTime,
+} from "@/utils/helperFunctions";
 
 const TradeHome = (props) => {
   const { profile, response = {} } = props;
-  const { hotEvents = {}, lastMinuteEvents = [] } = response;
+  const {
+    hotEvents = {},
+    lastMinuteEvents = [],
+    recentlyViewedEvents,
+  } = response;
 
   const constructViewDataType = (array) => {
     return array?.map((item) => {
       return {
         id: item?.m_id,
         name: item?.match_name,
-        date: formatDateTime(item?.match_date),
+        date: desiredFormatDate(item?.match_date),
         time: item?.match_time,
         listing: item?.listings,
+        league: item?.tournament_name,
         availableTickets: item?.available_tickets,
         priceFrom: `${item?.price_type} ${item?.price_start_from}`,
       };
@@ -25,44 +34,7 @@ const TradeHome = (props) => {
     {
       name: "Recently Viewed Events",
       icon: "eye",
-      events: [
-        {
-          league: "UEFA Champions League",
-          name: "Inter Milan vs RB Leipzig - Champions League 2024-2025",
-          date: "Tue, 26 Nov 2024",
-          time: "20:00",
-          listing: "71",
-          availableTickets: "£34.40",
-          priceFrom: "£34.40",
-        },
-        {
-          league: "UEFA Champions League",
-          name: "Inter Milan vs RB Leipzig - Champions League 2024-2025",
-          date: "Tue, 26 Nov 2024",
-          time: "20:00",
-          listing: "71",
-          availableTickets: "£34.40",
-          priceFrom: "£34.40",
-        },
-        {
-          league: "UEFA Champions League",
-          name: "Inter Milan vs RB Leipzig - Champions League 2024-2025",
-          date: "Tue, 26 Nov 2024",
-          time: "20:00",
-          listing: "71",
-          availableTickets: "£34.40",
-          priceFrom: "£34.40",
-        },
-        {
-          league: "UEFA Champions League",
-          name: "Inter Milan vs RB Leipzig - Champions League 2024-2025",
-          date: "Tue, 26 Nov 2024",
-          time: "20:00",
-          listing: "71",
-          availableTickets: "£34.40",
-          priceFrom: "£34.40",
-        },
-      ],
+      events: constructViewDataType(recentlyViewedEvents),
     },
     {
       name: "Hot Events",
@@ -115,12 +87,10 @@ const TradeHome = (props) => {
 
           <div
             className={`bg-white rounded-b shadow overflow-hidden transition-max-height duration-300 ease-in-out ${
-              expandedSections[index]
-                ? "max-h-[500px]"
-                : "max-h-0 opacity-0"
+              expandedSections[index] ? "max-h-[400px]" : "max-h-0 opacity-0"
             }`}
           >
-            <div className="overflow-y-auto max-h-[500px]">
+            <div className="overflow-y-auto max-h-[400px]">
               {section?.events?.map((event, eventIndex) => {
                 return <EventListView key={eventIndex} event={event} />;
               })}

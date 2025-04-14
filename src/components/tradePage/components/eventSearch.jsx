@@ -36,7 +36,7 @@ const EventSearch = ({ onClose, allCategories }) => {
   const [loading, setLoading] = useState(false);
   const [venueOptions, setVenueOptions] = useState([]);
 
-  const [filtersApplied, setFiltersApplied] = useState({ q: "" });
+  const [filtersApplied, setFiltersApplied] = useState({ query: "" });
 
   const fetchApiCall = async (params) => {
     setLoading(true);
@@ -44,7 +44,6 @@ const EventSearch = ({ onClose, allCategories }) => {
     setDisplayEventValues(response);
     setLoading(false);
   };
-
   const handleClickReset = () => {
     setLoading(true);
     const initialValues = {
@@ -80,9 +79,13 @@ const EventSearch = ({ onClose, allCategories }) => {
 
   const categoriesList = allCategories?.map((item) => {
     return {
-      value: item?.id,
+      value: item?.name,
       label: item?.name,
-      tournament: item?.is_tournament,
+      id: item?.id,
+      ...(item?.is_tournament && { is_tournament: item?.is_tournament }),
+      ...(item?.is_game_category && {
+        is_game_category: item?.is_game_category,
+      }),
     };
   });
 
@@ -95,18 +98,29 @@ const EventSearch = ({ onClose, allCategories }) => {
     if (key === "event_date") {
       const updatedQueryValues = {
         ...filtersApplied,
-        ...(value && { q: value }),
+        ...(value && { query: value }),
       };
       setFiltersApplied(updatedQueryValues);
       debouncedFetchEventSearch(fetchApiCall, updatedQueryValues);
     }
-    if (key === "venue" && !value) {
-      debouncedFetchEventSearch(venueSearch, { params: value });
+    if (key === "venue") {
+      const updatedParams = { ...filtersApplied, venue: "", city: "" };
+      setFiltersApplied(updatedParams);
+      if (value) {
+        debouncedFetchEventSearch(venueSearch, { params: value });
+      } else {
+        fetchApiCall(updatedParams);
+      }
     }
     if (key == "event_categories") {
       const updatedQueryValues = {
         ...filtersApplied,
-        is_tournament: selectedObject?.is_tournament,
+        ...(selectedObject?.is_tournament && {
+          is_tournament: selectedObject?.is_tournament,
+        }),
+        ...(selectedObject?.is_game_category && {
+          is_game_category: selectedObject?.is_game_category,
+        }),
         category_id: selectedObject?.id,
       };
       setFiltersApplied(updatedQueryValues);
@@ -116,8 +130,12 @@ const EventSearch = ({ onClose, allCategories }) => {
 
   const handleVenueViewClick = async (params, name, type) => {
     setFormFieldValues({ ...formFieldValues, [type]: name });
-    setFiltersApplied({ ...filtersApplied, ...params });
-    await fetchApiCall(params);
+    const venueParams = {
+      ...filtersApplied,
+      ...params,
+    };
+    setFiltersApplied(venueParams);
+    await fetchApiCall(venueParams);
     setVenueOptions([]);
   };
 
@@ -224,7 +242,7 @@ const EventSearch = ({ onClose, allCategories }) => {
       id: "event_categories",
       name: "event_categories",
       value: formFieldValues?.event_categories,
-      onChange: (e) => handleChange(e, "event_categories", "select"),
+      onChange: handleChange,
       className: `!py-2 !px-4`,
       labelClassName: "text-sm text-gray-600  block",
       options: categoriesList,
@@ -240,18 +258,34 @@ const EventSearch = ({ onClose, allCategories }) => {
           ))}
         </div>
       );
-    } else if (displayEventValues?.events?.length > 0) {
-      // Show the actual results when available
+    } else {
       return (
-        <div className="flex flex-col gap-2">
-          <p className="px-4 text-[13px] font-medium">Events</p>
-          {displayEventValues.events.map((item, index) => (
-            <SearchedList key={index} item={item} />
-          ))}
-        </div>
+        <>
+          {displayEventValues?.performers?.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <p className="px-4 text-[13px] font-medium">Performers</p>
+              {displayEventValues?.performers?.map((item, index) => (
+                <p className="border-[1px] cursor-pointer border-[#E0E1EA] mx-4 px-1 roundede-md py-1 text-[13px] text-[#323A70] ">
+                  {item?.team_name}
+                </p>
+              ))}
+            </div>
+          )}
+          {displayEventValues?.events?.length > 0 && (
+            <div
+              className={`"flex flex-col gap-2 ${
+                displayEventValues?.performers?.length > 0 && "mt-[30px]"
+              }`}
+            >
+              <p className="px-4 text-[13px] font-medium">Events</p>
+              {displayEventValues.events.map((item, index) => (
+                <SearchedList key={index} item={item} />
+              ))}
+            </div>
+          )}
+        </>
       );
     }
-    return null;
   };
 
   const handleDateChange = (key, dateRange) => {
@@ -268,7 +302,6 @@ const EventSearch = ({ onClose, allCategories }) => {
         start_date: "",
         end_date: "",
         date_format: "",
-        any_date: dateRange?.date,
       };
     } else {
       updatedParams = {
@@ -278,8 +311,10 @@ const EventSearch = ({ onClose, allCategories }) => {
         any_date: "",
       };
     }
-    setFiltersApplied({ ...filtersApplied, ...updatedParams });
-    fetchApiCall(updatedParams);
+    const updatedFieldParams = { ...filtersApplied, ...updatedParams };
+    setFiltersApplied(updatedFieldParams);
+
+    fetchApiCall(updatedFieldParams);
   };
 
   return (

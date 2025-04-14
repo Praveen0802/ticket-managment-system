@@ -70,10 +70,6 @@ const SelectDateComponent = ({
       // Show ONLY custom date range picker
       setShowCustomDatePicker(true);
       setShowSingleDatePicker(false);
-    } else if (option.value === "any") {
-      // Show ONLY single date picker for "any" option
-      setShowSingleDatePicker(true);
-      setShowCustomDatePicker(false);
     } else {
       // Handle other predefined options - hide all pickers
       setShowCustomDatePicker(false);
@@ -271,10 +267,6 @@ const SelectDateComponent = ({
 
           {showCustomDatePicker && (
             <div className="p-2 border-t border-gray-200">
-              <div className="mb-1 text-xs font-medium text-gray-700">
-                Select date range
-              </div>
-
               {/* Custom date range calendar */}
               <div className="inline-block w-full">
                 <CustomCalendarPicker
@@ -663,15 +655,15 @@ const CustomCalendarPicker = ({ value, onChange }) => {
 
   return (
     <div className="space-y-2">
-      <div className="text-xs font-medium text-gray-700">
+      {/* <div className="text-xs font-medium text-gray-700">
         {tempStartDate && tempEndDate
           ? `${formatDate(tempStartDate.toISOString())} - ${formatDate(
               tempEndDate.toISOString()
             )}`
           : tempStartDate
           ? `${formatDate(tempStartDate.toISOString())} - Select end date`
-          : "Select start date"}
-      </div>
+          : ""}
+      </div> */}
 
       {renderCalendar()}
 

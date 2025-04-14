@@ -9,6 +9,7 @@ import {
   FetchHotEvents,
   fetchOrderHistory,
   fetchProfileDetails,
+  fetchRecentlyViewedList,
   fetchTransactionHistory,
   fetchTransactionHistoryMonthly,
   fetchUserDetails,
@@ -97,11 +98,14 @@ export const fetchDashboardPageDetails = async (token) => {
 
 export const fetchTradePageData = async (tradeType, token) => {
   if (tradeType === "home") {
-    const [hotEvents, lastMinuteEvents] = await Promise.all([
-      FetchHotEvents(token),
-      LastMinuteEvents(token),
-    ]);
-    return { hotEvents, lastMinuteEvents };
+    const [hotEvents, lastMinuteEvents, recentlyViewedEvents] =
+      await Promise.all([
+        FetchHotEvents(token),
+        LastMinuteEvents(token),
+        fetchRecentlyViewedList(token),
+      ]);
+
+    return { hotEvents, lastMinuteEvents, recentlyViewedEvents };
   }
   try {
   } catch {

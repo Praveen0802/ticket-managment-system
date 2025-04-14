@@ -9,6 +9,9 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventSearch from "./components/eventSearch";
 import roundedChevron from "../../../public/rounded-chevron.svg";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { updateWalletPopupFlag } from "@/utils/redux/common/action";
+import chevronDown from "../../../public/white-chevron-right.svg";
 
 const TradePage = (props) => {
   const { profile, allCategories, fetchTabCount } = props;
@@ -63,6 +66,8 @@ const TradePage = (props) => {
     router?.push(`/trade/${item?.route}`);
   };
 
+  const showEventSearchRoutes = ["home", "inventory"];
+
   const selectedSubComponents = {
     home: <TradeHome {...props} />,
     tracking: <TrackingPage {...props} />,
@@ -70,14 +75,28 @@ const TradePage = (props) => {
     inventory: <InventoryFolder {...props} />,
   };
 
+  const dispatch = useDispatch();
+  const handleOpenAddWalletPopup = () => {
+    dispatch(
+      updateWalletPopupFlag({
+        flag: true,
+      })
+    );
+  };
+
   return (
-    <div className="bg-[#ECEDF2] w-full h-full relative overflow-auto">
+    <div className="bg-[#ECEDF2] w-full h-full relative ">
       <div className="absolute top-0 flex gap-3 items-center right-0 bg-white p-4">
         <div className="flex flex-col">
           <p className="text-[#7D82A4] text-[12px]">Available funds</p>
           <p className="text-[14px] text-[#323A70]">£1,915.75</p>
         </div>
-        <div className="flex gap-2 bg-[#F0F1F5] cursor-pointer rounded-md p-[8px] items-center">
+        <div
+          onClick={() => {
+            handleOpenAddWalletPopup();
+          }}
+          className="flex gap-2 bg-[#F0F1F5] cursor-pointer rounded-md p-[8px] items-center"
+        >
           <Image src={roundedChevron} width={16} height={16} alt="logo" />
           <p className="text-[14px] font-normal">Deposit</p>
         </div>
@@ -96,7 +115,7 @@ const TradePage = (props) => {
         })}
       </div>
       <div className="relative h-full flex">
-        {!showEventSearch && (
+        {!showEventSearch && showEventSearchRoutes?.includes(profile) && (
           <div
             onClick={() => setShowEventSearch(!showEventSearch)}
             className={`absolute z-[999] top-10 ${
@@ -105,18 +124,21 @@ const TradePage = (props) => {
           >
             <div className="px-3 flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
               <p className="text-white text-xs font-medium">Event Search</p>
-              <IconStore.chevronDown
-                className={`stroke-white text-white size-3 transition-transform duration-300 ${
-                  showEventSearch ? "rotate-180" : ""
-                }`}
+
+              <Image
+                src={chevronDown}
+                width={12}
+                height={12}
+                alt="logo"
+                className="rotate-90"
               />
             </div>
           </div>
         )}
 
         <div
-          className={`transition-all duration-300 
-             ${showEventSearch ? "w-[300px]" : "w-0"}`}
+          className={`transition-all duration-300 h-[calc(100%-100px)]
+             ${showEventSearch ? "w-[300px]" : "w-0 opacity-0"}`}
         >
           <EventSearch
             onClose={() => setShowEventSearch(false)}
@@ -124,7 +146,7 @@ const TradePage = (props) => {
           />
         </div>
         <div
-          className={`transition-all duration-300 z-[99] ${
+          className={`transition-all duration-300 overflow-auto h-[calc(100%-100px)] z-[99] ${
             showEventSearch ? "w-[calc(100%-300px)] ml-[0px]" : "w-full ml-0"
           }`}
         >
