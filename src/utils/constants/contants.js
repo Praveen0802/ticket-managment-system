@@ -16,6 +16,7 @@ export const nonAuthRequiredAPI = [
   "/auth/register",
   "/auth/verify-email",
   "/auth/resend-verify-email",
+  "/settings/dialing-code",
 ];
 
 export const nonAuthRequiredPages = [
