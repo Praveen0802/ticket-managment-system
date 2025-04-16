@@ -7,11 +7,12 @@ import { hidepageLoader, showpageLoader } from "@/utils/redux/loader/action";
 import PageLoader from "../pageLoader";
 import Header from "../header";
 import RightViewModal from "../commonComponents/rightViewModal";
-import { updateWalletPopupFlag } from "@/utils/redux/common/action";
+import { updateConfirmPurchasePopup, updateWalletPopupFlag } from "@/utils/redux/common/action";
 import { ADD_WALLET_POPUP } from "@/utils/redux/common/type";
 import AddDepositSummary from "../addDepositSummary";
 import { fetchProfileDetails } from "@/utils/apiHandler/request";
 import { updateCurrentUser } from "@/utils/redux/currentUser/action";
+import ConfirmPurchasePopup from "../confirmPurchasePopup";
 
 const SecureLayout = ({ children }) => {
   const router = useRouter();
@@ -19,7 +20,9 @@ const SecureLayout = ({ children }) => {
   const hideHeader = hideHeaderPages?.includes(router?.pathname);
   const dispatch = useDispatch();
   const { pageLoader } = useSelector((state) => state.pageLoader);
-  const { addWalletflag } = useSelector((state) => state.common);
+  const { addWalletflag, confirmPurchasePopupFields } = useSelector(
+    (state) => state.common
+  );
 
   useEffect(() => {
     // dispatch(showpageLoader());
@@ -54,6 +57,15 @@ const SecureLayout = ({ children }) => {
     );
   };
 
+  const closeConfirmPurchasePopup = () => {
+    dispatch(
+      updateConfirmPurchasePopup({
+        flag: false,
+        data: {},
+      })
+    );
+  };
+
   return (
     <>
       <div className="flex h-screen">
@@ -78,6 +90,17 @@ const SecureLayout = ({ children }) => {
               closeAddWalletPopup();
             }}
           />
+        </RightViewModal>
+
+        <RightViewModal
+          show={confirmPurchasePopupFields?.flag}
+          onClose={() => {
+            closeConfirmPurchasePopup();
+          }}
+          className={"md:!w-[650px]"}
+          outSideClickClose={false}
+        >
+          <ConfirmPurchasePopup onClose={closeConfirmPurchasePopup}/>
         </RightViewModal>
       </div>
     </>

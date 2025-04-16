@@ -14,7 +14,13 @@ import { updateWalletPopupFlag } from "@/utils/redux/common/action";
 import chevronDown from "../../../public/white-chevron-right.svg";
 
 const TradePage = (props) => {
-  const { profile, matchId, allCategories, fetchTabCount } = props;
+  const {
+    profile,
+    matchId,
+    allCategories,
+    fetchTabCount,
+    totalAmount = "£1,915.75",
+  } = props;
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);
@@ -68,14 +74,6 @@ const TradePage = (props) => {
 
   const showEventSearchRoutes = ["home", "inventory"];
 
-  const selectedSubComponents = {
-    home: <TradeHome {...props} />,
-    tracking: <TrackingPage {...props} />,
-    purchase: <PurchaseFolder {...props} />,
-    inventory: <InventoryFolder {...props} />,
-  };
-
-  const dispatch = useDispatch();
   const handleOpenAddWalletPopup = () => {
     dispatch(
       updateWalletPopupFlag({
@@ -84,12 +82,21 @@ const TradePage = (props) => {
     );
   };
 
+  const selectedSubComponents = {
+    home: <TradeHome {...props} />,
+    tracking: <TrackingPage {...props} />,
+    purchase: <PurchaseFolder {...props} />,
+    inventory: <InventoryFolder {...props} />,
+  };
+
+  const dispatch = useDispatch();
+
   return (
     <div className="bg-[#ECEDF2] w-full h-full relative ">
       <div className="absolute top-0 flex gap-3 items-center right-0 bg-white p-4">
         <div className="flex flex-col">
           <p className="text-[#7D82A4] text-[12px]">Available funds</p>
-          <p className="text-[14px] text-[#323A70]">£1,915.75</p>
+          <p className="text-[14px] text-[#323A70]">{totalAmount}</p>
         </div>
         <div
           onClick={() => {
@@ -137,7 +144,7 @@ const TradePage = (props) => {
         )}
 
         <div
-          className={`transition-all duration-300 h-[calc(100%-100px)]
+          className={`transition-all duration-300 h-full
              ${showEventSearch ? "w-[300px]" : "w-0 opacity-0"}`}
         >
           <EventSearch

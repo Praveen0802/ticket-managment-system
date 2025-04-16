@@ -144,3 +144,12 @@ export const desiredFormatDate = (dateString) => {
 
   return formattedDate;
 };
+
+export const dateFormat = (dateString) => {
+  // Parse the input date string (YYYY-MM-DD)
+  if(!dateString) return "";
+  const parts = dateString?.split("-");
+
+  // Rearrange to DD/MM/YYYY format
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+};

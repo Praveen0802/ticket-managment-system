@@ -6,6 +6,8 @@ import {
   formatDate,
   formatDateTime,
 } from "@/utils/helperFunctions";
+import { fetchRecentlyViewedList } from "@/utils/apiHandler/request";
+import { useRouter } from "next/router";
 
 const TradeHome = (props) => {
   const { profile, response = {} } = props;
@@ -62,6 +64,18 @@ const TradeHome = (props) => {
     });
   };
 
+  const router = useRouter();
+
+
+  const handleEventClick = async (event) => {
+    console.log("Event clicked:", event);
+    const { id } = event;
+    await fetchRecentlyViewedList("", "POST", "", {
+      m_id: id,
+    });
+    router.push(`/trade/inventory/${id}`);
+  };
+
   return (
     <div className="w-full bg-gray-100 p-4 h-full">
       {sections.map((section, index) => (
@@ -92,7 +106,13 @@ const TradeHome = (props) => {
           >
             <div className="overflow-y-auto max-h-[400px]">
               {section?.events?.map((event, eventIndex) => {
-                return <EventListView key={eventIndex} event={event} />;
+                return (
+                  <EventListView
+                    key={eventIndex}
+                    event={event}
+                    onClick={() => handleEventClick(event)}
+                  />
+                );
               })}
             </div>
           </div>

@@ -3,9 +3,9 @@ import Image from "next/image";
 import React from "react";
 import blueCalendar from "../../../../public/blue-calendar-icon.svg";
 
-const EventListView = ({ event }) => {
+const EventListView = ({ event,onClick }) => {
   return (
-    <div className="flex items-center justify-around w-full border-b border-[#E0E1EA]">
+    <div onClick={onClick} className="flex items-center cursor-pointer hover:bg-[#F6F7F9] transition-colors duration-200 justify-around w-full border-b border-[#E0E1EA]">
       {/* Event name and league */}
       <div className="flex-1 py-5 px-4 max-w-100">
         <p className="text-[#7D82A4] text-xs font-normal">{event?.league}</p>
