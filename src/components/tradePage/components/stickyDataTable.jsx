@@ -5,9 +5,26 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import ChevronRight from "@/components/commonComponents/filledChevron/chevronRight";
 import TooltipWrapper from "@/components/TooltipWrapper";
 
-const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
-  // Calculate the width of sticky columns
-  const stickyColumnsWidth = rightStickyColumns.length * 50; // 50px per column
+// Shimmer loading component for table cells
+const ShimmerCell = ({ width = "100%" }) => (
+  <div
+    className="animate-pulse bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded h-6"
+    style={{ width }}
+  ></div>
+);
+
+const StickyDataTable = ({
+  headers,
+  data,
+  rightStickyColumns = [],
+  loading = false,
+}) => {
+  // Calculate the width of sticky columns based on the first row or a default
+  const maxStickyColumnsLength =
+    rightStickyColumns.length > 0
+      ? Math.max(...rightStickyColumns.map((cols) => cols.length), 0)
+      : 0;
+  const stickyColumnsWidth = maxStickyColumnsLength * 50; // 50px per column
 
   // Split headers into regular and sticky columns
   const regularHeaders = headers.filter(
@@ -25,6 +42,19 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [activeTooltipKey, setActiveTooltipKey] = useState(null);
+
+  // Generate shimmer loading rows
+  const renderShimmerRows = (count = 5) => {
+    return Array(count)
+      .fill(0)
+      .map((_, rowIndex) => ({
+        id: `shimmer-${rowIndex}`,
+        isShimmer: true,
+      }));
+  };
+
+  // Data to display - either real data or shimmer placeholders
+  const displayData = loading ? renderShimmerRows() : data;
 
   // Synchronize row heights on load and resize
   useEffect(() => {
@@ -84,7 +114,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
       }
       window.removeEventListener("resize", syncRowHeights);
     };
-  }, [data]);
+  }, [displayData, rightStickyColumns, loading]);
 
   // Check if can scroll left/right and handle scroll events
   const checkScrollability = () => {
@@ -175,25 +205,32 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((row, rowIndex) => {
+            {displayData.map((row, rowIndex) => {
               return (
                 <tr
-                  key={rowIndex}
+                  key={row.isShimmer ? `shimmer-${rowIndex}` : rowIndex}
                   className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
                 >
                   {regularHeaders.map((header) => (
                     <td
                       key={`${rowIndex}-${header.key}`}
-                      className={`
-                      py-2 px-4 text-[12px] whitespace-nowrap overflow-hidden text-ellipsis align-middle
-                      ${
-                        header.key === "status"
-                          ? "text-green-500"
-                          : "text-[#323A70]"
-                      }   
-                    `}
+                      className="py-2 px-4 text-[12px] whitespace-nowrap overflow-hidden text-ellipsis align-middle"
                     >
-                      {row[header?.key]}
+                      {row.isShimmer ? (
+                        <ShimmerCell
+                          width={`${Math.floor(50 + Math.random() * 100)}px`}
+                        />
+                      ) : (
+                        <span
+                          className={
+                            header.key === "status"
+                              ? "text-green-500"
+                              : "text-[#323A70]"
+                          }
+                        >
+                          {row[header?.key]}
+                        </span>
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -215,7 +252,7 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
             <thead>
               <tr className="bg-white border-b border-[#E0E1EA]">
                 {/* Navigation arrows in header */}
-                <th colSpan={rightStickyColumns.length} className="py-2 px-2">
+                <th colSpan={maxStickyColumnsLength} className="py-2 px-2">
                   <div className="flex justify-end items-center">
                     {/* Left arrow */}
                     <button
@@ -252,39 +289,90 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
               </tr>
             </thead>
             <tbody>
-              {data.map((row, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
-                >
-                  {/* Icon columns */}
-                  {rightStickyColumns.map((column, colIndex) => (
-                    <td
-                      key={`${rowIndex}-${colIndex}`}
-                      className={`py-2 text-sm align-middle text-center ${column?.className}`}
-                    >
-                      <div className="flex justify-center">
-                        {column?.icon && column.tooltipText ? (
-                          <TooltipWrapper
-                            text={
-                              column.tooltipText || `${column.key} information`
-                            }
-                            position={column.tooltipPosition || "top"}
-                            tooltipKey={`${rowIndex}-${column.key}`}
-                            activeKey={activeTooltipKey}
-                            setActiveKey={setActiveTooltipKey}
+              {displayData.map((row, rowIndex) => {
+                // Get the row-specific sticky columns, or empty array if not defined
+                const rowStickyColumns =
+                  !loading && rightStickyColumns[rowIndex]
+                    ? rightStickyColumns[rowIndex]
+                    : [];
+
+                return (
+                  <tr
+                    key={
+                      row.isShimmer ? `shimmer-sticky-${rowIndex}` : rowIndex
+                    }
+                    className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
+                  >
+                    {/* Render shimmer for loading state or actual content */}
+                    {row.isShimmer ? (
+                      // Render shimmer cells for the maximum possible number of sticky columns
+                      Array(maxStickyColumnsLength)
+                        .fill(0)
+                        .map((_, colIndex) => (
+                          <td
+                            key={`shimmer-${rowIndex}-${colIndex}`}
+                            className="py-2 text-sm align-middle text-center"
                           >
-                            <div className="cursor-pointer">{column.icon}</div>
-                          </TooltipWrapper>
-                        ) : (
-                          <div className="cursor-pointer">{column.icon}</div>
-                        )}
-                        {column?.cta && <button>{column?.cta}</button>}
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-              ))}
+                            <div className="flex justify-center">
+                              <div className="w-8 h-8">
+                                <ShimmerCell width="32px" />
+                              </div>
+                            </div>
+                          </td>
+                        ))
+                    ) : (
+                      // Render actual sticky columns
+                      <>
+                        {rowStickyColumns.map((column, colIndex) => (
+                          <td
+                            key={`${rowIndex}-${colIndex}`}
+                            className={`py-2 text-sm align-middle text-center ${
+                              column?.className || ""
+                            }`}
+                          >
+                            <div className="flex justify-center">
+                              {column?.icon && column.tooltipText ? (
+                                <TooltipWrapper
+                                  text={
+                                    column.tooltipText ||
+                                    `${column.key} information`
+                                  }
+                                  position={column.tooltipPosition || "top"}
+                                  tooltipKey={`${rowIndex}-${column.key}`}
+                                  activeKey={activeTooltipKey}
+                                  setActiveKey={setActiveTooltipKey}
+                                >
+                                  <div className="cursor-pointer">
+                                    {column.icon}
+                                  </div>
+                                </TooltipWrapper>
+                              ) : (
+                                <div className="cursor-pointer">
+                                  {column.icon}
+                                </div>
+                              )}
+                              {column?.cta && <button>{column?.cta}</button>}
+                            </div>
+                          </td>
+                        ))}
+
+                        {/* Add empty cells to maintain column count if this row has fewer sticky columns */}
+                        {Array.from({
+                          length: Math.max(
+                            0,
+                            maxStickyColumnsLength - rowStickyColumns.length
+                          ),
+                        }).map((_, i) => (
+                          <td
+                            key={`${rowIndex}-empty-${i}`}
+                            className="py-2 text-sm"
+                          ></td>
+                        ))}
+                      </>
+                    )}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -292,4 +380,5 @@ const StickyDataTable = ({ headers, data, rightStickyColumns = [] }) => {
     </div>
   );
 };
+
 export default StickyDataTable;

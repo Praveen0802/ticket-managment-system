@@ -20,7 +20,7 @@ const SearchedList = ({ item }) => {
     );
   };
   return (
-    <div className="flex flex-col gap-2 p-4 border-[1px] border-[#E0E1EA]">
+    <div className="flex flex-col gap-2 p-4 border-[1px] border-[#E0E1EA] rounded-md">
       <p className="text-[14px] text-[#323A70] font-semibold">
         {item?.match_name}
       </p>

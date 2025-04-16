@@ -16,6 +16,8 @@ import {
   fetchWalletBalance,
   getLinkedCards,
   LastMinuteEvents,
+  purchaseEvents,
+  purchaseFavouratesTracking,
 } from "../apiHandler/request";
 
 export const fetchSettingsPageDetails = async (profile, token, ctx) => {
@@ -96,7 +98,7 @@ export const fetchDashboardPageDetails = async (token) => {
   } catch {}
 };
 
-export const fetchTradePageData = async (tradeType, token) => {
+export const fetchTradePageData = async (tradeType, token, matchId) => {
   if (tradeType === "home") {
     const [hotEvents, lastMinuteEvents, recentlyViewedEvents] =
       await Promise.all([
@@ -104,8 +106,13 @@ export const fetchTradePageData = async (tradeType, token) => {
         LastMinuteEvents(token),
         fetchRecentlyViewedList(token),
       ]);
-
     return { hotEvents, lastMinuteEvents, recentlyViewedEvents };
+  } else if (tradeType === "inventory") {
+    const tradePageData = await purchaseEvents(token, matchId);
+    return tradePageData;
+  } else if (tradeType === "tracking") {
+    const trackingData = await purchaseFavouratesTracking(token);
+    return trackingData;
   }
   try {
   } catch {

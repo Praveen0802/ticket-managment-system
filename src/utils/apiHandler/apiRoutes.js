@@ -39,4 +39,6 @@ export const API_ROUTES = {
   FETCH_ALL_CATEGORIES: "/settings/allcategories",
   FETCH_TAB_TOTAL: "/purchase/tab-total",
   RECENTLY_VIEWED_EVENTS: `/purchase/events/recently-viewed`,
+  PURCHASE_EVENTS: "/purchase/events",
+  PURCHASE_TRACKING: "/purchase/tracking",
 };

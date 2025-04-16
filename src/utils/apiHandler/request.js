@@ -638,7 +638,12 @@ export const FetchTabTotal = async (token, params = {}) => {
   }
 };
 
-export const fetchRecentlyViewedList = async (token, params) => {
+export const fetchRecentlyViewedList = async (
+  token,
+  method = "GET",
+  params,
+  data
+) => {
   const queryParams = {
     ...params,
     lang: "en",
@@ -646,13 +651,53 @@ export const fetchRecentlyViewedList = async (token, params) => {
   try {
     const response = await makeRequest({
       url: API_ROUTES.RECENTLY_VIEWED_EVENTS,
+      method: method,
+      ...(token && { token: token }),
+      ...(method?.toLocaleLowerCase() == "get" && { params: queryParams }),
+      ...(data && { data: data }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in fetchRecentlyViewedList", error);
+    throw error;
+  }
+};
+
+export const purchaseEvents = async (token, id, params = {}) => {
+  const queryParams = {
+    ...params,
+    lang: "en",
+    currency: "GBP",
+  };
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_EVENTS}/${id}`,
       method: "GET",
       ...(token && { token: token }),
       params: queryParams,
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
-    console.log("ERROR in fetchRecentlyViewedList", error);
+    console.log("ERROR in FetchTabTotal", error);
+    throw error;
+  }
+};
+
+export const purchaseFavouratesTracking = async (
+  token,
+  method = "GET",
+  data
+) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_TRACKING}`,
+      method: method,
+      ...(token && { token: token }),
+      ...(data && { data: data }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseFavouratesTracking", error);
     throw error;
   }
 };

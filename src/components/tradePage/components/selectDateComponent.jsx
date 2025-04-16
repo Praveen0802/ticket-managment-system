@@ -3,19 +3,21 @@ import React, { useState, useRef, useEffect } from "react";
 
 const SelectDateComponent = ({
   label = "Date Range",
-  selectedValue = null,
+  selected = null,
   onChange,
   className = "",
   mandatory = false,
   paddingClassName = "px-3 py-[8px]",
+  setSelected,
   error = "",
   id,
   labelClassName = "",
+  dateOptions,
   disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(selectedValue);
-  const [isFocused, setIsFocused] = useState(selectedValue ? true : false);
+
+  const [isFocused, setIsFocused] = useState(selected ? true : false);
   const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
   const [showSingleDatePicker, setShowSingleDatePicker] = useState(false);
   const [customDateRange, setCustomDateRange] = useState({
@@ -24,15 +26,6 @@ const SelectDateComponent = ({
   });
   const [singleDate, setSingleDate] = useState("");
   const dropdownRef = useRef(null);
-
-  const dateOptions = [
-    { value: "any", label: "Any Date" },
-    { value: "today", label: "Today" },
-    { value: "next_7days", label: "Next 7 Days" },
-    { value: "next_30days", label: "Next 30 Days" },
-    { value: "next_60days", label: "Next 60 Days" },
-    { value: "custom_range", label: "Custom Range" },
-  ];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -57,11 +50,11 @@ const SelectDateComponent = ({
 
   // Update selected value when prop changes
   useEffect(() => {
-    if (selectedValue) {
-      setSelected(selectedValue);
+    if (selected) {
+      setSelected(selected);
       setIsFocused(true);
     }
-  }, [selectedValue]);
+  }, [selected]);
 
   const handleSelect = (option) => {
     setSelected(option.label);
@@ -197,7 +190,7 @@ const SelectDateComponent = ({
 
       <div
         onClick={toggleDropdown}
-        className={`${baseClasses} ${paddingClassName} flex items-center justify-between relative`}
+        className={`${baseClasses} ${paddingClassName}  flex items-center justify-between relative`}
         id={id}
         role="combobox"
         aria-expanded={isOpen}

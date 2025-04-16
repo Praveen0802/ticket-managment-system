@@ -7,7 +7,11 @@ import blueTicket from "../../../../public/blue-ticket.svg";
 import hamburger from "../../../../public/hamburger.svg";
 import blueClock from "../../../../public/blue-clock.svg";
 import ToggleStatus from "./components/toggleStatus";
-import attachSquare from "../../../../public/attach-square.svg";
+import attachmentPin from "../../../../public/attachment-pin.svg";
+import attachment6 from "../../../../public/attachment-6.svg";
+import attachment3 from "../../../../public/attachment-3.svg";
+import attachment1 from "../../../../public/attachment-1.svg";
+import crossHand from "../../../../public/cross-hand.svg";
 import oneHand from "../../../../public/One-hand.svg";
 import star from "../../../../public/Star.svg";
 import InventoryFilterForm from "./inventoryFilterForm";
@@ -15,23 +19,25 @@ import Button from "@/components/commonComponents/button";
 import documentText from "../../../../public/document-text.svg";
 import StickyDataTable from "../components/stickyDataTable";
 import PinPatchMap from "./pinPatchMap";
+import { desiredFormatDate } from "@/utils/helperFunctions";
+import { purchaseFavouratesTracking } from "@/utils/apiHandler/request";
 
-const InventoryFolder = () => {
+const InventoryFolder = (props) => {
+  const { response = {}, matchId } = props;
+  const { match_details = {}, ticket_details = {}, filters = {} } = response;
   const [selectedItem, setSelectedItem] = useState("all");
   const [showMap, setShowMap] = useState(true);
   const [formFieldValues, setFormFieldValues] = useState({
     category: "",
     quantity: "",
     ticket_type: "",
-    ticketsInHand: false,
-    instantDownload: false,
-    newListings: false,
   });
+  const [loader, setLoader] = useState(false);
   const selectedMatchData = {
-    match: "Chelsea vs Arsenal - Premier League",
-    eventDate: "Sun, 10 Nov 2024",
-    eventTime: "15:00",
-    Venue: "Stamford Bridge, London",
+    match: `${match_details?.match_name}`,
+    eventDate: desiredFormatDate(match_details?.match_date),
+    eventTime: match_details?.match_time,
+    Venue: `${match_details?.venue},${match_details?.country},${match_details?.city}`,
   };
 
   const renderListValue = (icon, text) => {
@@ -84,135 +90,100 @@ const InventoryFolder = () => {
     { key: "category", label: "Category", sortable: true },
     { key: "section", label: "Section/Block", sortable: true },
     { key: "row", label: "Row", sortable: true },
-    { key: "forstSeat", label: "Forst Seat", sortable: true },
     { key: "ticketPrice", label: "Ticket Price", sortable: true },
   ];
 
-  const data = [
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-    {
-      qty: "1",
-      category: "Terzo Anello Rosso",
-      section: "",
-      row: "N/A",
-      forstSeat: "",
-      ticketPrice: "£318.27",
-    },
-  ];
+  const data = ticket_details?.map((item) => {
+    return {
+      qty: item?.quantity,
+      category: item?.seat_category,
+      section: item?.block_id,
+      row: item?.row,
+      ticketPrice: item?.price_with_symbol,
+    };
+  });
 
-  const rightStickyColumns = [
-    {
-      icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
-      className: "cursor-pointer",
-      key: "attach",
-      tooltipText: "Attach files",
-      tooltipPosition: "top",
-    },
-    {
-      icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
-      className: "cursor-pointer",
-      key: "oneHand",
-      tooltipText: "Raise hand",
-      tooltipPosition: "top",
-    },
-    {
-      icon: <Image width={20} height={20} src={star} alt="star" />,
-      className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
-      key: "star",
-      tooltipText: "Add to favorites",
-      tooltipPosition: "top",
-    },
-    {
-      icon: <Image width={20} height={20} src={documentText} alt="document" />,
-      className: "cursor-pointer",
-      key: "document",
-      tooltipText: "View document",
-      tooltipPosition: "top",
-    },
-    {
-      icon: (
-        <Button
-          label="Buy"
-          classNames={{
-            label_: "text-white text-xs sm:text-sm",
-            root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
-          }}
-        />
-      ),
-      key: "buy",
-    },
-  ];
+  const handleClickFavourites = async (item) => {
+    const payload = {
+      m_id: matchId,
+      s_no: item?.s_no,
+    };
+    const response = await purchaseFavouratesTracking("",'POST',payload);
+  };
+
+  const rightStickyColumns = ticket_details?.map((item) => {
+    return [
+      {
+        icon: (
+          <Image
+            width={14}
+            height={14}
+            src={
+              item?.ticket_type_id == 2
+                ? attachmentPin
+                : item?.ticket_type_id == 4 || item?.ticket_type_id == 6
+                ? attachment6
+                : item?.ticket_type_id == 3
+                ? attachment3
+                : item?.ticket_type_id == 1
+                ? attachment1
+                : attachmentPin
+            }
+            alt="attach"
+          />
+        ),
+        className: "cursor-pointer",
+        key: "attach",
+        tooltipText: "Attach files",
+        tooltipPosition: "top",
+      },
+      {
+        icon: <Image width={16} height={16} src={crossHand} alt="hand" />,
+        className: "cursor-pointer",
+        key: "oneHand",
+        tooltipText: "Raise hand",
+        tooltipPosition: "top",
+      },
+      {
+        icon: (
+          <Image width={20} height={20} src={documentText} alt="document" />
+        ),
+        className: "cursor-pointer",
+        key: "document",
+        tooltipText: "View document",
+        tooltipPosition: "top",
+      },
+      {
+        icon: (
+          <Image
+            onClick={() => {
+              handleClickFavourites(item);
+            }}
+            width={20}
+            height={20}
+            src={star}
+            alt="star"
+          />
+        ),
+        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        key: "star",
+        tooltipText: "Add to favorites",
+        tooltipPosition: "top",
+      },
+      {
+        icon: (
+          <Button
+            label="Buy"
+            classNames={{
+              label_: "text-white text-xs sm:text-sm",
+              root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            }}
+          />
+        ),
+        key: "buy",
+      },
+    ];
+  });
 
   return (
     <div className="flex flex-col gap-6 h-[calc(100%-100px)]">
@@ -252,7 +223,7 @@ const InventoryFolder = () => {
             )}
           </div>
         </div>
-        <div className="px-[24px] py-[10px] border-b-[1px] border-[#E0E1EA]">
+        {/* <div className="px-[24px] py-[10px] border-b-[1px] border-[#E0E1EA]">
           <div className="w-[250px]">
             <ToggleStatus
               listItems={listItems}
@@ -260,22 +231,23 @@ const InventoryFolder = () => {
               onClick={handleSelectedItemClick}
             />
           </div>
-        </div>
-        <div className="px-[24px] py-[10px] border-b-[1px] border-[#E0E1EA]">
+        </div> */}
+        <div className="px-[24px] py-[20px] border-b-[1px] border-[#E0E1EA]">
           <InventoryFilterForm
             formFieldValues={formFieldValues}
             handleChange={handleChange}
+            filters={filters}
           />
         </div>
         <div className="border-b-[1px] border-[#E0E1EA]">
           <div className="px-[21px] flex gap-3 items-center w-fit border-r-[1px] py-[10px] border-[#E0E1EA] ">
             {renderListItem(
               <Image src={hamburger} width={18} height={18} alt="logo" />,
-              162
+              filters?.TotalQtyTickets
             )}
             {renderListItem(
               <Image src={blueTicket} width={18} height={18} alt="logo" />,
-              162
+              filters?.TotalPeopleAddedTickets
             )}
             <div className="border-[1px] border-[#DADBE5] p-[4px]">
               <IconStore.reload className="size-3.5" />
@@ -322,6 +294,7 @@ const InventoryFolder = () => {
             headers={headers}
             data={data}
             rightStickyColumns={rightStickyColumns}
+            loading={loader}
           />
         </div>
       </div>

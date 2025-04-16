@@ -85,38 +85,186 @@ const TrackingPage = () => {
   ];
 
   const rightStickyColumns = [
-    {
-      icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
-      className: "cursor-pointer",
-      key: "attach",
-    },
-    {
-      icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
-      className: "cursor-pointer",
-      key: "oneHand",
-    },
-    {
-      icon: <Image width={20} height={20} src={star} alt="star" />,
-      className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
-      key: "star",
-    },
-    {
-      icon: <Image width={20} height={20} src={documentText} alt="document" />,
-      className: "cursor-pointer",
-      key: "document",
-    },
-    {
-      icon: (
-        <Button
-          label="Buy"
-          classNames={{
-            label_: "text-white text-xs sm:text-sm",
-            root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
-          }}
-        />
-      ),
-      key: "buy",
-    },
+    [
+      {
+        icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
+        className: "cursor-pointer",
+        key: "attach",
+      },
+      {
+        icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
+        className: "cursor-pointer",
+        key: "oneHand",
+      },
+      {
+        icon: <Image width={20} height={20} src={star} alt="star" />,
+        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        key: "star",
+      },
+      {
+        icon: (
+          <Image width={20} height={20} src={documentText} alt="document" />
+        ),
+        className: "cursor-pointer",
+        key: "document",
+      },
+      {
+        icon: (
+          <Button
+            label="Buy"
+            classNames={{
+              label_: "text-white text-xs sm:text-sm",
+              root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            }}
+          />
+        ),
+        key: "buy",
+      },
+    ],
+    [
+      {
+        icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
+        className: "cursor-pointer",
+        key: "attach",
+      },
+      {
+        icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
+        className: "cursor-pointer",
+        key: "oneHand",
+      },
+      {
+        icon: <Image width={20} height={20} src={star} alt="star" />,
+        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        key: "star",
+      },
+      {
+        icon: (
+          <Image width={20} height={20} src={documentText} alt="document" />
+        ),
+        className: "cursor-pointer",
+        key: "document",
+      },
+      {
+        icon: (
+          <Button
+            label="Buy"
+            classNames={{
+              label_: "text-white text-xs sm:text-sm",
+              root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            }}
+          />
+        ),
+        key: "buy",
+      },
+    ],
+    [
+      {
+        icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
+        className: "cursor-pointer",
+        key: "attach",
+      },
+      {
+        icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
+        className: "cursor-pointer",
+        key: "oneHand",
+      },
+      {
+        icon: <Image width={20} height={20} src={star} alt="star" />,
+        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        key: "star",
+      },
+      {
+        icon: (
+          <Image width={20} height={20} src={documentText} alt="document" />
+        ),
+        className: "cursor-pointer",
+        key: "document",
+      },
+      {
+        icon: (
+          <Button
+            label="Buy"
+            classNames={{
+              label_: "text-white text-xs sm:text-sm",
+              root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            }}
+          />
+        ),
+        key: "buy",
+      },
+    ],
+    [
+      {
+        icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
+        className: "cursor-pointer",
+        key: "attach",
+      },
+      {
+        icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
+        className: "cursor-pointer",
+        key: "oneHand",
+      },
+      {
+        icon: <Image width={20} height={20} src={star} alt="star" />,
+        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        key: "star",
+      },
+      {
+        icon: (
+          <Image width={20} height={20} src={documentText} alt="document" />
+        ),
+        className: "cursor-pointer",
+        key: "document",
+      },
+      {
+        icon: (
+          <Button
+            label="Buy"
+            classNames={{
+              label_: "text-white text-xs sm:text-sm",
+              root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            }}
+          />
+        ),
+        key: "buy",
+      },
+    ],
+    [
+      {
+        icon: <Image width={20} height={20} src={attachSquare} alt="attach" />,
+        className: "cursor-pointer",
+        key: "attach",
+      },
+      {
+        icon: <Image width={20} height={20} src={oneHand} alt="hand" />,
+        className: "cursor-pointer",
+        key: "oneHand",
+      },
+      {
+        icon: <Image width={20} height={20} src={star} alt="star" />,
+        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        key: "star",
+      },
+      {
+        icon: (
+          <Image width={20} height={20} src={documentText} alt="document" />
+        ),
+        className: "cursor-pointer",
+        key: "document",
+      },
+      {
+        icon: (
+          <Button
+            label="Buy"
+            classNames={{
+              label_: "text-white text-xs sm:text-sm",
+              root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
+            }}
+          />
+        ),
+        key: "buy",
+      },
+    ],
   ];
 
   const [items, setItems] = useState([

@@ -4,8 +4,13 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import SearchedList from "./searchedList";
-import { FetchEventSearch, FetchVenue } from "@/utils/apiHandler/request";
+import {
+  FetchEventSearch,
+  fetchRecentlyViewedList,
+  FetchVenue,
+} from "@/utils/apiHandler/request";
 import SelectDateComponent from "./selectDateComponent";
+import { useRouter } from "next/router";
 
 // Shimmer Effect Component
 const ShimmerItem = () => (
@@ -37,6 +42,7 @@ const EventSearch = ({ onClose, allCategories }) => {
   const [venueOptions, setVenueOptions] = useState([]);
 
   const [filtersApplied, setFiltersApplied] = useState({ query: "" });
+  const [selected, setSelected] = useState();
 
   const fetchApiCall = async (params) => {
     setLoading(true);
@@ -54,6 +60,8 @@ const EventSearch = ({ onClose, allCategories }) => {
       any_date: "",
     };
     setFormFieldValues(initialValues);
+    setFiltersApplied({});
+    setSelected();
     setDisplayEventValues([]);
     setTimeout(() => {
       setLoading(false);
@@ -89,6 +97,7 @@ const EventSearch = ({ onClose, allCategories }) => {
     };
   });
 
+  const router = useRouter();
   const handleChange = async (e, key, type, selectedObject) => {
     const selectType = type === "select";
     const dateType = type === "date"; // Fixed equality check
@@ -98,7 +107,7 @@ const EventSearch = ({ onClose, allCategories }) => {
     if (key === "event_date") {
       const updatedQueryValues = {
         ...filtersApplied,
-        ...(value && { query: value }),
+        query: value,
       };
       setFiltersApplied(updatedQueryValues);
       debouncedFetchEventSearch(fetchApiCall, updatedQueryValues);
@@ -115,13 +124,9 @@ const EventSearch = ({ onClose, allCategories }) => {
     if (key == "event_categories") {
       const updatedQueryValues = {
         ...filtersApplied,
-        ...(selectedObject?.is_tournament && {
-          is_tournament: selectedObject?.is_tournament,
-        }),
-        ...(selectedObject?.is_game_category && {
-          is_game_category: selectedObject?.is_game_category,
-        }),
-        category_id: selectedObject?.id,
+        is_tournament: selectedObject?.is_tournament || "",
+        is_game_category: selectedObject?.is_game_category || "",
+        category_id: selectedObject?.id || "",
       };
       setFiltersApplied(updatedQueryValues);
       fetchApiCall(updatedQueryValues);
@@ -130,13 +135,13 @@ const EventSearch = ({ onClose, allCategories }) => {
 
   const handleVenueViewClick = async (params, name, type) => {
     setFormFieldValues({ ...formFieldValues, [type]: name });
+    setVenueOptions([]);
     const venueParams = {
       ...filtersApplied,
       ...params,
     };
     setFiltersApplied(venueParams);
     await fetchApiCall(venueParams);
-    setVenueOptions([]);
   };
 
   const venueSearchEventComponent = () => (
@@ -216,8 +221,8 @@ const EventSearch = ({ onClose, allCategories }) => {
       name: "event_date",
       value: formFieldValues?.event_date,
       onChange: (e) => handleChange(e, "event_date"),
-      className: `!py-2 !px-4`,
-      labelClassName: "text-sm text-gray-600  block",
+      className: `!py-[6px] !text-[13px] !px-[10px]`,
+      labelClassName: "!text-[12px] text-gray-600  block",
       placeholder: "Enter Event/Performer",
     },
     {
@@ -230,8 +235,8 @@ const EventSearch = ({ onClose, allCategories }) => {
       // onBlur: handleVenueBlurChange,
       value: formFieldValues?.venue,
       onChange: (e) => handleChange(e, "venue"),
-      className: `!py-2 !px-4 `,
-      labelClassName: "text-sm text-gray-600  block",
+      className: `!py-[6px] !text-[13px] !px-[10px] `,
+      labelClassName: "!text-[12px] text-gray-600  block",
       placeholder: "Enter Venue/City",
     },
     {
@@ -243,11 +248,18 @@ const EventSearch = ({ onClose, allCategories }) => {
       name: "event_categories",
       value: formFieldValues?.event_categories,
       onChange: handleChange,
-      className: `!py-2 !px-4`,
-      labelClassName: "text-sm text-gray-600  block",
+      className: `!py-[6px] !text-[13px] !px-[10px]`,
+      labelClassName: "!text-[12px] text-gray-600  block",
       options: categoriesList,
     },
   ];
+
+  const handleEventClick = async (item) => {
+    await fetchRecentlyViewedList("", "POST", "", {
+      m_id: item?.m_id,
+    });
+    router.push(`/trade/inventory/${item?.m_id}`);
+  };
 
   const renderContent = () => {
     if (loading) {
@@ -265,21 +277,32 @@ const EventSearch = ({ onClose, allCategories }) => {
             <div className="flex flex-col gap-2">
               <p className="px-4 text-[13px] font-medium">Performers</p>
               {displayEventValues?.performers?.map((item, index) => (
-                <p className="border-[1px] cursor-pointer border-[#E0E1EA] mx-4 px-1 roundede-md py-1 text-[13px] text-[#323A70] ">
+                <p
+                  key={index}
+                  onClick={() => {
+                    handleChange(
+                      { target: { value: item?.team_name } },
+                      "event_date"
+                    );
+                  }}
+                  className="border border-[#E0E1EA] mx-4 px-1 rounded-md py-1 text-[13px] text-[#323A70] cursor-pointer hover:scale-105 transition-transform duration-200"
+                >
                   {item?.team_name}
                 </p>
               ))}
             </div>
           )}
           {displayEventValues?.events?.length > 0 && (
-            <div
-              className={`"flex flex-col gap-2 ${
-                displayEventValues?.performers?.length > 0 && "mt-[30px]"
-              }`}
-            >
+            <div className={`flex flex-col gap-2 p-3 `}>
               <p className="px-4 text-[13px] font-medium">Events</p>
               {displayEventValues.events.map((item, index) => (
-                <SearchedList key={index} item={item} />
+                <div
+                  key={index}
+                  onClick={() => handleEventClick(item)}
+                  className="hover:scale-105 cursor-pointer transition-transform duration-200"
+                >
+                  <SearchedList item={item} />
+                </div>
               ))}
             </div>
           )}
@@ -287,6 +310,15 @@ const EventSearch = ({ onClose, allCategories }) => {
       );
     }
   };
+
+  const dateOptions = [
+    { value: "any", label: "Any Date" },
+    { value: "today", label: "Today" },
+    { value: "next_7days", label: "Next 7 Days" },
+    { value: "next_30days", label: "Next 30 Days" },
+    { value: "next_60days", label: "Next 60 Days" },
+    { value: "custom_range", label: "Custom Range" },
+  ];
 
   const handleDateChange = (key, dateRange) => {
     let updatedParams = {};
@@ -297,7 +329,7 @@ const EventSearch = ({ onClose, allCategories }) => {
         date_format: "",
         any_date: "",
       };
-    } else if (key === "any_date") {
+    } else if (key === "any") {
       updatedParams = {
         start_date: "",
         end_date: "",
@@ -330,13 +362,16 @@ const EventSearch = ({ onClose, allCategories }) => {
           </button>
         </div>
       </div>
-      <div className="p-6 flex flex-col gap-[16px]">
+      <div className="p-4 flex flex-col gap-[14px]">
         <FormFields formFields={formValues} />
         <SelectDateComponent
           label="Date Range"
           onChange={handleDateChange}
-          selectedValue=""
+          selected={selected}
+          setSelected={setSelected}
           id="date-picker"
+          paddingClassName="!py-[6px] text-[12px] !px-[10px]"
+          dateOptions={dateOptions}
         />
       </div>
       <div className="overflow-y-auto flex-1">{renderContent()}</div>

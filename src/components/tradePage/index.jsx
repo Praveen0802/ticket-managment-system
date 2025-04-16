@@ -14,7 +14,7 @@ import { updateWalletPopupFlag } from "@/utils/redux/common/action";
 import chevronDown from "../../../public/white-chevron-right.svg";
 
 const TradePage = (props) => {
-  const { profile, allCategories, fetchTabCount } = props;
+  const { profile, matchId, allCategories, fetchTabCount } = props;
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);
