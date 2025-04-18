@@ -665,9 +665,10 @@ export const fetchRecentlyViewedList = async (
 
 export const purchaseEvents = async (token, id, params = {}) => {
   const queryParams = {
-    ...params,
     lang: "en",
     currency: "GBP",
+    page: 1,
+    ...params,
   };
   try {
     const response = await makeRequest({
@@ -701,3 +702,43 @@ export const purchaseFavouratesTracking = async (
     throw error;
   }
 };
+
+export const purchaseTickets = async (token, id, params = {}) => {
+  const queryParams = {
+    lang: "en",
+    client_country: "IN",
+    ...params,
+  };
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_TICKETS}/${id}`,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseTickets", error);
+    throw error;
+  }
+};
+
+export const purchaseHistory = async (token, params = {}) => {
+  const queryParams = {
+    lang: "en",
+    ...params,
+  };
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_HISTORY}`,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseHistory", error);
+    throw error;
+  }
+};
+

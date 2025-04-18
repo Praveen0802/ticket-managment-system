@@ -41,4 +41,6 @@ export const API_ROUTES = {
   RECENTLY_VIEWED_EVENTS: `/purchase/events/recently-viewed`,
   PURCHASE_EVENTS: "/purchase/events",
   PURCHASE_TRACKING: "/purchase/tracking",
+  PURCHASE_TICKETS: "/purchase/tickets",
+  PURCHASE_HISTORY:'/purchase/history'
 };

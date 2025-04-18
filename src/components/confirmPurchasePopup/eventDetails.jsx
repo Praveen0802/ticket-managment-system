@@ -5,6 +5,9 @@ import blueClock from "../../../public/blue-clock.svg";
 import blueCalendar from "../../../public/blue-calendar.svg";
 import blueLocation from "../../../public/blue-location.svg";
 import attachmentPin from "../../../public/attachment-pin.svg";
+import attachment6 from "../../../public/attachment-6.svg";
+import attachment3 from "../../../public/attachment-3.svg";
+import attachment1 from "../../../public/attachment-1.svg";
 import React from "react";
 
 const EventDetails = ({ data }) => {
@@ -64,8 +67,23 @@ const EventDetails = ({ data }) => {
             `${data?.venue},${data?.country},${data?.city}`
           )}
         </div>
-        <div className="flex gap-2 pr-4 border-l border-gray-200 items-center py-2">
-          <Image width={12} height={12} src={attachmentPin} alt="attach" />
+        <div className="flex gap-2 px-4 border-l border-gray-200 items-center py-2">
+          <Image
+            width={12}
+            height={12}
+            src={
+              data?.ticket_type_id == 2
+                ? attachmentPin
+                : data?.ticket_type_id == 4 || data?.ticket_type_id == 6
+                ? attachment6
+                : data?.ticket_type_id == 3
+                ? attachment3
+                : data?.ticket_type_id == 1
+                ? attachment1
+                : attachmentPin
+            }
+            alt="attach"
+          />
           <Image width={12} height={12} src={crossHand} alt="hand" />
         </div>
       </div>

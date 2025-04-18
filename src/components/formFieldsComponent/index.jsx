@@ -44,6 +44,7 @@ const FormFields = ({ formFields }) => {
           dropDownComponent,
           icon,
           count,
+          multiselect = false,
         } = field;
 
         const keyValue = field?.name || field?.key || id;
@@ -59,6 +60,7 @@ const FormFields = ({ formFields }) => {
                 options={options || []}
                 mandatory={mandatory}
                 selectedValue={value}
+                multiselect={multiselect}
                 labelClassName={labelClassName}
                 searchable={searchable}
                 disabled={disabled}

@@ -21,9 +21,16 @@ const FloatingSelect = ({
   disabled = false,
   searchable = false,
   rightIcon = null,
+  multiselect = false, // New prop for multiselect functionality
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(selectedValue);
+  const [selected, setSelected] = useState(
+    multiselect
+      ? Array.isArray(selectedValue)
+        ? selectedValue
+        : []
+      : selectedValue
+  );
   const [isFocused, setIsFocused] = useState(selectedValue ? true : false);
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
@@ -35,7 +42,10 @@ const FloatingSelect = ({
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
         // Only unfocus if no value is selected
-        if (!selected) {
+        if (
+          (!selected && !multiselect) ||
+          (multiselect && selected.length === 0)
+        ) {
           setIsFocused(false);
         }
         setSearchTerm("");
@@ -46,15 +56,25 @@ const FloatingSelect = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [selected]);
+  }, [selected, multiselect]);
 
   // Update selected value when prop changes
   useEffect(() => {
-    setSelected(selectedValue);
-    if (selectedValue) {
+    if (multiselect) {
+      setSelected(Array.isArray(selectedValue) ? selectedValue : []);
+    } else {
+      setSelected(selectedValue);
+    }
+
+    if (
+      (multiselect &&
+        Array.isArray(selectedValue) &&
+        selectedValue.length > 0) ||
+      (!multiselect && selectedValue)
+    ) {
       setIsFocused(true);
     }
-  }, [selectedValue]);
+  }, [selectedValue, multiselect]);
 
   // Focus input when dropdown opens
   useEffect(() => {
@@ -64,12 +84,54 @@ const FloatingSelect = ({
   }, [isOpen, searchable]);
 
   const handleSelect = (option, objectType) => {
-    setSelected(option);
-    setIsOpen(false);
-    setIsFocused(true);
-    setSearchTerm("");
+    if (multiselect) {
+      const optionValue =
+        typeof option === "object" && option !== null ? option.value : option;
+
+      // Check if the option is already selected
+      const isSelected = selected.some((item) => {
+        const itemValue =
+          typeof item === "object" && item !== null ? item.value : item;
+        return itemValue === optionValue;
+      });
+
+      let newSelected;
+      if (isSelected) {
+        // Remove option if already selected
+        newSelected = selected.filter((item) => {
+          const itemValue =
+            typeof item === "object" && item !== null ? item.value : item;
+          return itemValue !== optionValue;
+        });
+      } else {
+        // Add option if not selected
+        newSelected = [...selected, option];
+      }
+
+      setSelected(newSelected);
+      setIsFocused(true);
+
+      if (onSelect) {
+        onSelect(newSelected, keyValue, "select", objectType);
+      }
+    } else {
+      // Original single select behavior
+      setSelected(option);
+      setIsOpen(false);
+      setIsFocused(true);
+      setSearchTerm("");
+
+      if (onSelect) {
+        onSelect(option, keyValue, "select", objectType);
+      }
+    }
+  };
+
+  const handleDeselectAll = (e) => {
+    e.stopPropagation();
+    setSelected([]);
     if (onSelect) {
-      onSelect(option, keyValue, "select", objectType);
+      onSelect([], keyValue, "select");
     }
   };
 
@@ -82,13 +144,32 @@ const FloatingSelect = ({
 
   // Find the currently selected option's label
   const getSelectedLabel = () => {
-    if (!selected) return "";
+    if (multiselect) {
+      if (!selected || selected.length === 0) return "";
 
-    const selectedOption = options.find(
-      (option) => option.value === selected || option === selected
-    );
+      if (selected.length === 1) {
+        const selectedOption = options.find((option) => {
+          const optionValue =
+            option.value !== undefined ? option.value : option;
+          const selectedValue =
+            selected[0].value !== undefined ? selected[0].value : selected[0];
+          return optionValue === selectedValue;
+        });
 
-    return selectedOption ? selectedOption.label || selectedOption : "";
+        return selectedOption ? selectedOption.label || selectedOption : "";
+      } else {
+        return `${selected.length} items selected`;
+      }
+    } else {
+      // Original single select logic
+      if (!selected) return "";
+
+      const selectedOption = options.find(
+        (option) => option.value === selected || option === selected
+      );
+
+      return selectedOption ? selectedOption.label || selectedOption : "";
+    }
   };
 
   // Filter options based on search term
@@ -96,6 +177,19 @@ const FloatingSelect = ({
     const label = option.label !== undefined ? option.label : option;
     return label.toString().toLowerCase().includes(searchTerm.toLowerCase());
   });
+
+  // Check if an option is selected in multiselect mode
+  const isOptionSelected = (option) => {
+    if (!multiselect || !selected || selected.length === 0) return false;
+
+    const optionValue = option.value !== undefined ? option.value : option;
+
+    return selected.some((item) => {
+      const itemValue =
+        typeof item === "object" && item !== null ? item.value : item;
+      return itemValue === optionValue;
+    });
+  };
 
   // Base classes without padding (which is now customizable)
   const baseClasses = `block w-full text-[14px] rounded border-[1px] focus:outline-none ${
@@ -144,11 +238,14 @@ const FloatingSelect = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={placeholder || "Search..."}
             className="w-full outline-none bg-transparent"
+            onClick={(e) => e.stopPropagation()}
           />
         ) : (
           <span
             className={`block truncate ${selectedClassName} ${
-              !selected ? "text-gray-400" : ""
+              !selected || (multiselect && selected.length === 0)
+                ? "text-gray-400"
+                : ""
             }`}
           >
             {getSelectedLabel() || (isFocused ? placeholder : "")}
@@ -180,6 +277,16 @@ const FloatingSelect = ({
 
       {isOpen && !disabled && (
         <div className="absolute z-[99] w-full mt-1 bg-white rounded-md shadow-lg">
+          {multiselect && selected.length > 0 && (
+            <div className="flex justify-end px-3 py-2 border-b border-gray-100">
+              <button
+                onClick={handleDeselectAll}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                Deselect All
+              </button>
+            </div>
+          )}
           <ul
             className="py-1 overflow-auto text-[14px] rounded-md max-h-60 focus:outline-none"
             role="listbox"
@@ -191,8 +298,10 @@ const FloatingSelect = ({
                   option.value !== undefined ? option.value : option;
                 const label =
                   option.label !== undefined ? option.label : option;
-                const isSelectedOption =
-                  selected === value || selected === option;
+                const isSelectedOption = multiselect
+                  ? isOptionSelected(option)
+                  : selected === value || selected === option;
+
                 return (
                   <li
                     key={index}
@@ -204,19 +313,42 @@ const FloatingSelect = ({
                     id={`option-${index}`}
                     role="option"
                     aria-selected={isSelectedOption}
-                    onClick={() =>
-                      handleSelect(value !== undefined ? value : option, option)
-                    }
+                    onClick={(e) => {
+                      if (!multiselect) {
+                        handleSelect(
+                          value !== undefined ? value : option,
+                          option
+                        );
+                      } else {
+                        e.stopPropagation();
+                        handleSelect(
+                          value !== undefined ? value : option,
+                          option
+                        );
+                      }
+                    }}
                   >
-                    <span
-                      className={`block truncate ${
-                        isSelectedOption ? "font-medium" : "font-normal"
-                      }`}
-                    >
-                      {label}
-                    </span>
+                    <div className="flex items-center w-full">
+                      {multiselect && (
+                        <div className="mr-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelectedOption}
+                            onChange={() => {}}
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                        </div>
+                      )}
+                      <span
+                        className={`block truncate ${
+                          isSelectedOption ? "font-medium" : "font-normal"
+                        }`}
+                      >
+                        {label}
+                      </span>
+                    </div>
 
-                    {isSelectedOption && (
+                    {isSelectedOption && !multiselect && (
                       <div
                         onClick={(e) => {
                           e.stopPropagation();
@@ -228,13 +360,13 @@ const FloatingSelect = ({
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke-width="1.5"
+                          strokeWidth="1.5"
                           stroke="currentColor"
-                          class="size-4"
+                          className="size-4"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M6 18 18 6M6 6l12 12"
                           />
                         </svg>

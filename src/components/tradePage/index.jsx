@@ -21,6 +21,8 @@ const TradePage = (props) => {
     fetchTabCount,
     totalAmount = "£1,915.75",
   } = props;
+
+  console.log(props,'propsprops')
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);

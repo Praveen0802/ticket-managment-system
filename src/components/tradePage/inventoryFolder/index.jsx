@@ -21,10 +21,15 @@ import documentText from "../../../../public/document-text.svg";
 import StickyDataTable from "../components/stickyDataTable";
 import PinPatchMap from "./pinPatchMap";
 import { desiredFormatDate } from "@/utils/helperFunctions";
-import { purchaseFavouratesTracking } from "@/utils/apiHandler/request";
+import {
+  purchaseEvents,
+  purchaseFavouratesTracking,
+  purchaseTickets,
+} from "@/utils/apiHandler/request";
 import NonMatchSelectUI from "./nonMatchIdUI";
 import { useDispatch } from "react-redux";
 import { updateConfirmPurchasePopup } from "@/utils/redux/common/action";
+import OrderDetails from "@/components/orderDetails";
 
 const InventoryFolder = (props) => {
   const { response = {}, matchId } = props;
@@ -37,12 +42,14 @@ const InventoryFolder = (props) => {
   const [selectedItem, setSelectedItem] = useState("all");
   const [displayTicketDetails, setDisplayTicketDetails] =
     useState(ticket_details);
+  const [filtersApplied, setFiltersApplied] = useState({ page: 1 });
   const [showMap, setShowMap] = useState(true);
-  const [formFieldValues, setFormFieldValues] = useState({
+  const defaultFilters = {
     category: "",
     quantity: "",
-    ticket_type: "",
-  });
+    ticket_type_id: "",
+  };
+  const [formFieldValues, setFormFieldValues] = useState(defaultFilters);
   const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
   const selectedMatchData = {
@@ -61,19 +68,18 @@ const InventoryFolder = (props) => {
     );
   };
 
-  const listItems = [
-    {
-      key: "all",
-      label: "All Listings",
-    },
-    {
-      key: "mine",
-      label: "My Listings",
-    },
-  ];
-
-  const handleSelectedItemClick = (item) => {
-    setSelectedItem(item?.key);
+  const fetchAPIDetails = async (params, pagination = false) => {
+    setLoader(true);
+    const response = await purchaseEvents("", matchId, params);
+    if (pagination) {
+      setDisplayTicketDetails([
+        ...displayTicketDetails,
+        ...response?.ticket_details,
+      ]);
+    } else {
+      setDisplayTicketDetails([...response?.ticket_details]);
+    }
+    setLoader(false);
   };
 
   const handleChange = (e, key, type) => {
@@ -85,6 +91,15 @@ const InventoryFolder = (props) => {
       : selectType || dateType
       ? e
       : e.target.value;
+    if (selectType) {
+      let params = {
+        ...filtersApplied,
+        page: 1,
+        [key]: value,
+      };
+      setFiltersApplied(params);
+      fetchAPIDetails(params);
+    }
     setFormFieldValues({ ...formFieldValues, [key]: value });
   };
 
@@ -95,6 +110,20 @@ const InventoryFolder = (props) => {
         <p className="text-[#323A70] text-[12px] font-normal">{text}</p>
       </div>
     );
+  };
+
+  const fetchScrollEnd = async () => {
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+    const params = {
+      page: filtersApplied?.page + 1,
+      ...filtersApplied,
+    };
+
+    await fetchAPIDetails(params, true);
+    setFiltersApplied(params);
+    setTimeout(() => {
+      window.scrollTo(0, scrollPosition);
+    }, 0);
   };
 
   const headers = [
@@ -134,13 +163,23 @@ const InventoryFolder = (props) => {
     setDisplayTicketDetails(updatedTicketDetails);
   };
 
-  const handleClickItem = (item) => {
+  const handleClickItem = async (item) => {
+    // const data = await purchaseTickets("", item?.s_no, {
+    //   currency: item?.price_type,
+    // });
+    // console.log(data,'datadata')
     dispatch(
       updateConfirmPurchasePopup({
         flag: true,
-        data: { ...match_details, ...item, totalAmount },
+        data: { ...match_details, ...item },
       })
     );
+  };
+
+  const resetFilters = () => {
+    setFiltersApplied({ page: 1 });
+    setFormFieldValues(defaultFilters);
+    fetchAPIDetails({ page: 1 });
   };
 
   const rightStickyColumns = displayTicketDetails?.map((item) => {
@@ -166,23 +205,30 @@ const InventoryFolder = (props) => {
         ),
         className: "cursor-pointer",
         key: "attach",
-        tooltipText: "Attach files",
-        tooltipPosition: "top",
       },
       {
         icon: <Image width={16} height={16} src={crossHand} alt="hand" />,
         className: "cursor-pointer",
         key: "oneHand",
-        tooltipText: "Raise hand",
-        tooltipPosition: "top",
       },
       {
-        icon: (
+        icon: item?.listing_note?.length > 0 && (
           <Image width={20} height={20} src={documentText} alt="document" />
         ),
         className: "cursor-pointer",
         key: "document",
-        tooltipText: "View document",
+        tooltipComponent: item?.listing_note?.map((note, index) => (
+          <ul
+            className={`${
+              item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
+            }`}
+            key={index}
+          >
+            {Object.values(note).map((value, i) => (
+              <li key={i}>{value}</li>
+            ))}
+          </ul>
+        )),
         tooltipPosition: "top",
       },
       {
@@ -199,8 +245,6 @@ const InventoryFolder = (props) => {
         ),
         className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
         key: "star",
-        tooltipText: "Add to favorites",
-        tooltipPosition: "top",
       },
       {
         icon: (
@@ -265,15 +309,7 @@ const InventoryFolder = (props) => {
                 )}
               </div>
             </div>
-            {/* <div className="px-[24px] py-[10px] border-b-[1px] border-[#E0E1EA]">
-     <div className="w-[250px]">
-       <ToggleStatus
-         listItems={listItems}
-         selectedItem={selectedItem}
-         onClick={handleSelectedItemClick}
-       />
-     </div>
-   </div> */}
+
             <div className="px-[24px] py-[20px] border-b-[1px] border-[#E0E1EA]">
               <InventoryFilterForm
                 formFieldValues={formFieldValues}
@@ -289,11 +325,14 @@ const InventoryFolder = (props) => {
                 )}
                 {renderListItem(
                   <Image src={blueTicket} width={18} height={18} alt="logo" />,
-                  filters?.TotalPeopleAddedTickets
+                  filters?.TotalListingTickets
                 )}
-                <div className="border-[1px] border-[#DADBE5] p-[4px]">
+                <button
+                  onClick={() => resetFilters()}
+                  className="border-[1px] cursor-pointer border-[#DADBE5] p-[4px]"
+                >
                   <IconStore.reload className="size-3.5" />
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -335,6 +374,7 @@ overflow-hidden ${showMap ? "w-[50%] border-r-[1px] border-[#DADBE5]" : "w-0"}`}
                 data={data}
                 rightStickyColumns={rightStickyColumns}
                 loading={loader}
+                onScrollEnd={fetchScrollEnd}
               />
             </div>
           </div>
@@ -342,6 +382,7 @@ overflow-hidden ${showMap ? "w-[50%] border-r-[1px] border-[#DADBE5]" : "w-0"}`}
       ) : (
         <NonMatchSelectUI />
       )}
+      {/* <OrderDetails show={true} /> */}
     </>
   );
 };

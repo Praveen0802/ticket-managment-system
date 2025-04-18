@@ -18,7 +18,12 @@ const StickyDataTable = ({
   data,
   rightStickyColumns = [],
   loading = false,
+  fetchScrollEnd = null, // Original prop, kept for compatibility
+  onScrollEnd = null, // New prop name
 }) => {
+  // Use whichever callback is provided
+  const scrollEndCallback = onScrollEnd || fetchScrollEnd;
+
   // Calculate the width of sticky columns based on the first row or a default
   const maxStickyColumnsLength =
     rightStickyColumns.length > 0
@@ -43,8 +48,14 @@ const StickyDataTable = ({
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [activeTooltipKey, setActiveTooltipKey] = useState(null);
 
+  // Flag to prevent multiple triggers of the scroll end callback
+  const hasCalledScrollEnd = useRef(false);
+
+  // Reference to the parent element that might have vertical scrolling
+  const parentScrollRef = useRef(null);
+
   // Generate shimmer loading rows
-  const renderShimmerRows = (count = 5) => {
+  const renderShimmerRows = (count = 10) => {
     return Array(count)
       .fill(0)
       .map((_, rowIndex) => ({
@@ -55,6 +66,43 @@ const StickyDataTable = ({
 
   // Data to display - either real data or shimmer placeholders
   const displayData = loading ? renderShimmerRows() : data;
+
+  // Reset the scroll end flag when data changes or loading state changes
+  useEffect(() => {
+    hasCalledScrollEnd.current = false;
+  }, [data, loading]);
+
+  // Try to find the scrollable parent element (for vertical scrolling)
+  useEffect(() => {
+    // Find the first parent with overflow-y: auto/scroll
+    const findScrollableParent = (element) => {
+      if (!element) return null;
+
+      // Check if the document is the scrollable container
+      if (element === document.documentElement || element === document.body) {
+        return window;
+      }
+
+      const style = window.getComputedStyle(element);
+      const overflowY = style.getPropertyValue("overflow-y");
+
+      if (overflowY === "auto" || overflowY === "scroll") {
+        return element;
+      }
+
+      return findScrollableParent(element.parentElement);
+    };
+
+    // Try to find the scrollable parent once the component mounts
+    if (containerRef.current) {
+      parentScrollRef.current = findScrollableParent(containerRef.current);
+
+      // If no scrollable parent is found, default to window
+      if (!parentScrollRef.current) {
+        parentScrollRef.current = window;
+      }
+    }
+  }, []);
 
   // Synchronize row heights on load and resize
   useEffect(() => {
@@ -116,43 +164,109 @@ const StickyDataTable = ({
     };
   }, [displayData, rightStickyColumns, loading]);
 
-  // Check if can scroll left/right and handle scroll events
-  const checkScrollability = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
+  // Check if can scroll left/right (horizontal scrolling)
+  const checkHorizontalScrollability = () => {
+    if (!scrollContainerRef.current) return;
 
-      // Can scroll left if scrolled at least 1px
-      setCanScrollLeft(scrollLeft > 0);
+    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
 
-      // Can scroll right if there's more content to scroll to
-      // Adding a small buffer (1px) to account for rounding errors
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
+    // Can scroll left if scrolled at least 1px
+    setCanScrollLeft(scrollLeft > 0);
 
-      // Shadow effect
-      setHasScrolled(scrollLeft > 0);
+    // Check if scroll has reached the end
+    // Using a small buffer (2px) to account for rounding errors
+    const hasReachedEnd = scrollLeft + clientWidth >= scrollWidth - 2;
+
+    // Can scroll right if there's more content to scroll to
+    setCanScrollRight(!hasReachedEnd);
+
+    // Shadow effect
+    setHasScrolled(scrollLeft > 0);
+  };
+
+  // Check if reached vertical bottom
+  const checkVerticalScroll = () => {
+    if (!parentScrollRef.current || loading || hasCalledScrollEnd.current)
+      return;
+
+    // Calculate if we've reached the bottom
+    let isAtBottom = false;
+
+    if (parentScrollRef.current === window) {
+      // For window scrolling
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight =
+        document.documentElement.scrollHeight || document.body.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+
+      // Check if we're near the bottom (within 20px)
+      isAtBottom = scrollTop + clientHeight >= scrollHeight - 20;
+    } else {
+      // For div scrolling
+      const { scrollTop, scrollHeight, clientHeight } = parentScrollRef.current;
+
+      // Check if we're near the bottom (within 20px)
+      isAtBottom = scrollTop + clientHeight >= scrollHeight - 20;
+    }
+
+    // If scrolled to bottom and callback exists, call it
+    if (isAtBottom && scrollEndCallback && !hasCalledScrollEnd.current) {
+      scrollEndCallback();
+      hasCalledScrollEnd.current = true;
     }
   };
 
-  // Handle scroll events
+  // Handle horizontal and vertical scroll events
   useEffect(() => {
+    // Set up horizontal scroll event listener
     if (scrollContainerRef.current) {
-      // Initial check
-      checkScrollability();
-
-      // Set up event listener
-      scrollContainerRef.current.addEventListener("scroll", checkScrollability);
+      checkHorizontalScrollability(); // Check initial state
+      scrollContainerRef.current.addEventListener(
+        "scroll",
+        checkHorizontalScrollability
+      );
     }
 
+    // Set up vertical scroll event listener (on the scrollable parent)
+    if (parentScrollRef.current && scrollEndCallback) {
+      checkVerticalScroll(); // Check initial state
+
+      const scrollHandler = checkVerticalScroll;
+
+      if (parentScrollRef.current === window) {
+        window.addEventListener("scroll", scrollHandler);
+      } else {
+        parentScrollRef.current.addEventListener("scroll", scrollHandler);
+      }
+
+      return () => {
+        // Clean up both event listeners
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.removeEventListener(
+            "scroll",
+            checkHorizontalScrollability
+          );
+        }
+
+        if (parentScrollRef.current === window) {
+          window.removeEventListener("scroll", scrollHandler);
+        } else if (parentScrollRef.current) {
+          parentScrollRef.current.removeEventListener("scroll", scrollHandler);
+        }
+      };
+    }
+
+    // Only clean up horizontal scroll if no vertical scroll was set up
     return () => {
       if (scrollContainerRef.current) {
         scrollContainerRef.current.removeEventListener(
           "scroll",
-          checkScrollability
+          checkHorizontalScrollability
         );
       }
     };
-  }, []);
+  }, [loading, data, scrollEndCallback]); // Re-attach when loading or data changes
 
   // Navigation handlers
   const scrollLeft = () => {
@@ -167,6 +281,15 @@ const StickyDataTable = ({
       // Scroll right by a reasonable amount (e.g., 200px)
       scrollContainerRef.current.scrollBy({ left: 200, behavior: "smooth" });
     }
+  };
+
+  // Handle mouse hover for tooltips
+  const handleMouseEnter = (tooltipKey) => {
+    setActiveTooltipKey(tooltipKey);
+  };
+
+  const handleMouseLeave = () => {
+    setActiveTooltipKey(null);
   };
 
   return (
@@ -331,18 +454,23 @@ const StickyDataTable = ({
                             }`}
                           >
                             <div className="flex justify-center">
-                              {column?.icon && column.tooltipText ? (
+                              {column?.icon && column?.tooltipComponent ? (
                                 <TooltipWrapper
-                                  text={
-                                    column.tooltipText ||
-                                    `${column.key} information`
-                                  }
+                                  component={column?.tooltipComponent}
                                   position={column.tooltipPosition || "top"}
                                   tooltipKey={`${rowIndex}-${column.key}`}
                                   activeKey={activeTooltipKey}
                                   setActiveKey={setActiveTooltipKey}
                                 >
-                                  <div className="cursor-pointer">
+                                  <div
+                                    className="cursor-pointer"
+                                    onMouseEnter={() =>
+                                      handleMouseEnter(
+                                        `${rowIndex}-${column.key}`
+                                      )
+                                    }
+                                    onMouseLeave={handleMouseLeave}
+                                  >
                                     {column.icon}
                                   </div>
                                 </TooltipWrapper>

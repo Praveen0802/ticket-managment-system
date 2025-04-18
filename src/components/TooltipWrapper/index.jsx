@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 export default function TooltipWrapper({
   children,
-  text,
+  component,
   position = "top",
   tooltipKey,
   activeKey,
@@ -68,7 +68,7 @@ export default function TooltipWrapper({
         <div
           className={`absolute z-50 ${config.tooltipClass} bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap`}
         >
-          {text}
+          {component}
           <div
             className={`${config.pointerClass} w-0 h-0 border-solid border-transparent ${config.borderClass}`}
           ></div>

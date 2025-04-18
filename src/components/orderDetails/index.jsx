@@ -8,8 +8,38 @@ import OrderedTickets from "./components/orderedTickets";
 import Benifits from "./components/benifits";
 import CustomModal from "../commonComponents/customModal";
 import CtaValues from "./components/ctaValues";
+import AttendeeDetails from "./components/attendeeDetails";
 
-const OrderDetails = ({ testingValues, show, onClose }) => {
+const OrderDetails = ({ show, onClose }) => {
+  const testingValues = {
+    orderId: "6B1C74A9",
+    date: "20/10/2024, 17:36:03",
+    status: "Pending",
+    deliverdBy: "24/10/2024",
+    expectedPayoutDate: "09/11/2024",
+    daysToevent: "24",
+    customerName: "Customer Name",
+    customerEmail: "hassanaliahmed727@gmail.com",
+    eventName: "UFC 308 - Ilia Topuria vs d Max Holloway Abu Dhabi",
+    venue: "Etihad Arena",
+    eventDate: "26/10/2024",
+    seatDetails: "Lower 105",
+    ticketType: "E-ticket",
+    quantity: "2",
+    price: "£925.00",
+    orderValue: "£925.00",
+    benifits: [
+      "Includes unlimited food and soft drinks",
+      "VIP access 3 hours pre match",
+      "Tickets yve you access to a private VIP bar",
+      "VIP lounge access 1 hour post match",
+      "12 Person Suite",
+      "In-Seat Wait Service",
+    ],
+    billingAddress: "Manchester, GB",
+    shippingAddress: "Manchester, GB",
+  };
+
   const [expandedVersion, setExpandedVersion] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -93,7 +123,7 @@ const OrderDetails = ({ testingValues, show, onClose }) => {
           >
             <div className="flex items-center border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[24px]">
               <p className="text-[18px] text-[#323A70]">Order ID: {orderId}</p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ">
                 {expandedVersion ? (
                   <IconStore.collapse
                     onClick={handleCollapseModal}
@@ -112,6 +142,7 @@ const OrderDetails = ({ testingValues, show, onClose }) => {
               </div>
             </div>
             <div className="p-[24px] flex flex-col gap-4">
+              <AttendeeDetails />
               <CtaValues ctaText={ctaText} />
               <div
                 className={`flex gap-4 transition-custom ${
