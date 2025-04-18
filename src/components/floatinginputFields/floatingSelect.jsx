@@ -127,6 +127,23 @@ const FloatingSelect = ({
     }
   };
 
+  const handleSelectAll = (e) => {
+    e.stopPropagation();
+
+    // Extract values from filtered options in the same format they're stored in selected state
+    const allSelectedValues = filteredOptions.map((option) => {
+      // If options are objects with value property, extract just the value
+      // Otherwise use the option itself (for simple value arrays)
+      return option.value !== undefined ? option.value : option;
+    });
+
+    setSelected(allSelectedValues);
+
+    if (onSelect) {
+      onSelect(allSelectedValues, keyValue, "select");
+    }
+  };
+
   const handleDeselectAll = (e) => {
     e.stopPropagation();
     setSelected([]);
@@ -277,11 +294,17 @@ const FloatingSelect = ({
 
       {isOpen && !disabled && (
         <div className="absolute z-[99] w-full mt-1 bg-white rounded-md shadow-lg">
-          {multiselect && selected.length > 0 && (
-            <div className="flex justify-end px-3 py-2 border-b border-gray-100">
+          {multiselect && (
+            <div className="flex justify-between items-center px-3 py-2 border-b border-gray-100">
+              <button
+                onClick={handleSelectAll}
+                className="text-sm text-blue-600 cursor-pointer hover:text-blue-800"
+              >
+                Select All
+              </button>
               <button
                 onClick={handleDeselectAll}
-                className="text-sm text-blue-600 hover:text-blue-800"
+                className="text-sm text-blue-600 cursor-pointer hover:text-blue-800"
               >
                 Deselect All
               </button>

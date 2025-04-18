@@ -18,11 +18,11 @@ const EventDetails = ({ data }) => {
     },
     {
       name: "Category",
-      value: data?.seat_category,
+      value: data?.Category,
     },
     {
       name: "Section/block",
-      value: data?.block_id,
+      value: data?.ticket_block,
     },
     {
       name: "Row",
@@ -30,11 +30,11 @@ const EventDetails = ({ data }) => {
     },
     {
       name: "Ticket Type",
-      value: data?.ticket_type,
+      value: data?.Ticket_type,
     },
     {
-      name: "Expected delivery date",
-      value: dateFormat(data?.expected_date_inhand),
+      name: "Match Date",
+      value: desiredFormatDate(data?.match_date),
     },
   ];
 
@@ -64,7 +64,7 @@ const EventDetails = ({ data }) => {
           )}
           {renderContent(
             <Image src={blueLocation} alt="location" width={14} height={14} />,
-            `${data?.venue},${data?.country},${data?.city}`
+            `${data?.stadium_name},${data?.country_name},${data?.city_name}`
           )}
         </div>
         <div className="flex gap-2 px-4 border-l border-gray-200 items-center py-2">
@@ -99,12 +99,12 @@ const EventDetails = ({ data }) => {
           );
         })}
       </div>
-      <div className="flex flex-col gap-1 px-4 py-2">
+      {/* <div className="flex flex-col gap-1 px-4 py-2">
         <p className="text-gray-700 text-[11px] font-normal">Buying from</p>
         <p className="text-[12px] font-medium">
           {data?.country},{data?.city}
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

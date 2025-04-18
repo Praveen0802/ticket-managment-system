@@ -5,7 +5,12 @@ import netBankingSupports from "../../../public/netBankingSupports.svg";
 import { updateWalletPopupFlag } from "@/utils/redux/common/action";
 import { useDispatch } from "react-redux";
 
-const PaymentDetails = ({ data, handlePaymentChange, selectedPayment }) => {
+const PaymentDetails = ({
+  data,
+  handlePaymentChange,
+  selectedPayment,
+  paymentDetails,
+}) => {
   const dispatch = useDispatch();
   const handleOpenAddWalletPopup = () => {
     dispatch(
@@ -21,7 +26,11 @@ const PaymentDetails = ({ data, handlePaymentChange, selectedPayment }) => {
       component: (
         <div className="flex gap-4 items-center">
           <p className="text-[12px] text-gray-700">
-            Available Funds:{data?.totalAmount}
+            Available Balance:{" "}
+            <b>
+              {paymentDetails?.[0]?.wallet?.currencyIcons}
+              {paymentDetails?.[0]?.wallet?.amount}
+            </b>
           </p>
           <button
             onClick={() => {
@@ -69,7 +78,7 @@ const PaymentDetails = ({ data, handlePaymentChange, selectedPayment }) => {
                 onChange={() => handlePaymentChange(field?.name)}
               />
               <div className="ml-3 flex items-center">
-                <span className="text-gray-900 text-[12px] font-medium">
+                <span className="text-gray-900 text-[13px] font-medium">
                   {field?.name}
                 </span>
               </div>

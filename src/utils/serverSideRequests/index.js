@@ -19,6 +19,7 @@ import {
   purchaseEvents,
   purchaseFavouratesTracking,
   purchaseHistory,
+  purchaseTracking,
 } from "../apiHandler/request";
 
 export const fetchSettingsPageDetails = async (profile, token, ctx) => {
@@ -102,7 +103,7 @@ export const fetchDashboardPageDetails = async (token) => {
 export const fetchTradePageData = async (tradeType, token, matchId) => {
   if (tradeType === "home") {
     const [hotEvents, lastMinuteEvents, recentlyViewedEvents] =
-      await Promise.race([
+      await Promise.all([
         FetchHotEvents(token),
         LastMinuteEvents(token),
         fetchRecentlyViewedList(token),
@@ -112,9 +113,9 @@ export const fetchTradePageData = async (tradeType, token, matchId) => {
     const tradePageData = await purchaseEvents(token, matchId);
     return tradePageData;
   } else if (tradeType === "tracking") {
-    const trackingData = await purchaseFavouratesTracking(token);
+    const trackingData = await purchaseTracking(token);
     return trackingData;
-  }else if (tradeType === "purchase") {
+  } else if (tradeType === "purchase") {
     const purchaseData = await purchaseHistory(token);
     return purchaseData;
   }

@@ -25,7 +25,7 @@ const TradeHome = (props) => {
         date: desiredFormatDate(item?.match_date),
         time: item?.match_time,
         listing: item?.listings,
-        league: item?.tournament_name,
+        league: item?.tournament_name || item?.othereventCategory_name,
         availableTickets: item?.available_tickets,
         priceFrom: `${item?.price_type} ${item?.price_start_from}`,
       };
@@ -65,7 +65,6 @@ const TradeHome = (props) => {
   };
 
   const router = useRouter();
-
 
   const handleEventClick = async (event) => {
     console.log("Event clicked:", event);

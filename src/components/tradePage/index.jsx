@@ -21,8 +21,7 @@ const TradePage = (props) => {
     fetchTabCount,
     totalAmount = "£1,915.75",
   } = props;
-
-  console.log(props,'propsprops')
+  console.log(props, "propsprops");
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);
@@ -146,8 +145,8 @@ const TradePage = (props) => {
         )}
 
         <div
-          className={`transition-all duration-300 h-full
-             ${showEventSearch ? "w-[300px]" : "w-0 opacity-0"}`}
+          className={`transition-all duration-200 h-full
+             ${showEventSearch ? "w-[400px]" : "w-0 opacity-0"}`}
         >
           <EventSearch
             onClose={() => setShowEventSearch(false)}
@@ -155,8 +154,8 @@ const TradePage = (props) => {
           />
         </div>
         <div
-          className={`transition-all duration-300 overflow-auto h-[calc(100%-100px)] z-[99] ${
-            showEventSearch ? "w-[calc(100%-300px)] ml-[0px]" : "w-full ml-0"
+          className={`transition-all duration-200 overflow-auto h-[calc(100%-100px)] z-[99] ${
+            showEventSearch ? "w-[calc(100%-400px)] ml-[0px]" : "w-full ml-0"
           }`}
         >
           {selectedSubComponents?.[selectedTab]}

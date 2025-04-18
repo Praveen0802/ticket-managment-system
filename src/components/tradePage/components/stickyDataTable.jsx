@@ -13,6 +13,15 @@ const ShimmerCell = ({ width = "100%" }) => (
   ></div>
 );
 
+// No Records Found component
+const NoRecordsFound = () => (
+  <tr className="border-b border-[#E0E1EA] bg-white">
+    <td colSpan="100%" className="py-12 text-center text-[#7D82A4] font-medium">
+      No records found
+    </td>
+  </tr>
+);
+
 const StickyDataTable = ({
   headers,
   data,
@@ -64,8 +73,15 @@ const StickyDataTable = ({
       }));
   };
 
-  // Data to display - either real data or shimmer placeholders
-  const displayData = loading ? renderShimmerRows() : data;
+  // Check if data is empty (when not loading)
+  const isDataEmpty = !loading && (!data || data.length === 0);
+
+  // Data to display - either real data, shimmer placeholders, or empty array for "no records" state
+  const displayData = loading
+    ? renderShimmerRows()
+    : isDataEmpty
+    ? [{ isEmpty: true }] // Single row for "No records found" message
+    : data;
 
   // Reset the scroll end flag when data changes or loading state changes
   useEffect(() => {
@@ -186,7 +202,12 @@ const StickyDataTable = ({
 
   // Check if reached vertical bottom
   const checkVerticalScroll = () => {
-    if (!parentScrollRef.current || loading || hasCalledScrollEnd.current)
+    if (
+      !parentScrollRef.current ||
+      loading ||
+      hasCalledScrollEnd.current ||
+      isDataEmpty
+    )
       return;
 
     // Calculate if we've reached the bottom
@@ -266,7 +287,7 @@ const StickyDataTable = ({
         );
       }
     };
-  }, [loading, data, scrollEndCallback]); // Re-attach when loading or data changes
+  }, [loading, data, scrollEndCallback, isDataEmpty]); // Re-attach when loading, data or empty state changes
 
   // Navigation handlers
   const scrollLeft = () => {
@@ -328,13 +349,18 @@ const StickyDataTable = ({
             </tr>
           </thead>
           <tbody>
-            {displayData.map((row, rowIndex) => {
+            {displayData?.map((row, rowIndex) => {
+              // Handle empty state
+              if (row.isEmpty) {
+                return <NoRecordsFound key="no-records" />;
+              }
+
               return (
                 <tr
                   key={row.isShimmer ? `shimmer-${rowIndex}` : rowIndex}
                   className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
                 >
-                  {regularHeaders.map((header) => (
+                  {regularHeaders?.map((header) => (
                     <td
                       key={`${rowIndex}-${header.key}`}
                       className="py-2 px-4 text-[12px] whitespace-nowrap overflow-hidden text-ellipsis align-middle"
@@ -412,7 +438,19 @@ const StickyDataTable = ({
               </tr>
             </thead>
             <tbody>
-              {displayData.map((row, rowIndex) => {
+              {displayData?.map((row, rowIndex) => {
+                // Handle empty state for sticky table
+                if (row.isEmpty) {
+                  return (
+                    <tr
+                      key="no-records-sticky"
+                      className="border-b border-[#E0E1EA] bg-white"
+                    >
+                      <td colSpan={maxStickyColumnsLength}></td>
+                    </tr>
+                  );
+                }
+
                 // Get the row-specific sticky columns, or empty array if not defined
                 const rowStickyColumns =
                   !loading && rightStickyColumns[rowIndex]

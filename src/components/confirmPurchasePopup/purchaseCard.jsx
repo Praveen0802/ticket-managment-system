@@ -1,45 +1,88 @@
-import React from "react";
+import React, { useState } from "react";
+import FormFields from "../formFieldsComponent";
+import { PriceUpdatewithQuantity } from "@/utils/apiHandler/request";
 
 const PurchaseCard = ({ data }) => {
+  const { purchase = {} } = data;
+
+  const [selectedQuantity, setSelectedQuantity] = useState(
+    purchase?.price_breakdown?.ticket_quantity
+  );
+  const [priceDetails, setPriceDetails] = useState(purchase?.price_breakdown);
+  const handleChange = async (e, key) => {
+    setSelectedQuantity(e);
+    const response = await PriceUpdatewithQuantity("", data?.sNo, {
+      currency: priceDetails?.currency,
+      quantity: e,
+    });
+    setPriceDetails(response?.purchase?.price_breakdown);
+  };
+
+  const quantityOptions = purchase?.split_list?.map((item) => {
+    return {
+      label: item,
+      value: item,
+    };
+  });
+
   const listTotalView = [
-    { key: "Quantity", value: data?.quantity },
+    {
+      key: "Quantity",
+      component: (
+        <div className="flex gap-4 items-center w-full">
+          <FormFields
+            formFields={[
+              {
+                type: "select",
+                label: "Quantity",
+                id: `quantity`,
+                name: `quantity`,
+                value: selectedQuantity || "",
+                onChange: (e) => handleChange(e, "quantity"),
+                className: `!py-1 !px-4 `,
+                labelClassName: "!text-[12px] w-[50%] text-gray-600 block",
+                placeholder: "DD",
+                options: quantityOptions,
+              },
+            ]}
+          />
+          <p className="flex gap-1 whitespace-nowrap items-center">
+            of {data?.quantity}
+          </p>
+        </div>
+      ),
+    },
     {
       key: "Ticket Price",
-      value: data?.ticket_price,
-      symbol: data?.currency_symbol,
+      value: priceDetails?.ticket_price,
+      symbol: priceDetails?.currency_icon,
     },
     {
       key: "Subtotal",
-      value: data?.ticket_price,
-      symbol: data?.currency_symbol,
+      value: priceDetails?.sub_total,
+      symbol: priceDetails?.currency_icon,
     },
     {
       key: "Service Fee",
-      value: data?.serviceFee || "0.00",
-      symbol: data?.currency_symbol,
+      value: priceDetails?.service_fee || "0.00",
+      symbol: priceDetails?.currency_icon,
     },
     {
       key: "Shipping",
-      value: data?.shipping || "0.00",
-      symbol: data?.currency_symbol,
+      value: priceDetails?.shipping_fee || "0.00",
+      symbol: priceDetails?.currency_icon,
     },
-    { key: "Tax", value: data?.tax || "0.00", symbol: data?.currency_symbol },
+    {
+      key: "Tax",
+      value: priceDetails?.tax || "0.00",
+      symbol: priceDetails?.currency_icon,
+    },
     {
       key: "Total",
-      value: calculateTotal(data),
-      symbol: data?.currency_symbol,
+      value: priceDetails?.total_with_payment_fee,
+      symbol: priceDetails?.currency_icon,
     },
   ];
-
-  function calculateTotal(data) {
-    const subtotal =
-      Number(data?.quantity || 0) * Number(data?.ticket_price || 0);
-    const serviceFee = Number(data?.serviceFee || 0);
-    const shipping = Number(data?.shipping || 0);
-    const tax = Number(data?.tax || 0);
-    const total = subtotal + serviceFee + shipping + tax;
-    return total.toFixed(2);
-  }
 
   return (
     <div className="border border-gray-200 rounded-md">
@@ -53,13 +96,20 @@ const PurchaseCard = ({ data }) => {
               <p className="text-[13px] w-[20%] font-normal text-gray-700">
                 {item?.key}
               </p>
-              <div className="bg-gray-300 flex items-center rounded-md w-[80%]">
+              <div
+                className={`${
+                  !item?.component && "bg-gray-300"
+                }  flex items-center rounded-md w-[80%]`}
+              >
                 {item?.symbol && (
                   <p className="p-1 text-[13px] border-r-[0.5px] border-white">
                     {item?.symbol}
                   </p>
                 )}
-                <p className="text-[13px] py-1 px-3">{item?.value}</p>
+                {item?.component && item?.component}
+                {item?.value && (
+                  <p className="text-[13px] py-1 px-3">{item?.value}</p>
+                )}
               </div>
             </div>
           );

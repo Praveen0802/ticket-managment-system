@@ -66,7 +66,7 @@ export default function TooltipWrapper({
       {children}
       {isActive && (
         <div
-          className={`absolute z-50 ${config.tooltipClass} bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap`}
+          className={`absolute z-50 ${config.tooltipClass} bg-white  text-xs shadow-md px-2 py-1 rounded whitespace-nowrap`}
         >
           {component}
           <div

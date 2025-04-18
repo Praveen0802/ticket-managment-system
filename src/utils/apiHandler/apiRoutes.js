@@ -41,6 +41,9 @@ export const API_ROUTES = {
   RECENTLY_VIEWED_EVENTS: `/purchase/events/recently-viewed`,
   PURCHASE_EVENTS: "/purchase/events",
   PURCHASE_TRACKING: "/purchase/tracking",
+  PURCHASE_TRACKING_SEARCH: "/purchase/tracking-search",
   PURCHASE_TICKETS: "/purchase/tickets",
-  PURCHASE_HISTORY:'/purchase/history'
+  PURCHASE_HISTORY: "/purchase/history",
+  TICKET_QUANTITY_UPDATE: "/purchase/tickets-quantity-update",
+  PURCHASE_PAYMENT_METHODS: "/purchase/payment-methods",
 };

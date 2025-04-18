@@ -687,14 +687,36 @@ export const purchaseEvents = async (token, id, params = {}) => {
 export const purchaseFavouratesTracking = async (
   token,
   method = "GET",
-  data
+  data,
+  id
 ) => {
   try {
     const response = await makeRequest({
-      url: `${API_ROUTES.PURCHASE_TRACKING}`,
+      url: `${API_ROUTES.PURCHASE_TRACKING}${id ? `/${id}` : ""}`,
       method: method,
       ...(token && { token: token }),
       ...(data && { data: data }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseFavouratesTracking", error);
+    throw error;
+  }
+};
+
+export const purchaseTracking = async (token, method = "GET", params) => {
+  try {
+    const queryParams = {
+      lang: "en",
+      currency: "GBP",
+      page: 1,
+      ...params,
+    };
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_TRACKING_SEARCH}`,
+      method: method,
+      ...(token && { token: token }),
+      params: queryParams,
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
@@ -742,3 +764,42 @@ export const purchaseHistory = async (token, params = {}) => {
   }
 };
 
+export const PriceUpdatewithQuantity = async (token, id, params) => {
+  try {
+    const queryParams = {
+      lang: "en",
+      client_country: "IN",
+      ...params,
+    };
+    const response = await makeRequest({
+      url: `${API_ROUTES.TICKET_QUANTITY_UPDATE}${id ? `/${id}` : ""}`,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseFavouratesTracking", error);
+    throw error;
+  }
+};
+
+export const paymentPurchaseDetails = async (token, params) => {
+  try {
+    const queryParams = {
+      lang: "en",
+      client_country: "IN",
+      ...params,
+    };
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_PAYMENT_METHODS}`,
+      method: "GET",
+      ...(token && { token: token }),
+      params: queryParams,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in paymentPurchaseDetails", error);
+    throw error;
+  }
+};

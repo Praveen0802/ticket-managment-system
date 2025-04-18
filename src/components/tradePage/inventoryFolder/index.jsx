@@ -20,7 +20,7 @@ import Button from "@/components/commonComponents/button";
 import documentText from "../../../../public/document-text.svg";
 import StickyDataTable from "../components/stickyDataTable";
 import PinPatchMap from "./pinPatchMap";
-import { desiredFormatDate } from "@/utils/helperFunctions";
+import { dateFormat, desiredFormatDate } from "@/utils/helperFunctions";
 import {
   purchaseEvents,
   purchaseFavouratesTracking,
@@ -91,6 +91,7 @@ const InventoryFolder = (props) => {
       : selectType || dateType
       ? e
       : e.target.value;
+    console.log(value, "valuevaluevalue");
     if (selectType) {
       let params = {
         ...filtersApplied,
@@ -145,6 +146,7 @@ const InventoryFolder = (props) => {
   });
 
   const handleClickFavourites = async (item) => {
+    if (item?.trackingfound == 1) return;
     const payload = {
       m_id: matchId,
       s_no: item?.s_no,
@@ -154,7 +156,7 @@ const InventoryFolder = (props) => {
       if (ticket?.s_no == item?.s_no) {
         return {
           ...ticket,
-          favourite: !ticket?.favourite,
+          trackingfound: 1,
         };
       }
       return ticket;
@@ -164,14 +166,13 @@ const InventoryFolder = (props) => {
   };
 
   const handleClickItem = async (item) => {
-    // const data = await purchaseTickets("", item?.s_no, {
-    //   currency: item?.price_type,
-    // });
-    // console.log(data,'datadata')
+    const data = await purchaseTickets("", item?.s_no, {
+      currency: item?.price_type,
+    });
     dispatch(
       updateConfirmPurchasePopup({
         flag: true,
-        data: { ...match_details, ...item },
+        data: { ...data, sNo: item?.s_no },
       })
     );
   };
@@ -210,6 +211,14 @@ const InventoryFolder = (props) => {
         icon: <Image width={16} height={16} src={crossHand} alt="hand" />,
         className: "cursor-pointer",
         key: "oneHand",
+        tooltipComponent: (
+          <p className="text-center">
+            Expected Delivery Date:
+            <br />
+            {dateFormat(item?.expected_date_inhand)}
+          </p>
+        ),
+        tooltipPosition: "top",
       },
       {
         icon: item?.listing_note?.length > 0 && (
@@ -218,16 +227,19 @@ const InventoryFolder = (props) => {
         className: "cursor-pointer",
         key: "document",
         tooltipComponent: item?.listing_note?.map((note, index) => (
-          <ul
-            className={`${
-              item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
-            }`}
-            key={index}
-          >
-            {Object.values(note).map((value, i) => (
-              <li key={i}>{value}</li>
-            ))}
-          </ul>
+          <div className="flex flex-col gap-2">
+            <p className="text-left">Benifits/Restrictions</p>
+            <ul
+              className={`list-disc ml-[20px] ${
+                item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
+              }`}
+              key={index}
+            >
+              {Object.values(note).map((value, i) => (
+                <li key={i}>{value}</li>
+              ))}
+            </ul>
+          </div>
         )),
         tooltipPosition: "top",
       },
@@ -239,7 +251,7 @@ const InventoryFolder = (props) => {
             }}
             width={20}
             height={20}
-            src={item?.favourite ? star : beforeFaviurates}
+            src={item?.trackingfound == 1 ? star : beforeFaviurates}
             alt="star"
           />
         ),

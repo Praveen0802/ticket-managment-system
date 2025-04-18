@@ -1,25 +1,51 @@
 import { dateFormat, desiredFormatDate } from "@/utils/helperFunctions";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 
-
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import FooterButton from "../footerButton";
 import Button from "../commonComponents/button";
 import PurchaseCard from "./purchaseCard";
 import EventDetails from "./eventDetails";
 import PaymentDetails from "./paymentDetails";
+import AddessDetails from "./addessDetails";
+import {
+  fetchAddressBookDetails,
+  paymentPurchaseDetails,
+} from "@/utils/apiHandler/request";
 
 const ConfirmPurchasePopup = ({ onClose }) => {
   const { confirmPurchasePopupFields } = useSelector((state) => state?.common);
   const [loader, setLoader] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("LMT Pay");
+  const [addressDetails, setAddressDetails] = useState([]);
+  const [paymentDetails, setPaymentDetails] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(0);
   const { data = {} } = confirmPurchasePopupFields;
-
   const handlePaymentChange = (name) => {
     setSelectedPayment(name);
   };
+
+  const handleAddressChange = (id) => {
+    setSelectedAddress(id);
+  };
+
+  const fetchAddressPaymentDetails = async () => {
+    const [addressDetails, paymentDetails] = await Promise.all([
+      fetchAddressBookDetails(),
+      paymentPurchaseDetails("", {
+        currency: data?.purchase?.price_breakdown?.currency,
+      }),
+    ]);
+    setAddressDetails(addressDetails);
+    setPaymentDetails(paymentDetails?.payment_methods);
+    console.log(addressDetails, paymentDetails, "paymentDetailspaymentDetails");
+  };
+
+  useEffect(() => {
+    fetchAddressPaymentDetails();
+  }, []);
 
   const handleSubmit = async () => {};
 
@@ -43,7 +69,18 @@ const ConfirmPurchasePopup = ({ onClose }) => {
       <div className="flex-grow overflow-y-auto px-4 py-4 space-y-4">
         <EventDetails data={data} />
         <PurchaseCard data={data} />
-        <PaymentDetails data={data} selectedPayment={selectedPayment} handlePaymentChange={handlePaymentChange}/>
+        <AddessDetails
+          data={data}
+          addressDetails={addressDetails}
+          selectedAddress={selectedAddress}
+          handleAddressChange={handleAddressChange}
+        />
+        <PaymentDetails
+          data={data}
+          selectedPayment={selectedPayment}
+          handlePaymentChange={handlePaymentChange}
+          paymentDetails={paymentDetails}
+        />
       </div>
 
       {/* Footer - Fixed at Bottom */}
