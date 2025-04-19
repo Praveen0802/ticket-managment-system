@@ -18,8 +18,11 @@ import attachment1 from "../../../../public/attachment-1.svg";
 import crossHand from "../../../../public/cross-hand.svg";
 import {
   purchaseFavouratesTracking,
+  purchaseTickets,
   purchaseTracking,
 } from "@/utils/apiHandler/request";
+import { updateConfirmPurchasePopup } from "@/utils/redux/common/action";
+import { useDispatch } from "react-redux";
 
 const TrackingPage = (props) => {
   const { response = {} } = props;
@@ -35,6 +38,7 @@ const TrackingPage = (props) => {
     sold: response?.sold,
   });
   const [loader, setLoader] = useState(false);
+  const dispatch = useDispatch();
   const [filterApplied, setFIlterApplied] = useState({});
   const headers = [
     { key: "status", label: "Status", sortable: true },
@@ -103,6 +107,19 @@ const TrackingPage = (props) => {
       )
     );
   };
+
+  const handleClickItem = async (item) => {
+    const data = await purchaseTickets("", item?.s_no, {
+      currency: item?.price_type,
+    });
+    dispatch(
+      updateConfirmPurchasePopup({
+        flag: true,
+        data: { ...data, sNo: item?.s_no },
+      })
+    );
+  };
+
   const rightStickyColumns = selectedTicketDetails?.map((item) => {
     return [
       {
@@ -146,21 +163,23 @@ const TrackingPage = (props) => {
         ),
         className: "cursor-pointer",
         key: "document",
-        tooltipComponent: item?.listing_note?.map((note, index) => (
-          <div className="flex flex-col gap-2">
-            <p className="text-left">Benifits/Restrictions</p>
-            <ul
-              className={`list-disc ml-[20px] ${
-                item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
-              }`}
-              key={index}
-            >
-              {Object.values(note).map((value, i) => (
-                <li key={i}>{value}</li>
-              ))}
-            </ul>
-          </div>
-        )),
+        tooltipComponent:
+          item?.listing_note?.length > 0 &&
+          item?.listing_note?.map((note, index) => (
+            <div className="flex flex-col gap-2">
+              <p className="text-left">Benifits/Restrictions</p>
+              <ul
+                className={`list-disc ml-[20px] ${
+                  item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
+                }`}
+                key={index}
+              >
+                {Object.values(note).map((value, i) => (
+                  <li key={i}>{value}</li>
+                ))}
+              </ul>
+            </div>
+          )),
         tooltipPosition: "top",
       },
       {
@@ -186,9 +205,9 @@ const TrackingPage = (props) => {
               label_: "text-white text-xs sm:text-sm",
               root: "bg-[#0137D5] py-1 px-2 rounded-md hover:bg-[#0137D5] transition-colors whitespace-nowrap",
             }}
-            // onClick={() => {
-            //   handleClickItem(item);
-            // }}
+            onClick={() => {
+              handleClickItem(item);
+            }}
           />
         ),
         key: "buy",
@@ -218,7 +237,6 @@ const TrackingPage = (props) => {
         i === index ? { ...item, isChecked: !item.isChecked } : item
       )
     );
-    console.log(availabilityStatus, "availabilityStatusavailabilityStatus");
     const params = {
       ...filterApplied,
       availability: availabilityStatus != 1 ? "" : 1,

@@ -803,3 +803,45 @@ export const paymentPurchaseDetails = async (token, params) => {
     throw error;
   }
 };
+
+export const purchaseTicketValidate = async (token, params = {}, data) => {
+  const queryParams = {
+    lang: "en",
+    client_country: "IN",
+    ...params,
+  };
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_TICKETS_VALIDATE}`,
+      method: "POST",
+      ...(token && { token: token }),
+      params: queryParams,
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in FetchTabTotal", error);
+    throw error;
+  }
+};
+
+export const purchaseTicketsBuy = async (token, id, params = {}, data) => {
+  const queryParams = {
+    lang: "en",
+    client_country: "IN",
+    ...params,
+  };
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_TICKETS_BUY}/${id}`,
+      method: "POST",
+      ...(token && { token: token }),
+      params: queryParams,
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseTicketsBuy", error);
+    throw error;
+  }
+};

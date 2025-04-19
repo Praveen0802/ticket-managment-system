@@ -46,4 +46,6 @@ export const API_ROUTES = {
   PURCHASE_HISTORY: "/purchase/history",
   TICKET_QUANTITY_UPDATE: "/purchase/tickets-quantity-update",
   PURCHASE_PAYMENT_METHODS: "/purchase/payment-methods",
+  PURCHASE_TICKETS_VALIDATE: "/purchase/tickets/validate",
+  PURCHASE_TICKETS_BUY: "/purchase/tickets/buy",
 };

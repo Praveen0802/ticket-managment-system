@@ -20,6 +20,7 @@ const PaymentDetails = ({
     );
   };
 
+  const linkedCards = paymentDetails?.[1]?.linked_cards || [];
   const radioButtonFields = [
     {
       name: "LMT Pay",
@@ -44,9 +45,24 @@ const PaymentDetails = ({
         </div>
       ),
     },
-    {
-      name: "Card",
-    },
+    ...linkedCards.map(item => ({
+      name: `${item.RecurringDetail.paymentMethodVariant === 'mc' ? 'Mastercard' : 
+             item.RecurringDetail.paymentMethodVariant === 'visacredit' ? 'Visa' : 
+             item.RecurringDetail.paymentMethodVariant === 'amex' ? 'American Express' : 
+             item.RecurringDetail.paymentMethodVariant} ****${item.RecurringDetail.card.number}`,
+      component: (
+        <div className="flex items-center">
+          <img
+            src={`https://cdf6519016.cdn.adyen.com/checkoutshopper/images/logos/${item.RecurringDetail.variant}.svg`}
+            alt="Card Image"
+            style={{ width: "50px", height: "auto", margin: "0 10px" }}
+          />
+          <p className="text-[12px] text-gray-700">
+            **** **** **** {item.RecurringDetail.card.number}
+          </p>
+        </div>
+      ),
+    })),
     {
       name: "New Credit or Debit Card",
       component: (
@@ -54,6 +70,9 @@ const PaymentDetails = ({
       ),
     },
   ];
+
+  console.log(radioButtonFields,'radioButtonFieldsradioButtonFields')
+
   return (
     <div className="border border-gray-200 rounded-md">
       <p className="px-4 py-2 border-b border-gray-200 text-[14px] font-medium">
