@@ -1,176 +1,120 @@
-import {
-  adyenCreateSession,
-  adyenPaymentUpdate,
-} from "@/utils/apiHandler/request";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { adyenCreateSession, adyenPaymentSubmit, adyenPaymentUpdate } from "@/utils/apiHandler/request";
 
 const AdyenDropIn = ({ bookingId, paymentMethod }) => {
   const dropinContainerRef = useRef(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    // Load Adyen scripts and styles
-    const loadAdyenResources = async () => {
+    const loadAdyen = async () => {
       try {
-        if (!document.querySelector('script[src*="adyen.js"]')) {
+        // First, load the Adyen script manually if using script tags
+        if (!window.AdyenCheckout) {
+          // Load script
           const script = document.createElement("script");
-          script.src =
-            "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.js";
+          script.src = "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.js";
           script.crossOrigin = "anonymous";
           
-          // Create a promise to handle script loading
           await new Promise((resolve, reject) => {
             script.onload = resolve;
-            script.onerror = () => reject(new Error("Failed to load Adyen script"));
+            script.onerror = reject;
             document.head.appendChild(script);
           });
         }
-
+        
+        // Load CSS
         if (!document.querySelector('link[href*="adyen.css"]')) {
-          const link = document.createElement("link");
-          link.rel = "stylesheet";
-          link.href =
-            "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.css";
-          link.crossOrigin = "anonymous";
-          document.head.appendChild(link);
+          const adyenCSS = document.createElement("link");
+          adyenCSS.rel = "stylesheet";
+          adyenCSS.href = "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.css";
+          document.head.appendChild(adyenCSS);
         }
-        
-        setIsLoaded(true);
-      } catch (err) {
-        console.error("Error loading Adyen resources:", err);
-        setError(err.message);
-      }
-    };
 
-    loadAdyenResources();
-  }, []);
-
-  useEffect(() => {
-    const initAdyenCheckout = async () => {
-      if (!isLoaded || !window.AdyenCheckout || !dropinContainerRef.current) {
-        return;
-      }
-
-      try {
-        setIsProcessing(true);
-        
-        // Create session
-        const sessionResponse = await adyenCreateSession("", {
+        // Create session with backend
+        const data = await adyenCreateSession("", {
           booking_id: bookingId,
         });
-        
-        console.log("Session data:", sessionResponse);
-        
-        if (!sessionResponse || !sessionResponse.session) {
-          throw new Error("Failed to initialize Adyen session: Invalid response data");
-        }
 
-        // Verify the clientKey is valid
-        if (!sessionResponse.clientKey || typeof sessionResponse.clientKey !== 'string' || !sessionResponse.clientKey.startsWith('test_')) {
-          throw new Error("Invalid client key received from server");
-        }
+        console.log("Session data received:", data);
 
-        // Initialize checkout
+        // Initialize and mount Adyen Checkout using the global variable
         const checkout = await window.AdyenCheckout({
-          environment: sessionResponse.environment || 'test', // Ensure environment is set
-          clientKey: sessionResponse.clientKey,
-          session: {
-            id: sessionResponse.session.id,
-            sessionData: sessionResponse.session.sessionData
-          },
-          onPaymentCompleted: (result, component) => {
+          environment: data.environment,
+          clientKey: data.clientKey,
+          session: data.session,
+
+          // Handles both success and failure after final authorization
+          onPaymentCompleted: async (result, component) => {
             console.log("Payment completed:", result);
-            // Handle successful payment here (e.g., redirect or show success message)
-          },
-          onError: (error, component) => {
-            console.error("Payment error:", error);
-            setError(`Payment processing error: ${error.message || "Unknown error"}`);
-          },
-          onAdditionalDetails: async (state, component) => {
-            try {
-              const response = await adyenPaymentUpdate("", {
-                ...state.data,
-                booking_id: bookingId,
-                payment_method: paymentMethod,
+            await adyenPaymentSubmit("", {
+              booking_id: bookingId,
+              payment_method: paymentMethod,
+              resultCode: result?.resultCode,
+              pspReference: result?.pspReference || null,
+              sessionData: result?.sessionData || null,
+              sessionResult: result?.sessionResult || null,
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log("Final payment update response:", data);
+                // Optionally redirect or show message here
+              })
+              .catch((err) => {
+                console.error("Error during final payment update:", err);
               });
-              
-              const data = await response.json();
-              
-              if (response.ok) {
+          },
+
+          // Handles 3D Secure and other multi-step methods
+          onAdditionalDetails: async (state, component) => {
+            console.log("onAdditionalDetails triggered:", state);
+
+            await adyenPaymentUpdate("", {
+              ...state.data,
+              booking_id: bookingId,
+              payment_method: paymentMethod,
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(
+                  "Response from paymentUpdate (additionalDetails):",
+                  data
+                );
                 if (data.action) {
                   component.handleAction(data.action);
-                } else {
-                  console.log("Payment update success:", data);
-                  // Handle success case
                 }
-              } else {
-                throw new Error(`Payment update failed: ${response.status}`);
-              }
-            } catch (err) {
-              console.error("Payment update error:", err);
-              setError(err.message || "Payment update failed");
-            }
+              })
+              .catch((err) => {
+                console.error(
+                  "Error in paymentUpdate (additionalDetails):",
+                  err
+                );
+              });
           },
-          paymentMethodsConfiguration: {
-            card: {
-              hasHolderName: true,
-              holderNameRequired: true,
-              enableStoreDetails: false,
-              hideCVC: false,
-              showBrandsUnderCardNumber: true
-            }
+
+          onError: (error, component) => {
+            console.error("Payment error:", error);
           },
-          analytics: {
-            enabled: false
-          },
-          locale: "en-US",
-          styling: {
-            theme: "light",
-          }
         });
 
-        // Mount the drop-in component
-        const dropinComponent = checkout
-          .create("dropin", {
-            openFirstPaymentMethod: true,
-            openFirstStoredPaymentMethod: false,
-            showRemovePaymentMethodButton: false,
-            showPayButton: true
-          })
-          .mount(dropinContainerRef.current);
-          
-      } catch (err) {
-        console.error("Adyen initialization error:", err);
-        setError(err.message || "Failed to initialize payment form");
-      } finally {
-        setIsProcessing(false);
+        // Mount the Drop-in component
+        if (dropinContainerRef.current) {
+          checkout.create("dropin").mount(dropinContainerRef.current);
+        }
+      } catch (error) {
+        console.error("Failed to initialize Adyen:", error);
       }
     };
 
-    if (isLoaded) {
-      initAdyenCheckout();
-    }
-  }, [isLoaded, bookingId, paymentMethod]);
+    loadAdyen();
+
+    // Cleanup function
+    return () => {
+      // Remove any lingering DOM elements if needed
+    };
+  }, [bookingId, paymentMethod]); // Re-initialize if these props change
 
   return (
-    <div className="adyen-payment-container">
-      {/* {error && (
-        <div className="error-message p-3 bg-red-100 text-red-700 rounded mb-4">
-          {error}
-        </div>
-      )}
-      {isProcessing && (
-        <div className="processing-indicator p-3 bg-blue-50 text-blue-700 rounded mb-4">
-          Loading payment form...
-        </div>
-      )} */}
-      <div 
-        ref={dropinContainerRef} 
-        id="dropin-container"
-        className="p-4 border border-gray-200 rounded"
-      />
+    <div>
+      <div id="dropin-container" ref={dropinContainerRef}></div>
     </div>
   );
 };

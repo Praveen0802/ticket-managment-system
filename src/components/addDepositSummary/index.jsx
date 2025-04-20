@@ -62,7 +62,6 @@ const AddDepositSummary = ({ onClose }) => {
       "deposit_amount",
       "currency",
       "payment_transfer_by",
-      "proof",
       "notes",
     ];
     return requiredFields.every((field) => formFieldValues[field]);
@@ -120,7 +119,6 @@ const AddDepositSummary = ({ onClose }) => {
         type: "file",
         id: "proof",
         name: "proof",
-        mandatory: true,
         value: formFieldValues?.proof,
         onChange: handleChange,
         className: `!py-2 !px-4 ${fieldStyle}`,

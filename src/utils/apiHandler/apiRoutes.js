@@ -50,6 +50,7 @@ export const API_ROUTES = {
   PURCHASE_TICKETS_BUY: "/purchase/tickets/buy",
   DELETE_ADDRESS_BOOK: "/settings/delete-address-book",
   ADYEN_CREATE_SESSION: "/adyen/createsession",
-  ADYEN_PAYMENT_UPDATE: "adyen/paymentUpdate",
+  ADYEN_PAYMENT_UPDATE: "/adyen/paymentUpdate",
+  ADYEN_PAYMENT_SUBMIT:'/adyen/paymentResponse',
   PURCHASE_TICKET_CONFIRMATON: "/purchase/tickets/confirmation",
 };

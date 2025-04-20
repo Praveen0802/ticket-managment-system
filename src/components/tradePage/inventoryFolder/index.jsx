@@ -1,5 +1,5 @@
 import { IconStore } from "@/utils/helperFunctions/iconStore";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import blueLocation from "../../../../public/blue-location.svg";
 import Image from "next/image";
 import blueCalendar from "../../../../public/blue-calendar.svg";
@@ -44,6 +44,7 @@ const InventoryFolder = (props) => {
     useState(ticket_details);
   const [filtersApplied, setFiltersApplied] = useState({ page: 1 });
   const [showMap, setShowMap] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const defaultFilters = {
     category: "",
     quantity: "",
@@ -59,11 +60,26 @@ const InventoryFolder = (props) => {
     Venue: `${match_details?.venue},${match_details?.country},${match_details?.city}`,
   };
 
+  // Set mobile state based on screen width
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      // Automatically hide map on mobile
+      if (window.innerWidth < 768) {
+        setShowMap(false);
+      }
+    };
+
+    handleResize(); // Run initially
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const renderListValue = (icon, text) => {
     return (
       <div className="flex gap-[8px] items-center">
         {icon}
-        <p className="text-[12px] font-normal text-[#323A70]">{text}</p>
+        <p className="text-[12px] font-normal text-[#323A70] truncate">{text}</p>
       </div>
     );
   };
@@ -232,13 +248,12 @@ const InventoryFolder = (props) => {
         tooltipComponent:
           item?.listing_note?.length > 0 &&
           item?.listing_note?.map((note, index) => (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2" key={index}>
               <p className="text-left">Benifits/Restrictions</p>
               <ul
                 className={`list-disc ml-[20px] ${
                   item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
                 }`}
-                key={index}
               >
                 {Object.values(note).map((value, i) => (
                   <li key={i}>{value}</li>
@@ -281,17 +296,22 @@ const InventoryFolder = (props) => {
     ];
   });
 
+  const toggleMap = () => {
+    setShowMap(!showMap);
+  };
+
   return (
     <>
       {matchId ? (
-        <div className="flex flex-col gap-6 h-[calc(100%-100px)]">
+        <div className="flex flex-col gap-6 h-full">
           <div className="bg-white w-full">
-            <div className="px-[30px] border-b-[1px] border-[#E0E1EA] flex gap-4 items-center">
-              <p className="py-[12px] pr-[20px] text-[12px] font-medium text-[#323A70] border-r-[1px] border-[#E0E1EA]">
+            {/* Match header info */}
+            <div className="px-[16px] md:px-[30px] border-b-[1px] border-[#E0E1EA] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center">
+              <p className="py-[8px] md:py-[12px] pr-0 md:pr-[20px] text-[12px] font-medium text-[#323A70] border-b-[1px] md:border-b-0 w-full md:w-auto md:border-r-[1px] border-[#E0E1EA]">
                 {selectedMatchData?.match}
               </p>
-              <div className="py-[10px] flex gap-4 items-center">
-                <div className="pr-[20px] border-r-[1px] border-[#E0E1EA]">
+              <div className="py-[6px] md:py-[10px] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center w-full">
+                <div className="border-b-[1px] md:border-b-0 w-full md:w-auto md:pr-[20px] md:border-r-[1px] border-[#E0E1EA]">
                   {renderListValue(
                     <Image
                       src={blueCalendar}
@@ -302,7 +322,7 @@ const InventoryFolder = (props) => {
                     selectedMatchData?.eventDate
                   )}
                 </div>
-                <div className="pr-[20px] border-r-[1px] border-[#E0E1EA]">
+                <div className="border-b-[1px] md:border-b-0 w-full md:w-auto md:pr-[20px] md:border-r-[1px] border-[#E0E1EA]">
                   {renderListValue(
                     <Image
                       src={blueClock}
@@ -310,32 +330,35 @@ const InventoryFolder = (props) => {
                       width={14}
                       height={14}
                     />,
-
                     selectedMatchData?.eventTime
                   )}
                 </div>
-                {renderListValue(
-                  <Image
-                    src={blueLocation}
-                    alt="location"
-                    width={14}
-                    height={14}
-                  />,
-
-                  selectedMatchData?.Venue
-                )}
+                <div className="w-full md:w-auto">
+                  {renderListValue(
+                    <Image
+                      src={blueLocation}
+                      alt="location"
+                      width={14}
+                      height={14}
+                    />,
+                    selectedMatchData?.Venue
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="px-[24px] py-[20px] border-b-[1px] border-[#E0E1EA]">
+            {/* Filter form */}
+            <div className="px-[16px] md:px-[24px] py-[16px] md:py-[20px] border-b-[1px] border-[#E0E1EA]">
               <InventoryFilterForm
                 formFieldValues={formFieldValues}
                 handleChange={handleChange}
                 filters={filters}
               />
             </div>
-            <div className="border-b-[1px] border-[#E0E1EA]">
-              <div className="px-[21px] flex gap-3 items-center w-fit border-r-[1px] py-[10px] border-[#E0E1EA] ">
+            
+            {/* Stats bar */}
+            <div className="border-b-[1px] border-[#E0E1EA] overflow-x-auto whitespace-nowrap">
+              <div className="px-[16px] md:px-[21px] flex gap-3 items-center w-fit border-r-[1px] py-[10px] border-[#E0E1EA]">
                 {renderListItem(
                   <Image src={hamburger} width={18} height={18} alt="logo" />,
                   filters?.TotalQtyTickets
@@ -353,13 +376,34 @@ const InventoryFolder = (props) => {
               </div>
             </div>
           </div>
-          <div className="px-[24px] pb-[24px] flex relative">
-            {!showMap && (
+
+          {/* Map toggle button - now visible on mobile */}
+          <div className="px-[16px] md:px-[24px] flex gap-2">
+            {isMobile && (
+              <button
+                onClick={toggleMap}
+                className="bg-[#3E2E7E] text-white px-3 py-2 rounded-md flex items-center gap-1 mb-2"
+              >
+                <span className="text-[12px] font-medium">
+                  {showMap ? "Hide Map" : "View Map"}
+                </span>
+                <IconStore.chevronDown
+                  className={`stroke-white text-white size-3 transition-transform duration-300 ${
+                    showMap ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+            )}
+          </div>
+
+          {/* Map and table container */}
+          <div className="px-[16px] md:px-[24px] pb-[24px] flex flex-col md:flex-row relative">
+            {!isMobile && !showMap && (
               <div
                 onClick={() => setShowMap(!showMap)}
                 className={`absolute top-10 z-[10] ${
                   showMap ? "left-[265px]" : "-left-9"
-                } cursor-pointer -translate-y-1/2 -rotate-90  origin-center transition-all duration-300`}
+                } cursor-pointer -translate-y-1/2 -rotate-90 origin-center transition-all duration-300`}
               >
                 <div className="px-3 text-white flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
                   <p className="text-white text-[12px] font-medium">View Map</p>
@@ -371,19 +415,26 @@ const InventoryFolder = (props) => {
                 </div>
               </div>
             )}
-            <div
-              className={`transition-all duration-300  h-full
-overflow-hidden ${showMap ? "w-[50%] border-r-[1px] border-[#DADBE5]" : "w-0"}`}
-            >
-              <PinPatchMap
-                onClose={() => {
-                  setShowMap(false);
-                }}
-              />
-            </div>
+            
+            {/* Map Container - Full width on mobile when visible */}
+            {showMap && (
+              <div
+                className={`transition-all duration-300 h-[300px] md:h-full overflow-hidden ${
+                  isMobile ? "w-full mb-4" : "w-[50%] border-r-[1px] border-[#DADBE5]"
+                }`}
+              >
+                <PinPatchMap
+                  onClose={() => {
+                    setShowMap(false);
+                  }}
+                />
+              </div>
+            )}
+            
+            {/* Table Container */}
             <div
               className={`bg-white rounded-lg max-h-[450px] overflow-scroll ${
-                showMap ? "w-[50%]" : "w-full"
+                isMobile || !showMap ? "w-full" : "w-[50%]"
               }`}
             >
               <StickyDataTable

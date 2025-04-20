@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import EventListView from "./eventListView";
 import {
@@ -16,6 +16,25 @@ const TradeHome = (props) => {
     lastMinuteEvents = [],
     recentlyViewedEvents,
   } = response;
+  
+  // State to track if we're on mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if on mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Set initial value
+    checkIfMobile();
+    
+    // Add event listener
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Clean up
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
   const constructViewDataType = (array) => {
     return array?.map((item) => {
@@ -31,7 +50,7 @@ const TradeHome = (props) => {
       };
     });
   };
-  // Sample data based on the image
+  
   const sections = [
     {
       name: "Recently Viewed Events",
@@ -50,8 +69,7 @@ const TradeHome = (props) => {
     },
   ];
 
-  // Generate initial state dynamically based on sections length
-  // First section is expanded by default, others are collapsed
+  // Generate initial state for expanded sections - first one expanded by default
   const [expandedSections, setExpandedSections] = useState(() => {
     return sections.map((_, index) => index === 0);
   });
@@ -74,48 +92,82 @@ const TradeHome = (props) => {
     router.push(`/trade/inventory/${id}`);
   };
 
-  return (
-    <div className="w-full bg-gray-100 p-4 h-full">
-      {sections.map((section, index) => (
-        <div key={index} className="mb-4">
-          <div
-            className={`flex items-center justify-between bg-[#130061] text-white px-4 py-[14px]  ${
-              expandedSections[index] ? "rounded-t-[6px]" : "rounded-[6px]"
-            } cursor-pointer`}
-            onClick={() => toggleSection(index)}
-          >
-            <div className="flex gap-3 items-center">
-              <IconStore.eye className="size-5" />
-              <span className="text-[14px] font-medium">{section?.name}</span>
-            </div>
-            <div className="flex items-center bg-[#FFFFFF26] p-1 rounded-full">
-              {expandedSections[index] ? (
-                <IconStore.chevronUp className="size-4" />
-              ) : (
-                <IconStore.chevronDown className="size-4" />
-              )}
-            </div>
-          </div>
+  // Function to get the appropriate icon based on the sectio
 
-          <div
-            className={`bg-white rounded-b shadow overflow-hidden transition-max-height duration-300 ease-in-out ${
-              expandedSections[index] ? "max-h-[400px]" : "max-h-0 opacity-0"
-            }`}
-          >
-            <div className="overflow-y-auto max-h-[400px]">
-              {section?.events?.map((event, eventIndex) => {
-                return (
-                  <EventListView
-                    key={eventIndex}
-                    event={event}
-                    onClick={() => handleEventClick(event)}
-                  />
-                );
-              })}
+  return (
+    <div className="w-full bg-gray-100 md:p-4 p-2 h-full">
+      {/* Mobile sticky category tabs for quick access */}
+      {isMobile && (
+        <div className="flex overflow-x-auto pb-2 mb-2 gap-2 sticky top-0 bg-gray-100 z-10 -mx-2 px-2 pt-2">
+          {sections.map((section, index) => (
+            <div 
+              key={`tab-${index}`}
+              onClick={() => toggleSection(index)}
+              className={`flex-shrink-0 py-2 px-3 rounded-full flex items-center gap-1 ${
+                expandedSections[index] 
+                  ? "bg-[#130061] text-white" 
+                  : "bg-white text-[#130061] border border-[#130061]"
+              }`}
+            >
+             <IconStore.eye className="size-4" />
+              <span className="text-xs whitespace-nowrap">{section.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {sections.map((section, index) => (
+          <div key={index} className={`transition-all duration-300 ease-in-out ${
+            isMobile ? 'mb-3' : 'mb-4'
+          }`}>
+            {/* Section header */}
+            <div
+              className={`flex items-center justify-between bg-[#130061] text-white px-4 py-[14px] ${
+                expandedSections[index] ? "rounded-t-[6px]" : "rounded-[6px]"
+              } cursor-pointer`}
+              onClick={() => toggleSection(index)}
+            >
+              <div className="flex gap-3 items-center">
+              <IconStore.eye className="size-4" />
+                <span className="text-[14px] font-medium">{section.name}</span>
+              </div>
+              <div className="flex items-center bg-[#FFFFFF26] p-1 rounded-full">
+                {expandedSections[index] ? (
+                  <IconStore.chevronUp className="size-4" />
+                ) : (
+                  <IconStore.chevronDown className="size-4" />
+                )}
+              </div>
+            </div>
+
+            {/* Section content */}
+            <div
+              className={`bg-white rounded-b shadow overflow-hidden transition-all duration-300 ease-in-out ${
+                expandedSections[index] 
+                  ? "max-h-[500px] md:max-h-[400px] opacity-100" 
+                  : "max-h-0 opacity-0"
+              }`}
+            >
+              <div className="overflow-y-auto max-h-[500px] md:max-h-[400px]">
+                {section?.events?.length > 0 ? (
+                  section.events.map((event, eventIndex) => (
+                    <EventListView
+                      key={eventIndex}
+                      event={event}
+                      onClick={() => handleEventClick(event)}
+                    />
+                  ))
+                ) : (
+                  <div className="p-4 text-center text-gray-500 flex flex-col items-center">
+                    <p>No events available</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

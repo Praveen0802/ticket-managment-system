@@ -884,9 +884,24 @@ export const adyenPaymentUpdate = async (token, data) => {
       ...(token && { token: token }),
       data: data,
     });
-    return response?.data?.success ? response?.data?.data : {};
+    return response?.data;
   } catch (error) {
     console.log("ERROR in adyenPaymentUpdate", error);
+    throw error;
+  }
+};
+
+export const adyenPaymentSubmit = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.ADYEN_PAYMENT_SUBMIT}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data;
+  } catch (error) {
+    console.log("ERROR in adyenPaymentSubmit", error);
     throw error;
   }
 };
