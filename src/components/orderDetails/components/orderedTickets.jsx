@@ -1,34 +1,23 @@
 import React, { Fragment } from "react";
 import DisplayValues from "./displayValues";
 
-const OrderedTickets = ({ testingValues }) => {
-  const {
-    eventName,
-    venue,
-    eventDate,
-    seatDetails,
-    ticketType,
-    quantity,
-    price,
-    orderValue,
-  } = testingValues;
-
+const OrderedTickets = ({ ticket_details }) => {
   const listingObject = [
-    { name: "Event Name", text: eventName },
-    { name: "Event Venue", text: venue },
-    { name: "Event Date", text: eventDate },
-    { name: "Seat Details", text: seatDetails },
+    { name: "Event Name", text: ticket_details?.match_name },
+    { name: "Event Venue", text: ticket_details?.venue_name },
+    { name: "Event Date", text: ticket_details?.match_datetime },
+    { name: "Seat Details", text: ticket_details?.seat_category },
     {
       values: [
-        { name: "Ticket Type", text: ticketType },
-        { name: "Quantity", text: quantity },
+        { name: "Ticket Type", text: ticket_details?.ticket_type },
+        { name: "Quantity", text: ticket_details?.quantity },
       ],
       twoKeys: true,
     },
     {
       values: [
-        { name: "Ticket Price", text: price },
-        { name: "Order Value", text: orderValue },
+        { name: "Ticket Price", text: ticket_details?.ticket_price },
+        { name: "Order Value", text: ticket_details?.total_paid },
       ],
       twoKeys: true,
     },

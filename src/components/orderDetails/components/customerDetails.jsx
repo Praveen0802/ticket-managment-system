@@ -1,7 +1,7 @@
 import React from "react";
 import DisplayValues from "./displayValues";
 
-const CustomerDetails = ({ customerEmail, customerName }) => {
+const CustomerDetails = ({ customerEmail, customerName,mobileNumber }) => {
   return (
     <div className="border-[1px] border-[#E0E1EA] h-full rounded-md">
       <p className="px-[16px] py-[12px] text-[16px] font-semibold text-[#323A70] border-b-[1px] border-[#E0E1EA]">
@@ -17,6 +17,11 @@ const CustomerDetails = ({ customerEmail, customerName }) => {
           text={"Customer Email"}
           copyKeys={true}
           value={customerEmail}
+        />
+         <DisplayValues
+          text={"Mobile No"}
+          copyKeys={true}
+          value={mobileNumber}
         />
       </div>
     </div>

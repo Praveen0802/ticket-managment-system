@@ -1,7 +1,7 @@
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React from "react";
 
-const AddressList = ({ handleEditClick, item, index }) => {
+const AddressList = ({ handleEditClick, handleDeleteClick, item, index }) => {
   return (
     <div
       key={index}
@@ -11,13 +11,23 @@ const AddressList = ({ handleEditClick, item, index }) => {
         <p className="text-sm md:text-base text-[#323A70] font-medium">
           {item?.title}
         </p>
-        <div
-          onClick={() => {
-            handleEditClick(item);
-          }}
-          className="cursor-pointer"
-        >
-          <IconStore.pencilEdit className="size-4 stroke-2 cursor-pointer stroke-[#130061]" />
+        <div className="flex gap-2 items-center">
+          <div
+            onClick={() => {
+              handleEditClick(item);
+            }}
+            className="cursor-pointer"
+          >
+            <IconStore.pencilEdit className="size-4 stroke-2 cursor-pointer stroke-[#130061]" />
+          </div>
+          <div
+            onClick={() => {
+              handleDeleteClick(item);
+            }}
+            className="cursor-pointer"
+          >
+            <IconStore.trash className="size-4 stroke-2 cursor-pointer stroke-[#130061]" />
+          </div>
         </div>
       </div>
       <p className="p-3 md:p-4 max-w-[150px] min-h-[120px] w-full text-xs md:text-sm">

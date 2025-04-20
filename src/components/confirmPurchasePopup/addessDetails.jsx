@@ -8,11 +8,11 @@ const AddressDetails = ({
   return (
     <div className="border border-gray-200 rounded-md">
       <p className="px-4 py-2 border-b border-gray-200 text-[14px] font-medium">
-        Buying From
+       Shipping Address
       </p>
       <div>
         {addressDetails?.map((field, index) => {
-          if (!field?.address_type || !field?.address_line1) return null;
+          if (!field?.address_type && !field?.address_line1) return null;
 
           return (
             <label

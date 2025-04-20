@@ -91,7 +91,6 @@ const InventoryFolder = (props) => {
       : selectType || dateType
       ? e
       : e.target.value;
-    console.log(value, "valuevaluevalue");
     if (selectType) {
       let params = {
         ...filtersApplied,
@@ -172,7 +171,7 @@ const InventoryFolder = (props) => {
     dispatch(
       updateConfirmPurchasePopup({
         flag: true,
-        data: { ...data, sNo: item?.s_no },
+        data: { ...data, sNo: item?.s_no, matchId: matchId },
       })
     );
   };
@@ -183,8 +182,14 @@ const InventoryFolder = (props) => {
     fetchAPIDetails({ page: 1 });
   };
 
+  const rightStickyHeaders = ["Ticket Price"];
+
   const rightStickyColumns = displayTicketDetails?.map((item) => {
     return [
+      {
+        icon: <p>{item?.price_with_symbol}</p>,
+        className: "border-r-[1px] border-[#E0E1EA]",
+      },
       {
         icon: (
           <Image
@@ -204,12 +209,12 @@ const InventoryFolder = (props) => {
             alt="attach"
           />
         ),
-        className: "cursor-pointer",
+        className: "cursor-pointer pl-2",
         key: "attach",
       },
       {
         icon: <Image width={16} height={16} src={crossHand} alt="hand" />,
-        className: "cursor-pointer",
+        className: "cursor-pointer px-2",
         key: "oneHand",
         tooltipComponent: (
           <p className="text-center">
@@ -224,23 +229,25 @@ const InventoryFolder = (props) => {
         icon: item?.listing_note?.length > 0 && (
           <Image width={20} height={20} src={documentText} alt="document" />
         ),
-        className: "cursor-pointer",
+        className: "cursor-pointer pr-2",
         key: "document",
-        tooltipComponent: item?.listing_note?.map((note, index) => (
-          <div className="flex flex-col gap-2">
-            <p className="text-left">Benifits/Restrictions</p>
-            <ul
-              className={`list-disc ml-[20px] ${
-                item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
-              }`}
-              key={index}
-            >
-              {Object.values(note).map((value, i) => (
-                <li key={i}>{value}</li>
-              ))}
-            </ul>
-          </div>
-        )),
+        tooltipComponent:
+          item?.listing_note?.length > 0 &&
+          item?.listing_note?.map((note, index) => (
+            <div className="flex flex-col gap-2">
+              <p className="text-left">Benifits/Restrictions</p>
+              <ul
+                className={`list-disc ml-[20px] ${
+                  item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
+                }`}
+                key={index}
+              >
+                {Object.values(note).map((value, i) => (
+                  <li key={i}>{value}</li>
+                ))}
+              </ul>
+            </div>
+          )),
         tooltipPosition: "top",
       },
       {
@@ -255,7 +262,7 @@ const InventoryFolder = (props) => {
             alt="star"
           />
         ),
-        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        className: "border-x-[1px] px-2 border-[#E0E1EA] cursor-pointer",
         key: "star",
       },
       {
@@ -387,6 +394,7 @@ overflow-hidden ${showMap ? "w-[50%] border-r-[1px] border-[#DADBE5]" : "w-0"}`}
                 rightStickyColumns={rightStickyColumns}
                 loading={loader}
                 onScrollEnd={fetchScrollEnd}
+                rightStickyHeaders={rightStickyHeaders}
               />
             </div>
           </div>
@@ -394,7 +402,6 @@ overflow-hidden ${showMap ? "w-[50%] border-r-[1px] border-[#DADBE5]" : "w-0"}`}
       ) : (
         <NonMatchSelectUI />
       )}
-      {/* <OrderDetails show={true} /> */}
     </>
   );
 };

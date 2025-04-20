@@ -71,7 +71,6 @@ const PaymentDetails = ({
     },
   ];
 
-  console.log(radioButtonFields,'radioButtonFieldsradioButtonFields')
 
   return (
     <div className="border border-gray-200 rounded-md">

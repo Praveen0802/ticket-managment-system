@@ -3,7 +3,8 @@ import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, PlusCircle, X } from "lucide-react";
 
-const AttendeeDetails = ({ total = 3 }) => {
+const AttendeeDetails = ({ attendee_details = [] }) => {
+  const total = attendee_details?.length;
   const [attendees, setAttendees] = useState([
     { id: 1, isOpen: true, formData: {} },
   ]);

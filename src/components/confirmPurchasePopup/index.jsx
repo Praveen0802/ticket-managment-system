@@ -13,6 +13,8 @@ import AddessDetails from "./addessDetails";
 import {
   fetchAddressBookDetails,
   paymentPurchaseDetails,
+  purchaseTicketsBuy,
+  purchaseTicketValidate,
 } from "@/utils/apiHandler/request";
 
 const ConfirmPurchasePopup = ({ onClose }) => {
@@ -22,7 +24,11 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   const [addressDetails, setAddressDetails] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(0);
+
   const { data = {} } = confirmPurchasePopupFields;
+  const [selectedQuantity, setSelectedQuantity] = useState(
+    data?.purchase?.price_breakdown?.ticket_quantity
+  );
   const handlePaymentChange = (name) => {
     setSelectedPayment(name);
   };
@@ -32,22 +38,46 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   };
 
   const fetchAddressPaymentDetails = async () => {
-    const [addressDetails, paymentDetails] = await Promise.all([
+    const [addressDetails, paymentDetails] = await Promise.allSettled([
       fetchAddressBookDetails(),
       paymentPurchaseDetails("", {
         currency: data?.purchase?.price_breakdown?.currency,
       }),
     ]);
-    setAddressDetails(addressDetails);
-    setPaymentDetails(paymentDetails?.payment_methods);
-    console.log(addressDetails, paymentDetails, "paymentDetailspaymentDetails");
+    setAddressDetails(addressDetails?.value);
+    setPaymentDetails(paymentDetails?.value?.payment_methods);
   };
 
   useEffect(() => {
     fetchAddressPaymentDetails();
   }, []);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    const paymentMethod = selectedPayment == "LMT Pay" ? 1 : 2;
+    const fetchOrderIdPayload = {
+      currrency: data?.purchase?.price_breakdown?.currency,
+      client_country: "IN",
+      lang: "en",
+      match_id: `${data?.matchId}`,
+      quantity: `${selectedQuantity}`,
+      sell_ticket_id: `${data?.sNo}`,
+      payment_method: `${paymentMethod}`,
+    };
+    const response = await purchaseTicketValidate("", {}, fetchOrderIdPayload);
+    if (response?.status == 1) {
+      const secondApiPayload = {
+        cart_id: response?.cart_id,
+        billing_address_id: `${addressDetails?.[selectedAddress]?.id}`,
+        payment_method: `${paymentMethod}`,
+      };
+      const apiResponse = await purchaseTicketsBuy(
+        "",
+        response?.cart_id,
+        {},
+        secondApiPayload
+      );
+    }
+  };
 
   return (
     <div className="flex flex-col h-full max-h-screen">
@@ -68,7 +98,11 @@ const ConfirmPurchasePopup = ({ onClose }) => {
       {/* Content - Scrollable Area */}
       <div className="flex-grow overflow-y-auto px-4 py-4 space-y-4">
         <EventDetails data={data} />
-        <PurchaseCard data={data} />
+        <PurchaseCard
+          data={data}
+          setSelectedQuantity={setSelectedQuantity}
+          selectedQuantity={selectedQuantity}
+        />
         <AddessDetails
           data={data}
           addressDetails={addressDetails}

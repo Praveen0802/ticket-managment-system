@@ -61,7 +61,6 @@ const TrackingPage = (props) => {
       tracking: response?.tracking,
       sold: response?.sold,
     });
-    console.log(availablityStatus, "availablityStatusavailablityStatus");
     // Then update items with the new values
     setItems([
       { name: "Tracking", value: response?.tracking, showCheckbox: false },
@@ -115,13 +114,19 @@ const TrackingPage = (props) => {
     dispatch(
       updateConfirmPurchasePopup({
         flag: true,
-        data: { ...data, sNo: item?.s_no },
+        data: { ...data, sNo: item?.s_no, matchId: item?.m_id },
       })
     );
   };
 
+  const rightStickyHeaders = ["Ticket Price"];
+
   const rightStickyColumns = selectedTicketDetails?.map((item) => {
     return [
+      {
+        icon: <p>{item?.price_with_currency}</p>,
+        className: "border-r-[1px] border-[#E0E1EA]",
+      },
       {
         icon: (
           <Image
@@ -141,12 +146,12 @@ const TrackingPage = (props) => {
             alt="attach"
           />
         ),
-        className: "cursor-pointer",
+        className: "cursor-pointer pl-2",
         key: "attach",
       },
       {
         icon: <Image width={16} height={16} src={crossHand} alt="hand" />,
-        className: "cursor-pointer",
+        className: "cursor-pointer px-2",
         key: "oneHand",
         tooltipComponent: (
           <p className="text-center">
@@ -161,7 +166,7 @@ const TrackingPage = (props) => {
         icon: item?.listing_note?.length > 0 && (
           <Image width={20} height={20} src={documentText} alt="document" />
         ),
-        className: "cursor-pointer",
+        className: "cursor-pointer pr-2",
         key: "document",
         tooltipComponent:
           item?.listing_note?.length > 0 &&
@@ -194,7 +199,7 @@ const TrackingPage = (props) => {
             alt="star"
           />
         ),
-        className: "border-x-[1px] border-[#E0E1EA] cursor-pointer",
+        className: "border-x-[1px] px-2 border-[#E0E1EA] cursor-pointer",
         key: "star",
       },
       {
@@ -296,7 +301,7 @@ const TrackingPage = (props) => {
               id="eventDate"
               name="eventDate"
               keyValue="eventDate"
-              parentClassName="!w-fit"
+              parentClassName="!w-[350px]"
               label="Event Date"
               className="!py-[8px] !px-[16px] mobile:text-xs"
               value={selectedDate}
@@ -329,6 +334,7 @@ const TrackingPage = (props) => {
           data={data}
           rightStickyColumns={rightStickyColumns}
           loading={loader}
+          rightStickyHeaders={rightStickyHeaders}
         />
       </div>
     </div>

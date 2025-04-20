@@ -845,3 +845,48 @@ export const purchaseTicketsBuy = async (token, id, params = {}, data) => {
     throw error;
   }
 };
+
+export const deleteAddressBook = async (token, payload) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.DELETE_ADDRESS_BOOK}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: payload,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in deleteAddressBook", error);
+    throw error;
+  }
+};
+
+export const adyenCreateSession = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.ADYEN_CREATE_SESSION}}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseTicketsBuy", error);
+    throw error;
+  }
+};
+
+export const adyenPaymentUpdate = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.ADYEN_PAYMENT_UPDATE}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in adyenPaymentUpdate", error);
+    throw error;
+  }
+};

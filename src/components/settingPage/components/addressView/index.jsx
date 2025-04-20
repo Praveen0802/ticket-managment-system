@@ -1,7 +1,13 @@
 import React from "react";
 import AddressList from "./addressList";
 
-const AddressView = ({ title, handleEditClick, addressValues, component }) => {
+const AddressView = ({
+  title,
+  handleEditClick,
+  handleDeleteClick,
+  addressValues,
+  component,
+}) => {
   return (
     <>
       <div className="flex justify-between items-center">
@@ -13,6 +19,7 @@ const AddressView = ({ title, handleEditClick, addressValues, component }) => {
           return (
             <AddressList
               handleEditClick={handleEditClick}
+              handleDeleteClick={handleDeleteClick}
               item={item}
               index={index}
               key={index}

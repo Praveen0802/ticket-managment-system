@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import RightViewModal from "../commonComponents/rightViewModal";
 import AddEditAddress from "./components/addEditAddress";
 import Button from "../commonComponents/button";
-import { fetchAddressBookDetails } from "@/utils/apiHandler/request";
+import { deleteAddressBook, fetchAddressBookDetails } from "@/utils/apiHandler/request";
 import AddressList from "./components/addressView/addressList";
 import AddressView from "./components/addressView";
 
@@ -144,6 +144,23 @@ const AddressBook = (props) => {
     }
   };
 
+  const handleDeleteClick = async (item) => {
+    setIsLoading(true);
+    try {
+      const response = await deleteAddressBook("", { id: item?.id });
+      const updatedAddressDetails = addressBookDetails.filter(
+        (address) => address?.id !== item?.id
+      );
+      const updatedPrimaryAddressDetails = primaryAddressData.filter(
+        (address) => address?.id !== item?.id
+      );
+      setAddressBookDetails(updatedAddressDetails);
+      setPrimaryAddressData(updatedPrimaryAddressDetails);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleClosePopup = async (submit) => {
     if (submit?.submit) {
       setIsLoading(true);
@@ -190,12 +207,14 @@ const AddressBook = (props) => {
               <AddressView
                 title="Primary address"
                 handleEditClick={handleEditClick}
+                handleDeleteClick={handleDeleteClick}
                 addressValues={primaryValues}
               />
 
               <AddressView
                 title="Default address"
                 handleEditClick={handleEditClick}
+                handleDeleteClick={handleDeleteClick}
                 addressValues={addressValues}
                 component={
                   <Button

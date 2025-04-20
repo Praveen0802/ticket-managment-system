@@ -26,6 +26,7 @@ const StickyDataTable = ({
   headers,
   data,
   rightStickyColumns = [],
+  rightStickyHeaders = [],
   loading = false,
   fetchScrollEnd = null, // Original prop, kept for compatibility
   onScrollEnd = null, // New prop name
@@ -372,7 +373,9 @@ const StickyDataTable = ({
                       ) : (
                         <span
                           className={
-                            header.key === "status"
+                            header.key === "status" &&
+                            (row[header?.key] == "available" ||
+                              row[header?.key] == "fulfilled")
                               ? "text-green-500"
                               : "text-[#323A70]"
                           }
@@ -398,45 +401,95 @@ const StickyDataTable = ({
       >
         <div className="h-full">
           <table ref={stickyTableRef} className="w-full h-full border-collapse">
-            <thead>
-              <tr className="bg-white border-b border-[#E0E1EA]">
-                {/* Navigation arrows in header */}
-                <th colSpan={maxStickyColumnsLength} className="py-2 px-2">
-                  <div className="flex justify-end items-center">
-                    {/* Left arrow */}
-                    <button
-                      onClick={scrollLeft}
-                      disabled={!canScrollLeft}
-                      className={`p-1 rounded cursor-pointer ${
-                        canScrollLeft
-                          ? "text-[#323A70] hover:bg-gray-100"
-                          : "text-gray-300 cursor-not-allowed"
-                      }`}
-                      aria-label="Scroll left"
-                    >
-                      <ChevronRight
-                        className="rotate-180"
-                        color={canScrollLeft ? "" : "#B4B7CB"}
-                      />
-                    </button>
+            {rightStickyHeaders?.length > 0 ? (
+              <thead>
+                <tr className="bg-white border-b border-[#E0E1EA]">
+                  {rightStickyHeaders?.map((header) => (
+                    <th className="py-2 px-2 text-left text-[#7D82A4]  text-[13px] border-r-[1px] border-[#E0E1EA] font-medium whitespace-nowrap">{header}</th>
+                  ))}
+                  <th
+                    colSpan={
+                      maxStickyColumnsLength - rightStickyHeaders?.length
+                    }
+                    className="py-2 px-2"
+                  >
+                    <div className="flex justify-end items-center">
+                      {/* Left arrow */}
+                      <button
+                        onClick={scrollLeft}
+                        disabled={!canScrollLeft}
+                        className={`p-1 rounded cursor-pointer ${
+                          canScrollLeft
+                            ? "text-[#323A70] hover:bg-gray-100"
+                            : "text-gray-300 cursor-not-allowed"
+                        }`}
+                        aria-label="Scroll left"
+                      >
+                        <ChevronRight
+                          className="rotate-180"
+                          color={canScrollLeft ? "" : "#B4B7CB"}
+                        />
+                      </button>
 
-                    {/* Right arrow */}
-                    <button
-                      onClick={scrollRight}
-                      disabled={!canScrollRight}
-                      className={`p-1 rounded cursor-pointer ${
-                        canScrollRight
-                          ? "text-[#323A70] hover:bg-gray-100"
-                          : "text-gray-300 cursor-not-allowed"
-                      }`}
-                      aria-label="Scroll right"
-                    >
-                      <ChevronRight color={canScrollRight ? "" : "#B4B7CB"} />
-                    </button>
-                  </div>
-                </th>
-              </tr>
-            </thead>
+                      {/* Right arrow */}
+                      <button
+                        onClick={scrollRight}
+                        disabled={!canScrollRight}
+                        className={`p-1 rounded cursor-pointer ${
+                          canScrollRight
+                            ? "text-[#323A70] hover:bg-gray-100"
+                            : "text-gray-300 cursor-not-allowed"
+                        }`}
+                        aria-label="Scroll right"
+                      >
+                        <ChevronRight color={canScrollRight ? "" : "#B4B7CB"} />
+                      </button>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+            ) : (
+              <thead>
+                <tr className="bg-white border-b border-[#E0E1EA]">
+                  {/* Navigation arrows in header */}
+                  <th colSpan={maxStickyColumnsLength} className="py-2 px-2">
+                    <div className="flex justify-end items-center">
+                      {/* Left arrow */}
+                      <button
+                        onClick={scrollLeft}
+                        disabled={!canScrollLeft}
+                        className={`p-1 rounded cursor-pointer ${
+                          canScrollLeft
+                            ? "text-[#323A70] hover:bg-gray-100"
+                            : "text-gray-300 cursor-not-allowed"
+                        }`}
+                        aria-label="Scroll left"
+                      >
+                        <ChevronRight
+                          className="rotate-180"
+                          color={canScrollLeft ? "" : "#B4B7CB"}
+                        />
+                      </button>
+
+                      {/* Right arrow */}
+                      <button
+                        onClick={scrollRight}
+                        disabled={!canScrollRight}
+                        className={`p-1 rounded cursor-pointer ${
+                          canScrollRight
+                            ? "text-[#323A70] hover:bg-gray-100"
+                            : "text-gray-300 cursor-not-allowed"
+                        }`}
+                        aria-label="Scroll right"
+                      >
+                        <ChevronRight color={canScrollRight ? "" : "#B4B7CB"} />
+                      </button>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+            )}
+
             <tbody>
               {displayData?.map((row, rowIndex) => {
                 // Handle empty state for sticky table
@@ -484,7 +537,7 @@ const StickyDataTable = ({
                     ) : (
                       // Render actual sticky columns
                       <>
-                        {rowStickyColumns.map((column, colIndex) => (
+                        {rowStickyColumns?.map((column, colIndex) => (
                           <td
                             key={`${rowIndex}-${colIndex}`}
                             className={`py-2 text-sm align-middle text-center ${

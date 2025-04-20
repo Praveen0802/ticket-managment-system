@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import FormFields from "../formFieldsComponent";
 import { PriceUpdatewithQuantity } from "@/utils/apiHandler/request";
 
-const PurchaseCard = ({ data }) => {
+const PurchaseCard = ({ data,selectedQuantity,setSelectedQuantity }) => {
   const { purchase = {} } = data;
 
-  const [selectedQuantity, setSelectedQuantity] = useState(
-    purchase?.price_breakdown?.ticket_quantity
-  );
+
   const [priceDetails, setPriceDetails] = useState(purchase?.price_breakdown);
   const handleChange = async (e, key) => {
     setSelectedQuantity(e);

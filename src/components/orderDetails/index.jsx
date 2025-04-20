@@ -10,36 +10,14 @@ import CustomModal from "../commonComponents/customModal";
 import CtaValues from "./components/ctaValues";
 import AttendeeDetails from "./components/attendeeDetails";
 
-const OrderDetails = ({ show, onClose }) => {
-  const testingValues = {
-    orderId: "6B1C74A9",
-    date: "20/10/2024, 17:36:03",
-    status: "Pending",
-    deliverdBy: "24/10/2024",
-    expectedPayoutDate: "09/11/2024",
-    daysToevent: "24",
-    customerName: "Customer Name",
-    customerEmail: "hassanaliahmed727@gmail.com",
-    eventName: "UFC 308 - Ilia Topuria vs d Max Holloway Abu Dhabi",
-    venue: "Etihad Arena",
-    eventDate: "26/10/2024",
-    seatDetails: "Lower 105",
-    ticketType: "E-ticket",
-    quantity: "2",
-    price: "£925.00",
-    orderValue: "£925.00",
-    benifits: [
-      "Includes unlimited food and soft drinks",
-      "VIP access 3 hours pre match",
-      "Tickets yve you access to a private VIP bar",
-      "VIP lounge access 1 hour post match",
-      "12 Person Suite",
-      "In-Seat Wait Service",
-    ],
-    billingAddress: "Manchester, GB",
-    shippingAddress: "Manchester, GB",
-  };
-
+const OrderDetails = ({ show, onClose, data }) => {
+  const {
+    order_details = {},
+    customer_details = {},
+    ticket_details = {},
+    benefits_restrictions = [],
+    attendee_details = [],
+  } = data;
   const [expandedVersion, setExpandedVersion] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -48,24 +26,15 @@ const OrderDetails = ({ show, onClose }) => {
     { title: "Additional File", cta: "Download File" },
   ];
 
-  const {
-    orderId,
-    date,
-    status,
-    customerName,
-    customerEmail,
-    deliverdBy,
-    daysToevent,
-    expectedPayoutDate,
-  } = testingValues;
-
   const orderObject = {
-    order_id: orderId,
-    order_date: date,
-    order_status: status,
-    delivery_by: deliverdBy,
-    days_to_event: daysToevent,
-    expected_payout_date: expectedPayoutDate,
+    match_name: order_details?.match_name,
+    match_date_time: order_details?.match_datetime,
+    order_id: order_details?.order_id,
+    order_date: order_details?.booking_date,
+    order_status: order_details?.ticket_status,
+    delivery_by: order_details?.expected_ticket_delivery,
+    days_to_event: order_details?.days_left_to_event,
+    expected_payout_date: order_details?.expected_payout_date,
   };
 
   const handleCollapseModal = () => {
@@ -100,7 +69,9 @@ const OrderDetails = ({ show, onClose }) => {
       `}</style>
 
       <CustomModal
-        className={`transition-custom ${expandedVersion ? "w-full" : ""}`}
+        className={`transition-custom ${
+          expandedVersion ? "w-full" : "w-[700px]"
+        }`}
         show={show}
         onClose={onClose}
       >
@@ -122,27 +93,33 @@ const OrderDetails = ({ show, onClose }) => {
             }}
           >
             <div className="flex items-center border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[24px]">
-              <p className="text-[18px] text-[#323A70]">Order ID: {orderId}</p>
+              <p className="text-[18px] text-[#323A70]">
+                Order ID: {order_details?.order_id}
+              </p>
               <div className="flex items-center gap-2 ">
-                {expandedVersion ? (
-                  <IconStore.collapse
-                    onClick={handleCollapseModal}
+                <button className="cursor-pointer">
+                  {expandedVersion ? (
+                    <IconStore.collapse
+                      onClick={handleCollapseModal}
+                      className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
+                    />
+                  ) : (
+                    <IconStore.expand
+                      onClick={handleCollapseModal}
+                      className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
+                    />
+                  )}
+                </button>
+                <button className="cursor-pointer">
+                  <IconStore.close
+                    onClick={onClose}
                     className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
                   />
-                ) : (
-                  <IconStore.expand
-                    onClick={handleCollapseModal}
-                    className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
-                  />
-                )}
-                <IconStore.close
-                  onClick={onClose}
-                  className="size-4 cursor-pointer stroke-[#130061] transition-transform duration-300 hover:scale-110"
-                />
+                </button>
               </div>
             </div>
             <div className="p-[24px] flex flex-col gap-4">
-              <AttendeeDetails />
+              <AttendeeDetails attendee_details={attendee_details} />
               <CtaValues ctaText={ctaText} />
               <div
                 className={`flex gap-4 transition-custom ${
@@ -162,15 +139,16 @@ const OrderDetails = ({ show, onClose }) => {
                   }`}
                 >
                   <CustomerDetails
-                    customerEmail={customerEmail}
-                    customerName={customerName}
+                    customerEmail={customer_details?.email}
+                    customerName={customer_details?.first_name}
+                    mobileNumber={customer_details?.mobile_no}
                   />
                 </div>
               </div>
-              <OrderedTickets testingValues={testingValues} />
+              <OrderedTickets ticket_details={ticket_details} />
               <Benifits
-                testingValues={testingValues}
                 expandedVersion={expandedVersion}
+                benefits_restrictions={benefits_restrictions}
               />
             </div>
           </div>
