@@ -125,7 +125,7 @@ const TrackingPage = (props) => {
     return [
       {
         icon: <p>{item?.price_with_currency}</p>,
-        className: "border-r-[1px] border-[#E0E1EA]",
+        className: "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
       },
       {
         icon: (

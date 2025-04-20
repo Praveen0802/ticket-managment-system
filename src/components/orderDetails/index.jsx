@@ -21,6 +21,7 @@ const OrderDetails = ({ show, onClose, data }) => {
   const [expandedVersion, setExpandedVersion] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  const orderId = order_details?.order_id || order_details?.booking_no;
   const ctaText = [
     { title: "Order Notes", cta: "+ Add Note" },
     { title: "Additional File", cta: "Download File" },
@@ -29,7 +30,7 @@ const OrderDetails = ({ show, onClose, data }) => {
   const orderObject = {
     match_name: order_details?.match_name,
     match_date_time: order_details?.match_datetime,
-    order_id: order_details?.order_id,
+    order_id: orderId,
     order_date: order_details?.booking_date,
     order_status: order_details?.ticket_status,
     delivery_by: order_details?.expected_ticket_delivery,
@@ -94,7 +95,7 @@ const OrderDetails = ({ show, onClose, data }) => {
           >
             <div className="flex items-center border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[24px]">
               <p className="text-[18px] text-[#323A70]">
-                Order ID: {order_details?.order_id}
+                Order ID: {orderId}
               </p>
               <div className="flex items-center gap-2 ">
                 <button className="cursor-pointer">

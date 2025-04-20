@@ -131,7 +131,6 @@ const InventoryFolder = (props) => {
     { key: "category", label: "Category", sortable: true },
     { key: "section", label: "Section/Block", sortable: true },
     { key: "row", label: "Row", sortable: true },
-    { key: "ticketPrice", label: "Ticket Price", sortable: true },
   ];
 
   const data = displayTicketDetails?.map((item) => {
@@ -140,7 +139,6 @@ const InventoryFolder = (props) => {
       category: item?.seat_category,
       section: item?.block_id,
       row: item?.row,
-      ticketPrice: item?.price_with_symbol,
     };
   });
 
@@ -188,7 +186,7 @@ const InventoryFolder = (props) => {
     return [
       {
         icon: <p>{item?.price_with_symbol}</p>,
-        className: "border-r-[1px] border-[#E0E1EA]",
+        className: "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
       },
       {
         icon: (

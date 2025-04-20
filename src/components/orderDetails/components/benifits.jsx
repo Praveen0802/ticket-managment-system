@@ -16,7 +16,7 @@ const Benifits = ({
       >
         {benefits_restrictions?.map((item, index) => {
           return (
-            <li className="" key={index}>
+            <li className="text-[13px]" key={index}>
               {item}
             </li>
           );

@@ -18,3 +18,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555; /* color of the scroll thumb on hover */
 }
+
+.hideScrollbar {
+  /* For Chrome, Safari, and newer Edge */
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For IE and Edge */
+}
+
+.hideScrollbar::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and newer Edge */
+}

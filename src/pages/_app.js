@@ -40,6 +40,7 @@ export default function App({ Component, pageProps }) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
+            zIndex={99999} 
           />
         </SecureLayout>
       </Provider>

@@ -13,9 +13,13 @@ import AddessDetails from "./addessDetails";
 import {
   fetchAddressBookDetails,
   paymentPurchaseDetails,
+  purchaseTicketConfirm,
   purchaseTicketsBuy,
   purchaseTicketValidate,
 } from "@/utils/apiHandler/request";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AdyenDropIn from "./adyenPurchaseNewCard";
 
 const ConfirmPurchasePopup = ({ onClose }) => {
   const { confirmPurchasePopupFields } = useSelector((state) => state?.common);
@@ -24,6 +28,8 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   const [addressDetails, setAddressDetails] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(0);
+  const [showAdyenDropIn, setShowAdyenDropIn] = useState(false);
+  const [adyenBookingId, setAdyenBookingId] = useState(null);
 
   const { data = {} } = confirmPurchasePopupFields;
   const [selectedQuantity, setSelectedQuantity] = useState(
@@ -38,49 +44,120 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   };
 
   const fetchAddressPaymentDetails = async () => {
-    const [addressDetails, paymentDetails] = await Promise.allSettled([
-      fetchAddressBookDetails(),
-      paymentPurchaseDetails("", {
-        currency: data?.purchase?.price_breakdown?.currency,
-      }),
-    ]);
-    setAddressDetails(addressDetails?.value);
-    setPaymentDetails(paymentDetails?.value?.payment_methods);
+    try {
+      const [addressDetails, paymentDetails] = await Promise.allSettled([
+        fetchAddressBookDetails(),
+        paymentPurchaseDetails("", {
+          currency: data?.purchase?.price_breakdown?.currency,
+        }),
+      ]);
+      setAddressDetails(addressDetails?.value);
+      setPaymentDetails(paymentDetails?.value?.payment_methods);
+    } catch (error) {
+      toast.error("Failed to load address and payment details");
+    }
   };
 
   useEffect(() => {
     fetchAddressPaymentDetails();
   }, []);
 
+  const bookingConfirm = async (success, message) => {
+    if (success) {
+      toast.success(message);
+      onClose();
+    } else {
+      toast.error(message || "Booking confirmation failed");
+    }
+  };
+
   const handleSubmit = async () => {
-    const paymentMethod = selectedPayment == "LMT Pay" ? 1 : 2;
-    const fetchOrderIdPayload = {
-      currrency: data?.purchase?.price_breakdown?.currency,
-      client_country: "IN",
-      lang: "en",
-      match_id: `${data?.matchId}`,
-      quantity: `${selectedQuantity}`,
-      sell_ticket_id: `${data?.sNo}`,
-      payment_method: `${paymentMethod}`,
-    };
-    const response = await purchaseTicketValidate("", {}, fetchOrderIdPayload);
-    if (response?.status == 1) {
-      const secondApiPayload = {
-        cart_id: response?.cart_id,
-        billing_address_id: `${addressDetails?.[selectedAddress]?.id}`,
+    try {
+      setLoader(true);
+
+      // Validate address selection
+      if (!addressDetails || addressDetails.length === 0) {
+        bookingConfirm(false,"Please add a billing address");
+        setLoader(false);
+        return;
+      }
+
+      const paymentMethod = selectedPayment == "LMT Pay" ? 1 : 2;
+      const fetchOrderIdPayload = {
+        currrency: data?.purchase?.price_breakdown?.currency,
+        client_country: "IN",
+        lang: "en",
+        match_id: `${data?.matchId}`,
+        quantity: `${selectedQuantity}`,
+        sell_ticket_id: `${data?.sNo}`,
         payment_method: `${paymentMethod}`,
       };
-      const apiResponse = await purchaseTicketsBuy(
+
+      const response = await purchaseTicketValidate(
         "",
-        response?.cart_id,
         {},
-        secondApiPayload
+        fetchOrderIdPayload
       );
+
+      if (response?.status == 1) {
+        const secondApiPayload = {
+          cart_id: response?.cart_id,
+          lang: "en",
+          client_country: "IN",
+          billing_address_id: `${addressDetails?.[selectedAddress]?.id}`,
+          payment_method: `${paymentMethod}`,
+        };
+
+        const apiResponse = await purchaseTicketsBuy(
+          "",
+          response?.cart_id,
+          {},
+          secondApiPayload
+        );
+
+        if (apiResponse?.status == "success") {
+          if (paymentMethod == 1) {
+            const confirmationPayload = {
+              booking_id: apiResponse?.booking_id,
+              payment_method: paymentMethod,
+            };
+
+            const confirmResponse = await purchaseTicketConfirm(
+              "",
+              confirmationPayload
+            );
+
+            if (confirmResponse?.result?.booking_status == "Success") {
+              bookingConfirm(true, "Booking Confirmed Successfully");
+            } else {
+              bookingConfirm(
+                false,
+                confirmResponse?.result?.message ||
+                  "Booking confirmation failed"
+              );
+            }
+          } else if (paymentMethod == 2) {
+            setAdyenBookingId(apiResponse?.booking_id);
+            setShowAdyenDropIn(true);
+          }
+        } else {
+          bookingConfirm(false, apiResponse?.data || "Booking failed");
+        }
+      } else {
+        bookingConfirm(false, response?.data || "Booking failed");
+      }
+    } catch (error) {
+      bookingConfirm(false, "An unexpected error occurred. Please try again later.");
+    } finally {
+      setLoader(false);
     }
   };
 
   return (
     <div className="flex flex-col h-full max-h-screen">
+      {/* Toast container */}
+      <ToastContainer position="top-right" closeOnClick autoClose={5000} />
+
       {/* Header */}
       <div className="flex-shrink-0 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
         <h2 className="text-[15px] font-semibold text-gray-800">
@@ -142,6 +219,9 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           />
         </div>
       </div>
+      {showAdyenDropIn && (
+        <AdyenDropIn bookingId={adyenBookingId} paymentMethod={2} />
+      )}
     </div>
   );
 };

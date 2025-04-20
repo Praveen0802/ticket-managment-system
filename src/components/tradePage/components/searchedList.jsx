@@ -6,13 +6,13 @@ import grayCalendar from "../../../../public/gray-calendar.svg";
 import { desiredFormatDate, formatDateTime } from "@/utils/helperFunctions";
 
 const SearchedList = ({ item }) => {
-  const renderIconText = (icon, text) => {
+  const renderIconText = (icon, text,className='') => {
     return (
       <div className="flex gap-2 items-center">
         {icon}
         <p
           title={text}
-          className="text-[#7D82A4] truncate w-[80%] text-[12px] font-normal"
+          className={`text-[#7D82A4] ${className}  w-[80%] text-[12px] font-normal`}
         >
           {text}
         </p>
@@ -27,7 +27,8 @@ const SearchedList = ({ item }) => {
       <div className="flex items-center gap-4">
         {renderIconText(
           <Image src={grayCalendar} width={16} height={16} alt="logo" />,
-          desiredFormatDate(item?.match_date)
+          desiredFormatDate(item?.match_date),
+          'whitespace-nowrap'
         )}
         {renderIconText(
           <Image src={grayClock} width={16} height={16} alt="logo" />,
@@ -36,7 +37,8 @@ const SearchedList = ({ item }) => {
       </div>
       {renderIconText(
         <Image src={grayLocation} width={16} height={16} alt="logo" />,
-        `${item?.stadium},${item?.city},${item?.country}`
+        `${item?.stadium},${item?.city},${item?.country}`,
+        'truncate'
       )}
     </div>
   );

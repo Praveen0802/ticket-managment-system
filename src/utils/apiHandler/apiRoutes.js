@@ -48,7 +48,8 @@ export const API_ROUTES = {
   PURCHASE_PAYMENT_METHODS: "/purchase/payment-methods",
   PURCHASE_TICKETS_VALIDATE: "/purchase/tickets/validate",
   PURCHASE_TICKETS_BUY: "/purchase/tickets/buy",
-  DELETE_ADDRESS_BOOK:'/settings/delete-address-book',
-  ADYEN_CREATE_SESSION:'/adyen/createsession',
-  ADYEN_PAYMENT_UPDATE:'adyen/paymentUpdate'
+  DELETE_ADDRESS_BOOK: "/settings/delete-address-book",
+  ADYEN_CREATE_SESSION: "/adyen/createsession",
+  ADYEN_PAYMENT_UPDATE: "adyen/paymentUpdate",
+  PURCHASE_TICKET_CONFIRMATON: "/purchase/tickets/confirmation",
 };

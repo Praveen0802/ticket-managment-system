@@ -12,14 +12,14 @@ const OrderValues = ({ orderObject }) => {
       <div className="p-4 grid grid-cols-2 gap-4">
         {Object?.entries(orderObject)?.map(([key, value], index) => {
           const copyKeys = key == "order_id";
-          const pendingOrder =
-            key == "order_status" && value?.toLowerCase() == "pending";
+          const orderStatusKey = key == "order_status"
           const deliveryKey = key == "delivery_by";
           return (
             <DisplayValues
               text={convertSnakeCaseToCamelCase(key)}
               copyKeys={copyKeys}
-              pendingOrder={pendingOrder}
+              orderStatusKey={orderStatusKey}
+              orderObject={orderObject}
               deliveryKey={deliveryKey}
               value={value}
               key={index}

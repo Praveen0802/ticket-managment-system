@@ -67,7 +67,6 @@ const TradeHome = (props) => {
   const router = useRouter();
 
   const handleEventClick = async (event) => {
-    console.log("Event clicked:", event);
     const { id } = event;
     await fetchRecentlyViewedList("", "POST", "", {
       m_id: id,

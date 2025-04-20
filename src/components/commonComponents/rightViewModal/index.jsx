@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomModal from "../customModal";
 
 const RightViewModal = ({
@@ -14,14 +14,14 @@ const RightViewModal = ({
   useEffect(() => {
     if (show) {
       setIsVisible(true);
-
+      // Small delay to ensure DOM is ready before animation
       const timer = setTimeout(() => {
         setIsAnimated(true);
       }, 50);
       return () => clearTimeout(timer);
     } else {
       setIsAnimated(false);
-
+      // Wait for animation to complete before hiding
       const timer = setTimeout(() => {
         setIsVisible(false);
       }, 300);
@@ -43,18 +43,22 @@ const RightViewModal = ({
           w-full 
           sm:w-[500px] 
           h-full 
-          ${className} 
+          ${className || ''} 
           fixed 
           top-0 
           right-0 
-          z-50 
           transition-transform 
           duration-300 
           ease-in-out 
           ${isAnimated ? "translate-x-0" : "translate-x-full"}
           shadow-2xl
-          overflow-hidden
+          overflow-auto
         `}
+        style={{ 
+          isolation: "isolate",
+          transform: isAnimated ? "translateX(0)" : "translateX(100%)"
+        }}
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>

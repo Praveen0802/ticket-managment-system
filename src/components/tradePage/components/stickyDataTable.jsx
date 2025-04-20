@@ -224,12 +224,22 @@ const StickyDataTable = ({
 
       // Check if we're near the bottom (within 20px)
       isAtBottom = scrollTop + clientHeight >= scrollHeight - 20;
+
+      // If the content is too short to scroll, don't trigger the callback
+      if (scrollHeight <= clientHeight) {
+        return;
+      }
     } else {
       // For div scrolling
       const { scrollTop, scrollHeight, clientHeight } = parentScrollRef.current;
 
       // Check if we're near the bottom (within 20px)
       isAtBottom = scrollTop + clientHeight >= scrollHeight - 20;
+
+      // If the content is too short to scroll, don't trigger the callback
+      if (scrollHeight <= clientHeight) {
+        return;
+      }
     }
 
     // If scrolled to bottom and callback exists, call it
@@ -238,6 +248,13 @@ const StickyDataTable = ({
       hasCalledScrollEnd.current = true;
     }
   };
+
+  useEffect(() => {
+    // Only reset the flag when loading has completed
+    if (!loading) {
+      hasCalledScrollEnd.current = false;
+    }
+  }, [data, loading]);
 
   // Handle horizontal and vertical scroll events
   useEffect(() => {
@@ -372,13 +389,13 @@ const StickyDataTable = ({
                         />
                       ) : (
                         <span
-                          className={
+                          className={`${
                             header.key === "status" &&
                             (row[header?.key] == "available" ||
                               row[header?.key] == "fulfilled")
                               ? "text-green-500"
                               : "text-[#323A70]"
-                          }
+                          } capitalize`}
                         >
                           {row[header?.key]}
                         </span>
@@ -405,7 +422,9 @@ const StickyDataTable = ({
               <thead>
                 <tr className="bg-white border-b border-[#E0E1EA]">
                   {rightStickyHeaders?.map((header) => (
-                    <th className="py-2 px-2 text-left text-[#7D82A4]  text-[13px] border-r-[1px] border-[#E0E1EA] font-medium whitespace-nowrap">{header}</th>
+                    <th className="py-2 px-2 text-left text-[#7D82A4]  text-[13px] border-r-[1px] border-[#E0E1EA] font-medium whitespace-nowrap">
+                      {header}
+                    </th>
                   ))}
                   <th
                     colSpan={

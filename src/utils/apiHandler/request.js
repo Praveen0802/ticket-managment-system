@@ -820,15 +820,15 @@ export const purchaseTicketValidate = async (token, params = {}, data) => {
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
-    console.log("ERROR in FetchTabTotal", error);
-    throw error;
+    console.log("ERROR in purchaseTicketValidate", error);
+    return error?.response?.data;
   }
 };
 
 export const purchaseTicketsBuy = async (token, id, params = {}, data) => {
   const queryParams = {
-    lang: "en",
-    client_country: "IN",
+    // lang: "en",
+    // client_country: "IN",
     ...params,
   };
   try {
@@ -842,7 +842,7 @@ export const purchaseTicketsBuy = async (token, id, params = {}, data) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in purchaseTicketsBuy", error);
-    throw error;
+    return error?.response?.data;
   }
 };
 
@@ -864,12 +864,12 @@ export const deleteAddressBook = async (token, payload) => {
 export const adyenCreateSession = async (token, data) => {
   try {
     const response = await makeRequest({
-      url: `${API_ROUTES.ADYEN_CREATE_SESSION}}`,
+      url: `${API_ROUTES.ADYEN_CREATE_SESSION}`,
       method: "POST",
       ...(token && { token: token }),
       data: data,
     });
-    return response?.data?.success ? response?.data?.data : {};
+    return response?.data ;
   } catch (error) {
     console.log("ERROR in purchaseTicketsBuy", error);
     throw error;
@@ -887,6 +887,21 @@ export const adyenPaymentUpdate = async (token, data) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in adyenPaymentUpdate", error);
+    throw error;
+  }
+};
+
+export const purchaseTicketConfirm = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_TICKET_CONFIRMATON}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseTicketConfirm", error);
     throw error;
   }
 };

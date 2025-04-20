@@ -374,7 +374,7 @@ const EventSearch = ({ onClose, allCategories }) => {
           dateOptions={dateOptions}
         />
       </div>
-      <div className="overflow-y-auto flex-1">{renderContent()}</div>
+      <div className="overflow-y-auto flex-1 pb-[100px]">{renderContent()}</div>
     </div>
   );
 };
