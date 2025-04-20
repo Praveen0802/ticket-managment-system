@@ -45,11 +45,16 @@ const PaymentDetails = ({
         </div>
       ),
     },
-    ...linkedCards.map(item => ({
-      name: `${item.RecurringDetail.paymentMethodVariant === 'mc' ? 'Mastercard' : 
-             item.RecurringDetail.paymentMethodVariant === 'visacredit' ? 'Visa' : 
-             item.RecurringDetail.paymentMethodVariant === 'amex' ? 'American Express' : 
-             item.RecurringDetail.paymentMethodVariant} ****${item.RecurringDetail.card.number}`,
+    ...linkedCards.map((item) => ({
+      name: `${
+        item.RecurringDetail.paymentMethodVariant === "mc"
+          ? "Mastercard"
+          : item.RecurringDetail.paymentMethodVariant === "visacredit"
+          ? "Visa"
+          : item.RecurringDetail.paymentMethodVariant === "amex"
+          ? "American Express"
+          : item.RecurringDetail.paymentMethodVariant
+      } ****${item.RecurringDetail.card.number}`,
       component: (
         <div className="flex items-center">
           <img
@@ -62,6 +67,7 @@ const PaymentDetails = ({
           </p>
         </div>
       ),
+      field: item,
     })),
     {
       name: "New Credit or Debit Card",
@@ -70,7 +76,6 @@ const PaymentDetails = ({
       ),
     },
   ];
-
 
   return (
     <div className="border border-gray-200 rounded-md">
@@ -92,8 +97,8 @@ const PaymentDetails = ({
                 type="radio"
                 name="paymentMethod"
                 className="w-3 h-3 text-blue-600 cursor-pointer"
-                checked={selectedPayment === field?.name}
-                onChange={() => handlePaymentChange(field?.name)}
+                checked={selectedPayment?.name === field?.name}
+                onChange={() => handlePaymentChange(field)}
               />
               <div className="ml-3 flex items-center">
                 <span className="text-gray-900 text-[13px] font-medium">

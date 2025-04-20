@@ -13,6 +13,7 @@ import AddessDetails from "./addessDetails";
 import {
   fetchAddressBookDetails,
   paymentPurchaseDetails,
+  paymentWithExistingCard,
   purchaseTicketConfirm,
   purchaseTicketsBuy,
   purchaseTicketValidate,
@@ -70,19 +71,28 @@ const ConfirmPurchasePopup = ({ onClose }) => {
       toast.error(message || "Booking confirmation failed");
     }
   };
-
+  console.log(
+    selectedPayment,
+    selectedPayment?.field?.RecurringDetail?.recurringDetailReference,
+    "selectedPaymentselectedPayment"
+  );
   const handleSubmit = async () => {
     try {
       setLoader(true);
 
       // Validate address selection
       if (!addressDetails || addressDetails.length === 0) {
-        bookingConfirm(false,"Please add a billing address");
+        bookingConfirm(false, "Please add a billing address");
         setLoader(false);
         return;
       }
 
-      const paymentMethod = selectedPayment == "LMT Pay" ? 1 : 2;
+      const paymentMethod =
+        selectedPayment?.name == "LMT Pay"
+          ? 1
+          : selectedPayment?.name == "New Credit or Debit Card"
+          ? 2
+          : 3;
       const fetchOrderIdPayload = {
         currrency: data?.purchase?.price_breakdown?.currency,
         client_country: "IN",
@@ -139,6 +149,19 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           } else if (paymentMethod == 2) {
             setAdyenBookingId(apiResponse?.booking_id);
             setShowAdyenDropIn(true);
+          } else if (paymentMethod == 3) {
+            const response = await paymentWithExistingCard("", {
+              booking_id: apiResponse?.booking_id,
+              payment_method: 3,
+              recurringDetailReference:
+                selectedPayment?.field?.RecurringDetail
+                  ?.recurringDetailReference,
+            });
+            if (response?.success) {
+              bookingConfirm(true, "Booking Confirmed Successfully");
+            } else {
+              bookingConfirm(false, response?.message || "Booking failed");
+            }
           }
         } else {
           bookingConfirm(false, apiResponse?.data || "Booking failed");
@@ -147,7 +170,10 @@ const ConfirmPurchasePopup = ({ onClose }) => {
         bookingConfirm(false, response?.data || "Booking failed");
       }
     } catch (error) {
-      bookingConfirm(false, "An unexpected error occurred. Please try again later.");
+      bookingConfirm(
+        false,
+        "An unexpected error occurred. Please try again later."
+      );
     } finally {
       setLoader(false);
     }

@@ -869,7 +869,7 @@ export const adyenCreateSession = async (token, data) => {
       ...(token && { token: token }),
       data: data,
     });
-    return response?.data ;
+    return response?.data;
   } catch (error) {
     console.log("ERROR in purchaseTicketsBuy", error);
     throw error;
@@ -918,5 +918,20 @@ export const purchaseTicketConfirm = async (token, data) => {
   } catch (error) {
     console.log("ERROR in purchaseTicketConfirm", error);
     throw error;
+  }
+};
+
+export const paymentWithExistingCard = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PAY_WITH_SAVED_CARDS}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in paymentWithExistingCard", error);
+    return error?.response?.data;
   }
 };

@@ -53,4 +53,5 @@ export const API_ROUTES = {
   ADYEN_PAYMENT_UPDATE: "/adyen/paymentUpdate",
   ADYEN_PAYMENT_SUBMIT:'/adyen/paymentResponse',
   PURCHASE_TICKET_CONFIRMATON: "/purchase/tickets/confirmation",
+  PAY_WITH_SAVED_CARDS:'/adyen/pay-with-saved-card'
 };
