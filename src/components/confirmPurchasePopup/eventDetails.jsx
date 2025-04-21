@@ -53,7 +53,7 @@ const EventDetails = ({ data }) => {
         {data?.match_name}
       </p>
       <div className="border-b border-gray-200 flex items-center justify-between">
-        <div className="flex gap-3 items-center px-4 py-2">
+        <div className="flex max-md:flex-col gap-3 md:items-center px-4 py-2">
           {renderContent(
             <Image src={blueCalendar} alt="location" width={14} height={14} />,
             desiredFormatDate(data?.match_date)

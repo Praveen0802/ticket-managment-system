@@ -72,14 +72,14 @@ const OrderDetails = ({ show, onClose, data }) => {
 
       <CustomModal
         className={`transition-custom ${
-          expandedVersion ? "w-full" : "w-[700px]"
+          expandedVersion ? "w-full" : "w-full sm:w-[700px]"
         }`}
         show={show}
         onClose={onClose}
       >
         <div
           className={`transition-custom ${
-            expandedVersion ? "w-full h-full" : "m-4"
+            expandedVersion ? "w-full h-full" : "m-2 sm:m-4"
           }`}
         >
           <div
@@ -94,11 +94,11 @@ const OrderDetails = ({ show, onClose, data }) => {
               transformOrigin: "center",
             }}
           >
-            <div className="flex items-center border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[24px]">
-              <p className="text-[18px] text-[#323A70]">
+            <div className="flex items-center border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[16px] sm:px-[24px]">
+              <p className="text-[16px] sm:text-[18px] text-[#323A70]">
                 Order ID: {orderId}
               </p>
-              <div className="flex items-center gap-2 ">
+              <div className="flex items-center gap-2">
                 <button className="cursor-pointer">
                   {expandedVersion ? (
                     <IconStore.collapse
@@ -120,24 +120,23 @@ const OrderDetails = ({ show, onClose, data }) => {
                 </button>
               </div>
             </div>
-            <div className="p-[24px] flex flex-col gap-4">
-            
+            <div className="p-[16px] sm:p-[24px] flex flex-col gap-4">
               <CtaValues ctaText={ctaText} />
               <div
-                className={`flex gap-4 transition-custom ${
+                className={`flex flex-col gap-4 transition-custom ${
                   expandedVersion ? "" : "flex-col"
                 }`}
               >
                 <div
                   className={`transition-custom ${
-                    expandedVersion ? "w-1/2" : "w-full"
+                    expandedVersion ? "w-full sm:w-1/2" : "w-full"
                   }`}
                 >
                   <OrderValues orderObject={orderObject} />
                 </div>
                 <div
                   className={`transition-custom ${
-                    expandedVersion ? "w-1/2 h-full" : "w-full"
+                    expandedVersion ? "w-full sm:w-1/2 h-full" : "w-full"
                   }`}
                 >
                   <CustomerDetails
@@ -152,7 +151,7 @@ const OrderDetails = ({ show, onClose, data }) => {
                 expandedVersion={expandedVersion}
                 benefits_restrictions={benefits_restrictions}
               />
-                <AttendeeDetails attendee_details={attendee_details} />
+              <AttendeeDetails attendee_details={attendee_details} />
             </div>
           </div>
         </div>
