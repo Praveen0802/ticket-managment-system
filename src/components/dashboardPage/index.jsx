@@ -93,6 +93,7 @@ const DashboardPage = (props) => {
           {/* Latest Order View */}
           <LatestOrderView
             listItems={transactionHistory?.transaction_history}
+            meta={transactionHistory?.meta}
           />
 
           {/* Latest Booking Table */}

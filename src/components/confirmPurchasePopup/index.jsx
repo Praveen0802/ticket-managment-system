@@ -21,14 +21,15 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdyenDropIn from "./adyenPurchaseNewCard";
+import { useRouter } from "next/router";
 
 const ConfirmPurchasePopup = ({ onClose }) => {
   const { confirmPurchasePopupFields } = useSelector((state) => state?.common);
   const [loader, setLoader] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState("LMT Pay");
+  const [selectedPayment, setSelectedPayment] = useState({ name: "LMT Pay" });
   const [addressDetails, setAddressDetails] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState(0);
+  const [selectedAddress, setSelectedAddress] = useState();
   const [showAdyenDropIn, setShowAdyenDropIn] = useState(false);
   const [adyenBookingId, setAdyenBookingId] = useState(null);
 
@@ -36,6 +37,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   const [selectedQuantity, setSelectedQuantity] = useState(
     data?.purchase?.price_breakdown?.ticket_quantity
   );
+
   const handlePaymentChange = (name) => {
     setSelectedPayment(name);
   };
@@ -54,6 +56,9 @@ const ConfirmPurchasePopup = ({ onClose }) => {
       ]);
       setAddressDetails(addressDetails?.value);
       setPaymentDetails(paymentDetails?.value?.payment_methods);
+      setSelectedAddress(
+        addressDetails?.value?.findIndex((item) => item.primary_address == 1)
+      );
     } catch (error) {
       toast.error("Failed to load address and payment details");
     }
@@ -63,19 +68,18 @@ const ConfirmPurchasePopup = ({ onClose }) => {
     fetchAddressPaymentDetails();
   }, []);
 
+  const router = useRouter();
+
   const bookingConfirm = async (success, message) => {
     if (success) {
       toast.success(message);
       onClose();
+      router.push("/trade/purchase");
     } else {
       toast.error(message || "Booking confirmation failed");
     }
   };
-  console.log(
-    selectedPayment,
-    selectedPayment?.field?.RecurringDetail?.recurringDetailReference,
-    "selectedPaymentselectedPayment"
-  );
+
   const handleSubmit = async () => {
     try {
       setLoader(true);
@@ -157,7 +161,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
                 selectedPayment?.field?.RecurringDetail
                   ?.recurringDetailReference,
             });
-            if (response?.success) {
+            if (response?.result?.status == 1) {
               bookingConfirm(true, "Booking Confirmed Successfully");
             } else {
               bookingConfirm(false, response?.message || "Booking failed");

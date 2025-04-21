@@ -32,7 +32,8 @@ const OrderDetails = ({ show, onClose, data }) => {
     match_date_time: order_details?.match_datetime,
     order_id: orderId,
     order_date: order_details?.booking_date,
-    order_status: order_details?.ticket_status,
+    ticket_status: order_details?.ticket_status,
+    order_status: order_details?.booking_status,
     delivery_by: order_details?.expected_ticket_delivery,
     days_to_event: order_details?.days_left_to_event,
     expected_payout_date: order_details?.expected_payout_date,
@@ -120,7 +121,7 @@ const OrderDetails = ({ show, onClose, data }) => {
               </div>
             </div>
             <div className="p-[24px] flex flex-col gap-4">
-              <AttendeeDetails attendee_details={attendee_details} />
+            
               <CtaValues ctaText={ctaText} />
               <div
                 className={`flex gap-4 transition-custom ${
@@ -151,6 +152,7 @@ const OrderDetails = ({ show, onClose, data }) => {
                 expandedVersion={expandedVersion}
                 benefits_restrictions={benefits_restrictions}
               />
+                <AttendeeDetails attendee_details={attendee_details} />
             </div>
           </div>
         </div>

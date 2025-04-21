@@ -1,7 +1,15 @@
 import FormFields from "@/components/formFieldsComponent";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, PlusCircle, X, Edit, Save } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  PlusCircle,
+  X,
+  Edit,
+  Save,
+} from "lucide-react";
+import { purchaseAttendeeDetails } from "@/utils/apiHandler/request";
 
 const AttendeeDetails = ({ attendee_details = [] }) => {
   const total = attendee_details?.length || 5;
@@ -18,17 +26,17 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           formData: {
             first_name: detail.first_name || "",
             last_name: detail.last_name || "",
-            dob_day: detail.dob ? detail.dob.split('-')[2] : "",
-            dob_month: detail.dob ? detail.dob.split('-')[1] : "",
-            dob_year: detail.dob ? detail.dob.split('-')[0] : "",
-            nationality: detail.nationality || "",
-            passport: detail.passport || "",
             email: detail.email || "",
             phone: detail.phone || "",
-            gender: detail.gender || "",
-            ticket_id: detail.ticket_id || "",
+            dob_day: detail.dob ? detail.dob.split("-")[2] : "",
+            dob_month: detail.dob ? detail.dob.split("-")[1] : "",
+            dob_year: detail.dob ? detail.dob.split("-")[0] : "",
             seat: detail.seat || "",
-          }
+            gender: detail.gender || "",
+            nationality: detail.nationality || "",
+            passport: detail.passport || "",
+            ticket_id: detail.ticket_id || "",
+          },
         };
       });
       setAttendees(initialAttendees);
@@ -58,6 +66,23 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
     );
   };
 
+  const handleRadioChange = (value, field, attendeeId) => {
+    setAttendees(
+      attendees.map((attendee) => {
+        if (attendee.id === attendeeId) {
+          return {
+            ...attendee,
+            formData: {
+              ...attendee.formData,
+              [field]: value,
+            },
+          };
+        }
+        return attendee;
+      })
+    );
+  };
+
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
@@ -79,33 +104,45 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
     }
   };
 
-  const saveAttendeeDetails = () => {
-    // Here you would typically make an API call to save all attendees
+  const saveAttendeeDetails = async () => {
     toggleEditMode();
-    
-    // Format data for submission
-    const formattedData = attendees.map(attendee => ({
-      serial: attendee.id,
-      first_name: attendee.formData.first_name,
-      last_name: attendee.formData.last_name,
-      dob: attendee.formData.dob_year && attendee.formData.dob_month && attendee.formData.dob_day ? 
-        `${attendee.formData.dob_year}-${attendee.formData.dob_month}-${attendee.formData.dob_day}` : null,
-      nationality: attendee.formData.nationality,
-      passport: attendee.formData.passport,
-      email: attendee.formData.email,
-      phone: attendee.formData.phone,
-      gender: attendee.formData.gender,
-      ticket_id: attendee.formData.ticket_id,
-      seat: attendee.formData.seat,
-    }));
-    
-    // Here you would send formattedData to your API
+
+    const formattedData = {
+      tickets: attendees.map((attendee) => ({
+        id: attendee.id,
+        first_name: attendee.formData.first_name,
+        last_name: attendee.formData.last_name,
+        email: attendee.formData.email,
+        nationality: attendee.formData.nationality,
+        dob:
+          attendee.formData.dob_year &&
+          attendee.formData.dob_month &&
+          attendee.formData.dob_day
+            ? `${attendee.formData.dob_year}-${attendee.formData.dob_month}-${attendee.formData.dob_day}`
+            : null,
+        phone: attendee.formData.phone,
+        passport: attendee.formData.passport,
+        gender: attendee.formData.gender,
+        seat: attendee.formData.seat,
+      })),
+    };
+    const response = await purchaseAttendeeDetails(
+      "",
+      attendee_details?.[0]?.ticket_id,
+      formattedData
+    );
+    console.log(response,'responseresponse')
   };
 
-  const generateAttendeeFormFields = (attendeeId, attendeeData, isEditable = true) => {
+  const generateAttendeeFormFields = (
+    attendeeId,
+    attendeeData,
+    isEditable = true
+  ) => {
     const readOnlyProps = isEditable ? {} : { readOnly: true, disabled: true };
-    
+
     return [
+      // First Name
       [
         {
           label: "First Name",
@@ -115,9 +152,11 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           name: `first_name_${attendeeId}`,
           value: attendeeData.first_name || "",
           onChange: (e) => handleChange(e, "first_name", attendeeId),
-          className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
+          className: `!py-1 !px-4 ${fieldStyle} ${
+            !isEditable ? "bg-gray-100" : ""
+          }`,
           labelClassName: "!text-[12px] text-gray-600 block",
-          placeholder: isEditable ? "Enter attendee first name" : "Not provided",
+          placeholder: isEditable ? "Enter first name" : "Not provided",
           rightIcon: attendeeData.first_name
             ? () => (
                 <span className="text-green-500">
@@ -125,9 +164,10 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                 </span>
               )
             : null,
-          ...readOnlyProps
+          ...readOnlyProps,
         },
       ],
+      // Last Name
       [
         {
           label: "Last Name",
@@ -137,9 +177,11 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           name: `last_name_${attendeeId}`,
           value: attendeeData.last_name || "",
           onChange: (e) => handleChange(e, "last_name", attendeeId),
-          className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
+          className: `!py-1 !px-4 ${fieldStyle} ${
+            !isEditable ? "bg-gray-100" : ""
+          }`,
           labelClassName: "!text-[12px] text-gray-600 block",
-          placeholder: isEditable ? "Enter attendee last name" : "Not provided",
+          placeholder: isEditable ? "Enter last name" : "Not provided",
           rightIcon: attendeeData.last_name
             ? () => (
                 <span className="text-green-500">
@@ -147,9 +189,44 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                 </span>
               )
             : null,
-          ...readOnlyProps
+          ...readOnlyProps,
         },
       ],
+      // Email
+      [
+        {
+          label: "Email",
+          type: "email",
+          id: `email_${attendeeId}`,
+          name: `email_${attendeeId}`,
+          value: attendeeData.email || "",
+          onChange: (e) => handleChange(e, "email", attendeeId),
+          className: `!py-1 !px-4 ${fieldStyle} ${
+            !isEditable ? "bg-gray-100" : ""
+          }`,
+          labelClassName: "!text-[12px] text-gray-600 block",
+          placeholder: isEditable ? "Enter email" : "Not provided",
+          ...readOnlyProps,
+        },
+      ],
+      // Phone
+      [
+        {
+          label: "Phone No",
+          type: "text",
+          id: `phone_${attendeeId}`,
+          name: `phone_${attendeeId}`,
+          value: attendeeData.phone || "",
+          onChange: (e) => handleChange(e, "phone", attendeeId),
+          className: `!py-1 !px-4 ${fieldStyle} ${
+            !isEditable ? "bg-gray-100" : ""
+          }`,
+          labelClassName: "!text-[12px] text-gray-600 block",
+          placeholder: isEditable ? "Enter phone number" : "Not provided",
+          ...readOnlyProps,
+        },
+      ],
+      // DOB
       [
         {
           label: "Date Of Birth",
@@ -177,10 +254,12 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                         };
                         handleChange(syntheticEvent, "dob_day", attendeeId);
                       },
-                      className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
+                      className: `!py-1 !px-4 ${fieldStyle} ${
+                        !isEditable ? "bg-gray-100" : ""
+                      }`,
                       labelClassName: "!text-[12px] text-gray-600 block",
                       placeholder: "DD",
-                      ...readOnlyProps
+                      ...readOnlyProps,
                     },
                   ]}
                 />
@@ -205,10 +284,12 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                         };
                         handleChange(syntheticEvent, "dob_month", attendeeId);
                       },
-                      className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
+                      className: `!py-1 !px-4 ${fieldStyle} ${
+                        !isEditable ? "bg-gray-100" : ""
+                      }`,
                       labelClassName: "!text-[12px] text-gray-600 block",
                       placeholder: "MM",
-                      ...readOnlyProps
+                      ...readOnlyProps,
                     },
                   ]}
                 />
@@ -233,10 +314,12 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                         };
                         handleChange(syntheticEvent, "dob_year", attendeeId);
                       },
-                      className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
+                      className: `!py-1 !px-4 ${fieldStyle} ${
+                        !isEditable ? "bg-gray-100" : ""
+                      }`,
                       labelClassName: "!text-[12px] text-gray-600 block",
                       placeholder: "YYYY",
-                      ...readOnlyProps
+                      ...readOnlyProps,
                     },
                   ]}
                 />
@@ -245,6 +328,66 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           ),
         },
       ],
+      // Seat
+      [
+        {
+          label: "Seat",
+          type: "text",
+          id: `seat_${attendeeId}`,
+          name: `seat_${attendeeId}`,
+          value: attendeeData.seat || "",
+          onChange: (e) => handleChange(e, "seat", attendeeId),
+          className: `!py-1 !px-4 ${fieldStyle} ${
+            !isEditable ? "bg-gray-100" : ""
+          }`,
+          labelClassName: "!text-[12px] text-gray-600 block",
+          placeholder: isEditable ? "Enter seat number" : "Not provided",
+          ...readOnlyProps,
+        },
+      ],
+      // Gender
+      [
+        {
+          label: "Gender",
+          type: "custom",
+          id: `gender_section_${attendeeId}`,
+          customComponent: (
+            <div className="flex space-x-4 py-1">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name={`gender_${attendeeId}`}
+                  value="male"
+                  checked={attendeeData.gender === "male"}
+                  onChange={() =>
+                    isEditable &&
+                    handleRadioChange("male", "gender", attendeeId)
+                  }
+                  className="form-radio h-4 w-4 text-blue-600"
+                  disabled={!isEditable}
+                />
+                <span className="ml-2 text-sm text-gray-700">Male</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name={`gender_${attendeeId}`}
+                  value="female"
+                  checked={attendeeData.gender === "female"}
+                  onChange={() =>
+                    isEditable &&
+                    handleRadioChange("female", "gender", attendeeId)
+                  }
+                  className="form-radio h-4 w-4 text-blue-600"
+                  disabled={!isEditable}
+                />
+                <span className="ml-2 text-sm text-gray-700">Female</span>
+              </label>
+            </div>
+          ),
+        },
+      ],
+      // Nationality
       [
         {
           label: "Nationality",
@@ -254,9 +397,11 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           name: `nationality_${attendeeId}`,
           value: attendeeData.nationality || "",
           onChange: (e) => handleChange(e, "nationality", attendeeId),
-          className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
+          className: `!py-1 !px-4 ${fieldStyle} ${
+            !isEditable ? "bg-gray-100" : ""
+          }`,
           labelClassName: "!text-[12px] text-gray-600 block",
-          placeholder: isEditable ? "Nationality" : "Not provided",
+          placeholder: isEditable ? "Enter nationality" : "Not provided",
           rightIcon: attendeeData.nationality
             ? () => (
                 <span className="text-green-500">
@@ -264,9 +409,10 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                 </span>
               )
             : null,
-          ...readOnlyProps
+          ...readOnlyProps,
         },
       ],
+      // Passport
       [
         {
           label: "Passport",
@@ -276,9 +422,11 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           name: `passport_${attendeeId}`,
           value: attendeeData.passport || "",
           onChange: (e) => handleChange(e, "passport", attendeeId),
-          className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
+          className: `!py-1 !px-4 ${fieldStyle} ${
+            !isEditable ? "bg-gray-100" : ""
+          }`,
           labelClassName: "!text-[12px] text-gray-600 block",
-          placeholder: isEditable ? "Enter attendee Passport" : "Not provided",
+          placeholder: isEditable ? "Enter passport number" : "Not provided",
           rightIcon: attendeeData.passport
             ? () => (
                 <span className="text-green-500">
@@ -286,53 +434,31 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                 </span>
               )
             : null,
-          ...readOnlyProps
-        },
-      ],
-      [
-        {
-          label: "Email",
-          type: "email",
-          id: `email_${attendeeId}`,
-          name: `email_${attendeeId}`,
-          value: attendeeData.email || "",
-          onChange: (e) => handleChange(e, "email", attendeeId),
-          className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
-          labelClassName: "!text-[12px] text-gray-600 block",
-          placeholder: isEditable ? "Enter attendee email" : "Not provided",
-          ...readOnlyProps
-        },
-      ],
-      [
-        {
-          label: "Phone",
-          type: "tel",
-          id: `phone_${attendeeId}`,
-          name: `phone_${attendeeId}`,
-          value: attendeeData.phone || "",
-          onChange: (e) => handleChange(e, "phone", attendeeId),
-          className: `!py-1 !px-4 ${fieldStyle} ${!isEditable ? 'bg-gray-100' : ''}`,
-          labelClassName: "!text-[12px] text-gray-600 block",
-          placeholder: isEditable ? "Enter attendee phone" : "Not provided",
-          ...readOnlyProps
+          ...readOnlyProps,
         },
       ],
     ];
   };
 
-  const completedAttendees = attendees.filter(attendee => 
-    attendee.formData.first_name &&
-    attendee.formData.last_name &&
-    attendee.formData.nationality &&
-    attendee.formData.passport &&
-    attendee.formData.dob_day &&
-    attendee.formData.dob_month &&
-    attendee.formData.dob_year
+  const completedAttendees = attendees.filter(
+    (attendee) =>
+      attendee.formData.first_name &&
+      attendee.formData.last_name &&
+      attendee.formData.nationality &&
+      attendee.formData.passport &&
+      attendee.formData.dob_day &&
+      attendee.formData.dob_month &&
+      attendee.formData.dob_year &&
+      attendee.formData.gender
   ).length;
 
   return (
     <div className="flex flex-col">
-      <div className={`border ${isEditMode ? 'border-blue-300' : 'border-[#E0E1EA]'} rounded-md overflow-hidden`}>
+      <div
+        className={`border ${
+          isEditMode ? "border-blue-300" : "border-[#E0E1EA]"
+        } rounded-md overflow-hidden`}
+      >
         <div
           className={`flex justify-between items-center px-4 py-3 cursor-pointer`}
           onClick={toggleAccordion}
@@ -376,7 +502,7 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                 attendee.formData,
                 isEditMode
               );
-              
+
               const isComplete =
                 attendee.formData.first_name &&
                 attendee.formData.last_name &&
@@ -384,10 +510,18 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                 attendee.formData.passport &&
                 attendee.formData.dob_day &&
                 attendee.formData.dob_month &&
-                attendee.formData.dob_year;
+                attendee.formData.dob_year &&
+                attendee.formData.gender;
 
               return (
-                <div key={attendee.id} className={`mb-6 pb-6 ${index < attendees.length - 1 ? 'border-b border-gray-200' : ''}`}>
+                <div
+                  key={attendee.id}
+                  className={`mb-6 pb-6 ${
+                    index < attendees.length - 1
+                      ? "border-b border-gray-200"
+                      : ""
+                  }`}
+                >
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-md font-medium flex items-center gap-2">
                       Attendee {attendee.id}
@@ -396,37 +530,63 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                           <IconStore.circleTick className="size-5" />
                         </span>
                       )}
-                      {attendee.formData.first_name && attendee.formData.last_name && (
-                        <span className="text-gray-500 text-sm ml-2">
-                          ({attendee.formData.first_name} {attendee.formData.last_name})
-                        </span>
-                      )}
+                      {attendee.formData.first_name &&
+                        attendee.formData.last_name && (
+                          <span className="text-gray-500 text-sm ml-2">
+                            ({attendee.formData.first_name}{" "}
+                            {attendee.formData.last_name})
+                          </span>
+                        )}
                     </h3>
+                    {isEditMode && attendees.length > 1 && (
+                      <button
+                        onClick={() => removeAttendee(attendee.id)}
+                        className="text-red-500 hover:text-red-700"
+                        title="Remove attendee"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
                   </div>
 
+                  {/* First Name and Last Name */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <FormFields formFields={[attendeeFields[0][0]]} />
                     <FormFields formFields={[attendeeFields[1][0]]} />
                   </div>
 
+                  {/* Email and Phone */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+                    <FormFields formFields={[attendeeFields[2][0]]} />
+                    <FormFields formFields={[attendeeFields[3][0]]} />
+                  </div>
+
+                  {/* DOB */}
                   <div className="w-full mt-4">
                     <label className="text-sm text-gray-600 mb-1 block">
                       Date Of Birth
                     </label>
-                    <FormFields formFields={[attendeeFields[2][0]]} />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
-                    <FormFields formFields={[attendeeFields[3][0]]} />
                     <FormFields formFields={[attendeeFields[4][0]]} />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+                  {/* Seat */}
+                  <div className="w-full mt-4">
                     <FormFields formFields={[attendeeFields[5][0]]} />
+                  </div>
+
+                  {/* Gender */}
+                  <div className="w-full mt-4">
+                    <label className="text-sm text-gray-600 mb-1 block">
+                      Gender
+                    </label>
                     <FormFields formFields={[attendeeFields[6][0]]} />
                   </div>
-                  
-                 
+
+                  {/* Nationality and Passport */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+                    <FormFields formFields={[attendeeFields[7][0]]} />
+                    <FormFields formFields={[attendeeFields[8][0]]} />
+                  </div>
                 </div>
               );
             })}

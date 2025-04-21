@@ -10,9 +10,7 @@ const Benifits = ({
         Benefits/Restrictions
       </p>
       <ul
-        className={`py-4 px-10 ${
-          expandedVersion ? "grid grid-cols-2" : "flex flex-col"
-        } gap-2 list-disc"`}
+        className={`py-4 px-10 grid grid-cols-2 gap-2 list-disc`}
       >
         {benefits_restrictions?.map((item, index) => {
           return (

@@ -935,3 +935,18 @@ export const paymentWithExistingCard = async (token, data) => {
     return error?.response?.data;
   }
 };
+
+export const purchaseAttendeeDetails = async (token, id, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.PURCHASE_ATTENDEE_DETAILS}/${id}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in purchaseAttendeeDetails", error);
+    return error?.response?.data;
+  }
+};

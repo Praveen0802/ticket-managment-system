@@ -17,7 +17,7 @@ const FloatingDateRange = ({
   className = "",
   labelClassName = "",
   error = "",
-  singleDateMode = false, // New prop to control single date selection mode
+  singleDateMode = false,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +37,7 @@ const FloatingDateRange = ({
         const formattedDate = formatDate(value.startDate);
         setDisplayValue(formattedDate);
         setStartDate(value.startDate);
-        setCurrentMonth(new Date(value.startDate));
+        setCurrentMonth(parseLocalDate(value.startDate));
       } else {
         setDisplayValue("");
         setStartDate("");
@@ -50,7 +50,7 @@ const FloatingDateRange = ({
         setDisplayValue(`${formattedStart} - ${formattedEnd}`);
         setStartDate(value.startDate);
         setEndDate(value.endDate);
-        setCurrentMonth(new Date(value.startDate));
+        setCurrentMonth(parseLocalDate(value.startDate));
       } else {
         setDisplayValue("");
         setStartDate("");
@@ -78,16 +78,39 @@ const FloatingDateRange = ({
     };
   }, []);
 
+  // Helper function to parse a date string in local timezone
+  const parseLocalDate = (dateString) => {
+    if (!dateString) return new Date();
+
+    // Split the date string (assuming YYYY-MM-DD format)
+    const [year, month, day] = dateString.split("-").map(Number);
+
+    // Create a new date using local timezone
+    // Month is 0-indexed in JavaScript Date
+    return new Date(year, month - 1, day);
+  };
+
+  // Convert a Date object to YYYY-MM-DD string without timezone shift
+  const toLocalDateString = (date) => {
+    if (!date) return "";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    const date = new Date(dateString);
-    return date
-      .toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-      })
-      .replace(/\//g, "/");
+
+    // Parse the date string (assuming YYYY-MM-DD format)
+    const [year, month, day] = dateString.split("-").map(Number);
+
+    // Format as DD/MM/YY using local parts
+    const formattedDay = String(day).padStart(2, "0");
+    const formattedMonth = String(month).padStart(2, "0");
+    const formattedYear = String(year).slice(-2);
+
+    return `${formattedDay}/${formattedMonth}/${formattedYear}`;
   };
 
   const handleInputClick = () => {
@@ -95,29 +118,29 @@ const FloatingDateRange = ({
       setIsOpen(!isOpen);
       setIsFocused(true);
       // Reset temp dates when opening
-      setTempStartDate(startDate ? new Date(startDate) : null);
-      setTempEndDate(endDate ? new Date(endDate) : null);
+      setTempStartDate(startDate ? parseLocalDate(startDate) : null);
+      setTempEndDate(endDate ? parseLocalDate(endDate) : null);
     }
   };
 
   const handleApply = () => {
     if (singleDateMode) {
       if (tempStartDate) {
-        const formattedDate = tempStartDate.toISOString().split("T")[0];
+        const formattedDate = toLocalDateString(tempStartDate);
         setStartDate(formattedDate);
         setDisplayValue(formatDate(formattedDate));
 
         if (onChange) {
           onChange(
-            { startDate: formattedDate, endDate: formattedDate }, // In single mode, startDate and endDate are the same
+            { startDate: formattedDate, endDate: formattedDate },
             keyValue
           );
         }
       }
     } else {
       if (tempStartDate && tempEndDate) {
-        const formattedStart = tempStartDate.toISOString().split("T")[0];
-        const formattedEnd = tempEndDate.toISOString().split("T")[0];
+        const formattedStart = toLocalDateString(tempStartDate);
+        const formattedEnd = toLocalDateString(tempEndDate);
         setStartDate(formattedStart);
         setEndDate(formattedEnd);
         setDisplayValue(
@@ -153,7 +176,7 @@ const FloatingDateRange = ({
       setTempStartDate(date);
       setTempEndDate(date); // Set end date same as start for consistent data format
 
-      const formattedDate = date.toISOString().split("T")[0];
+      const formattedDate = toLocalDateString(date);
       setStartDate(formattedDate);
       setEndDate(formattedDate);
       setDisplayValue(formatDate(formattedDate));
@@ -225,13 +248,18 @@ const FloatingDateRange = ({
 
       if (singleDateMode) {
         isSelected =
-          tempStartDate && date.getTime() === tempStartDate.getTime();
+          tempStartDate &&
+          date.getDate() === tempStartDate.getDate() &&
+          date.getMonth() === tempStartDate.getMonth() &&
+          date.getFullYear() === tempStartDate.getFullYear();
       } else {
         isSelected =
           tempStartDate && tempEndDate
             ? date >= tempStartDate && date <= tempEndDate
             : tempStartDate
-            ? date.getTime() === tempStartDate.getTime()
+            ? date.getDate() === tempStartDate.getDate() &&
+              date.getMonth() === tempStartDate.getMonth() &&
+              date.getFullYear() === tempStartDate.getFullYear()
             : false;
       }
 
@@ -260,6 +288,9 @@ const FloatingDateRange = ({
         isInRange: false,
       });
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time part for accurate comparison
 
     return (
       <div className={`w-full`}>
@@ -296,8 +327,14 @@ const FloatingDateRange = ({
           {days.map((dayObj, index) => {
             const isSelected = dayObj.isSelected;
             const isInRange = dayObj.isInRange;
+
+            // Compare just the date parts for "today" check
+            const dayDate = new Date(dayObj.date);
+            dayDate.setHours(0, 0, 0, 0);
             const isToday =
-              dayObj.date.toDateString() === new Date().toDateString();
+              dayDate.getDate() === today.getDate() &&
+              dayDate.getMonth() === today.getMonth() &&
+              dayDate.getFullYear() === today.getFullYear();
 
             return (
               <button
@@ -384,14 +421,16 @@ const FloatingDateRange = ({
             <div className="text-xs font-medium text-gray-700">
               {singleDateMode
                 ? tempStartDate
-                  ? `${formatDate(tempStartDate.toISOString())}`
+                  ? `${formatDate(toLocalDateString(tempStartDate))}`
                   : "Select date"
                 : tempStartDate && tempEndDate
-                ? `${formatDate(tempStartDate.toISOString())} - ${formatDate(
-                    tempEndDate.toISOString()
-                  )}`
+                ? `${formatDate(
+                    toLocalDateString(tempStartDate)
+                  )} - ${formatDate(toLocalDateString(tempEndDate))}`
                 : tempStartDate
-                ? `${formatDate(tempStartDate.toISOString())} - Select end date`
+                ? `${formatDate(
+                    toLocalDateString(tempStartDate)
+                  )} - Select end date`
                 : "Select start date"}
             </div>
 

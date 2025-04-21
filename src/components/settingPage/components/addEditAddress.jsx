@@ -32,6 +32,7 @@ const AddEditAddress = ({
     mobile_number = "",
     address_line1 = "",
     company_name = "",
+    email = "",
     phone_code = "",
   } = addressDetails;
 
@@ -44,6 +45,7 @@ const AddEditAddress = ({
     last_name: last_name,
     company_name: company_name,
     address_type: address_type,
+    email: email,
     mobile_number: mobile_number,
     phone_code: phone_code,
     address_line_1: address_line1,
@@ -77,7 +79,7 @@ const AddEditAddress = ({
     const phoneCodeField = response?.data?.map((item) => {
       return {
         value: `${item?.phone_code}`,
-        label: item?.country_code,
+        label: `${item?.country_short_name},${item?.country_code}`,
       };
     });
     setPhoneCodeOptions(phoneCodeField);
@@ -107,6 +109,8 @@ const AddEditAddress = ({
       "first_name",
       "last_name",
       "address_line_1",
+      "email",
+      "address_type",
       "mobile_number",
       "phone_code",
       "country",
@@ -129,6 +133,7 @@ const AddEditAddress = ({
         label: "Address title",
         type: "text",
         id: "address_type",
+        mandatory: true,
         name: "address_type",
         value: formFieldValues?.address_type,
         onChange: (e) => handleChange(e, "address_type"),
@@ -174,6 +179,27 @@ const AddEditAddress = ({
         className: `!py-2 !px-4 ${fieldStyle}`,
         labelClassName: "text-sm text-gray-600 mb-1 block",
         rightIcon: formFieldValues?.last_name
+          ? () => (
+              <span className="text-green-500">
+                <IconStore.circleTick className="size-5" />
+              </span>
+            )
+          : null,
+      },
+    ],
+    [
+      {
+        label: "Email",
+        type: "email",
+        id: "email",
+        mandatory: true,
+        name: "email",
+        value: formFieldValues?.email,
+        onChange: (e) => handleChange(e, "email"),
+        className: `!py-2 !px-4 ${fieldStyle}`,
+        labelClassName: "text-sm text-gray-600 mb-1 block",
+        placeholder: "Downtown Dubai - 12345",
+        rightIcon: formFieldValues?.email
           ? () => (
               <span className="text-green-500">
                 <IconStore.circleTick className="size-5" />
@@ -465,11 +491,11 @@ const AddEditAddress = ({
         <div className="w-full">
           <FormFields formFields={addressFormFields[7]} />
         </div>
-
+        <FormFields formFields={[addressFormFields[8][0]]} />
         {/* City and Zip Code */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormFields formFields={[addressFormFields[8][0]]} />
-          <FormFields formFields={[addressFormFields[8][1]]} />
+          <FormFields formFields={[addressFormFields[9][0]]} />
+          <FormFields formFields={[addressFormFields[9][1]]} />
         </div>
 
         <div className="flex items-center mt-2 cursor-pointer">

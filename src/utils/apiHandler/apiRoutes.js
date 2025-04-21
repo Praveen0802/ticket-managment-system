@@ -51,7 +51,8 @@ export const API_ROUTES = {
   DELETE_ADDRESS_BOOK: "/settings/delete-address-book",
   ADYEN_CREATE_SESSION: "/adyen/createsession",
   ADYEN_PAYMENT_UPDATE: "/adyen/paymentUpdate",
-  ADYEN_PAYMENT_SUBMIT:'/adyen/paymentResponse',
+  ADYEN_PAYMENT_SUBMIT: "/adyen/paymentResponse",
   PURCHASE_TICKET_CONFIRMATON: "/purchase/tickets/confirmation",
-  PAY_WITH_SAVED_CARDS:'/adyen/pay-with-saved-card'
+  PAY_WITH_SAVED_CARDS: "/adyen/pay-with-saved-card",
+  PURCHASE_ATTENDEE_DETAILS: "/purchase/atendee-update-bulk",
 };

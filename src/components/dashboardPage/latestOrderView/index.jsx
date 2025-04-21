@@ -94,6 +94,7 @@ const LatestOrderView = ({ listItems, meta }) => {
     }
   };
 
+
   const fetchNextPage = async () => {
     if (loading || currentPage >= meta?.last_page) return;
     setLoading(true);
@@ -154,7 +155,10 @@ const LatestOrderView = ({ listItems, meta }) => {
               />
             </div>
 
-            <div className="overflow-auto h-full px-3 md:px-5" ref={tableRef}>
+            <div
+              className="overflow-auto h-full px-3 md:px-5 max-h-[350px]"
+              ref={tableRef}
+            >
               {/* Desktop Table View */}
               <table className="min-w-full border-collapse hidden sm:table">
                 <thead className="sticky top-0 bg-white">

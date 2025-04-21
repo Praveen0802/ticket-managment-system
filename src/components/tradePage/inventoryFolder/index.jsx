@@ -30,6 +30,7 @@ import NonMatchSelectUI from "./nonMatchIdUI";
 import { useDispatch } from "react-redux";
 import { updateConfirmPurchasePopup } from "@/utils/redux/common/action";
 import OrderDetails from "@/components/orderDetails";
+import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 
 const InventoryFolder = (props) => {
   const { response = {}, matchId } = props;
@@ -79,7 +80,9 @@ const InventoryFolder = (props) => {
     return (
       <div className="flex gap-[8px] items-center">
         {icon}
-        <p className="text-[12px] font-normal text-[#323A70] truncate">{text}</p>
+        <p className="text-[12px] font-normal text-[#323A70] truncate">
+          {text}
+        </p>
       </div>
     );
   };
@@ -144,9 +147,17 @@ const InventoryFolder = (props) => {
 
   const headers = [
     { key: "qty", label: "Qty", sortable: true },
-    { key: "category", label: "Category", sortable: true },
-    { key: "section", label: "Section/Block", sortable: true },
-    { key: "row", label: "Row", sortable: true },
+    { key: "category", label: "Category" },
+    { key: "section", label: "Section/Block" },
+    { key: "row", label: "Row" },
+    ...(isMobile
+      ? [
+          { key: "price", label: "Price", sortable: true },
+          { key: "attachment", label: "" },
+          { key: "hand", label: "" },
+          { key: "document", label: "" },
+        ]
+      : []),
   ];
 
   const data = displayTicketDetails?.map((item) => {
@@ -155,8 +166,36 @@ const InventoryFolder = (props) => {
       category: item?.seat_category,
       section: item?.block_id,
       row: item?.row,
+      ...(isMobile
+        ? {
+            price: item?.price_with_symbol,
+            attachment: (
+              <Image
+                width={14}
+                height={14}
+                src={
+                  item?.ticket_type_id == 2
+                    ? attachmentPin
+                    : item?.ticket_type_id == 4 || item?.ticket_type_id == 6
+                    ? attachment6
+                    : item?.ticket_type_id == 3
+                    ? attachment3
+                    : item?.ticket_type_id == 1
+                    ? attachment1
+                    : attachmentPin
+                }
+                alt="attach"
+              />
+            ),
+            hand: <Image width={16} height={16} src={crossHand} alt="hand" />,
+            document: item?.listing_note?.length > 0 && (
+              <Image width={20} height={20} src={documentText} alt="document" />
+            ),
+          }
+        : {}),
     };
   });
+
 
   const handleClickFavourites = async (item) => {
     if (item?.trackingfound == 1) return;
@@ -196,73 +235,87 @@ const InventoryFolder = (props) => {
     fetchAPIDetails({ page: 1 });
   };
 
-  const rightStickyHeaders = ["Ticket Price"];
+  const rightStickyHeaders = isMobile ? [] : ["Ticket Price"];
 
   const rightStickyColumns = displayTicketDetails?.map((item) => {
     return [
-      {
-        icon: <p>{item?.price_with_symbol}</p>,
-        className: "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
-      },
-      {
-        icon: (
-          <Image
-            width={14}
-            height={14}
-            src={
-              item?.ticket_type_id == 2
-                ? attachmentPin
-                : item?.ticket_type_id == 4 || item?.ticket_type_id == 6
-                ? attachment6
-                : item?.ticket_type_id == 3
-                ? attachment3
-                : item?.ticket_type_id == 1
-                ? attachment1
-                : attachmentPin
-            }
-            alt="attach"
-          />
-        ),
-        className: "cursor-pointer pl-2",
-        key: "attach",
-      },
-      {
-        icon: <Image width={16} height={16} src={crossHand} alt="hand" />,
-        className: "cursor-pointer px-2",
-        key: "oneHand",
-        tooltipComponent: (
-          <p className="text-center">
-            Expected Delivery Date:
-            <br />
-            {dateFormat(item?.expected_date_inhand)}
-          </p>
-        ),
-        tooltipPosition: "top",
-      },
-      {
-        icon: item?.listing_note?.length > 0 && (
-          <Image width={20} height={20} src={documentText} alt="document" />
-        ),
-        className: "cursor-pointer pr-2",
-        key: "document",
-        tooltipComponent:
-          item?.listing_note?.length > 0 &&
-          item?.listing_note?.map((note, index) => (
-            <div className="flex flex-col gap-2" key={index}>
-              <p className="text-left">Benifits/Restrictions</p>
-              <ul
-                className={`list-disc ml-[20px] ${
-                  item?.listing_note?.length > 3 && "grid grid-cols-2 gap-1"
-                }`}
-              >
-                {Object.values(note).map((value, i) => (
-                  <li key={i}>{value}</li>
-                ))}
-              </ul>
-            </div>
-          )),
-        tooltipPosition: "top",
-      },
+      ...(isMobile
+        ? []
+        : [
+            {
+              icon: <p>{item?.price_with_symbol}</p>,
+              className:
+                "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
+            },
+            {
+              icon: (
+                <Image
+                  width={14}
+                  height={14}
+                  src={
+                    item?.ticket_type_id == 2
+                      ? attachmentPin
+                      : item?.ticket_type_id == 4 || item?.ticket_type_id == 6
+                      ? attachment6
+                      : item?.ticket_type_id == 3
+                      ? attachment3
+                      : item?.ticket_type_id == 1
+                      ? attachment1
+                      : attachmentPin
+                  }
+                  alt="attach"
+                />
+              ),
+              className: "cursor-pointer pl-2",
+              tooltipComponent: (
+                <p className="text-center">{item?.ticket_type}</p>
+              ),
+              key: "attach",
+            },
+            {
+              icon: <Image width={16} height={16} src={crossHand} alt="hand" />,
+              className: "cursor-pointer px-2",
+              key: "oneHand",
+              tooltipComponent: (
+                <p className="text-center">
+                  Expected Delivery Date:
+                  <br />
+                  {dateFormat(item?.expected_date_inhand)}
+                </p>
+              ),
+              tooltipPosition: "top",
+            },
+            {
+              icon: item?.listing_note?.length > 0 && (
+                <Image
+                  width={20}
+                  height={20}
+                  src={documentText}
+                  alt="document"
+                />
+              ),
+              className: "cursor-pointer pr-2",
+              key: "document",
+              tooltipComponent:
+                item?.listing_note?.length > 0 &&
+                item?.listing_note?.map((note, index) => (
+                  <div className="flex flex-col gap-2" key={index}>
+                    <p className="text-left">Benifits/Restrictions</p>
+                    <ul
+                      className={`list-disc ml-[20px] ${
+                        item?.listing_note?.length > 3 &&
+                        "grid grid-cols-2 gap-1"
+                      }`}
+                    >
+                      {Object.values(note).map((value, i) => (
+                        <li key={i}>{value}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )),
+              tooltipPosition: "top",
+            },
+          ]),
       {
         icon: (
           <Image
@@ -355,17 +408,17 @@ const InventoryFolder = (props) => {
                 filters={filters}
               />
             </div>
-            
+
             {/* Stats bar */}
             <div className="border-b-[1px] border-[#E0E1EA] overflow-x-auto whitespace-nowrap">
               <div className="px-[16px] md:px-[21px] flex gap-3 items-center w-fit border-r-[1px] py-[10px] border-[#E0E1EA]">
                 {renderListItem(
                   <Image src={hamburger} width={18} height={18} alt="logo" />,
-                  filters?.TotalQtyTickets
+                  filters?.TotalListingTickets
                 )}
                 {renderListItem(
                   <Image src={blueTicket} width={18} height={18} alt="logo" />,
-                  filters?.TotalListingTickets
+                  filters?.TotalQtyTickets
                 )}
                 <button
                   onClick={() => resetFilters()}
@@ -415,12 +468,14 @@ const InventoryFolder = (props) => {
                 </div>
               </div>
             )}
-            
+
             {/* Map Container - Full width on mobile when visible */}
             {showMap && (
               <div
                 className={`transition-all duration-300 h-[300px] md:h-full overflow-hidden ${
-                  isMobile ? "w-full mb-4" : "w-[50%] border-r-[1px] border-[#DADBE5]"
+                  isMobile
+                    ? "w-full mb-4"
+                    : "w-[50%] border-r-[1px] border-[#DADBE5]"
                 }`}
               >
                 <PinPatchMap
@@ -430,7 +485,7 @@ const InventoryFolder = (props) => {
                 />
               </div>
             )}
-            
+
             {/* Table Container */}
             <div
               className={`bg-white rounded-lg max-h-[450px] overflow-scroll ${

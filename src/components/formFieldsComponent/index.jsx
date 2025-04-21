@@ -11,7 +11,7 @@ const FormFields = ({ formFields }) => {
     <>
       {formFields?.map((field, index) => {
         const {
-          type,
+          type='',
           label,
           id,
           name,

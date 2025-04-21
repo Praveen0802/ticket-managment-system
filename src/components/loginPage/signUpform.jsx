@@ -23,11 +23,11 @@ const SignupForm = () => {
     password: "",
     confirm_password: "",
     mobile_number: "",
-    phone_code: "",
+    phone_code: "44",
   });
 
   const [emailVerficationSent, setEmailVerificationSent] = useState(false);
-
+console.log(formData,'formDataformData')
   const [errors, setErrors] = useState({
     first_name: "",
     last_name: "",
@@ -190,10 +190,10 @@ const SignupForm = () => {
         const isCountryNull = isEmptyObject(response);
         const formattedCodes = isCountryNull
           ? fallbackCountryCode
-          : response?.data?.map((item) => {
+          : response?.data?.map((item) => {          
               return {
                 value: `${item?.phone_code}`,
-                label: `${item?.country_short_name}-${item?.phone_code}`,
+                label: `${item?.country_short_name},${item?.country_code}`,
               };
             });
         setCountryCodes(formattedCodes);

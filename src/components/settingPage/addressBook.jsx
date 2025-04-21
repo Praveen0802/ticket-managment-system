@@ -3,9 +3,13 @@ import React, { useState, useEffect } from "react";
 import RightViewModal from "../commonComponents/rightViewModal";
 import AddEditAddress from "./components/addEditAddress";
 import Button from "../commonComponents/button";
-import { deleteAddressBook, fetchAddressBookDetails } from "@/utils/apiHandler/request";
+import {
+  deleteAddressBook,
+  fetchAddressBookDetails,
+} from "@/utils/apiHandler/request";
 import AddressList from "./components/addressView/addressList";
 import AddressView from "./components/addressView";
+import DeleteConfirmation from "../commonComponents/deleteConfirmation";
 
 // Shimmer loader component
 // Shimmer loader component
@@ -69,6 +73,10 @@ const AddressBook = (props) => {
   });
   const [editAdressValues, setEditAdressValues] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [confirmationDeleteAddress, setConfirmationDeleteAddress] = useState({
+    flag: false,
+    id: null,
+  });
 
   const addressValues = addressBookDetails?.map((item) => {
     const title = `${item?.address_type ? item?.address_type : "Address"} - ${
@@ -144,10 +152,19 @@ const AddressBook = (props) => {
     }
   };
 
-  const handleDeleteClick = async (item) => {
+  const handleDeleteConfirmation = (item) => {
+    setConfirmationDeleteAddress({
+      flag: true,
+      id: item?.id,
+    });
+  };
+
+  const handleDeleteClick = async () => {
     setIsLoading(true);
     try {
-      const response = await deleteAddressBook("", { id: item?.id });
+      const response = await deleteAddressBook("", {
+        id: confirmationDeleteAddress?.id,
+      });
       const updatedAddressDetails = addressBookDetails.filter(
         (address) => address?.id !== item?.id
       );
@@ -207,14 +224,14 @@ const AddressBook = (props) => {
               <AddressView
                 title="Primary address"
                 handleEditClick={handleEditClick}
-                handleDeleteClick={handleDeleteClick}
+                handleDeleteClick={handleDeleteConfirmation}
                 addressValues={primaryValues}
               />
 
               <AddressView
                 title="Default address"
                 handleEditClick={handleEditClick}
-                handleDeleteClick={handleDeleteClick}
+                handleDeleteClick={handleDeleteConfirmation}
                 addressValues={addressValues}
                 component={
                   <Button
@@ -236,6 +253,16 @@ const AddressBook = (props) => {
           )}
         </div>
       </div>
+      {confirmationDeleteAddress?.flag && (
+        <DeleteConfirmation
+          content="Are you sure you want to delete this Address"
+          handleClose={() =>
+            setConfirmationDeleteAddress({ flag: false, id: null })
+          }
+          handleDelete={() => handleDeleteClick()}
+          loader={isLoading}
+        />
+      )}
       <RightViewModal
         show={addressViewPopup?.show}
         onClose={handleClosePopup}
