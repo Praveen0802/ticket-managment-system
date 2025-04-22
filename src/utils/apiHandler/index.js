@@ -35,7 +35,6 @@ const AJAX = {
     }
   },
   get: async (url, opts = {}) => {
-    console.log(url,'ooooooooooooooooooooooooooooooooooo')
     return getApiCall(url, fetchAuthorizationKey(opts?.token));
   },
   put: async (url, data, opts = {}) => {

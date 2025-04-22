@@ -22,7 +22,7 @@ const makeRequest = async ({
         : (modifiedUrl += `?${key}=${value}`);
     });
   }
-
+  console.log(modifiedUrl, "modifiedUrlmodifiedUrl");
   // Making API call based on client or server
   try {
     const response = isClient

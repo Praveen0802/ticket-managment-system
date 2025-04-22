@@ -76,7 +76,7 @@ const PurchaseFolder = (props) => {
   const headers = [
     { key: "status", label: "Status", sortable: true },
     { key: "listmyTicket", label: "List my Ticket ID", sortable: true },
-    { key: "bookingNo", label: "Booking No", sortable: true },
+    { key: "bookingNo", label: "Booking Status", sortable: true },
     { key: "orderDate", label: "Order Date", sortable: true },
     { key: "event", label: "Event", sortable: true },
     { key: "venue", label: "Venue", sortable: true },
@@ -85,6 +85,7 @@ const PurchaseFolder = (props) => {
     { key: "ticketType", label: "Ticket Type", sortable: true },
     { key: "qty", label: "Qty", sortable: true },
     { key: "ticketPrice", label: "Ticket Price", sortable: true },
+    { key: "subTotal", label: "Subtotal", sortable: true },
     { key: "total", label: "Total", sortable: true },
   ];
 
@@ -92,7 +93,7 @@ const PurchaseFolder = (props) => {
     return {
       status: item?.ticket_status,
       listmyTicket: item?.booking_no,
-      bookingNo: item?.booking_no,
+      bookingNo: item?.booking_status_text,
       orderDate: item?.booking_date,
       event: item?.match_name,
       venue: item?.venue_name,
@@ -101,7 +102,8 @@ const PurchaseFolder = (props) => {
       ticketType: item?.ticket_type_name,
       qty: item?.quantity,
       ticketPrice: `${item?.currency_icon}${item?.ticket_price}`,
-      total: `${item?.currency_icon}${item?.total_ticket_price}`,
+      subTotal: `${item?.currency_icon}${item?.total_ticket_price}`,
+      total: `${item?.currency_icon}${item?.total_amount}`,
     };
   });
 

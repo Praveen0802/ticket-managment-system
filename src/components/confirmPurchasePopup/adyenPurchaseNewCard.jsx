@@ -5,12 +5,20 @@ import {
   adyenPaymentUpdate,
 } from "@/utils/apiHandler/request";
 
-const AdyenDropIn = ({ bookingId, paymentMethod, bookingConfirm }) => {
+const AdyenDropIn = ({
+  bookingId,
+  paymentMethod,
+  bookingConfirm,
+  setHideCta,
+}) => {
   const dropinContainerRef = useRef(null);
 
   useEffect(() => {
     const loadAdyen = async () => {
       try {
+        // Hide CTA as soon as we start loading
+        setHideCta(true);
+
         // First, load the Adyen script manually if using script tags
         if (!window.AdyenCheckout) {
           // Load script
@@ -71,14 +79,11 @@ const AdyenDropIn = ({ bookingId, paymentMethod, bookingConfirm }) => {
 
           // Handles 3D Secure and other multi-step methods
           onAdditionalDetails: async (state, component) => {
-            console.log("onAdditionalDetails triggered:", state);
-
             await adyenPaymentUpdate("", {
               ...state.data,
               booking_id: bookingId,
               payment_method: paymentMethod,
             })
-              .then((res) => res.json())
               .then((data) => {
                 console.log(
                   "Response from paymentUpdate (additionalDetails):",
@@ -98,15 +103,23 @@ const AdyenDropIn = ({ bookingId, paymentMethod, bookingConfirm }) => {
 
           onError: (error, component) => {
             console.error("Payment error:", error);
+            // Show CTA again if there's an error
+            setHideCta(false);
           },
         });
 
         // Mount the Drop-in component
         if (dropinContainerRef.current) {
-          checkout.create("dropin").mount(dropinContainerRef.current);
+          const dropinComponent = checkout.create("dropin");
+          dropinComponent.mount(dropinContainerRef.current);
+
+          // Show CTA again after successful mounting
+          setHideCta(false);
         }
       } catch (error) {
         console.error("Failed to initialize Adyen:", error);
+        // Show CTA again if there's an error
+        setHideCta(false);
       }
     };
 
@@ -115,8 +128,10 @@ const AdyenDropIn = ({ bookingId, paymentMethod, bookingConfirm }) => {
     // Cleanup function
     return () => {
       // Remove any lingering DOM elements if needed
+      // Show CTA again when component unmounts
+      setHideCta(false);
     };
-  }, [bookingId, paymentMethod]); // Re-initialize if these props change
+  }, [bookingId, paymentMethod, setHideCta]); // Added setHideCta to dependencies
 
   return (
     <div>

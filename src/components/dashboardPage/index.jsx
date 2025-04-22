@@ -27,11 +27,11 @@ const DashboardPage = (props) => {
                     key={index}
                     title="Balance"
                     desc={
-                      <div className="flex gap-2 items-center">
+                      <div className="flex gap-1 items-center">
                         <p className="text-[#0137D5] bg-[#F2F5FD] font-normal p-[8px] rounded-[4px] text-xs md:text-sm">
                           {wallet?.icon}
                         </p>
-                        <p className="text-[#323A70] text-sm md:text-base font-normal">
+                        <p className="text-[#323A70] text-sm md:text-base font-normal whitespace-nowrap">
                           {wallet?.price_with_currency}
                         </p>
                       </div>

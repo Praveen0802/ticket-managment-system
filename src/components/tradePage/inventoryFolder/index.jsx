@@ -31,9 +31,15 @@ import { useDispatch } from "react-redux";
 import { updateConfirmPurchasePopup } from "@/utils/redux/common/action";
 import OrderDetails from "@/components/orderDetails";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
+import StadiumMap from "./pinPatchMap/mapSvg";
 
 const InventoryFolder = (props) => {
+  console.log(props, "propspropspropsprops");
   const { response = {}, matchId } = props;
+  console.log(
+    response?.match_details?.stadium_image,
+    "response?.match_details?.stadium_image"
+  );
   const {
     match_details = {},
     ticket_details = [],
@@ -195,7 +201,6 @@ const InventoryFolder = (props) => {
         : {}),
     };
   });
-
 
   const handleClickFavourites = async (item) => {
     if (item?.trackingfound == 1) return;
@@ -429,7 +434,6 @@ const InventoryFolder = (props) => {
               </div>
             </div>
           </div>
-
           {/* Map toggle button - now visible on mobile */}
           <div className="px-[16px] md:px-[24px] flex gap-2">
             {isMobile && (
@@ -448,7 +452,6 @@ const InventoryFolder = (props) => {
               </button>
             )}
           </div>
-
           {/* Map and table container */}
           <div className="px-[16px] md:px-[24px] pb-[24px] flex flex-col md:flex-row relative">
             {!isMobile && !showMap && (
@@ -482,6 +485,8 @@ const InventoryFolder = (props) => {
                   onClose={() => {
                     setShowMap(false);
                   }}
+                  svgUrl={response?.match_details?.stadium_image}
+                  mapData={response?.map}
                 />
               </div>
             )}

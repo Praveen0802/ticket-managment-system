@@ -16,8 +16,14 @@ const OrderedTickets = ({ ticket_details }) => {
     },
     {
       values: [
-        { name: "Ticket Price", text: ticket_details?.ticket_price },
-        { name: "Order Value", text: ticket_details?.total_paid },
+        {
+          name: "Ticket Price",
+          text: `${ticket_details?.currencyIcon}${ticket_details?.ticket_price}`,
+        },
+        {
+          name: "Order Value",
+          text: `${ticket_details?.currencyIcon}${ticket_details?.total_paid}`,
+        },
       ],
       twoKeys: true,
     },

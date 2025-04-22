@@ -5,14 +5,14 @@ import {
   TransformComponent,
   useControls,
 } from "react-zoom-pan-pinch";
-import MapSvg from "./mapSvg";
+import StadiumMap from "./mapSvg";
 
-const PinPatchMap = ({ onClose }) => {
+const PinPatchMap = ({ onClose, mapData, svgUrl }) => {
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
 
     return (
-      <div className="flex items-center justify-end  border-b-[1px] border-[#DADBE5]">
+      <div className="flex items-center justify-end border-b-[1px] border-[#DADBE5]">
         <div className="py-[9px] px-[12px] flex items-center gap-3">
           <div className="border-[1px] w-fit flex items-center border-[#DADBE5] rounded-4px]">
             <button
@@ -54,12 +54,16 @@ const PinPatchMap = ({ onClose }) => {
         initialPositionX={200}
         initialPositionY={100}
       >
-        {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+        {({ zoomIn, zoomOut, resetTransform, state, ...rest }) => (
           <>
             <Controls />
             <div className="w-full h-full flex items-center justify-center">
               <TransformComponent wrapperClass="!w-full !h-full ">
-                <MapSvg />
+                <StadiumMap
+                  stadiumData={mapData}
+                  svgUrl={svgUrl}
+                  transformState={state}
+                />
               </TransformComponent>
             </div>
           </>

@@ -38,6 +38,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   const [phoneCodeOptions, setPhoneCodeOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
   const [countryOptions, setCountryOptions] = useState([]);
+  const [hideCta, setHideCta] = useState(false);
 
   const { data = {} } = confirmPurchasePopupFields;
   const [selectedQuantity, setSelectedQuantity] = useState(
@@ -305,35 +306,39 @@ const ConfirmPurchasePopup = ({ onClose }) => {
       </div>
 
       {/* Footer - Fixed at Bottom */}
-      <div className="flex-shrink-0 w-full px-4 sm:px-6 py-3 sm:py-4 bg-white border-t border-gray-200 mt-auto">
-        <div className="flex justify-start gap-3 sm:gap-4">
-          <Button
-            label="Cancel"
-            type="secondary"
-            onClick={onClose}
-            classNames={{
-              root: "py-2 px-3 sm:px-4 bg-white hover:bg-gray-50 w-[50%] justify-center rounded-md transition-all duration-200",
-              label_: "text-sm font-medium text-gray-800",
-            }}
-          />
-          <Button
-            label="Submit"
-            loading={loader}
-            onClick={handleSubmit}
-            classNames={{
-              root: `py-2 px-4 sm:px-5 rounded-md w-[50%] justify-center transition-all duration-200 
-                bg-green-500 hover:bg-green-600          
-            `,
-              label_: "text-sm font-medium text-white",
-            }}
-          />
+      {!hideCta && (
+        <div className="flex-shrink-0 w-full px-4 sm:px-6 py-3 sm:py-4 bg-white border-t border-gray-200 mt-auto">
+          <div className="flex justify-start gap-3 sm:gap-4">
+            <Button
+              label="Cancel"
+              type="secondary"
+              onClick={onClose}
+              classNames={{
+                root: "py-2 px-3 sm:px-4 bg-white hover:bg-gray-50 w-[50%] justify-center rounded-md transition-all duration-200",
+                label_: "text-sm font-medium text-gray-800",
+              }}
+            />
+            <Button
+              label="Submit"
+              loading={loader}
+              onClick={handleSubmit}
+              classNames={{
+                root: `py-2 px-4 sm:px-5 rounded-md w-[50%] justify-center transition-all duration-200 
+          bg-green-500 hover:bg-green-600          
+      `,
+                label_: "text-sm font-medium text-white",
+              }}
+            />
+          </div>
         </div>
-      </div>
+      )}
+
       {showAdyenDropIn && (
         <AdyenDropIn
           bookingId={adyenBookingId}
           paymentMethod={2}
           bookingConfirm={bookingConfirm}
+          setHideCta={setHideCta}
         />
       )}
     </div>
