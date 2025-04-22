@@ -12,6 +12,9 @@ import PaymentDetails from "./paymentDetails";
 import AddessDetails from "./addessDetails";
 import {
   fetchAddressBookDetails,
+  fetchCityBasedonCountry,
+  fetchCountrieList,
+  getDialingCode,
   paymentPurchaseDetails,
   paymentWithExistingCard,
   purchaseTicketConfirm,
@@ -32,11 +35,24 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   const [selectedAddress, setSelectedAddress] = useState();
   const [showAdyenDropIn, setShowAdyenDropIn] = useState(false);
   const [adyenBookingId, setAdyenBookingId] = useState(null);
+  const [phoneCodeOptions, setPhoneCodeOptions] = useState([]);
+  const [cityOptions, setCityOptions] = useState([]);
+  const [countryOptions, setCountryOptions] = useState([]);
 
   const { data = {} } = confirmPurchasePopupFields;
   const [selectedQuantity, setSelectedQuantity] = useState(
     data?.purchase?.price_breakdown?.ticket_quantity
   );
+
+  const [formFieldValues, setFormFieldValues] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    dialing_code: "",
+    mobile_no: "",
+    country_id: "",
+    city: "",
+  });
 
   const handlePaymentChange = (name) => {
     setSelectedPayment(name);
@@ -48,12 +64,28 @@ const ConfirmPurchasePopup = ({ onClose }) => {
 
   const fetchAddressPaymentDetails = async () => {
     try {
-      const [addressDetails, paymentDetails] = await Promise.allSettled([
-        fetchAddressBookDetails(),
-        paymentPurchaseDetails("", {
-          currency: data?.purchase?.price_breakdown?.currency,
-        }),
-      ]);
+      const [addressDetails, paymentDetails, dialingCode, countryList] =
+        await Promise.allSettled([
+          fetchAddressBookDetails(),
+          paymentPurchaseDetails("", {
+            currency: data?.purchase?.price_breakdown?.currency,
+          }),
+          getDialingCode(),
+          fetchCountrieList(),
+        ]);
+      setCountryOptions(
+        countryList?.value?.map((item) => {
+          return { label: item?.name, value: item?.id };
+        })
+      );
+      setPhoneCodeOptions(
+        dialingCode?.value?.data?.map((item) => {
+          return {
+            value: item?.phone_code,
+            label: `${item?.country_short_name} ${item?.country_code}`,
+          };
+        })
+      );
       setAddressDetails(addressDetails?.value);
       setPaymentDetails(paymentDetails?.value?.payment_methods);
       setSelectedAddress(
@@ -67,6 +99,37 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   useEffect(() => {
     fetchAddressPaymentDetails();
   }, []);
+
+  const fetchCityDetails = async (id) => {
+    if (!id) return;
+    try {
+      const response = await fetchCityBasedonCountry("", { country_id: id });
+      const cityField =
+        response?.length > 0
+          ? response?.map((list) => {
+              return { value: list?.id, label: list?.name };
+            })
+          : [];
+      setCityOptions(cityField);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+      toast.error("Failed to load cities");
+    }
+  };
+
+  useEffect(() => {
+    if (formFieldValues?.country_id) {
+      fetchCityDetails(formFieldValues?.country_id);
+    }
+  }, [formFieldValues?.country_id]);
+
+  const handleInputAdressChange = (e, key, type) => {
+    const value = type == "select" ? e : e.target.value;
+    setFormFieldValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   const router = useRouter();
 
@@ -118,7 +181,19 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           cart_id: response?.cart_id,
           lang: "en",
           client_country: "IN",
-          billing_address_id: `${addressDetails?.[selectedAddress]?.id}`,
+          ...(selectedAddress == "other"
+            ? {
+                first_name: formFieldValues?.first_name,
+                last_name: formFieldValues?.last_name,
+                email: formFieldValues?.email,
+                mobile_no: formFieldValues?.mobile_no,
+                dialing_code: `${formFieldValues?.dialing_code}`,
+                country_id: `${formFieldValues?.country_id}`,
+                city: `${formFieldValues?.city}`,
+              }
+            : {
+                billing_address_id: `${addressDetails?.[selectedAddress]?.id}`,
+              }),
           payment_method: `${paymentMethod}`,
         };
 
@@ -215,6 +290,11 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           addressDetails={addressDetails}
           selectedAddress={selectedAddress}
           handleAddressChange={handleAddressChange}
+          formFieldValues={formFieldValues}
+          handleChange={handleInputAdressChange}
+          phoneCodeOptions={phoneCodeOptions}
+          countryList={countryOptions}
+          cityOptions={cityOptions}
         />
         <PaymentDetails
           data={data}
