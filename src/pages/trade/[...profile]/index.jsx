@@ -11,7 +11,7 @@ const Trade = (props) => {
 export default Trade;
 
 export async function getServerSideProps(context) {
-  const { profile } = context?.query;
+  const { profile, success = "" } = context?.query;
   const [initialStep, matchId] = profile;
   const authToken = getAuthToken(context);
   const response = await fetchTradePageData(initialStep, authToken, matchId);
@@ -24,6 +24,7 @@ export async function getServerSideProps(context) {
       response: response || {},
       allCategories: allCategories || [],
       fetchTabCount: fetchTabCount || {},
+      ...(success && { success: success }),
     },
   };
 }

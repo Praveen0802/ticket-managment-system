@@ -102,6 +102,8 @@ const SelectDateComponent = ({
     // Update the displayed value
     if (startFormatted && endFormatted) {
       setSelected(`${startFormatted} - ${endFormatted}`);
+
+      // Use the original dateRange values to maintain consistency
       setCustomDateRange(dateRange);
 
       // Call parent onChange with the custom date value
@@ -115,7 +117,6 @@ const SelectDateComponent = ({
       setIsOpen(false);
     }
   };
-
   const handleSingleDateChange = (date) => {
     // Format the single date for display
     const formatted = date
@@ -488,8 +489,22 @@ const CustomCalendarPicker = ({ value, onChange }) => {
 
   const handleApply = () => {
     if (tempStartDate && tempEndDate) {
-      const formattedStart = tempStartDate.toISOString().split("T")[0];
-      const formattedEnd = tempEndDate.toISOString().split("T")[0];
+      // Create new Date objects for start and end dates
+      const adjustStartDate = new Date(tempStartDate);
+      const adjustEndDate = new Date(tempEndDate);
+
+      // Add timezone offset to ensure the correct date in local time
+      const timezoneOffset = adjustStartDate.getTimezoneOffset() * 60000;
+
+      // Format dates ensuring they represent the correct local date regardless of timezone
+      const formattedStart = new Date(
+        adjustStartDate.getTime() - timezoneOffset
+      )
+        .toISOString()
+        .split("T")[0];
+      const formattedEnd = new Date(adjustEndDate.getTime() - timezoneOffset)
+        .toISOString()
+        .split("T")[0];
 
       if (onChange) {
         onChange({ startDate: formattedStart, endDate: formattedEnd });

@@ -1,7 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { adyenCreateSession, adyenPaymentSubmit, adyenPaymentUpdate } from "@/utils/apiHandler/request";
+import {
+  adyenCreateSession,
+  adyenPaymentSubmit,
+  adyenPaymentUpdate,
+} from "@/utils/apiHandler/request";
 
-const AdyenDropIn = ({ bookingId, paymentMethod }) => {
+const AdyenDropIn = ({ bookingId, paymentMethod, bookingConfirm }) => {
   const dropinContainerRef = useRef(null);
 
   useEffect(() => {
@@ -11,21 +15,23 @@ const AdyenDropIn = ({ bookingId, paymentMethod }) => {
         if (!window.AdyenCheckout) {
           // Load script
           const script = document.createElement("script");
-          script.src = "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.js";
+          script.src =
+            "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.js";
           script.crossOrigin = "anonymous";
-          
+
           await new Promise((resolve, reject) => {
             script.onload = resolve;
             script.onerror = reject;
             document.head.appendChild(script);
           });
         }
-        
+
         // Load CSS
         if (!document.querySelector('link[href*="adyen.css"]')) {
           const adyenCSS = document.createElement("link");
           adyenCSS.rel = "stylesheet";
-          adyenCSS.href = "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.css";
+          adyenCSS.href =
+            "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/5.16.0/adyen.css";
           document.head.appendChild(adyenCSS);
         }
 
@@ -53,9 +59,9 @@ const AdyenDropIn = ({ bookingId, paymentMethod }) => {
               sessionData: result?.sessionData || null,
               sessionResult: result?.sessionResult || null,
             })
-              .then((res) => res.json())
               .then((data) => {
                 console.log("Final payment update response:", data);
+                bookingConfirm(true, "Payment successful");
                 // Optionally redirect or show message here
               })
               .catch((err) => {

@@ -2,7 +2,7 @@ import React from "react";
 import SignupForm from "./signUpform";
 import LoginForm from "./loginForm";
 
-const RightFold = ({ signUpForm, setSignUpForm }) => {
+const RightFold = ({ signUpForm, setSignUpForm, fetchedCountryCodes }) => {
   return (
     <div className="flex flex-col gap-6 justify-center w-full md:w-1/2 items-center bg-white rounded-b-xl md:rounded-b-none md:rounded-r-xl p-6 md:p-8">
       <div
@@ -10,7 +10,11 @@ const RightFold = ({ signUpForm, setSignUpForm }) => {
           signUpForm ? "gap-6 max-w-sm" : "gap-8 max-w-[90%]"
         }`}
       >
-        {signUpForm ? <SignupForm /> : <LoginForm />}
+        {signUpForm ? (
+          <SignupForm fetchedCountryCodes={fetchedCountryCodes} />
+        ) : (
+          <LoginForm />
+        )}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ const TradePage = (props) => {
   const {
     profile,
     matchId,
+    success = "",
     allCategories,
     fetchTabCount,
     totalAmount = "£1,915.75",
@@ -169,7 +170,7 @@ const TradePage = (props) => {
         )}
 
         {/* Event Search Panel */}
-        
+
         <div
           className={`transition-all duration-200 h-full
             ${

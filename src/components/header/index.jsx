@@ -23,7 +23,7 @@ const Header = () => {
   return (
     <div className="px-4 sm:px-[24px] h-auto min-h-[60px] sm:h-[80px] py-3 sm:py-0 bg-white border-b-[1px] flex flex-col sm:flex-row w-full justify-between items-start sm:items-center border-[#eaeaf1] gap-3 sm:gap-0">
       <p className="text-[18px] sm:text-[24px] font-semibold text-[#323A70]">
-        {getGreeting()}
+        {/* {getGreeting()} */} Welcome back
         <span className="capitalize">{currentUser?.first_name ? `, ${currentUser?.first_name}` : ""}</span>
       </p>
       <div className="flex gap-3 items-center self-end sm:self-auto">

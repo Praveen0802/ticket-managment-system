@@ -94,6 +94,7 @@ const LatestOrderView = ({ listItems, meta }) => {
     }
   };
 
+  console.log(currentPage, meta?.last_page, "huiiiiiiiiiiiiiii");
 
   const fetchNextPage = async () => {
     if (loading || currentPage >= meta?.last_page) return;

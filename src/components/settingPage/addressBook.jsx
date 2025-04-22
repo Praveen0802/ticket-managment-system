@@ -166,13 +166,18 @@ const AddressBook = (props) => {
         id: confirmationDeleteAddress?.id,
       });
       const updatedAddressDetails = addressBookDetails.filter(
-        (address) => address?.id !== item?.id
+        (address) => address?.id !== confirmationDeleteAddress?.id
       );
       const updatedPrimaryAddressDetails = primaryAddressData.filter(
-        (address) => address?.id !== item?.id
+        (address) => address?.id !== confirmationDeleteAddress?.id
       );
+
       setAddressBookDetails(updatedAddressDetails);
       setPrimaryAddressData(updatedPrimaryAddressDetails);
+      setConfirmationDeleteAddress({
+        flag: false,
+        id: null,
+      });
     } finally {
       setIsLoading(false);
     }

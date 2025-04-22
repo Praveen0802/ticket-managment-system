@@ -74,7 +74,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
     if (success) {
       toast.success(message);
       onClose();
-      router.push("/trade/purchase");
+      router.push("/trade/purchase?success=true");
     } else {
       toast.error(message || "Booking confirmation failed");
     }
@@ -250,7 +250,11 @@ const ConfirmPurchasePopup = ({ onClose }) => {
         </div>
       </div>
       {showAdyenDropIn && (
-        <AdyenDropIn bookingId={adyenBookingId} paymentMethod={2} />
+        <AdyenDropIn
+          bookingId={adyenBookingId}
+          paymentMethod={2}
+          bookingConfirm={bookingConfirm}
+        />
       )}
     </div>
   );

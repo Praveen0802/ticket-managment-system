@@ -14,7 +14,7 @@ import { purchaseAttendeeDetails } from "@/utils/apiHandler/request";
 const AttendeeDetails = ({ attendee_details = [] }) => {
   const total = attendee_details?.length || 5;
   const [attendees, setAttendees] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -66,9 +66,15 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
   const fieldStyle =
     "border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500";
 
+  console.log(attendees, "aaaaaaaaaaa");
+
   const handleChange = (e, field, attendeeId, type = "input") => {
-    setAttendees(
-      attendees.map((attendee) => {
+    // Stop event propagation to prevent triggering the accordion toggle
+    e.stopPropagation && e.stopPropagation();
+
+    // Use functional update pattern to ensure we're working with latest state
+    setAttendees((prevAttendees) => {
+      return prevAttendees.map((attendee) => {
         if (attendee.id === attendeeId) {
           return {
             ...attendee,
@@ -79,13 +85,12 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           };
         }
         return attendee;
-      })
-    );
+      });
+    });
   };
-
   const handleRadioChange = (value, field, attendeeId) => {
-    setAttendees(
-      attendees.map((attendee) => {
+    setAttendees((prevAttendees) => {
+      return prevAttendees.map((attendee) => {
         if (attendee.id === attendeeId) {
           return {
             ...attendee,
@@ -96,8 +101,8 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
           };
         }
         return attendee;
-      })
-    );
+      });
+    });
   };
 
   const toggleAccordion = () => {
@@ -106,19 +111,6 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
 
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
-  };
-
-  const addAttendee = () => {
-    if (attendees.length < total) {
-      const newId = Math.max(...attendees.map((a) => a.id)) + 1;
-      setAttendees([...attendees, { id: newId, formData: {} }]);
-    }
-  };
-
-  const removeAttendee = (id) => {
-    if (attendees.length > 1) {
-      setAttendees(attendees.filter((attendee) => attendee.id !== id));
-    }
   };
 
   const saveAttendeeDetails = async () => {
@@ -490,11 +482,6 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
             <span className="font-medium text-sm md:text-base">
               Attendee details
             </span>
-            {isMobile && (
-              <span className="text-xs text-gray-500">
-                ({completedAttendees}/{attendees.length} complete)
-              </span>
-            )}
           </div>
           <div className="flex items-center gap-1 md:gap-3">
             {isEditMode ? (
@@ -572,15 +559,6 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                           </span>
                         )}
                     </h3>
-                    {isEditMode && attendees.length > 1 && (
-                      <button
-                        onClick={() => removeAttendee(attendee.id)}
-                        className="text-red-500 hover:text-red-700"
-                        title="Remove attendee"
-                      >
-                        <X size={isMobile ? 16 : 18} />
-                      </button>
-                    )}
                   </div>
 
                   {/* Form fields layout - responsive grid */}
@@ -627,16 +605,6 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
                 </div>
               );
             })}
-
-            {attendees.length < total && isEditMode && (
-              <button
-                onClick={addAttendee}
-                className="flex cursor-pointer items-center justify-center gap-2 text-blue-600 hover:text-blue-800 py-2 px-4 border border-dashed border-blue-300 rounded-md mt-2 hover:bg-blue-50 transition-colors w-full"
-              >
-                <PlusCircle size={isMobile ? 16 : 18} />
-                <span className="text-sm md:text-base">Add Attendee</span>
-              </button>
-            )}
           </div>
         )}
       </div>

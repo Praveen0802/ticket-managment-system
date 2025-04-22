@@ -79,7 +79,7 @@ const AddEditAddress = ({
     const phoneCodeField = response?.data?.map((item) => {
       return {
         value: `${item?.phone_code}`,
-        label: `${item?.country_short_name},${item?.country_code}`,
+        label: `${item?.country_short_name} ${item?.country_code}`,
       };
     });
     setPhoneCodeOptions(phoneCodeField);

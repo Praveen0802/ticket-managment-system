@@ -1,12 +1,14 @@
 import React from "react";
 import FloatingLabelInput from "../../floatinginputFields";
 import PhoneInputComponent from "../../commonComponents/phoneInputComponent";
+import FloatingSelect from "@/components/floatinginputFields/floatingSelect";
 
 const AccounInfoForm = ({
   formData,
   handleChange,
   countryCode,
   handleCountryCodeChange,
+  countryCodeValues,
   disabled,
 }) => {
   return (
@@ -47,15 +49,50 @@ const AccounInfoForm = ({
         onChange={handleChange}
         required
       />
-      <PhoneInputComponent
+
+      <div className="flex gap-2 items-center">
+        <div className="md:w-1/4">
+          <FloatingSelect
+            id="phone_code"
+            name="phone_code"
+            keyValue={"phone_code"}
+            type="text"
+            label=""
+            disabled={disabled}
+            selectedValue={countryCode}
+            onSelect={handleCountryCodeChange}
+            searchable={true}
+            options={countryCodeValues}
+            paddingClassName="!py-[6px] !px-[10px] "
+            placeholder="+1"
+            className={" !text-[#323A70] !text-[13px]"}
+          />
+        </div>
+        <div className="md:w-3/4">
+          <FloatingLabelInput
+            id="phoneNumber"
+            name="phoneNumber"
+            keyValue={"phoneNumber"}
+            type="tel"
+            label="Mobile Number"
+            value={formData?.phoneNumber}
+            onChange={handleChange}
+            readOnly={disabled}
+            className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
+          />
+        </div>
+      </div>
+
+      {/* <PhoneInputComponent
         value={formData?.phoneNumber}
         onChange={handleChange}
         readOnly={disabled}
         countryCode={countryCode}
         keyValue="phoneNumber"
         onCountryCodeChange={handleCountryCodeChange}
+        countryCodeValues={countryCodeValues}
         placeholder="Phone number"
-      />
+      /> */}
     </div>
   );
 };

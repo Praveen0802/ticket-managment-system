@@ -15,6 +15,13 @@ const MyAccountTeam = (props) => {
     phoneNumber: profileDetails?.mobile_number,
   };
 
+  const countryCodeValues = props?.dialingCode?.data?.map((item) => {
+    return {
+      value: `${item?.country_code}`,
+      label: `${item?.country_short_name} ${item?.country_code}`,
+    };
+  });
+
   const [formData, setFormData] = useState(initialValues);
   const [submitLoader, setSubmitLoader] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -75,6 +82,7 @@ const MyAccountTeam = (props) => {
               handleChange={handleChange}
               countryCode={countryCode}
               handleCountryCodeChange={handleCountryCodeChange}
+              countryCodeValues={countryCodeValues}
               disabled={!edit}
             />
             <div className="flex max-md:w-[50%] gap-3 items-center">

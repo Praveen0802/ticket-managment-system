@@ -4,14 +4,19 @@ import Image from "next/image";
 import LeftFold from "./leftFold";
 import RightFold from "./rightFold";
 
-const LoginPage = () => {
+const LoginPage = (props) => {
+  const { fetchedCountryCodes = [] } = props;
   const [signUpForm, setSignUpForm] = useState(false);
 
   return (
     <div className="bg-[#130061] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
       <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row min-h-[432px] z-10 relative">
         <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
-        <RightFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
+        <RightFold
+          setSignUpForm={setSignUpForm}
+          signUpForm={signUpForm}
+          fetchedCountryCodes={fetchedCountryCodes}
+        />
       </div>
       <Image
         src={Design}

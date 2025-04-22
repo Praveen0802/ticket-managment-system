@@ -15,7 +15,7 @@ import {
   ResendVerificationRequest,
 } from "@/utils/apiHandler/request";
 
-const SignupForm = () => {
+const SignupForm = ({ fetchedCountryCodes }) => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -25,9 +25,7 @@ const SignupForm = () => {
     mobile_number: "",
     phone_code: "44",
   });
-
   const [emailVerficationSent, setEmailVerificationSent] = useState(false);
-console.log(formData,'formDataformData')
   const [errors, setErrors] = useState({
     first_name: "",
     last_name: "",
@@ -42,7 +40,6 @@ console.log(formData,'formDataformData')
 
   const [loader, setLoader] = useState(false);
   const [resendVerificationLinkSent, setResetRequestSent] = useState(false);
-  const [countryCodes, setCountryCodes] = useState([]);
   const router = useRouter();
 
   const handleChange = (e, key, type) => {
@@ -165,45 +162,12 @@ console.log(formData,'formDataformData')
     setResetRequestSent(true);
   };
 
-  const fallbackCountryCode = [
-    { label: "+1", value: "+1" }, // USA, Canada
-    { label: "+44", value: "+44" }, // UK
-    { label: "+61", value: "+61" }, // Australia
-    { label: "+81", value: "+81" }, // Japan
-    { label: "+91", value: "+91" }, // India
-    { label: "+49", value: "+49" }, // Germany
-    { label: "+33", value: "+33" }, // France
-    { label: "+86", value: "+86" }, // China
-    { label: "+971", value: "+971" }, // UAE
-    { label: "+65", value: "+65" }, // Singapore
-    { label: "+94", value: "+94" }, // Sri Lanka
-    { label: "+880", value: "+880" }, // Bangladesh
-    { label: "+92", value: "+92" }, // Pakistan
-    { label: "+82", value: "+82" }, // South Korea
-    { label: "+34", value: "+34" }, // Spain
-  ];
-
-  useEffect(() => {
-    const fetchCountryCodes = async () => {
-      try {
-        const response = await getDialingCode();
-        const isCountryNull = isEmptyObject(response);
-        const formattedCodes = isCountryNull
-          ? fallbackCountryCode
-          : response?.data?.map((item) => {          
-              return {
-                value: `${item?.phone_code}`,
-                label: `${item?.country_short_name},${item?.country_code}`,
-              };
-            });
-        setCountryCodes(formattedCodes);
-      } catch (error) {
-        console.error("Error fetching country codes:", error);
-      }
+  const countryCodes = fetchedCountryCodes.map((item) => {
+    return {
+      value: `${item?.phone_code}`,
+      label: `${item?.country_short_name} ${item?.country_code}`,
     };
-
-    fetchCountryCodes();
-  }, []);
+  });
 
   return (
     <>
@@ -349,7 +313,7 @@ console.log(formData,'formDataformData')
                     keyValue={"phone_code"}
                     type="text"
                     label=""
-                    value={formData?.phone_code}
+                    selectedValue={formData?.phone_code}
                     onSelect={handleChange}
                     searchable={true}
                     error={errors.phone_code}

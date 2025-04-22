@@ -77,7 +77,7 @@ const PurchaseCard = ({ data,selectedQuantity,setSelectedQuantity }) => {
     },
     {
       key: "Total",
-      value: priceDetails?.ticket_price,
+      value: priceDetails?.total,
       symbol: priceDetails?.currency_icon,
     },
   ];

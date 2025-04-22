@@ -7,19 +7,14 @@ const PhoneInputComponent = ({
   countryCode = "+41",
   onCountryCodeChange,
   placeholder = "Phone number",
+  countryCodeValues = [],
   keyValue,
   className = "",
   readOnly,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const countryCodes = [
-    { code: "+41", label: "CH +41" },
-    { code: "+1", label: "US +1" },
-    { code: "+44", label: "UK +44" },
-    { code: "+971", label: "UAE +971" },
-    { code: "+91", label: "IN +91" },
-  ];
+  const countryCodes = countryCodeValues;
 
   const toggleDropdown = () => {
     if (!readOnly) setIsOpen(!isOpen);

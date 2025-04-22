@@ -7,9 +7,13 @@ import StickyDataTable from "../components/stickyDataTable";
 import FloatingLabelInput from "@/components/floatinginputFields";
 import { purchaseHistory } from "@/utils/apiHandler/request";
 import OrderDetails from "@/components/orderDetails";
+import useIsMobile from "@/utils/helperFunctions/useIsmobile";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const PurchaseFolder = (props) => {
-  const { response } = props;
+  const { response, success } = props;
+  console.log(success, "successsuccesssuccess");
   const [listTicketDetails, setListTicketDetails] = useState(response?.data);
   const [selectedTicketStatus, setSelectedTicketStatus] = useState("");
   const [selectedBookingStatus, setSelectedBookingStatus] = useState("");
@@ -49,20 +53,16 @@ const PurchaseFolder = (props) => {
     flag: false,
     data: {},
   });
+  const router = useRouter();
   const [loader, setLoader] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
-  // Check if the screen is mobile
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    if (success == "true") {
+      toast.success("Booking Completed successfully");
+    }
   }, []);
-
   const eyeIconClick = async (item) => {
     const response = await purchaseHistory("", {
       booking_no: item?.booking_no,

@@ -14,6 +14,7 @@ import {
   fetchTransactionHistoryMonthly,
   fetchUserDetails,
   fetchWalletBalance,
+  getDialingCode,
   getLinkedCards,
   LastMinuteEvents,
   purchaseEvents,
@@ -32,7 +33,8 @@ export const fetchSettingsPageDetails = async (profile, token, ctx) => {
           fetchProfileDetails(token, "GET"),
           fetchCountrieList(token),
         ]);
-      return { addressDetails, profileDetails, fetchCountries };
+      const dialingCode = await getDialingCode();
+      return { addressDetails, profileDetails, fetchCountries, dialingCode };
     } else if (profile === "addressBook") {
       const [primaryAddress, defaultAddress, profileDetails, fetchCountries] =
         await Promise.all([
@@ -63,7 +65,9 @@ export const fetchSettingsPageDetails = async (profile, token, ctx) => {
       return { userDetails, fetchCountries };
     } else if (profile == "linkedCards") {
       const shopperRefernce = ctx?.req?.cookies?.user_token;
+
       const linkedCards = await getLinkedCards(token, "", shopperRefernce);
+
       return { linkedCards, shopperRefernce };
     }
   } catch {}
