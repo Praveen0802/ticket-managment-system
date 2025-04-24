@@ -9,6 +9,8 @@ import Benifits from "./components/benifits";
 import CustomModal from "../commonComponents/customModal";
 import CtaValues from "./components/ctaValues";
 import AttendeeDetails from "./components/attendeeDetails";
+import PaymentOrderDetails from "./components/paymentOrderDetails";
+import DownLoadYourTickets from "./components/downLoadYourTickets";
 
 const OrderDetails = ({ show, onClose, data }) => {
   const {
@@ -17,7 +19,10 @@ const OrderDetails = ({ show, onClose, data }) => {
     ticket_details = {},
     benefits_restrictions = [],
     attendee_details = [],
+    payment_details = {},
+    tickets = {},
   } = data;
+  console.log(data, "datadata");
   const [expandedVersion, setExpandedVersion] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -123,27 +128,30 @@ const OrderDetails = ({ show, onClose, data }) => {
             <div className="p-[16px] sm:p-[24px] flex flex-col gap-4">
               <CtaValues ctaText={ctaText} />
               <div
-                className={`flex flex-col gap-4 transition-custom ${
+                className={`flex gap-4 transition-custom ${
                   expandedVersion ? "" : "flex-col"
                 }`}
               >
                 <div
-                  className={`transition-custom ${
+                  className={`transition-custom flex flex-col gap-4 ${
                     expandedVersion ? "w-full sm:w-1/2" : "w-full"
                   }`}
                 >
                   <OrderValues orderObject={orderObject} />
+                  <DownLoadYourTickets tickets={tickets} />
                 </div>
                 <div
-                  className={`transition-custom ${
+                  className={`flex flex-col gap-4  ${`transition-custom ${
                     expandedVersion ? "w-full sm:w-1/2 h-full" : "w-full"
-                  }`}
+                  }`}`}
                 >
                   <CustomerDetails
                     customerEmail={customer_details?.email}
                     customerName={customer_details?.first_name}
                     mobileNumber={customer_details?.mobile_no}
                   />
+
+                  <PaymentOrderDetails payment_details={payment_details} />
                 </div>
               </div>
               <OrderedTickets ticket_details={ticket_details} />

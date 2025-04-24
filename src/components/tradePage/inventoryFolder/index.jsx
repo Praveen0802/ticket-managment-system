@@ -20,7 +20,11 @@ import Button from "@/components/commonComponents/button";
 import documentText from "../../../../public/document-text.svg";
 import StickyDataTable from "../components/stickyDataTable";
 import PinPatchMap from "./pinPatchMap";
-import { dateFormat, desiredFormatDate } from "@/utils/helperFunctions";
+import {
+  dateFormat,
+  desiredFormatDate,
+  isEmptyObject,
+} from "@/utils/helperFunctions";
 import {
   purchaseEvents,
   purchaseFavouratesTracking,
@@ -32,14 +36,11 @@ import { updateConfirmPurchasePopup } from "@/utils/redux/common/action";
 import OrderDetails from "@/components/orderDetails";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import StadiumMap from "./pinPatchMap/mapSvg";
+import ClearChip from "./components/clearChip";
 
 const InventoryFolder = (props) => {
-  console.log(props, "propspropspropsprops");
   const { response = {}, matchId } = props;
-  console.log(
-    response?.match_details?.stadium_image,
-    "response?.match_details?.stadium_image"
-  );
+
   const {
     match_details = {},
     ticket_details = [],
@@ -66,7 +67,6 @@ const InventoryFolder = (props) => {
     eventTime: match_details?.match_time,
     Venue: `${match_details?.venue},${match_details?.country},${match_details?.city}`,
   };
-
   const currentCategoryRef = useRef(null);
   const svgContainerRef = useRef(null);
   // Set mobile state based on screen width
@@ -153,6 +153,16 @@ const InventoryFolder = (props) => {
     }, 0);
   };
 
+  const handleMapBlockClick = (blockId) => {
+    const params = {
+      ...filtersApplied,
+      page: 1,
+      category: blockId,
+    };
+    setFiltersApplied(params);
+    fetchAPIDetails(params);
+  };
+
   const headers = [
     { key: "qty", label: "Qty", sortable: true },
     { key: "category", label: "Category" },
@@ -201,6 +211,7 @@ const InventoryFolder = (props) => {
             ),
           }
         : {}),
+      seat_category_id: item?.seat_category_id,
     };
   });
 
@@ -387,25 +398,36 @@ const InventoryFolder = (props) => {
   const handleTicketMouseLeave = () => {
     if (!svgContainerRef.current) return;
     svgContainerRef.current
-    .querySelectorAll("[data-section] .block")
-    .forEach((block) => {
-      const originalColor = block.getAttribute("data-color");
-      if (originalColor) {
-        block.style.fill = originalColor;
-      }
+      .querySelectorAll("[data-section] .block")
+      .forEach((block) => {
+        const originalColor = block.getAttribute("data-color");
+        if (originalColor) {
+          block.style.fill = originalColor;
+        }
 
-      const text = block.closest("[data-section]")?.querySelector("text");
-      if (text) text.style.fill = "#000";
-    });
+        const text = block.closest("[data-section]")?.querySelector("text");
+        if (text) text.style.fill = "#000";
+      });
   };
 
   const commonProps = {
     svgContainerRef,
     currentCategoryRef,
+    handleMapBlockClick,
   };
 
   const toggleMap = () => {
     setShowMap(!showMap);
+  };
+
+  const handleClearChip = (key, value) => {
+    const params = {
+      ...filtersApplied,
+      [key]: "",
+    };
+    setFormFieldValues({ ...formFieldValues, [key]: "" });
+    setFiltersApplied(params);
+    fetchAPIDetails(params);
   };
 
   return (
@@ -465,23 +487,53 @@ const InventoryFolder = (props) => {
             </div>
 
             {/* Stats bar */}
-            <div className="border-b-[1px] border-[#E0E1EA] overflow-x-auto whitespace-nowrap">
-              <div className="px-[16px] md:px-[21px] flex gap-3 items-center w-fit border-r-[1px] py-[10px] border-[#E0E1EA]">
-                {renderListItem(
-                  <Image src={hamburger} width={18} height={18} alt="logo" />,
-                  filters?.TotalListingTickets
-                )}
-                {renderListItem(
-                  <Image src={blueTicket} width={18} height={18} alt="logo" />,
-                  filters?.TotalQtyTickets
-                )}
-                <button
-                  onClick={() => resetFilters()}
-                  className="border-[1px] cursor-pointer border-[#DADBE5] p-[4px]"
-                >
-                  <IconStore.reload className="size-3.5" />
-                </button>
+            <div className="flex gap-2 items-center">
+              <div className="border-b-[1px] border-[#E0E1EA] overflow-x-auto whitespace-nowrap">
+                <div className="px-[16px] md:px-[21px] flex gap-3 items-center w-fit border-r-[1px] py-[10px] border-[#E0E1EA]">
+                  {renderListItem(
+                    <Image src={hamburger} width={18} height={18} alt="logo" />,
+                    filters?.TotalListingTickets
+                  )}
+                  {renderListItem(
+                    <Image
+                      src={blueTicket}
+                      width={18}
+                      height={18}
+                      alt="logo"
+                    />,
+                    filters?.TotalQtyTickets
+                  )}
+                  <button
+                    onClick={() => resetFilters()}
+                    className="border-[1px] cursor-pointer border-[#DADBE5] p-[4px]"
+                  >
+                    <IconStore.reload className="size-3.5" />
+                  </button>
+                </div>
               </div>
+              {!isEmptyObject(filtersApplied) && (
+                <div className="flex gap-2 items-center">
+                  {Object.entries(filtersApplied)?.map(
+                    ([key, value], index) => {
+                      console.log(value, key, "valuekey");
+                      if (key === "page" || !value || value?.length == 0)
+                        return null;
+                      return (
+                        <ClearChip
+                          key={index}
+                          text={key}
+                          value={
+                            Array.isArray(value)
+                              ? `${value?.length} selected`
+                              : value
+                          }
+                          onClick={handleClearChip}
+                        />
+                      );
+                    }
+                  )}
+                </div>
+              )}
             </div>
           </div>
           {/* Map toggle button - now visible on mobile */}

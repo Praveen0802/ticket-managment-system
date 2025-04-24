@@ -1,5 +1,5 @@
 import TradePage from "@/components/tradePage";
-import { FetchAllCategories, FetchTabTotal } from "@/utils/apiHandler/request";
+import { FetchAllCategories, FetchTabTotal, getWalletBalance } from "@/utils/apiHandler/request";
 import { getAuthToken } from "@/utils/helperFunctions";
 import { fetchTradePageData } from "@/utils/serverSideRequests";
 import React from "react";
@@ -17,6 +17,7 @@ export async function getServerSideProps(context) {
   const response = await fetchTradePageData(initialStep, authToken, matchId);
   const allCategories = await FetchAllCategories(authToken);
   const fetchTabCount = await FetchTabTotal(authToken);
+  const fetchWalletBalance = await getWalletBalance(authToken);
   return {
     props: {
       profile: initialStep,
@@ -25,6 +26,7 @@ export async function getServerSideProps(context) {
       allCategories: allCategories || [],
       fetchTabCount: fetchTabCount || {},
       ...(success && { success: success }),
+      fetchWalletBalance
     },
   };
 }

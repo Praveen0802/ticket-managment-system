@@ -10,7 +10,11 @@ import Image from "next/image";
 import FloatingSelect from "@/components/floatinginputFields/floatingSelect";
 import FloatingDateRange from "@/components/commonComponents/dateRangeInput";
 import Button from "@/components/commonComponents/button";
-import { dateFormat, desiredFormatDate } from "@/utils/helperFunctions";
+import {
+  dateFormat,
+  desiredFormatDate,
+  isEmptyObject,
+} from "@/utils/helperFunctions";
 import attachmentPin from "../../../../public/attachment-pin.svg";
 import attachment6 from "../../../../public/attachment-6.svg";
 import attachment3 from "../../../../public/attachment-3.svg";
@@ -24,6 +28,8 @@ import {
 import { updateConfirmPurchasePopup } from "@/utils/redux/common/action";
 import { useDispatch } from "react-redux";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
+import ClearChip from "../inventoryFolder/components/clearChip";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
 
 const TrackingPage = (props) => {
   const { response = {} } = props;
@@ -33,6 +39,10 @@ const TrackingPage = (props) => {
     response?.ticket_details
   );
   const [availabilityStatus, setAvailabilityStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(
+    response?.pagination?.current_page
+  );
+  const [lastPage, setLastPage] = useState(response?.pagination?.last_page);
   const [availableTypes, setAvailableTypes] = useState({
     available: response?.available,
     tracking: response?.tracking,
@@ -59,11 +69,19 @@ const TrackingPage = (props) => {
         ]
       : []),
   ];
-  const trackingFetchApi = async (params, availablityStatus) => {
+  const trackingFetchApi = async (params, pagination, availablityStatus) => {
     setLoader(true);
     const response = await purchaseTracking("", "GET", params);
-    setSelectedTicketDetails(response?.ticket_details);
-
+    if (pagination) {
+      setSelectedTicketDetails([
+        ...selectedTicketDetails,
+        ...response?.ticket_details,
+      ]);
+    } else {
+      setSelectedTicketDetails(response?.ticket_details);
+    }
+    setCurrentPage(response?.pagination?.current_page);
+    setLastPage(response?.pagination?.last_page);
     // First update availableTypes
     setAvailableTypes({
       available: response?.available,
@@ -151,6 +169,13 @@ const TrackingPage = (props) => {
         data: { ...data, sNo: item?.s_no, matchId: item?.m_id },
       })
     );
+  };
+
+  const fetchScrollEnd = async () => {
+    if (currentPage == lastPage) return;
+    const params = { ...filterApplied, page: currentPage + 1 };
+    await trackingFetchApi(params, true);
+    setFIlterApplied(params);
   };
 
   const rightStickyHeaders = isMobile ? [] : ["Ticket Price"];
@@ -290,7 +315,11 @@ const TrackingPage = (props) => {
       ...filterApplied,
       availability: availabilityStatus != 1 ? "" : 1,
     };
-    await trackingFetchApi(params, availabilityStatus == 1 ? true : false);
+    await trackingFetchApi(
+      params,
+      false,
+      availabilityStatus == 1 ? true : false
+    );
     setAvailabilityStatus(availabilityStatus == 1 ? "" : 1);
     setFIlterApplied(params);
   };
@@ -304,6 +333,25 @@ const TrackingPage = (props) => {
     };
     trackingFetchApi(params);
     setFIlterApplied(params);
+  };
+
+  const handleClearChip = (key, value) => {
+    const params = {
+      ...filterApplied,
+      [key]: "",
+    };
+    if (key === "match_date") {
+      setSelectedDate("");
+    }
+    trackingFetchApi(params);
+    setFIlterApplied(params);
+  };
+
+  const resetFilters = () => {
+    setFIlterApplied({});
+    setSelectedMatch("");
+    setSelectedDate("");
+    trackingFetchApi({});
   };
 
   return (
@@ -345,7 +393,7 @@ const TrackingPage = (props) => {
               id="eventDate"
               name="eventDate"
               keyValue="eventDate"
-              parentClassName="!md:w-[350px] !max-md:w-full"
+              parentClassName="md:w-[350px] !max-md:w-full"
               label="Event Date"
               className="!py-[8px] !px-[16px] mobile:text-xs"
               value={selectedDate}
@@ -362,23 +410,49 @@ const TrackingPage = (props) => {
             />
           </div>
         </div>
-        <div className="border-b-[1px] border-[#E0E1EA]">
-          <div
-            className={
-              "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
-            }
-          >
-            {data?.length} purchases
+        <div className="border-b-[1px] border-[#E0E1EA] flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <p
+              className={
+                "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
+              }
+            >
+              {data?.length} purchases
+            </p>
+            <button
+              onClick={() => resetFilters()}
+              className="border-[1px] cursor-pointer border-[#DADBE5] p-[4px]"
+            >
+              <IconStore.reload className="size-3.5" />
+            </button>
           </div>
+          {!isEmptyObject(filterApplied) && (
+            <div className="flex gap-2 items-center">
+              {Object.entries(filterApplied)?.map(([key, value], index) => {
+                if (key === "page" || !value || value?.length == 0) return null;
+                return (
+                  <ClearChip
+                    key={index}
+                    text={key}
+                    value={
+                      Array.isArray(value) ? `${value?.length} selected` : value
+                    }
+                    onClick={handleClearChip}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
-      <div className="bg-white shadow rounded-lg mx-[24px]">
+      <div className="bg-white shadow rounded-lg mx-[24px] max-h-[350px] overflow-auto">
         <StickyDataTable
           headers={headers}
           data={data}
           rightStickyColumns={rightStickyColumns}
           loading={loader}
           rightStickyHeaders={rightStickyHeaders}
+          onScrollEnd={fetchScrollEnd}
         />
       </div>
     </div>

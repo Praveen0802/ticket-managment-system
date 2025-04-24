@@ -10,13 +10,17 @@ import OrderDetails from "@/components/orderDetails";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import ClearChip from "../inventoryFolder/components/clearChip";
+import { isEmptyObject } from "@/utils/helperFunctions";
 
 const PurchaseFolder = (props) => {
   const { response, success } = props;
-  console.log(success, "successsuccesssuccess");
-  const [listTicketDetails, setListTicketDetails] = useState(response?.data);
+  const [listTicketDetails, setListTicketDetails] = useState(
+    response?.data?.data
+  );
   const [selectedTicketStatus, setSelectedTicketStatus] = useState("");
   const [selectedBookingStatus, setSelectedBookingStatus] = useState("");
+
   const [displayTabValues, setDisplayTabValues] = useState({
     total_count: response?.total_count,
     details_required: response?.details_required,
@@ -27,8 +31,10 @@ const PurchaseFolder = (props) => {
     upcomming: false,
     expired: false,
   });
+  const [lastPage, setLastPage] = useState(response?.data?.last_page);
+  const [currentPage, setCurrentPage] = useState(response?.data?.current_page);
   const [selectedMatch, setSelectedMatch] = useState("");
-  const [listItems, setListItems] = useState([
+  const initialListItems = [
     { name: "Purchases", value: displayTabValues?.total_count },
     {
       name: "Upcomming Event",
@@ -45,7 +51,9 @@ const PurchaseFolder = (props) => {
       isChecked: checkboxValue?.expired,
     },
     { name: "Details Required", value: displayTabValues?.details_required },
-  ]);
+  ];
+  const [listItems, setListItems] = useState(initialListItems);
+
   const [filtersApplied, setFiltersApplied] = useState({});
   const [eventDate, setEventDate] = useState("");
   const [orderDate, setOrderDate] = useState("");
@@ -75,8 +83,8 @@ const PurchaseFolder = (props) => {
 
   const headers = [
     { key: "status", label: "Status", sortable: true },
-    { key: "listmyTicket", label: "List my Ticket ID", sortable: true },
     { key: "bookingNo", label: "Booking Status", sortable: true },
+    { key: "listmyTicket", label: "List my Ticket ID", sortable: true },
     { key: "orderDate", label: "Order Date", sortable: true },
     { key: "event", label: "Event", sortable: true },
     { key: "venue", label: "Venue", sortable: true },
@@ -92,8 +100,8 @@ const PurchaseFolder = (props) => {
   const data = listTicketDetails?.map((item) => {
     return {
       status: item?.ticket_status,
-      listmyTicket: item?.booking_no,
       bookingNo: item?.booking_status_text,
+      listmyTicket: item?.booking_no,
       orderDate: item?.booking_date,
       event: item?.match_name,
       venue: item?.venue_name,
@@ -121,11 +129,17 @@ const PurchaseFolder = (props) => {
     ];
   });
 
-  const fetchAPiDetails = async (params) => {
+  const fetchAPiDetails = async (params, pagination) => {
     setLoader(true);
     const response = await purchaseHistory("", params);
     const { data = [], ...rest } = response;
-    setListTicketDetails(data);
+    if (pagination) {
+      setListTicketDetails([...listTicketDetails, ...response?.data?.data]);
+    } else {
+      setListTicketDetails(response?.data?.data);
+    }
+    setCurrentPage(response?.data?.current_page);
+    setLastPage(response?.data?.last_page);
     setDisplayTabValues(rest);
     const updatedListItems = [
       { name: "Purchases", value: response?.total_count },
@@ -149,6 +163,13 @@ const PurchaseFolder = (props) => {
     setListItems(updatedListItems);
     setFiltersApplied(params);
     setLoader(false);
+  };
+
+  const fetchScrollEnd = async () => {
+    if (currentPage == lastPage) return;
+    const params = { ...filtersApplied, page: currentPage + 1 };
+    await fetchAPiDetails(params, true);
+    setFiltersApplied(params);
   };
 
   const handleMatchSearch = (e, key, type) => {
@@ -216,7 +237,6 @@ const PurchaseFolder = (props) => {
     fetchAPiDetails(params);
   };
 
-  // Mobile filters rendering
   const renderMobileFilters = () => (
     <>
       <div className="flex justify-between items-center mb-4">
@@ -311,6 +331,24 @@ const PurchaseFolder = (props) => {
     </>
   );
 
+  const bookingStatusOptions = [
+    { value: 0, label: "Failed" },
+    { value: 1, label: "Confirmed" },
+    { value: 2, label: "Pending" },
+    { value: 3, label: "Cancelled" },
+    { value: 4, label: "Shipped" },
+    { value: 5, label: "Delivered" },
+    { value: 6, label: "Downloaded" },
+    { value: 8, label: "Rejected" },
+  ];
+
+  function getStatusLabel(statusCode) {
+    const statusOption = bookingStatusOptions.find(
+      (option) => option.value === statusCode
+    );
+    return statusOption?.label;
+  }
+
   // Desktop filters rendering - maintain original layout
   const renderDesktopFilters = () => (
     <div className="md:flex gap-4 items-center md:w-[90%]">
@@ -362,16 +400,7 @@ const PurchaseFolder = (props) => {
       />
       <FloatingSelect
         label={"Booking Status"}
-        options={[
-          { value: 0, label: "Failed" },
-          { value: 1, label: "Confirmed" },
-          { value: 2, label: "Pending" },
-          { value: 3, label: "Cancelled" },
-          { value: 4, label: "Shipped" },
-          { value: 5, label: "Delivered" },
-          { value: 6, label: "Downloaded" },
-          { value: 8, label: "Rejected" },
-        ]}
+        options={bookingStatusOptions}
         selectedValue={selectedBookingStatus}
         keyValue="booking_status"
         className="!w-[30%]"
@@ -382,6 +411,52 @@ const PurchaseFolder = (props) => {
       />
     </div>
   );
+
+  const handleClearChip = (key, value) => {
+    let updatedParams = {};
+    if (key == "event_date_from") {
+      updatedParams = {
+        event_date_from: "",
+        event_date_to: "",
+      };
+      setEventDate("");
+    } else if (key == "order_date_from") {
+      updatedParams = {
+        order_date_from: "",
+        order_date_to: "",
+      };
+      setOrderDate("");
+    } else {
+      if (key == "ticket_status") {
+        setSelectedTicketStatus("");
+      } else if (key == "booking_status") {
+        setSelectedBookingStatus("");
+      }
+      updatedParams = {
+        [key]: "",
+      };
+    }
+    const params = {
+      ...filtersApplied,
+      ...updatedParams,
+    };
+    fetchAPiDetails(params);
+  };
+
+  const resetFilters = () => {
+    setFiltersApplied({ page: 1 });
+    setSelectedMatch("");
+    setSelectedTicketStatus("");
+    setSelectedBookingStatus("");
+    setEventDate("");
+    setCheckboxValue({
+      upcomming: false,
+      expired: false,
+    });
+    setOrderDate("");
+    setListItems(initialListItems);
+    fetchAPiDetails({ page: 1 });
+  };
 
   return (
     <div className="flex flex-col gap-[24px]">
@@ -415,28 +490,72 @@ const PurchaseFolder = (props) => {
         </div>
 
         {/* Purchase count - hidden on mobile since we show it in filters section */}
-        <div
-          className={`border-b-[1px] border-[#E0E1EA] ${
-            isMobile ? "hidden" : ""
-          }`}
-        >
+        <div>
           <div
-            className={
-              "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
-            }
+            className={`border-b-[1px] border-[#E0E1EA] flex items-center gap-4 ${
+              isMobile ? "hidden" : ""
+            }`}
           >
-            {data?.length} purchases
+            <div className="flex gap-2 items-center">
+              <p
+                className={
+                  "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
+                }
+              >
+                {data?.length} purchases
+              </p>
+              <button
+                onClick={() => resetFilters()}
+                className="border-[1px] cursor-pointer border-[#DADBE5] p-[4px]"
+              >
+                <IconStore.reload className="size-3.5" />
+              </button>
+            </div>
+            {!isEmptyObject(filtersApplied) && (
+              <div className="flex gap-2 items-center">
+                {Object.entries(filtersApplied)?.map(([key, value], index) => {
+                  if (
+                    key === "page" ||
+                    !value ||
+                    value?.length == 0 ||
+                    key == "order_date_to" ||
+                    key == "match_name" ||
+                    key == "event_date_to"
+                  )
+                    return null;
+                  return (
+                    <ClearChip
+                      key={index}
+                      text={key}
+                      value={
+                        key == "booking_status"
+                          ? `${getStatusLabel(value)}`
+                          : key == "order_date_from"
+                          ? `${value} - ${filtersApplied?.order_date_to}`
+                          : key == "event_date_from"
+                          ? `${value} - ${filtersApplied?.event_date_to}`
+                          : Array.isArray(value)
+                          ? `${value?.length} selected`
+                          : value
+                      }
+                      onClick={handleClearChip}
+                    />
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Data table section - add horizontal scroll for mobile */}
-      <div className="bg-white shadow rounded-lg mx-[24px] overflow-x-auto">
+      <div className="bg-white shadow rounded-lg mx-[24px]  max-h-[300px] overflow-scroll">
         <StickyDataTable
           headers={headers}
           data={data}
           rightStickyColumns={rightStickyColumns}
           loading={loader}
+          onScrollEnd={fetchScrollEnd}
         />
       </div>
 

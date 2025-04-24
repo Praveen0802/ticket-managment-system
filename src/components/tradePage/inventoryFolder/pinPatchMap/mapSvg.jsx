@@ -8,8 +8,8 @@ const StadiumMap = ({
   displayTicketDetails: ticketData,
   commonProps,
 }) => {
-  const { svgContainerRef, currentCategoryRef } = commonProps;
-  const [currentBlock, setCurrentBlock] = useState(null);
+  const { svgContainerRef, currentCategoryRef, handleMapBlockClick } =
+    commonProps;
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
   const [error, setError] = useState(null);
@@ -124,7 +124,7 @@ const StadiumMap = ({
     const blockIdFull = section.getAttribute("data-section");
     const parts = blockIdFull.split("_");
     const blockId = parts.length > 1 ? parts[1] : null;
-    setCurrentBlock(blockId);
+    handleMapBlockClick(blockId);
   };
 
   // Handle mouse enter on section

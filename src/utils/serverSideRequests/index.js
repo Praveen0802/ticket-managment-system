@@ -16,6 +16,7 @@ import {
   fetchWalletBalance,
   getDialingCode,
   getLinkedCards,
+  getPartnerSetting,
   LastMinuteEvents,
   purchaseEvents,
   purchaseFavouratesTracking,
@@ -69,6 +70,9 @@ export const fetchSettingsPageDetails = async (profile, token, ctx) => {
       const linkedCards = await getLinkedCards(token, "", shopperRefernce);
 
       return { linkedCards, shopperRefernce };
+    } else if (profile == "ticketDelivery") {
+      const partnerDetails = await getPartnerSetting(token);
+      return { partnerDetails };
     }
   } catch {}
 };

@@ -10,6 +10,7 @@ import ChangePassword from "./changePassword";
 import AddressBook from "./addressBook";
 import BankAccounts from "./bankAccounts";
 import LinkedCards from "./linkedCards";
+import TicketDelivery from "./ticketDelivery";
 
 const SettingsPage = (props) => {
   const { profile, apiData } = props;
@@ -37,15 +38,16 @@ const SettingsPage = (props) => {
       title: "Address Book",
       key: "addressBook",
     },
-    // {
-    //   icon: <IconStore.profile className={IconclassName} />,
-    //   title: "Bank Accounts",
-    //   key: "bankAccounts",
-    // },
+
     {
       icon: <IconStore.profile className={IconclassName} />,
       title: "My Customers",
       key: "myCustomers",
+    },
+    {
+      icon: <IconStore.tickets className={IconclassName} />,
+      title: "Ticket Delivery",
+      key: "ticketDelivery",
     },
     {
       icon: <IconStore.cards className={IconclassName} />,
@@ -72,6 +74,7 @@ const SettingsPage = (props) => {
     bankAccounts: <BankAccounts {...apiData} />,
     myCustomers: <MyTeamView {...apiData} />,
     linkedCards: <LinkedCards {...apiData} />,
+    ticketDelivery: <TicketDelivery {...apiData} />,
     // txPay: <TXPay />,
   };
 

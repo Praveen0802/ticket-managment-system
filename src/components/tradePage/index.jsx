@@ -22,6 +22,7 @@ const TradePage = (props) => {
     allCategories,
     fetchTabCount,
     totalAmount = "£1,915.75",
+    fetchWalletBalance,
   } = props;
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
@@ -119,7 +120,15 @@ const TradePage = (props) => {
       <div className="absolute top-0 right-0 flex gap-3 items-center bg-white p-4 md:p-4 md:right-0 md:left-auto md:w-auto w-full justify-end">
         <div className="flex flex-col">
           <p className="text-[#7D82A4] text-[12px]">Available funds</p>
-          <p className="text-[14px] text-[#323A70]">{totalAmount}</p>
+          <div className="flex gap-2 items-center w-[100px] overflow-auto hideScrollbar">
+            {fetchWalletBalance?.account_data?.map((item, index) => {
+              return (
+                  <p className="text-[#323A70] text-[14px] font-normal whitespace-nowrap">
+                    {item?.balance_amount}
+                  </p>
+              );
+            })}
+          </div>
         </div>
         <div
           onClick={handleOpenAddWalletPopup}
@@ -168,9 +177,6 @@ const TradePage = (props) => {
             </div>
           </div>
         )}
-
-        {/* Event Search Panel */}
-
         <div
           className={`transition-all duration-200 h-full
             ${

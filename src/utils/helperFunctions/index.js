@@ -48,6 +48,7 @@ export const nextRedirect = (pathName = "login") => {
   };
 };
 
+
 export const getAuthToken = (context = null, token) => {
   const isClient = typeof window !== "undefined";
   const authToken = token

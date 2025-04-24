@@ -69,7 +69,6 @@ const TradeHome = (props) => {
     },
   ];
 
-  // Generate initial state for expanded sections - first one expanded by default
   const [expandedSections, setExpandedSections] = useState(() => {
     return sections.map((_, index) => index === 0);
   });
@@ -92,11 +91,8 @@ const TradeHome = (props) => {
     router.push(`/trade/inventory/${id}`);
   };
 
-  // Function to get the appropriate icon based on the sectio
-
   return (
     <div className="w-full bg-gray-100 md:p-4 p-2 h-full">
-      {/* Mobile sticky category tabs for quick access */}
       {isMobile && (
         <div className="flex overflow-x-auto pb-2 mb-2 gap-2 sticky top-0 bg-gray-100 z-10 -mx-2 px-2 pt-2">
           {sections.map((section, index) => (

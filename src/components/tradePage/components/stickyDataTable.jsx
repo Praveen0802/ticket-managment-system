@@ -379,33 +379,59 @@ const StickyDataTable = ({
                 <tr
                   key={row.isShimmer ? `shimmer-${rowIndex}` : rowIndex}
                   className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
-                  onMouseEnter={() => handleTicketMouseEnter()}
+                  onMouseEnter={() =>
+                    handleTicketMouseEnter(row?.seat_category_id)
+                  }
                   onMouseLeave={() => handleTicketMouseLeave()}
                 >
-                  {regularHeaders?.map((header) => (
-                    <td
-                      key={`${rowIndex}-${header.key}`}
-                      className="py-2 px-4 text-[12px] whitespace-nowrap overflow-hidden text-ellipsis align-middle"
-                    >
-                      {row.isShimmer ? (
-                        <ShimmerCell
-                          width={`${Math.floor(50 + Math.random() * 100)}px`}
-                        />
-                      ) : (
-                        <span
-                          className={`${
-                            header.key === "status" &&
-                            (row[header?.key] == "available" ||
-                              row[header?.key] == "fulfilled")
-                              ? "text-green-500"
-                              : "text-[#323A70]"
-                          } capitalize`}
-                        >
-                          {row[header?.key]}
-                        </span>
-                      )}
-                    </td>
-                  ))}
+                  {regularHeaders?.map((header) => {
+                    const displayText =
+                      typeof row[header?.key] == "string"
+                        ? row[header?.key]?.toLowerCase()
+                        : row[header?.key];
+
+                    return (
+                      <td
+                        key={`${rowIndex}-${header.key}`}
+                        className="py-2 px-4 text-[12px] whitespace-nowrap overflow-hidden text-ellipsis align-middle"
+                      >
+                        {row.isShimmer ? (
+                          <ShimmerCell
+                            width={`${Math.floor(50 + Math.random() * 100)}px`}
+                          />
+                        ) : (
+                          <span
+                            className={`
+                              ${
+                                header.key === "status" &&
+                                (displayText == "available" ||
+                                  displayText == "fulfilled")
+                                  ? "text-green-500"
+                                  : displayText == "incomplete"
+                                  ? "text-yellow-500"
+                                  : "text-[#323A70]"
+                              }
+                             ${
+                               header?.key == "bookingNo" &&
+                               (displayText == "pending"
+                                 ? "text-[#00A3ED]"
+                                 : displayText == "cancelled"
+                                 ? "text-red-500"
+                                 : displayText == "confirmed"
+                                 ? "text-green-500"
+                                 : displayText == "delivered"
+                                 ? "text-[#0037D5]"
+                                 : displayText == "shipped"
+                                 ? "text-[#0037D5]"
+                                 : "text-[#323A70]")
+                             } capitalize`}
+                          >
+                            {row[header?.key]}
+                          </span>
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })}

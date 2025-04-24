@@ -94,7 +94,6 @@ const LatestOrderView = ({ listItems, meta }) => {
     }
   };
 
-
   const fetchNextPage = async () => {
     if (loading || currentPage >= meta?.last_page) return;
     setLoading(true);
@@ -102,7 +101,7 @@ const LatestOrderView = ({ listItems, meta }) => {
       const nextPage = currentPage + 1;
       const data = await fetchTransactionHistory("", {
         page: nextPage,
-        days: selectedFilter,
+        ...(selectedFilter && { days: selectedFilter }),
       });
       setTransactions((prevTransactions) => [
         ...prevTransactions,

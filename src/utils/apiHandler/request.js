@@ -951,3 +951,74 @@ export const purchaseAttendeeDetails = async (token, id, data) => {
     return error?.response?.data;
   }
 };
+
+export const getContactDetails = async (token) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.GET_CONTACT_DETAILS}`,
+      method: "GET",
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getContactDetails", error);
+    return error?.response?.data;
+  }
+};
+
+export const getWalletBalance = async (token) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.GET_WALLET_BALANCE}`,
+      method: "GET",
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getWalletBalance", error);
+    return error?.response?.data;
+  }
+};
+
+export const getPartnerSetting = async (token) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.GET_PARTNER_SETTINGS}`,
+      method: "GET",
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getWalletBalance", error);
+    return error?.response?.data;
+  }
+};
+
+export const postPartnerSetting = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.POST_PARTNER_SETTINGS}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getWalletBalance", error);
+    return error?.response?.data;
+  }
+};
+
+export const downloadTicketLinks = async (token, url) => {
+  try {
+    const response = await makeRequest({
+      url: `${url}`,
+      method: "GET",
+      ...(token && { token: token }),
+    });
+    return response?.data?.success ? response?.data?.data : {};
+  } catch (error) {
+    console.log("ERROR in getWalletBalance", error);
+    return error?.response?.data;
+  }
+};
