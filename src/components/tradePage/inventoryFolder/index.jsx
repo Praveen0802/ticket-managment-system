@@ -1,5 +1,5 @@
 import { IconStore } from "@/utils/helperFunctions/iconStore";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import blueLocation from "../../../../public/blue-location.svg";
 import Image from "next/image";
 import blueCalendar from "../../../../public/blue-calendar.svg";
@@ -67,6 +67,8 @@ const InventoryFolder = (props) => {
     Venue: `${match_details?.venue},${match_details?.country},${match_details?.city}`,
   };
 
+  const currentCategoryRef = useRef(null);
+  const svgContainerRef = useRef(null);
   // Set mobile state based on screen width
   useEffect(() => {
     const handleResize = () => {
@@ -354,6 +356,54 @@ const InventoryFolder = (props) => {
     ];
   });
 
+  const handleTicketMouseEnter = (categoryId) => {
+    if (!svgContainerRef.current) return;
+
+    // Ensure categoryId is treated as a string for consistent comparison
+    const categoryIdStr = String(categoryId);
+
+    svgContainerRef.current
+      .querySelectorAll("[data-section] .block")
+      .forEach((block) => {
+        const blockCategoryId = block?.getAttribute("data-category-id");
+
+        // Convert blockCategoryId to string for proper comparison
+        if (String(blockCategoryId) === categoryIdStr) {
+          block.style.fill = "#7d7af9"; // Highlight color
+          const text = block.closest("[data-section]")?.querySelector("text");
+          if (text) text.style.fill = "#fff";
+        } else {
+          const originalColor = block.getAttribute("data-color");
+          if (originalColor) block.style.fill = originalColor;
+          const text = block.closest("[data-section]")?.querySelector("text");
+          if (text) text.style.fill = "#000";
+        }
+      });
+
+    // Update current category reference to maintain highlight after hover
+    currentCategoryRef.current = categoryIdStr;
+  };
+
+  const handleTicketMouseLeave = () => {
+    if (!svgContainerRef.current) return;
+    svgContainerRef.current
+    .querySelectorAll("[data-section] .block")
+    .forEach((block) => {
+      const originalColor = block.getAttribute("data-color");
+      if (originalColor) {
+        block.style.fill = originalColor;
+      }
+
+      const text = block.closest("[data-section]")?.querySelector("text");
+      if (text) text.style.fill = "#000";
+    });
+  };
+
+  const commonProps = {
+    svgContainerRef,
+    currentCategoryRef,
+  };
+
   const toggleMap = () => {
     setShowMap(!showMap);
   };
@@ -487,6 +537,8 @@ const InventoryFolder = (props) => {
                   }}
                   svgUrl={response?.match_details?.stadium_image}
                   mapData={response?.map}
+                  displayTicketDetails={displayTicketDetails}
+                  commonProps={commonProps}
                 />
               </div>
             )}
@@ -504,6 +556,8 @@ const InventoryFolder = (props) => {
                 loading={loader}
                 onScrollEnd={fetchScrollEnd}
                 rightStickyHeaders={rightStickyHeaders}
+                handleTicketMouseEnter={handleTicketMouseEnter}
+                handleTicketMouseLeave={handleTicketMouseLeave}
               />
             </div>
           </div>

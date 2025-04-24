@@ -29,7 +29,9 @@ const StickyDataTable = ({
   rightStickyHeaders = [],
   loading = false,
   fetchScrollEnd = null, // Original prop, kept for compatibility
-  onScrollEnd = null, // New prop name
+  onScrollEnd = null, // New prop name,
+  handleTicketMouseEnter = () => {},
+  handleTicketMouseLeave = () => {},
 }) => {
   // Use whichever callback is provided
   const scrollEndCallback = onScrollEnd || fetchScrollEnd;
@@ -377,6 +379,8 @@ const StickyDataTable = ({
                 <tr
                   key={row.isShimmer ? `shimmer-${rowIndex}` : rowIndex}
                   className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
+                  onMouseEnter={() => handleTicketMouseEnter()}
+                  onMouseLeave={() => handleTicketMouseLeave()}
                 >
                   {regularHeaders?.map((header) => (
                     <td

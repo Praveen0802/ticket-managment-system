@@ -7,7 +7,7 @@ import {
 } from "react-zoom-pan-pinch";
 import StadiumMap from "./mapSvg";
 
-const PinPatchMap = ({ onClose, mapData, svgUrl }) => {
+const PinPatchMap = ({ onClose, mapData, svgUrl, displayTicketDetails,commonProps }) => {
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
 
@@ -63,6 +63,8 @@ const PinPatchMap = ({ onClose, mapData, svgUrl }) => {
                   stadiumData={mapData}
                   svgUrl={svgUrl}
                   transformState={state}
+                  displayTicketDetails={displayTicketDetails}
+                  commonProps={commonProps}
                 />
               </TransformComponent>
             </div>
