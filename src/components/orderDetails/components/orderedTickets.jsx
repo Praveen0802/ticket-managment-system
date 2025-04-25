@@ -18,11 +18,11 @@ const OrderedTickets = ({ ticket_details }) => {
       values: [
         {
           name: "Ticket Price",
-          text: `${ticket_details?.currencyIcon}${ticket_details?.ticket_price}`,
+          text: `${ticket_details?.sub_total_converted}`,
         },
         {
           name: "Order Value",
-          text: `${ticket_details?.currencyIcon}${ticket_details?.total_paid}`,
+          text: `${ticket_details?.total_paid_converted}`,
         },
       ],
       twoKeys: true,

@@ -43,7 +43,7 @@ const ViewComponent = ({ item, onClick }) => {
                   {item?.key}
                 </p>
 
-                <div className="relative">
+                {/* <div className="relative">
                   <button
                     className="cursor-pointer"
                     onMouseEnter={() => setTooltipVisible(index)}
@@ -57,7 +57,7 @@ const ViewComponent = ({ item, onClick }) => {
                       {`${item?.key}: ${item?.value}`}
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
               <p
                 className={`${

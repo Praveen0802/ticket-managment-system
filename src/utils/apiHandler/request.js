@@ -939,7 +939,7 @@ export const purchaseAttendeeDetails = async (token, id, data) => {
   try {
     const response = await makeRequest({
       url: `${API_ROUTES.PURCHASE_ATTENDEE_DETAILS}/${id}`,
-      method: "POST",
+      method: "PUT",
       ...(token && { token: token }),
       data: data,
     });

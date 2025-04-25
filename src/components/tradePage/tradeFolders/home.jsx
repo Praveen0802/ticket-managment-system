@@ -11,12 +11,13 @@ import { useRouter } from "next/router";
 
 const TradeHome = (props) => {
   const { profile, response = {} } = props;
+  console.log(response, "propsprops");
   const {
     hotEvents = {},
     lastMinuteEvents = [],
     recentlyViewedEvents,
   } = response;
-  
+
   // State to track if we're on mobile
   const [isMobile, setIsMobile] = useState(false);
 
@@ -25,15 +26,15 @@ const TradeHome = (props) => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Set initial value
     checkIfMobile();
-    
+
     // Add event listener
-    window.addEventListener('resize', checkIfMobile);
-    
+    window.addEventListener("resize", checkIfMobile);
+
     // Clean up
-    return () => window.removeEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
   const constructViewDataType = (array) => {
@@ -46,11 +47,11 @@ const TradeHome = (props) => {
         listing: item?.listings,
         league: item?.tournament_name || item?.othereventCategory_name,
         availableTickets: item?.available_tickets,
-        priceFrom: `${item?.price_type} ${item?.price_start_from}`,
+        priceFrom: item?.price_start_from_with_currency,
       };
     });
   };
-  
+
   const sections = [
     {
       name: "Recently Viewed Events",
@@ -96,16 +97,16 @@ const TradeHome = (props) => {
       {isMobile && (
         <div className="flex overflow-x-auto pb-2 mb-2 gap-2 sticky top-0 bg-gray-100 z-10 -mx-2 px-2 pt-2">
           {sections.map((section, index) => (
-            <div 
+            <div
               key={`tab-${index}`}
               onClick={() => toggleSection(index)}
               className={`flex-shrink-0 py-2 px-3 rounded-full flex items-center gap-1 ${
-                expandedSections[index] 
-                  ? "bg-[#130061] text-white" 
+                expandedSections[index]
+                  ? "bg-[#130061] text-white"
                   : "bg-white text-[#130061] border border-[#130061]"
               }`}
             >
-             <IconStore.eye className="size-4" />
+              <IconStore.eye className="size-4" />
               <span className="text-xs whitespace-nowrap">{section.name}</span>
             </div>
           ))}
@@ -114,9 +115,12 @@ const TradeHome = (props) => {
 
       <div className="space-y-3">
         {sections.map((section, index) => (
-          <div key={index} className={`transition-all duration-300 ease-in-out ${
-            isMobile ? 'mb-3' : 'mb-4'
-          }`}>
+          <div
+            key={index}
+            className={`transition-all duration-300 ease-in-out ${
+              isMobile ? "mb-3" : "mb-4"
+            }`}
+          >
             {/* Section header */}
             <div
               className={`flex items-center justify-between bg-[#130061] text-white px-4 py-[14px] ${
@@ -125,7 +129,7 @@ const TradeHome = (props) => {
               onClick={() => toggleSection(index)}
             >
               <div className="flex gap-3 items-center">
-              <IconStore.eye className="size-4" />
+                <IconStore.eye className="size-4" />
                 <span className="text-[14px] font-medium">{section.name}</span>
               </div>
               <div className="flex items-center bg-[#FFFFFF26] p-1 rounded-full">
@@ -140,8 +144,8 @@ const TradeHome = (props) => {
             {/* Section content */}
             <div
               className={`bg-white rounded-b shadow overflow-hidden transition-all duration-300 ease-in-out ${
-                expandedSections[index] 
-                  ? "max-h-[500px] md:max-h-[400px] opacity-100" 
+                expandedSections[index]
+                  ? "max-h-[500px] md:max-h-[400px] opacity-100"
                   : "max-h-0 opacity-0"
               }`}
             >

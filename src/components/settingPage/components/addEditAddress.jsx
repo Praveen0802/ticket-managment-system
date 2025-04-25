@@ -406,6 +406,7 @@ const AddEditAddress = ({
     const payload = {
       first_name: formFieldValues.first_name,
       last_name: formFieldValues.last_name,
+      email:formFieldValues?.email,
       company_name: formFieldValues.company_name,
       address_line1: formFieldValues?.address_line_1,
       address_line2: formFieldValues?.address_line_2,

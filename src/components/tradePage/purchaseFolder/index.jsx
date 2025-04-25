@@ -14,7 +14,7 @@ import ClearChip from "../inventoryFolder/components/clearChip";
 import { isEmptyObject } from "@/utils/helperFunctions";
 
 const PurchaseFolder = (props) => {
-  const { response, success } = props;
+  const { response, success,booking_no='' } = props;
   const [listTicketDetails, setListTicketDetails] = useState(
     response?.data?.data
   );
@@ -69,6 +69,7 @@ const PurchaseFolder = (props) => {
   useEffect(() => {
     if (success == "true") {
       toast.success("Booking Completed successfully");
+      eyeIconClick({ booking_no: booking_no });
     }
   }, []);
   const eyeIconClick = async (item) => {
@@ -380,7 +381,7 @@ const PurchaseFolder = (props) => {
         name="orderDate"
         keyValue="orderDate"
         parentClassName="!w-[350px]"
-         subParentClassName="!w-[200px]"
+        subParentClassName="!w-[200px]"
         label="Order Date"
         className="!py-[8px] !px-[16px] mobile:text-xs"
         value={orderDate}

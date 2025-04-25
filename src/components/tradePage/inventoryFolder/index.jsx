@@ -162,7 +162,7 @@ const InventoryFolder = (props) => {
     const params = {
       ...filtersApplied,
       page: 1,
-      category: blockId,
+      ticket_category: blockId,
     };
     setFiltersApplied(params);
     fetchAPIDetails(params);

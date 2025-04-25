@@ -53,32 +53,32 @@ const PurchaseCard = ({ data,selectedQuantity,setSelectedQuantity }) => {
     {
       key: "Ticket Price",
       value: priceDetails?.ticket_price,
-      symbol: priceDetails?.currency_icon,
+      // symbol: priceDetails?.currency_icon,
     },
     {
       key: "Subtotal",
       value: priceDetails?.sub_total,
-      symbol: priceDetails?.currency_icon,
+      // symbol: priceDetails?.currency_icon,
     },
     {
       key: "Service Fee",
       value: priceDetails?.service_fee || "0.00",
-      symbol: priceDetails?.currency_icon,
+      // symbol: priceDetails?.currency_icon,
     },
     {
       key: "Shipping",
       value: priceDetails?.shipping_fee || "0.00",
-      symbol: priceDetails?.currency_icon,
+      // symbol: priceDetails?.currency_icon,
     },
     {
       key: "Tax",
       value: priceDetails?.tax || "0.00",
-      symbol: priceDetails?.currency_icon,
+      // symbol: priceDetails?.currency_icon,
     },
     {
       key: "Total",
       value: priceDetails?.total,
-      symbol: priceDetails?.currency_icon,
+      // symbol: priceDetails?.currency_icon,
     },
   ];
 

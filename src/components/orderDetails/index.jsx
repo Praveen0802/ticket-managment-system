@@ -41,7 +41,6 @@ const OrderDetails = ({ show, onClose, data }) => {
     order_status: order_details?.booking_status,
     delivery_by: order_details?.expected_ticket_delivery,
     days_to_event: order_details?.days_left_to_event,
-    expected_payout_date: order_details?.expected_payout_date,
   };
 
   const handleCollapseModal = () => {
@@ -126,7 +125,7 @@ const OrderDetails = ({ show, onClose, data }) => {
               </div>
             </div>
             <div className="p-[16px] sm:p-[24px] flex flex-col gap-4">
-              <CtaValues ctaText={ctaText} />
+              {/* <CtaValues ctaText={ctaText} /> */}
               <div
                 className={`flex gap-4 transition-custom ${
                   expandedVersion ? "" : "flex-col"
@@ -159,7 +158,7 @@ const OrderDetails = ({ show, onClose, data }) => {
                 expandedVersion={expandedVersion}
                 benefits_restrictions={benefits_restrictions}
               />
-              <AttendeeDetails attendee_details={attendee_details} />
+              <AttendeeDetails attendee_details={attendee_details} bookingId={orderId}/>
             </div>
           </div>
         </div>

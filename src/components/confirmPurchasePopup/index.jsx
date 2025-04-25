@@ -39,6 +39,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   const [cityOptions, setCityOptions] = useState([]);
   const [countryOptions, setCountryOptions] = useState([]);
   const [hideCta, setHideCta] = useState(false);
+  const [bookingNo, setBookingNo] = useState(null);
 
   const { data = {} } = confirmPurchasePopupFields;
   const [selectedQuantity, setSelectedQuantity] = useState(
@@ -138,7 +139,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
     if (success) {
       toast.success(message);
       onClose();
-      router.push("/trade/purchase?success=true");
+      router.push(`/trade/purchase?success=true&booking_no=${bookingNo}`);
     } else {
       toast.error(message || "Booking confirmation failed");
     }
@@ -204,7 +205,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           {},
           secondApiPayload
         );
-
+        setBookingNo(apiResponse?.booking_no);
         if (apiResponse?.status == "success") {
           if (paymentMethod == 1) {
             const confirmationPayload = {
@@ -229,6 +230,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           } else if (paymentMethod == 2) {
             setAdyenBookingId(apiResponse?.booking_id);
             setShowAdyenDropIn(true);
+            setHideCta(true);
           } else if (paymentMethod == 3) {
             const response = await paymentWithExistingCard("", {
               booking_id: apiResponse?.booking_id,

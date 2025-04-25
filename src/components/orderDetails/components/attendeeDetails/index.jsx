@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { purchaseAttendeeDetails } from "@/utils/apiHandler/request";
 
-const AttendeeDetails = ({ attendee_details = [] }) => {
+const AttendeeDetails = ({ attendee_details = [], bookingId }) => {
   const total = attendee_details?.length || 5;
   const [attendees, setAttendees] = useState([]);
   const [isOpen, setIsOpen] = useState(true);
@@ -118,30 +118,33 @@ const AttendeeDetails = ({ attendee_details = [] }) => {
 
     const formattedData = {
       tickets: attendees.map((attendee) => ({
-        id: attendee.id,
-        first_name: attendee.formData.first_name,
-        last_name: attendee.formData.last_name,
-        email: attendee.formData.email,
-        nationality: attendee.formData.nationality,
-        dob:
-          attendee.formData.dob_year &&
-          attendee.formData.dob_month &&
-          attendee.formData.dob_day
-            ? `${attendee.formData.dob_year}-${attendee.formData.dob_month}-${attendee.formData.dob_day}`
-            : null,
-        phone: attendee.formData.phone,
-        passport: attendee.formData.passport,
-        gender: attendee.formData.gender,
-        seat: attendee.formData.seat,
+        attendee: attendee.id,
+        fields: [
+          { first_name: attendee.formData.first_name },
+          { last_name: attendee.formData.last_name },
+          { email: attendee.formData.email },
+          { nationality: attendee.formData.nationality },
+          {
+            dob:
+              attendee.formData.dob_year &&
+              attendee.formData.dob_month &&
+              attendee.formData.dob_day
+                ? `${attendee.formData.dob_year}-${attendee.formData.dob_month}-${attendee.formData.dob_day}`
+                : null,
+          },
+          { phone: attendee.formData.phone },
+          { passport: attendee.formData.passport },
+          { gender: attendee.formData.gender },
+          { seat: attendee.formData.seat },
+        ],
       })),
     };
 
     try {
-      const response = await purchaseAttendeeDetails(
-        "",
-        attendee_details?.[0]?.ticket_id,
-        formattedData
-      );
+      const response = await purchaseAttendeeDetails("", bookingId, {
+        booking_no: bookingId,
+        attendees: formattedData?.tickets,
+      });
       console.log(response, "responseresponse");
     } catch (error) {
       console.error("Error saving attendee details:", error);

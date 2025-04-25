@@ -62,9 +62,8 @@ const DownloadYourTickets = ({ tickets, bookingId }) => {
           type="primary"
           label="Download All"
           classNames={{
-            root: "px-3 py-[5px] w-full transition-colors w-fit",
-            label_:
-              "text-sm font-medium flex items-center justify-center gap-2",
+            root: "bg-[#0137D5] px-[8px] py-[5px] w-fit",
+            label_: "text-[12px] text-white font-medium",
           }}
           onClick={() => fetchDownloadLinks("etickets", "", "download-all")}
           icon={<Download size={16} />}
@@ -91,12 +90,6 @@ const DownloadYourTickets = ({ tickets, bookingId }) => {
         {/* E-Tickets Content */}
         {activeTab === "etickets" && tickets?.etickets?.length > 0 && (
           <div className="flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-gray-800">E-Tickets</h2>
-              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                {tickets.etickets.length} available
-              </span>
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 pl-[20px]">
               {tickets?.etickets?.map((item, index) => (
                 <div key={index} className="flex flex-col gap-3 ">
@@ -109,9 +102,8 @@ const DownloadYourTickets = ({ tickets, bookingId }) => {
                     type="primary"
                     label="Download"
                     classNames={{
-                      root: "px-4 py-2 w-full transition-colors w-fit",
-                      label_:
-                        "text-sm font-medium flex items-center justify-center gap-2",
+                      root: "bg-[#0137D5] px-[8px] py-[5px] w-fit",
+                      label_: "text-[12px] text-white font-medium",
                     }}
                     onClick={() => {
                       fetchDownloadLinks("etickets", item.id, "download");
@@ -127,9 +119,6 @@ const DownloadYourTickets = ({ tickets, bookingId }) => {
         {/* Links Content */}
         {activeTab === "links" && tickets?.links?.length > 0 && (
           <div className="flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-gray-800">Links</h2>
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pl-[20px]">
               {tickets?.links?.map((item, index) => (
                 <div key={index} className="flex flex-col gap-2">
@@ -171,8 +160,8 @@ const DownloadYourTickets = ({ tickets, bookingId }) => {
                 type="primary"
                 label="Download"
                 classNames={{
-                  root: "px-4 py-2 w-fit ",
-                  label_: "text-sm font-medium flex items-center gap-2",
+                  root: "bg-[#0137D5] px-[8px] py-[5px]",
+                  label_: "text-[12px] text-white font-medium",
                 }}
                 onClick={() => {
                   fetchDownloadLinks(
@@ -198,8 +187,8 @@ const DownloadYourTickets = ({ tickets, bookingId }) => {
                 type="primary"
                 label="Download Pods"
                 classNames={{
-                  root: "px-4 py-2 w-fit ",
-                  label_: "text-sm font-medium flex items-center gap-2",
+                  root: "bg-[#0137D5] px-[8px] py-[5px]",
+                  label_: "text-[12px] text-white font-medium",
                 }}
                 onClick={() => {
                   fetchDownloadLinks("etickets", "", "download-pod");

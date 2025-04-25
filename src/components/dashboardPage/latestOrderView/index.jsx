@@ -43,8 +43,20 @@ const ShimmerRow = ({ isMobile }) => {
   );
 };
 
-const LatestOrderView = ({ listItems, meta }) => {
-  const [transactions, setTransactions] = useState(listItems);
+const NoDataFound = () => {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      {/* <IconStore.alertCircle className="size-12 text-gray-400 mb-3" /> */}
+      <h3 className="text-lg font-medium text-gray-700 mb-1">No Data Found</h3>
+      <p className="text-gray-500 text-sm max-w-xs">
+        There are no transactions available for the selected time period.
+      </p>
+    </div>
+  );
+};
+
+const LatestOrderView = ({ listItems=[], meta }) => {
+  const [transactions, setTransactions] = useState(listItems || []);
   const [currentPage, setCurrentPage] = useState(meta?.current_page);
   const [loading, setLoading] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -89,6 +101,7 @@ const LatestOrderView = ({ listItems, meta }) => {
       setTransactions(response?.transaction_history || []);
     } catch (error) {
       console.error("Error fetching filtered data:", error);
+      setTransactions([]);
     } finally {
       setLoading(false);
     }
@@ -118,6 +131,7 @@ const LatestOrderView = ({ listItems, meta }) => {
   const handleScroll = () => {
     const container = tableRef.current;
     if (
+      container &&
       container.scrollTop + container.clientHeight >=
       container.scrollHeight - 50
     ) {
@@ -127,12 +141,20 @@ const LatestOrderView = ({ listItems, meta }) => {
 
   useEffect(() => {
     const container = tableRef.current;
-    container.addEventListener("scroll", handleScroll);
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
 
     return () => {
-      container.removeEventListener("scroll", handleScroll);
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [loading, currentPage, selectedFilter]);
+
+  // Check if data is available
+  const hasData = !loading && transactions && transactions.length > 0;
+  const showNoData = !loading && (!transactions || transactions.length === 0);
 
   return (
     <div className="flex flex-col h-full">
@@ -158,42 +180,99 @@ const LatestOrderView = ({ listItems, meta }) => {
               className="overflow-auto h-full px-3 md:px-5 max-h-[350px]"
               ref={tableRef}
             >
+              {/* No Data State */}
+              {showNoData && <NoDataFound />}
+
               {/* Desktop Table View */}
-              <table className="min-w-full border-collapse hidden sm:table">
-                <thead className="sticky top-0 bg-white">
-                  <tr className="text-gray-400">
-                    <th className="p-3 text-left text-sm font-medium">
-                      Reference No
-                    </th>
-                    <th className="p-3 text-left text-sm font-medium">
-                      Date & Time
-                    </th>
-                    <th className="p-3 text-left text-sm font-medium">Type</th>
-                    <th className="p-3 text-left text-sm font-medium">
-                      Amount
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+              {!showNoData && (
+                <table className="min-w-full border-collapse hidden sm:table">
+                  <thead className="sticky top-0 bg-white">
+                    <tr className="text-gray-400">
+                      <th className="p-3 text-left text-sm font-medium">
+                        Reference No
+                      </th>
+                      <th className="p-3 text-left text-sm font-medium">
+                        Date & Time
+                      </th>
+                      <th className="p-3 text-left text-sm font-medium">Type</th>
+                      <th className="p-3 text-left text-sm font-medium">
+                        Amount
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading
+                      ? Array(5)
+                          .fill()
+                          .map((_, index) => <ShimmerRow key={index} />)
+                      : transactions?.map((transaction) => (
+                          <tr
+                            key={transaction?.id}
+                            className="border-t border-[#eaeaf1]"
+                          >
+                            <td className="p-3 text-sm text-[#323A70]">
+                              {transaction?.reference_no}
+                            </td>
+                            <td className="p-3 text-sm flex gap-1 items-center text-[#323A70]">
+                              <IconStore.calendarDays className="size-4" />{" "}
+                              {formatDateTime(transaction?.created_date_time)}
+                            </td>
+                            <td className="p-3 text-sm">
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs ${
+                                  transaction?.credit_depit === "CREDIT"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-red-100 text-red-800"
+                                }`}
+                              >
+                                {transaction?.credit_depit}
+                              </span>
+                            </td>
+                            <td className="p-3 text-sm font-medium">
+                              <div className="flex items-center">
+                                <span
+                                  className={
+                                    transaction?.credit_depit === "CREDIT"
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }
+                                >
+                                  {transaction?.price_with_currency}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                  </tbody>
+                </table>
+              )}
+
+              {/* Mobile List View */}
+              {!showNoData && (
+                <div className="sm:hidden">
                   {loading
                     ? Array(5)
                         .fill()
-                        .map((_, index) => <ShimmerRow key={index} />)
+                        .map((_, index) => (
+                          <ShimmerRow key={index} isMobile={isMobile} />
+                        ))
                     : transactions?.map((transaction) => (
-                        <tr
+                        <div
                           key={transaction?.id}
-                          className="border-t border-[#eaeaf1]"
+                          className="border-t border-[#eaeaf1] p-3 flex justify-between items-center"
                         >
-                          <td className="p-3 text-sm text-[#323A70]">
-                            {transaction?.reference_no}
-                          </td>
-                          <td className="p-3 text-sm flex gap-1 items-center text-[#323A70]">
-                            <IconStore.calendarDays className="size-4" />{" "}
-                            {formatDateTime(transaction?.created_date_time)}
-                          </td>
-                          <td className="p-3 text-sm">
+                          <div className="flex flex-col">
+                            <span className="text-sm text-[#323A70] font-medium">
+                              {transaction?.reference_no}
+                            </span>
+                            <span className="text-xs text-gray-500 flex items-center gap-1">
+                              <IconStore.calendarDays className="size-4" />
+                              {formatDateTime(transaction?.created_date_time)}
+                            </span>
+                          </div>
+                          <div className="flex flex-col items-end">
                             <span
-                              className={`px-2 py-1 rounded-full text-xs ${
+                              className={`px-2 py-1 rounded-full text-xs mb-1 ${
                                 transaction?.credit_depit === "CREDIT"
                                   ? "bg-green-100 text-green-800"
                                   : "bg-red-100 text-red-800"
@@ -201,70 +280,20 @@ const LatestOrderView = ({ listItems, meta }) => {
                             >
                               {transaction?.credit_depit}
                             </span>
-                          </td>
-                          <td className="p-3 text-sm font-medium">
-                            <div className="flex items-center">
-                              <span
-                                className={
-                                  transaction?.credit_depit === "CREDIT"
-                                    ? "text-green-600"
-                                    : "text-red-600"
-                                }
-                              >
-                                {transaction?.price_with_currency}
-                              </span>
-                            </div>
-                          </td>
-                        </tr>
+                            <span
+                              className={
+                                transaction?.credit_depit === "CREDIT"
+                                  ? "text-green-600"
+                                  : "text-red-600"
+                              }
+                            >
+                              {transaction?.price_with_currency}
+                            </span>
+                          </div>
+                        </div>
                       ))}
-                </tbody>
-              </table>
-
-              {/* Mobile List View */}
-              <div className="sm:hidden">
-                {loading
-                  ? Array(5)
-                      .fill()
-                      .map((_, index) => (
-                        <ShimmerRow key={index} isMobile={isMobile} />
-                      ))
-                  : transactions?.map((transaction) => (
-                      <div
-                        key={transaction?.id}
-                        className="border-t border-[#eaeaf1] p-3 flex justify-between items-center"
-                      >
-                        <div className="flex flex-col">
-                          <span className="text-sm text-[#323A70] font-medium">
-                            {transaction?.reference_no}
-                          </span>
-                          <span className="text-xs text-gray-500 flex items-center gap-1">
-                            <IconStore.calendarDays className="size-4" />
-                            {formatDateTime(transaction?.created_date_time)}
-                          </span>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs mb-1 ${
-                              transaction?.credit_depit === "CREDIT"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {transaction?.credit_depit}
-                          </span>
-                          <span
-                            className={
-                              transaction?.credit_depit === "CREDIT"
-                                ? "text-green-600"
-                                : "text-red-600"
-                            }
-                          >
-                            {transaction?.price_with_currency}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

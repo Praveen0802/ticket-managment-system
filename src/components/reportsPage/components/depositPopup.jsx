@@ -56,9 +56,10 @@ const DepositPopup = ({ onClose, data }) => {
 
   // Download proof function
   const handleDownloadProof = () => {
-    if (data?.proof) {
-      window.open(data.proof, "_blank");
-    }
+    const createdAnchor = document.createElement("a");
+    createdAnchor.href = data?.proof;
+    createdAnchor.download = "Download";
+    createdAnchor.click();
   };
 
   return (
