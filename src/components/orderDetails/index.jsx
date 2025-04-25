@@ -22,7 +22,7 @@ const OrderDetails = ({ show, onClose, data }) => {
     payment_details = {},
     tickets = {},
   } = data;
-  console.log(data, "datadata");
+
   const [expandedVersion, setExpandedVersion] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -138,7 +138,7 @@ const OrderDetails = ({ show, onClose, data }) => {
                   }`}
                 >
                   <OrderValues orderObject={orderObject} />
-                  <DownLoadYourTickets tickets={tickets} />
+                  <DownLoadYourTickets tickets={tickets} bookingId={order_details?.booking_id}/>
                 </div>
                 <div
                   className={`flex flex-col gap-4  ${`transition-custom ${

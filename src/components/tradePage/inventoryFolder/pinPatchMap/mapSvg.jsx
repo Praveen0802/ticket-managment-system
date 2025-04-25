@@ -298,7 +298,7 @@ const StadiumMap = ({
     });
 
     // Add price indicators
-    addPriceIndicators();
+    // addPriceIndicators();
   };
 
   // Handle SVG load

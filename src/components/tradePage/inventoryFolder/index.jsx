@@ -51,6 +51,8 @@ const InventoryFolder = (props) => {
   const [displayTicketDetails, setDisplayTicketDetails] =
     useState(ticket_details);
   const [filtersApplied, setFiltersApplied] = useState({ page: 1 });
+  const [lastPage, setLastPage] = useState(response?.meta?.last_page);
+  const [currentPage, setCurrentPage] = useState(response?.meta?.current_page);
   const [showMap, setShowMap] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const defaultFilters = {
@@ -106,6 +108,8 @@ const InventoryFolder = (props) => {
     } else {
       setDisplayTicketDetails([...response?.ticket_details]);
     }
+    setLastPage(response?.meta?.last_page);
+    setCurrentPage(response?.meta?.current_page);
     setLoader(false);
   };
 
@@ -140,17 +144,18 @@ const InventoryFolder = (props) => {
   };
 
   const fetchScrollEnd = async () => {
+    if (currentPage >= lastPage) return;
     const scrollPosition = window.scrollY || document.documentElement.scrollTop;
     const params = {
-      page: filtersApplied?.page + 1,
       ...filtersApplied,
+      page: currentPage + 1,
     };
 
     await fetchAPIDetails(params, true);
     setFiltersApplied(params);
-    setTimeout(() => {
-      window.scrollTo(0, scrollPosition);
-    }, 0);
+    // setTimeout(() => {
+    //   window.scrollTo(0, scrollPosition);
+    // }, 0);
   };
 
   const handleMapBlockClick = (blockId) => {

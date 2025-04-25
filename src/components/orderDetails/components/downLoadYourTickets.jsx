@@ -1,11 +1,15 @@
 import Button from "@/components/commonComponents/button";
 import { isEmptyObject } from "@/utils/helperFunctions";
 import React, { useState } from "react";
-import { Download } from "lucide-react";
+import { Download, CheckCircle } from "lucide-react";
+import { downloadTicketLinks } from "@/utils/apiHandler/request";
+import { IconStore } from "@/utils/helperFunctions/iconStore";
 
-const DownloadYourTickets = ({ tickets }) => {
+const DownloadYourTickets = ({ tickets, bookingId }) => {
   // State to track active tab
   const [activeTab, setActiveTab] = useState("etickets");
+  // Track which link has been copied
+  const [copiedLinkIndex, setCopiedLinkIndex] = useState(null);
 
   // Define available tabs based on data
   const availableTabs = [];
@@ -15,6 +19,7 @@ const DownloadYourTickets = ({ tickets }) => {
     availableTabs.push({ id: "links", label: "Links" });
   if (!isEmptyObject(tickets?.pod))
     availableTabs.push({ id: "pods", label: "Pods" });
+  availableTabs.push({ id: "instructionFile", label: "Instruction File" });
 
   // Set default active tab if current one isn't available
   React.useEffect(() => {
@@ -26,12 +31,26 @@ const DownloadYourTickets = ({ tickets }) => {
     }
   }, [tickets, activeTab]);
 
+  const fetchDownloadLinks = async (type, id, downloadType = "") => {
+    const generateUrl = `/bookings/${bookingId}/${type}${
+      id ? `/${id}` : ""
+    }/${downloadType}`;
+    const response = await downloadTicketLinks("", generateUrl);
+    const createdAnchor = document.createElement("a");
+    createdAnchor.href = response?.url;
+    createdAnchor.download = "Download";
+    createdAnchor.click();
+  };
 
-  const fetchDownloadLinks = async(type,id)=>{
-const generateUrl = `/bookings/`
-  }
+  const handleCopy = (value, index) => {
+    navigator.clipboard.writeText(value);
+    setCopiedLinkIndex(index);
 
-
+    // Reset the copied status after 2 seconds
+    setTimeout(() => {
+      setCopiedLinkIndex(null);
+    }, 2000);
+  };
 
   return (
     <div className="border-[1px] border-[#E0E1EA] h-full rounded-md">
@@ -47,6 +66,7 @@ const generateUrl = `/bookings/`
             label_:
               "text-sm font-medium flex items-center justify-center gap-2",
           }}
+          onClick={() => fetchDownloadLinks("etickets", "", "download-all")}
           icon={<Download size={16} />}
         />
       </div>
@@ -93,6 +113,9 @@ const generateUrl = `/bookings/`
                       label_:
                         "text-sm font-medium flex items-center justify-center gap-2",
                     }}
+                    onClick={() => {
+                      fetchDownloadLinks("etickets", item.id, "download");
+                    }}
                     icon={<Download size={16} />}
                   />
                 </div>
@@ -106,23 +129,60 @@ const generateUrl = `/bookings/`
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold text-gray-800">Links</h2>
-              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                {tickets.links.length} available
-              </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pl-[20px]">
               {tickets?.links?.map((item, index) => (
-                <div key={index} className="flex flex-col gap-2 ">
-                  <div>
-                    <p className="font-medium text-gray-700">
+                <div key={index} className="flex flex-col gap-2">
+                  <div className="bg-gray-100 hover:bg-gray-200 px-3 py-2 flex items-center justify-between rounded-md transition-all">
+                    <p className="font-medium text-gray-700 truncate">
                       Link #{index + 1}
                     </p>
+                    <div className="flex items-center gap-1">
+                      {copiedLinkIndex === index ? (
+                        <div className="flex items-center text-green-600 text-sm">
+                          <CheckCircle className="size-4 mr-1" />
+                          <span>Copied!</span>
+                        </div>
+                      ) : (
+                        <IconStore.copy
+                          onClick={() => {
+                            handleCopy(item?.qr_link_android, index);
+                          }}
+                          className="size-4 cursor-pointer hover:text-indigo-600"
+                        />
+                      )}
+                    </div>
                   </div>
-                  <button className="flex items-center gap-2 text-sm  cursor-pointer hover:underline font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
-                    <Download size={16} /> Download
-                  </button>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "instructionFile" && tickets?.instruction_file && (
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Instruction File
+              </h2>
+            </div>
+            <div className="p-4">
+              <Button
+                type="primary"
+                label="Download"
+                classNames={{
+                  root: "px-4 py-2 w-fit ",
+                  label_: "text-sm font-medium flex items-center gap-2",
+                }}
+                onClick={() => {
+                  fetchDownloadLinks(
+                    "etickets",
+                    "",
+                    "download-instruction-file"
+                  );
+                }}
+                icon={<Download size={16} />}
+              />
             </div>
           </div>
         )}
@@ -140,6 +200,9 @@ const generateUrl = `/bookings/`
                 classNames={{
                   root: "px-4 py-2 w-fit ",
                   label_: "text-sm font-medium flex items-center gap-2",
+                }}
+                onClick={() => {
+                  fetchDownloadLinks("etickets", "", "download-pod");
                 }}
                 icon={<Download size={16} />}
               />

@@ -18,6 +18,7 @@ const FloatingDateRange = ({
   labelClassName = "",
   error = "",
   singleDateMode = false,
+  subParentClassName=''
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -388,7 +389,7 @@ const FloatingDateRange = ({
         </span>
       </FloatingPlaceholder>
 
-      <div className="relative">
+      <div className={`${subParentClassName} relative`}>
         {!hideCalendarIcon && (
           <div
             className="absolute left-2 z-10 bg-white top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"

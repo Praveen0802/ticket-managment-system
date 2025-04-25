@@ -13,17 +13,10 @@ import { useDispatch } from "react-redux";
 import { updateWalletPopupFlag } from "@/utils/redux/common/action";
 import chevronDown from "../../../public/white-chevron-right.svg";
 import useIsMobile from "@/utils/helperFunctions/useIsmobile";
+import AvailableFunds from "./components/availableFunds";
 
 const TradePage = (props) => {
-  const {
-    profile,
-    matchId,
-    success = "",
-    allCategories,
-    fetchTabCount,
-    totalAmount = "£1,915.75",
-    fetchWalletBalance,
-  } = props;
+  const { profile, allCategories, fetchTabCount, fetchWalletBalance } = props;
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(profile);
   const [showEventSearch, setShowEventSearch] = useState(false);
@@ -118,18 +111,7 @@ const TradePage = (props) => {
     <div className="bg-[#ECEDF2] w-full h-full relative">
       {/* Wallet info - Responsive for both desktop and mobile */}
       <div className="absolute top-0 right-0 flex gap-3 items-center bg-white p-4 md:p-4 md:right-0 md:left-auto md:w-auto w-full justify-end">
-        <div className="flex flex-col">
-          <p className="text-[#7D82A4] text-[12px]">Available funds</p>
-          <div className="flex gap-2 items-center w-[100px] overflow-auto hideScrollbar">
-            {fetchWalletBalance?.account_data?.map((item, index) => {
-              return (
-                  <p className="text-[#323A70] text-[14px] font-normal whitespace-nowrap">
-                    {item?.balance_amount}
-                  </p>
-              );
-            })}
-          </div>
-        </div>
+        <AvailableFunds fetchWalletBalance={fetchWalletBalance} />
         <div
           onClick={handleOpenAddWalletPopup}
           className="flex gap-2 bg-[#F0F1F5] cursor-pointer rounded-md p-[8px] items-center"

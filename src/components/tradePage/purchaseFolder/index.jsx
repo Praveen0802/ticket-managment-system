@@ -368,8 +368,9 @@ const PurchaseFolder = (props) => {
         id="eventDate"
         name="eventDate"
         keyValue="eventDate"
-        parentClassName="!w-[350px]"
+        parentClassName="!w-[200px]"
         label="Event Date"
+        subParentClassName="!w-[200px]"
         className="!py-[8px] !px-[16px] mobile:text-xs"
         value={eventDate}
         onChange={(dateValue) => handleDateChange(dateValue, "eventDate")}
@@ -379,6 +380,7 @@ const PurchaseFolder = (props) => {
         name="orderDate"
         keyValue="orderDate"
         parentClassName="!w-[350px]"
+         subParentClassName="!w-[200px]"
         label="Order Date"
         className="!py-[8px] !px-[16px] mobile:text-xs"
         value={orderDate}

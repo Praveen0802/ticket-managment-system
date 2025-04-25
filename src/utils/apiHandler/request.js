@@ -22,7 +22,6 @@ const makeRequest = async ({
         : (modifiedUrl += `?${key}=${value}`);
     });
   }
-  console.log(modifiedUrl, "modifiedUrlmodifiedUrl");
   // Making API call based on client or server
   try {
     const response = isClient
@@ -402,7 +401,6 @@ export const storePaymentMethod = async (token, data) => {
       data: data,
       ...(token && { token: token }),
     });
-    console.log(response, "responseresponseresponse");
     return response?.data;
   } catch (error) {
     console.log("ERROR in storePaymentMethod", error);
@@ -1016,7 +1014,7 @@ export const downloadTicketLinks = async (token, url) => {
       method: "GET",
       ...(token && { token: token }),
     });
-    return response?.data?.success ? response?.data?.data : {};
+    return response?.data;
   } catch (error) {
     console.log("ERROR in getWalletBalance", error);
     return error?.response?.data;
