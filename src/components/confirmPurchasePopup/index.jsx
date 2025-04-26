@@ -134,16 +134,22 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   };
 
   const router = useRouter();
-
-  const bookingConfirm = async (success, message) => {
+  console.log(bookingNo, "router");
+  const bookingConfirm = async (success, message,booking) => {
     if (success) {
       toast.success(message);
+      router.push(`/trade/purchase?success=true&booking_no=${booking}`);
+
       onClose();
-      router.push(`/trade/purchase?success=true&booking_no=${bookingNo}`);
     } else {
       toast.error(message || "Booking confirmation failed");
+      setLoader(false);
     }
   };
+
+  // useEffect(()=>{
+
+  // })
 
   const handleSubmit = async () => {
     try {
@@ -205,6 +211,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           {},
           secondApiPayload
         );
+        console.log(apiResponse?.booking_no, "apiResponse?.booking_no");
         setBookingNo(apiResponse?.booking_no);
         if (apiResponse?.status == "success") {
           if (paymentMethod == 1) {
@@ -219,7 +226,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
             );
 
             if (confirmResponse?.result?.booking_status == "Success") {
-              bookingConfirm(true, "Booking Confirmed Successfully");
+              bookingConfirm(true, "Booking Confirmed Successfully",apiResponse?.booking_no);
             } else {
               bookingConfirm(
                 false,
@@ -240,7 +247,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
                   ?.recurringDetailReference,
             });
             if (response?.result?.status == 1) {
-              bookingConfirm(true, "Booking Confirmed Successfully");
+              bookingConfirm(true, "Booking Confirmed Successfully",apiResponse?.booking_no);
             } else {
               bookingConfirm(false, response?.message || "Booking failed");
             }
@@ -257,7 +264,6 @@ const ConfirmPurchasePopup = ({ onClose }) => {
         "An unexpected error occurred. Please try again later."
       );
     } finally {
-      setLoader(false);
     }
   };
 
@@ -341,6 +347,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           paymentMethod={2}
           bookingConfirm={bookingConfirm}
           setHideCta={setHideCta}
+          bookingNo={bookingNo}
         />
       )}
     </div>

@@ -517,10 +517,9 @@ const InventoryFolder = (props) => {
                 </div>
               </div>
               {!isEmptyObject(filtersApplied) && (
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 flex-wrap items-center">
                   {Object.entries(filtersApplied)?.map(
                     ([key, value], index) => {
-                      console.log(value, key, "valuekey");
                       if (key === "page" || !value || value?.length == 0)
                         return null;
                       return (

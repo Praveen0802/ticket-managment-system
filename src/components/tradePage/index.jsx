@@ -78,7 +78,7 @@ const TradePage = (props) => {
   };
 
   const selectedSubComponents = {
-    home: <TradeHome {...props} />,
+    home: <TradeHome {...props} showEventSearch={showEventSearch}/>,
     tracking: <TrackingPage {...props} />,
     purchase: <PurchaseFolder {...props} />,
     inventory: <InventoryFolder {...props} />,

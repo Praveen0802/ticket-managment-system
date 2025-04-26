@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import chevronDown from "../../../../public/chevron-down.svg";
 import Image from "next/image";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
@@ -36,10 +36,10 @@ const StickyDataTable = ({
   // Use whichever callback is provided
   const scrollEndCallback = onScrollEnd || fetchScrollEnd;
 
-  // Calculate the width of sticky columns based on the first row or a default
+  // Calculate the width of sticky columns based on consistent sizing
   const maxStickyColumnsLength =
     rightStickyColumns.length > 0
-      ? Math.max(...rightStickyColumns.map((cols) => cols.length), 0)
+      ? Math.max(...rightStickyColumns.map((cols) => Array.isArray(cols) ? cols.length : 0), 0)
       : 0;
   const stickyColumnsWidth = maxStickyColumnsLength * 50; // 50px per column
 
@@ -132,6 +132,13 @@ const StickyDataTable = ({
       const mainRows = mainTableRef.current.querySelectorAll("tbody tr");
       const stickyRows = stickyTableRef.current.querySelectorAll("tbody tr");
 
+      // Ensure we have the same number of rows to sync
+      if (mainRows.length !== stickyRows.length) {
+        console.warn("Row count mismatch between main and sticky tables");
+        return;
+      }
+
+      // Reset all heights to auto first
       mainRows.forEach((row) => (row.style.height = "auto"));
       stickyRows.forEach((row) => (row.style.height = "auto"));
 
@@ -144,25 +151,29 @@ const StickyDataTable = ({
         stickyHeaderRow.style.height = `${headerHeight}px`;
       }
 
-      // Sync body row heights
-      mainRows.forEach((row, index) => {
-        if (row && stickyRows[index]) {
-          // Get the natural heights of both rows
-          const mainRowHeight = row.offsetHeight;
-          const stickyRowHeight = stickyRows[index].offsetHeight;
+      // Allow the browser to recalculate natural heights
+      requestAnimationFrame(() => {
+        // Sync body row heights using row index as key
+        mainRows.forEach((row, index) => {
+          if (index < stickyRows.length) {
+            const stickyRow = stickyRows[index];
+            // Get the natural heights of both rows
+            const mainRowHeight = row.offsetHeight;
+            const stickyRowHeight = stickyRow.offsetHeight;
 
-          // Use the larger of the two heights
-          const maxHeight = Math.max(mainRowHeight, stickyRowHeight);
-          row.style.height = `${maxHeight}px`;
-          stickyRows[index].style.height = `${maxHeight}px`;
-        }
+            // Use the larger of the two heights
+            const maxHeight = Math.max(mainRowHeight, stickyRowHeight);
+            row.style.height = `${maxHeight}px`;
+            stickyRow.style.height = `${maxHeight}px`;
+          }
+        });
       });
     };
 
-    // Run sync initially and when data changes
-    requestAnimationFrame(() => {
+    // Wait for rendering to complete before measuring
+    const timer = setTimeout(() => {
       syncRowHeights();
-    });
+    }, 0);
 
     // Set up resize observer for continuous monitoring
     const resizeObserver = new ResizeObserver(() => {
@@ -176,6 +187,7 @@ const StickyDataTable = ({
     window.addEventListener("resize", syncRowHeights);
 
     return () => {
+      clearTimeout(timer);
       if (containerRef.current) {
         resizeObserver.unobserve(containerRef.current);
       }
@@ -333,6 +345,26 @@ const StickyDataTable = ({
     setActiveTooltipKey(null);
   };
 
+  // Ensure rightStickyColumns matches displayData length
+  const normalizedStickyColumns = useMemo(() => {
+    // If rightStickyColumns is an array of arrays (one per row)
+    if (Array.isArray(rightStickyColumns) && rightStickyColumns.length > 0 && Array.isArray(rightStickyColumns[0])) {
+      // If rightStickyColumns already matches displayData length, use it as-is
+      if (rightStickyColumns.length === displayData.length) {
+        return rightStickyColumns;
+      }
+      
+      // Otherwise, pad or truncate to match displayData length
+      return Array(displayData.length).fill(0).map((_, i) => 
+        i < rightStickyColumns.length ? rightStickyColumns[i] : []
+      );
+    }
+    
+    // If rightStickyColumns is just a single array of column configs (same for all rows)
+    // or if it's something else, return empty arrays for each row
+    return Array(displayData.length).fill(0).map(_ => []);
+  }, [rightStickyColumns, displayData]);
+
   return (
     <div ref={containerRef} className="w-full relative">
       {/* Main scrollable table container */}
@@ -377,7 +409,7 @@ const StickyDataTable = ({
 
               return (
                 <tr
-                  key={row.isShimmer ? `shimmer-${rowIndex}` : rowIndex}
+                  key={row.isShimmer ? `shimmer-${rowIndex}` : (row.id || rowIndex)}
                   className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
                   onMouseEnter={() =>
                     handleTicketMouseEnter(row?.seat_category_id)
@@ -451,50 +483,53 @@ const StickyDataTable = ({
             {rightStickyHeaders?.length > 0 ? (
               <thead>
                 <tr className="bg-white border-b border-[#E0E1EA]">
-                  {rightStickyHeaders?.map((header) => (
-                    <th className="py-2 px-2 text-left text-[#7D82A4]  text-[13px] border-r-[1px] border-[#E0E1EA] font-medium whitespace-nowrap">
+                  {rightStickyHeaders?.map((header, idx) => (
+                    <th 
+                      key={`sticky-header-${idx}`}
+                      className="py-2 px-2 text-left text-[#7D82A4] text-[13px] border-r-[1px] border-[#E0E1EA] font-medium whitespace-nowrap"
+                    >
                       {header}
                     </th>
                   ))}
-                  <th
-                    colSpan={
-                      maxStickyColumnsLength - rightStickyHeaders?.length
-                    }
-                    className="py-2 px-2"
-                  >
-                    <div className="flex justify-end items-center">
-                      {/* Left arrow */}
-                      <button
-                        onClick={scrollLeft}
-                        disabled={!canScrollLeft}
-                        className={`p-1 rounded cursor-pointer ${
-                          canScrollLeft
-                            ? "text-[#323A70] hover:bg-gray-100"
-                            : "text-gray-300 cursor-not-allowed"
-                        }`}
-                        aria-label="Scroll left"
-                      >
-                        <ChevronRight
-                          className="rotate-180"
-                          color={canScrollLeft ? "" : "#B4B7CB"}
-                        />
-                      </button>
+                  {maxStickyColumnsLength > rightStickyHeaders?.length && (
+                    <th
+                      colSpan={maxStickyColumnsLength - rightStickyHeaders?.length}
+                      className="py-2 px-2"
+                    >
+                      <div className="flex justify-end items-center">
+                        {/* Left arrow */}
+                        <button
+                          onClick={scrollLeft}
+                          disabled={!canScrollLeft}
+                          className={`p-1 rounded cursor-pointer ${
+                            canScrollLeft
+                              ? "text-[#323A70] hover:bg-gray-100"
+                              : "text-gray-300 cursor-not-allowed"
+                          }`}
+                          aria-label="Scroll left"
+                        >
+                          <ChevronRight
+                            className="rotate-180"
+                            color={canScrollLeft ? "" : "#B4B7CB"}
+                          />
+                        </button>
 
-                      {/* Right arrow */}
-                      <button
-                        onClick={scrollRight}
-                        disabled={!canScrollRight}
-                        className={`p-1 rounded cursor-pointer ${
-                          canScrollRight
-                            ? "text-[#323A70] hover:bg-gray-100"
-                            : "text-gray-300 cursor-not-allowed"
-                        }`}
-                        aria-label="Scroll right"
-                      >
-                        <ChevronRight color={canScrollRight ? "" : "#B4B7CB"} />
-                      </button>
-                    </div>
-                  </th>
+                        {/* Right arrow */}
+                        <button
+                          onClick={scrollRight}
+                          disabled={!canScrollRight}
+                          className={`p-1 rounded cursor-pointer ${
+                            canScrollRight
+                              ? "text-[#323A70] hover:bg-gray-100"
+                              : "text-gray-300 cursor-not-allowed"
+                          }`}
+                          aria-label="Scroll right"
+                        >
+                          <ChevronRight color={canScrollRight ? "" : "#B4B7CB"} />
+                        </button>
+                      </div>
+                    </th>
+                  )}
                 </tr>
               </thead>
             ) : (
@@ -554,16 +589,13 @@ const StickyDataTable = ({
                 }
 
                 // Get the row-specific sticky columns, or empty array if not defined
-                const rowStickyColumns =
-                  !loading && rightStickyColumns[rowIndex]
-                    ? rightStickyColumns[rowIndex]
-                    : [];
+                const rowStickyColumns = !loading && Array.isArray(normalizedStickyColumns[rowIndex]) 
+                  ? normalizedStickyColumns[rowIndex] 
+                  : [];
 
                 return (
                   <tr
-                    key={
-                      row.isShimmer ? `shimmer-sticky-${rowIndex}` : rowIndex
-                    }
+                    key={row.isShimmer ? `shimmer-sticky-${rowIndex}` : (row.id ? `sticky-${row.id}` : `sticky-${rowIndex}`)}
                     className="border-b border-[#E0E1EA] bg-white hover:bg-gray-50"
                   >
                     {/* Render shimmer for loading state or actual content */}
@@ -586,10 +618,10 @@ const StickyDataTable = ({
                     ) : (
                       // Render actual sticky columns
                       <>
-                        {rowStickyColumns?.map((column, colIndex) => (
+                        {rowStickyColumns.map((column, colIndex) => (
                           <td
-                            key={`${rowIndex}-${colIndex}`}
-                            className={` text-sm align-middle text-center ${
+                            key={`sticky-${rowIndex}-${colIndex}`}
+                            className={`text-sm align-middle text-center ${
                               column?.className || ""
                             }`}
                           >
@@ -614,11 +646,11 @@ const StickyDataTable = ({
                                     {column.icon}
                                   </div>
                                 </TooltipWrapper>
-                              ) : (
+                              ) : column.icon ? (
                                 <div className="cursor-pointer">
                                   {column.icon}
                                 </div>
-                              )}
+                              ) : null}
                               {column?.cta && <button>{column?.cta}</button>}
                             </div>
                           </td>

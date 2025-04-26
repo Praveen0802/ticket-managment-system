@@ -10,7 +10,7 @@ import { fetchRecentlyViewedList } from "@/utils/apiHandler/request";
 import { useRouter } from "next/router";
 
 const TradeHome = (props) => {
-  const { profile, response = {} } = props;
+  const { profile, response = {}, showEventSearch } = props;
   console.log(response, "propsprops");
   const {
     hotEvents = {},
@@ -154,6 +154,7 @@ const TradeHome = (props) => {
                   section.events.map((event, eventIndex) => (
                     <EventListView
                       key={eventIndex}
+                      showEventSearch={showEventSearch}
                       event={event}
                       onClick={() => handleEventClick(event)}
                     />

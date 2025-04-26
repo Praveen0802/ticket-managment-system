@@ -10,12 +10,45 @@ export const readCookie = function (name) {
   return null;
 };
 
-export const setCookie = (name, value, daysToExpire) => {
+export const setCookie = (name, value, daysToExpire = 30) => {
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + daysToExpire);
-  const cookieValue = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
+  
+  // For deletion, make sure to use a past date
+  const expires = daysToExpire < 0 ? "Thu, 01 Jan 1970 00:00:00 GMT" : expirationDate.toUTCString();
+  
+  console.log(name, value, 'eeeeeee');
+  const cookieValue = `${name}=${value}; expires=${expires}; path=/`;
   document.cookie = cookieValue;
 };
+
+
+
+export function getCookie(name) {
+  // Add = to the name to ensure we find the exact cookie name and not a substring
+  const nameEQ = name + "=";
+  // Split the cookie string by semicolons into an array
+  const cookies = document.cookie.split(';');
+  
+  // Loop through all cookies
+  for (let i = 0; i < cookies.length; i++) {
+    let cookie = cookies[i];
+    // Remove leading spaces if any
+    while (cookie.charAt(0) === ' ') {
+      cookie = cookie.substring(1);
+    }
+    // If this cookie starts with the name we're looking for
+    if (cookie.indexOf(nameEQ) === 0) {
+      // Return the cookie value (everything after the name=)
+      return cookie.substring(nameEQ.length);
+    }
+  }
+  // If cookie not found, return null
+  return null;
+}
+
+// Example usage:
+// const authToken = getCookie("auth_token");
 
 export const parseCookie = (str) =>
   str

@@ -1,6 +1,6 @@
 import { loginUser, sendResetRequest } from "@/utils/apiHandler/request";
 import { currentTimeEpochTimeInMilliseconds } from "@/utils/helperFunctions";
-import { setCookie } from "@/utils/helperFunctions/cookie";
+import { getCookie, setCookie } from "@/utils/helperFunctions/cookie";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Button from "../commonComponents/button";
@@ -88,6 +88,9 @@ const LoginForm = () => {
           const authToken = response?.token;
 
           if (authToken) {
+            if (getCookie("auth_token")) {
+              await setCookie("auth_token", "");
+            }
             setCookie("auth_token", authToken);
             setCookie(
               "auth_token_validity",
