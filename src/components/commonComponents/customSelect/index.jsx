@@ -82,7 +82,7 @@ const CustomSelect = ({
       >
         <span
           className={`${
-            viewingValue?.placeholder ? "text-gray-400" : "text-[#323A70]"
+            viewingValue?.placeholder ? "text-gray-400" : "text-[#343432]"
           } font-normal text-[12px]`}
         >
           {viewingValue?.placeholder ? viewingValue?.placeholder : viewingValue}

@@ -20,11 +20,11 @@ const LeftViewContainer = (props) => {
                   alt="image-logo"
                 />
               </div>
-              <p className="text-[#323A70] text-[14px] font-normal">
+              <p className="text-[#343432] text-[14px] font-normal">
                 {report?.text}
               </p>
             </div>
-            <p className="text-[#323A70] text-[16px] font-semibold ml-10 sm:ml-0">
+            <p className="text-[#343432] text-[16px] font-semibold ml-10 sm:ml-0">
               {report?.desc}
             </p>
           </div>

@@ -184,7 +184,7 @@ const DashboardPage = (props) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white border border-[#eaeaf1] flex flex-col gap-3 md:gap-5 rounded-md p-3 md:p-5">
             <div className="flex flex-col gap-5">
-              <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
+              <p className="text-[#343432] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 {"Wallet"}
               </p>
               <div className="grid grid-cols-2 gap-4">
@@ -202,7 +202,7 @@ const DashboardPage = (props) => {
           </div>
           <div className="bg-white border border-[#eaeaf1] flex flex-col gap-3 md:gap-5 rounded-md p-3 md:p-5">
             <div className="flex flex-col gap-5">
-              <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
+              <p className="text-[#343432] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 {"Orders"}
               </p>
               <div className="grid grid-cols-3 gap-4">

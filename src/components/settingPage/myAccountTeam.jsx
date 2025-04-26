@@ -105,7 +105,7 @@ const MyAccountTeam = (props) => {
                     onClick={updateProfileDetails}
                     loading={submitLoader}
                     classNames={{
-                      root: "w-full sm:w-auto bg-[#130061] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
+                      root: "w-full sm:w-auto bg-[#343432] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
                       label_:
                         "text-xs md:text-sm text-center text-white font-normal",
                     }}
@@ -120,7 +120,7 @@ const MyAccountTeam = (props) => {
                   // iconBefore={<IconStore.pencilEdit className="stroke-white" />}
                   loading={submitLoader}
                   classNames={{
-                    root: "w-full sm:w-auto bg-[#130061] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
+                    root: "w-full sm:w-auto bg-[#343432] justify-center py-1 px-3 md:px-[14px] sm:mt-0",
                     label_:
                       "text-xs md:text-sm text-center text-white font-normal",
                   }}

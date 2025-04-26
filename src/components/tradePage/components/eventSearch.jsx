@@ -285,7 +285,7 @@ const EventSearch = ({ onClose, allCategories }) => {
                       "event_date"
                     );
                   }}
-                  className="border border-[#E0E1EA] mx-4 px-1 rounded-md py-1 text-[13px] text-[#323A70] cursor-pointer hover:scale-105 transition-transform duration-200"
+                  className="border border-[#E0E1EA] mx-4 px-1 rounded-md py-1 text-[13px] text-[#343432] cursor-pointer hover:scale-105 transition-transform duration-200"
                 >
                   {item?.team_name}
                 </p>
@@ -352,7 +352,7 @@ const EventSearch = ({ onClose, allCategories }) => {
   return (
     <div className="bg-white w-full h-full shadow-md border-r-[1px] border-[#E0E1EA] flex flex-col">
       <div className="flex justify-between items-center border-b-[1px] border-[#E0E1EA] p-4">
-        <p className="text-[#323A70] text-[18px] font-semibold">Event Search</p>
+        <p className="text-[#343432] text-[18px] font-semibold">Event Search</p>
         <div className="flex gap-2 items-center">
           <button onClick={handleClickReset} className="cursor-pointer">
             <IconStore.reload className="stroke-[#3E2E7E] size-4" />

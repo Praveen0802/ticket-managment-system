@@ -48,7 +48,7 @@ const TradeTickets = () => {
   return (
     <div className="border-[1px] border-[#eaeaf1] rounded-md bg-white">
       <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-b-[1px] border-[#eaeaf1]">
-        <p className="text-[16px] text-[#323A70] font-semibold mb-3 sm:mb-0">
+        <p className="text-[16px] text-[#343432] font-semibold mb-3 sm:mb-0">
           Trade Tickets
         </p>
         <Button type="blueType" label="Find Tickets" />

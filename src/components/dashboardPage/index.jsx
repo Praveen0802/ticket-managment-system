@@ -18,7 +18,7 @@ const DashboardPage = (props) => {
           {/* Wallet Section */}
           <div className="bg-white border border-[#eaeaf1] flex flex-col gap-3 md:gap-5 rounded-md p-3 md:p-5">
             <div className="flex flex-col gap-5">
-              <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
+              <p className="text-[#343432] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 Wallet
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -28,10 +28,10 @@ const DashboardPage = (props) => {
                     title="Balance"
                     desc={
                       <div className="flex gap-1 items-center">
-                        {/* <p className="text-[#0137D5] bg-[#F2F5FD] font-normal p-[8px] rounded-[4px] text-xs md:text-sm">
+                        {/* <p className="text-[#343432] bg-[#F2F5FD] font-normal p-[8px] rounded-[4px] text-xs md:text-sm">
                           {wallet?.icon}
                         </p> */}
-                        <p className="text-[#323A70] text-sm md:text-base font-normal whitespace-nowrap">
+                        <p className="text-[#343432] text-sm md:text-base font-normal whitespace-nowrap">
                           {wallet?.price_with_currency}
                         </p>
                       </div>
@@ -45,7 +45,7 @@ const DashboardPage = (props) => {
           {/* Orders Section */}
           <div className="bg-white border border-[#eaeaf1] flex flex-col gap-3 md:gap-5 rounded-md p-3 md:p-5">
             <div className="flex flex-col gap-5">
-              <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
+              <p className="text-[#343432] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 Orders
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -63,7 +63,7 @@ const DashboardPage = (props) => {
                         title={title}
                         desc={
                           <div className="flex gap-2 items-center">
-                            <div className="text-[#0137D5] bg-[#F2F5FD] font-normal p-[8px] rounded-[4px] text-xs md:text-sm">
+                            <div className="text-[#343432] bg-[#F2F5FD] font-normal p-[8px] rounded-[4px] text-xs md:text-sm">
                               <Image
                                 src={
                                   key === "completedOrders"
@@ -77,7 +77,7 @@ const DashboardPage = (props) => {
                                 alt="logo"
                               />
                             </div>
-                            <p className="text-[#323A70] text-sm md:text-base font-normal">
+                            <p className="text-[#343432] text-sm md:text-base font-normal">
                               {value}
                             </p>
                           </div>

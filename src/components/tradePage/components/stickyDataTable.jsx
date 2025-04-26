@@ -441,7 +441,7 @@ const StickyDataTable = ({
                                   ? "text-green-500"
                                   : displayText == "incomplete"
                                   ? "text-yellow-500"
-                                  : "text-[#323A70]"
+                                  : "text-[#343432]"
                               }
                              ${
                                header?.key == "bookingNo" &&
@@ -455,7 +455,7 @@ const StickyDataTable = ({
                                  ? "text-[#0037D5]"
                                  : displayText == "shipped"
                                  ? "text-[#0037D5]"
-                                 : "text-[#323A70]")
+                                 : "text-[#343432]")
                              } capitalize`}
                           >
                             {row[header?.key]}
@@ -503,7 +503,7 @@ const StickyDataTable = ({
                           disabled={!canScrollLeft}
                           className={`p-1 rounded cursor-pointer ${
                             canScrollLeft
-                              ? "text-[#323A70] hover:bg-gray-100"
+                              ? "text-[#343432] hover:bg-gray-100"
                               : "text-gray-300 cursor-not-allowed"
                           }`}
                           aria-label="Scroll left"
@@ -520,7 +520,7 @@ const StickyDataTable = ({
                           disabled={!canScrollRight}
                           className={`p-1 rounded cursor-pointer ${
                             canScrollRight
-                              ? "text-[#323A70] hover:bg-gray-100"
+                              ? "text-[#343432] hover:bg-gray-100"
                               : "text-gray-300 cursor-not-allowed"
                           }`}
                           aria-label="Scroll right"
@@ -544,7 +544,7 @@ const StickyDataTable = ({
                         disabled={!canScrollLeft}
                         className={`p-1 rounded cursor-pointer ${
                           canScrollLeft
-                            ? "text-[#323A70] hover:bg-gray-100"
+                            ? "text-[#343432] hover:bg-gray-100"
                             : "text-gray-300 cursor-not-allowed"
                         }`}
                         aria-label="Scroll left"
@@ -561,7 +561,7 @@ const StickyDataTable = ({
                         disabled={!canScrollRight}
                         className={`p-1 rounded cursor-pointer ${
                           canScrollRight
-                            ? "text-[#323A70] hover:bg-gray-100"
+                            ? "text-[#343432] hover:bg-gray-100"
                             : "text-gray-300 cursor-not-allowed"
                         }`}
                         aria-label="Scroll right"

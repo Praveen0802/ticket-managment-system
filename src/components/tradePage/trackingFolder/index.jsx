@@ -187,7 +187,7 @@ const TrackingPage = (props) => {
             {
               icon: <p>{item?.price_with_currency}</p>,
               className:
-                "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
+                "border-r-[1px] border-[#E0E1EA] text-[#343432] text-[12px]",
             },
             {
               icon: (
@@ -385,7 +385,7 @@ const TrackingPage = (props) => {
               type="text"
               label="Search Match Event"
               value={selectedMatch}
-              className={"!py-[7px] !px-[12px] !text-[#323A70] !text-[14px]"}
+              className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"}
               onChange={handleMatchSearch}
               paddingClassName=""
             />
@@ -414,7 +414,7 @@ const TrackingPage = (props) => {
           <div className="flex items-center gap-2">
             <p
               className={
-                "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
+                "p-[20px] text-[14px] w-fit text-[#343432] font-semibold border-r-[1px] border-[#E0E1EA]"
               }
             >
               {data?.length} purchases

@@ -26,7 +26,7 @@ const Button = (props) => {
   /* Style mapping for (primary, primary-disable, secondary, secondary-disable) Button */
 
   const classNameMapping = {
-    primary: "bg-[#130061] text-white py-[12.5px] text-white",
+    primary: "bg-[#343432] text-white py-[12.5px] text-white",
     "primary-disable":
       "bg-[#E6EAEE] border-[1px] border-[#E6EAEE] text-[#CCD5DC]",
     blueType: "bg-[#0137D5] text-white",

@@ -221,7 +221,7 @@ const AddEditBankDetails = ({ onClose, type, data = {}, fetchCountries }) => {
   return (
     <div className="w-full max-w-3xl mx-auto rounded-lg relative bg-white">
       <div className="flex p-4 border-b border-gray-200 justify-between items-center rounded-t-lg">
-        <h2 className="text-lg sm:text-xl text-[#323A70] font-semibold">
+        <h2 className="text-lg sm:text-xl text-[#343432] font-semibold">
           {editType ? "Edit" : "Add"} Bank Details
         </h2>
         <button
@@ -260,7 +260,7 @@ const AddEditBankDetails = ({ onClose, type, data = {}, fetchCountries }) => {
                 : "bg-indigo-200 cursor-not-allowed"
             }`,
             label_: `text-xs sm:text-sm font-medium ${
-              isFormValid() ? "text-white" : "text-[#323A70]"
+              isFormValid() ? "text-white" : "text-[#343432]"
             }`,
           }}
         />

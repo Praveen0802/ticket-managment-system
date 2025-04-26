@@ -104,7 +104,7 @@ const ResetPasswordFold = ({ token }) => {
         className="w-20 h-20 md:w-28 md:h-28"
       />
       <div className="text-center flex flex-col gap-2 md:gap-3">
-        <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
+        <p className="text-[#343432] text-xl md:text-2xl font-semibold">
           Reset Password
         </p>
         <p className="text-[#7D82A4] text-sm font-normal">

@@ -128,7 +128,7 @@ const FloatingFileUpload = ({
               <div className="flex text-sm text-gray-600">
                 <label
                   htmlFor={id}
-                  className={`relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500 ${
+                  className={`relative cursor-pointer rounded-md bg-white font-medium text-[#343432] focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500 ${
                     disabled ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
@@ -148,7 +148,7 @@ const FloatingFileUpload = ({
         ) : (
           <div className="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md bg-gray-50">
             <div className="flex items-center space-x-2">
-              <IconStore.document className="size-6 text-indigo-600" />
+              <IconStore.document className="size-6 text-[#343432]" />
               <div className="text-sm">
                 <p className="font-medium text-gray-900 truncate max-w-xs">
                   {fileName}

@@ -38,7 +38,7 @@ const ChangePassword = (props) => {
 
   const formFields = [
     {
-      className: "!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]", // Added w-full for mobile
+      className: "!py-[6px] !px-[10px] !text-[#343432] !text-[13px]", // Added w-full for mobile
       autoComplete: "new-password",
       id: "newPassword",
       name: "newPassword",
@@ -49,7 +49,7 @@ const ChangePassword = (props) => {
       placeholder: "Enter new password",
     },
     {
-      className: "!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]", // Added w-full for mobile
+      className: "!py-[6px] !px-[10px] !text-[#343432] !text-[13px]", // Added w-full for mobile
       autoComplete: "new-password",
       id: "confirmPassword",
       name: "confirmPassword",
@@ -90,7 +90,7 @@ const ChangePassword = (props) => {
             type="primary"
             onClick={handleSubmit}
             classNames={{
-              root: `py-1 px-3 md:px-[14px] w-fit transition-all duration-200 ${"bg-[#130061] hover:bg-[#0f0053]"}`,
+              root: `py-1 px-3 md:px-[14px] w-fit transition-all duration-200 ${"bg-[#343432] hover:bg-[#0f0053]"}`,
               label_: `text-xs md:text-sm font-normal ${"text-white"}`,
             }}
           />

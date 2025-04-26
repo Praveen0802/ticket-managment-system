@@ -242,7 +242,7 @@ const PurchaseFolder = (props) => {
     <>
       <div className="flex justify-between items-center mb-4">
         <button
-          className="flex items-center gap-2 text-[#323A70] font-medium"
+          className="flex items-center gap-2 text-[#343432] font-medium"
           onClick={() => setIsFilterExpanded(!isFilterExpanded)}
         >
           <span>{isFilterExpanded ? "Hide Filters" : "Show Filters"}</span>
@@ -264,7 +264,7 @@ const PurchaseFolder = (props) => {
             type="text"
             label="Search Match Event"
             value={selectedMatch}
-            className={"!py-[7px] !px-[12px] !text-[#323A70] !text-[14px]"}
+            className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"}
             onChange={handleMatchSearch}
             paddingClassName=""
             autoComplete="off"
@@ -360,7 +360,7 @@ const PurchaseFolder = (props) => {
         type="text"
         label="Search Match Event"
         value={selectedMatch}
-        className={"!py-[7px] !px-[12px] !text-[#323A70] !text-[14px] "}
+        className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px] "}
         onChange={handleMatchSearch}
         paddingClassName=""
         autoComplete="off"
@@ -502,7 +502,7 @@ const PurchaseFolder = (props) => {
             <div className="flex gap-2 items-center">
               <p
                 className={
-                  "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
+                  "p-[20px] text-[14px] w-fit text-[#343432] font-semibold border-r-[1px] border-[#E0E1EA]"
                 }
               >
                 {data?.length} purchases

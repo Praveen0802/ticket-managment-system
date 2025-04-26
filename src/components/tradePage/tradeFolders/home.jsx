@@ -102,7 +102,7 @@ const TradeHome = (props) => {
               onClick={() => toggleSection(index)}
               className={`flex-shrink-0 py-2 px-3 rounded-full flex items-center gap-1 ${
                 expandedSections[index]
-                  ? "bg-[#130061] text-white"
+                  ? "bg-[#343432] text-white"
                   : "bg-white text-[#130061] border border-[#130061]"
               }`}
             >
@@ -123,7 +123,7 @@ const TradeHome = (props) => {
           >
             {/* Section header */}
             <div
-              className={`flex items-center justify-between bg-[#130061] text-white px-4 py-[14px] ${
+              className={`flex items-center justify-between bg-[#343432] text-white px-4 py-[14px] ${
                 expandedSections[index] ? "rounded-t-[6px]" : "rounded-[6px]"
               } cursor-pointer`}
               onClick={() => toggleSection(index)}

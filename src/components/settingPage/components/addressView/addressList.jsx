@@ -8,7 +8,7 @@ const AddressList = ({ handleEditClick, handleDeleteClick, item, index }) => {
       className="border-[1px] md:w-[50%] border-[#eaeaf1] rounded-lg"
     >
       <div className="flex justify-between items-center p-3 md:p-4 border-b-[1px] border-[#eaeaf1]">
-        <p className="text-sm md:text-base text-[#323A70] font-medium">
+        <p className="text-sm md:text-base text-[#343432] font-medium">
           {item?.title}
         </p>
         <div className="flex gap-2 items-center">

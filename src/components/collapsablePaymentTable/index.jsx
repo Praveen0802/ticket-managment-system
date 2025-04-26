@@ -71,7 +71,7 @@ const CollapsablePaymentTable = ({
               !expandedSections[sectionIndex]
                 ? "rounded-[6px]"
                 : "rounded-t-[6px]"
-            } bg-[#130061]  text-white px-4 py-3 cursor-pointer mobile:px-3 mobile:py-2`}
+            } bg-[#343432]  text-white px-4 py-3 cursor-pointer mobile:px-3 mobile:py-2`}
             onClick={() => toggleSection(sectionIndex)}
           >
             <h3 className="text-[14px] font-semibold mobile:text-xs">
@@ -190,7 +190,7 @@ const CollapsablePaymentTable = ({
                                   : cellIndex === section.headers.length - 1 &&
                                     (values === "Sent" || values === "Approved")
                                   ? "text-green-400"
-                                  : "text-[#323A70]"
+                                  : "text-[#343432]"
                               } ${
                                 isFirstCell
                                   ? `border-l border-[#E0E1EA] ${

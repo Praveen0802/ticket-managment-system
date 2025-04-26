@@ -148,7 +148,7 @@ const MyTeamView = (props) => {
   };
 
   const headerClassName =
-    "px-2 sm:px-4 py-2 border-b border-r border-[#eaeaf1] text-xs sm:text-sm font-medium text-[#323A70]";
+    "px-2 sm:px-4 py-2 border-b border-r border-[#eaeaf1] text-xs sm:text-sm font-medium text-[#343432]";
 
   const rowClassName =
     "px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-b border-r border-[#eaeaf1]";
@@ -163,7 +163,7 @@ const MyTeamView = (props) => {
           {/* Search and filter area */}
           <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="border-[1px] flex gap-2 items-center px-1 py-[4px] w-full sm:w-[40%] border-[#eaeaf1] rounded-md">
-              <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
+              <IconStore.search className="size-4 stroke-[#343432] stroke-4" />
               <input
                 type="text"
                 placeholder="search by customer name or phone number"
@@ -171,18 +171,18 @@ const MyTeamView = (props) => {
                 value={searchText}
                 onBlur={(e) => handleInputBlurOrEnter(e, true)}
                 onKeyPress={(e) => handleInputBlurOrEnter(e)}
-                className="outline-none placeholder:text-[#130061] placeholder:font-[300] placeholder:opacity-50 text-xs sm:text-sm text-[#130061] w-full"
+                className="outline-none  placeholder:font-[300] placeholder:opacity-50 text-xs sm:text-sm w-full"
               />
             </div>
           </div>
 
           {/* User count and pagination controls */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-            <p className="p-3 sm:p-4 text-xs sm:text-sm text-[#323A70] border-b-[1px] sm:border-b-0 sm:border-r-[1px] border-[#eaeaf1] font-medium w-full sm:w-auto">
+            <p className="p-3 sm:p-4 text-xs sm:text-sm text-[#343432] border-b-[1px] sm:border-b-0 sm:border-r-[1px] border-[#eaeaf1] font-medium w-full sm:w-auto">
               {metaDetails?.total} users
             </p>
 
-            <div className="flex flex-wrap sm:flex-nowrap justify-between w-full sm:w-auto border-t-[1px] sm:border-t-0 sm:border-l-[1px] p-3 sm:pl-4 border-[#eaeaf1] items-center text-[#323A70] text-xs sm:text-sm">
+            <div className="flex flex-wrap sm:flex-nowrap justify-between w-full sm:w-auto border-t-[1px] sm:border-t-0 sm:border-l-[1px] p-3 sm:pl-4 border-[#eaeaf1] items-center text-[#343432] text-xs sm:text-sm">
               <div className="flex items-center mb-2 sm:mb-0 mr-0 sm:mr-4">
                 <span className="mr-2">View</span>
                 <CustomSelect
@@ -254,7 +254,7 @@ const MyTeamView = (props) => {
               });
             }}
             classNames={{
-              root: "bg-[#130061] text-white w-fit px-4 py-2 text-xs sm:text-sm",
+              root: "bg-[#343432] text-white w-fit px-4 py-2 text-xs sm:text-sm",
             }}
           />
         </div>

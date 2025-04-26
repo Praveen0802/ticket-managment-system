@@ -99,7 +99,7 @@ const OrderDetails = ({ show, onClose, data }) => {
             }}
           >
             <div className="flex items-center border-b-[1px] border-[#E0E1EA] justify-between py-[13px] px-[16px] sm:px-[24px]">
-              <p className="text-[16px] sm:text-[18px] text-[#323A70]">
+              <p className="text-[16px] sm:text-[18px] text-[#343432]">
                 Order ID: {orderId}
               </p>
               <div className="flex items-center gap-2">
@@ -158,7 +158,7 @@ const OrderDetails = ({ show, onClose, data }) => {
                 expandedVersion={expandedVersion}
                 benefits_restrictions={benefits_restrictions}
               />
-              <AttendeeDetails attendee_details={attendee_details} bookingId={orderId}/>
+              <AttendeeDetails attendee_details={attendee_details} bookingId={order_details?.booking_id}/>
             </div>
           </div>
         </div>

@@ -172,7 +172,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
   return (
     <>
       <div className="text-center flex flex-col gap-2 md:gap-3">
-        <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
+        <p className="text-[#343432] text-xl md:text-2xl font-semibold">
           Sign Up
         </p>
         <p className="text-[#7D82A4] text-sm font-normal">
@@ -220,7 +220,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     onChange={handleChange}
                     error={errors.first_name}
                     className={
-                      "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                      "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
                     }
                     autoComplete="off"
                     required
@@ -237,7 +237,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     onChange={handleChange}
                     error={errors.last_name}
                     className={
-                      "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                      "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
                     }
                     autoComplete="off"
                     required
@@ -256,7 +256,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                   onChange={handleChange}
                   error={errors.email}
                   className={
-                    "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                    "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
                   }
                   autoComplete="off"
                   required
@@ -270,7 +270,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                   type="password"
                   keyValue={"password"}
                   className={
-                    "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                    "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
                   }
                   label="Password"
                   value={formData?.password}
@@ -290,7 +290,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                   type="password"
                   keyValue={"confirm_password"}
                   className={
-                    "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                    "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
                   }
                   label="Confirm Password"
                   value={formData?.confirm_password}
@@ -320,7 +320,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     options={countryCodes}
                     paddingClassName="!py-[10px] !px-[12px]"
                     placeholder="+1"
-                    className={" !text-[#323A70] !text-[14px]"}
+                    className={" !text-[#343432] !text-[14px]"}
                   />
                 </div>
                 <div className="md:w-3/4">
@@ -334,7 +334,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     onChange={handleChange}
                     error={errors.mobile_number}
                     className={
-                      "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
+                      "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
                     }
                   />
                 </div>

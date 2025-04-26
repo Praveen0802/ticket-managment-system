@@ -20,7 +20,7 @@ const AccounInfoForm = ({
         label="First Name"
         keyValue={"firstName"}
         value={formData?.firstName}
-        className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
+        className="!py-[6px] !px-[10px] !text-[#343432] !text-[13px]"
         onChange={handleChange}
         readOnly={disabled}
         required
@@ -32,7 +32,7 @@ const AccounInfoForm = ({
         keyValue={"lastName"}
         label="Last Name"
         value={formData?.lastName}
-        className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
+        className="!py-[6px] !px-[10px] !text-[#343432] !text-[13px]"
         onChange={handleChange}
         readOnly={disabled}
         required
@@ -45,7 +45,7 @@ const AccounInfoForm = ({
         keyValue={"email"}
         readOnly
         value={formData?.email}
-        className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
+        className="!py-[6px] !px-[10px] !text-[#343432] !text-[13px]"
         onChange={handleChange}
         required
       />
@@ -65,7 +65,7 @@ const AccounInfoForm = ({
             options={countryCodeValues}
             paddingClassName="!py-[6px] !px-[10px] "
             placeholder="+1"
-            className={" !text-[#323A70] !text-[13px]"}
+            className={" !text-[#343432] !text-[13px]"}
           />
         </div>
         <div className="md:w-3/4">
@@ -78,7 +78,7 @@ const AccounInfoForm = ({
             value={formData?.phoneNumber}
             onChange={handleChange}
             readOnly={disabled}
-            className="!py-[6px] !px-[10px] !text-[#323A70] !text-[13px]"
+            className="!py-[6px] !px-[10px] !text-[#343432] !text-[13px]"
           />
         </div>
       </div>
