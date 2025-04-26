@@ -12,10 +12,10 @@ const LeftFold = ({ signUpForm, setSignUpForm }) => {
     <div className="bg-[#F0F1F5] w-full md:w-1/2 rounded-t-xl md:rounded-tr-none md:rounded-l-xl p-6 md:p-8 flex flex-col items-center justify-center gap-4 md:gap-6">
       <Image
         src={logo}
-        width={70}
-        height={70}
+        width={200}
+        height={170}
         alt="image-logo"
-        className="w-20 h-20 md:w-26 md:h-26"
+        className="w-20 h-20 md:w-[200px] md:h-[130px]"
       />
       <div className="flex flex-col gap-2 md:gap-3">
         <p className="text-xl md:text-2xl text-center font-bold text-[#323A70]">
