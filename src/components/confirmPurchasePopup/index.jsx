@@ -134,7 +134,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   };
 
   const router = useRouter();
-  console.log(bookingNo, "router");
+
   const bookingConfirm = async (success, message,booking) => {
     if (success) {
       toast.success(message);

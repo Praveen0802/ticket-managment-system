@@ -7,7 +7,10 @@ import { hidepageLoader, showpageLoader } from "@/utils/redux/loader/action";
 import PageLoader from "../pageLoader";
 import Header from "../header";
 import RightViewModal from "../commonComponents/rightViewModal";
-import { updateConfirmPurchasePopup, updateWalletPopupFlag } from "@/utils/redux/common/action";
+import {
+  updateConfirmPurchasePopup,
+  updateWalletPopupFlag,
+} from "@/utils/redux/common/action";
 import { ADD_WALLET_POPUP } from "@/utils/redux/common/type";
 import AddDepositSummary from "../addDepositSummary";
 import { fetchProfileDetails } from "@/utils/apiHandler/request";
@@ -70,7 +73,11 @@ const SecureLayout = ({ children }) => {
     <>
       <div className="flex h-screen">
         {!hideLeftMenu && <LeftMenuBar />}
-        <div className="flex flex-col max-md:pt-20 w-full overflow-hidden">
+        <div
+          className={`flex flex-col ${
+            hideHeader ? " " : "max-md:pt-20"
+          } w-full overflow-hidden`}
+        >
           {!hideHeader && <Header />}
           <div className="flex-1 overflow-hidden">
             {pageLoader ? <PageLoader /> : <>{children}</>}
@@ -100,7 +107,7 @@ const SecureLayout = ({ children }) => {
           className={"md:!w-[650px]"}
           outSideClickClose={false}
         >
-          <ConfirmPurchasePopup onClose={closeConfirmPurchasePopup}/>
+          <ConfirmPurchasePopup onClose={closeConfirmPurchasePopup} />
         </RightViewModal>
       </div>
     </>

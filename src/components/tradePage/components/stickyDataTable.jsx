@@ -370,7 +370,7 @@ const StickyDataTable = ({
       {/* Main scrollable table container */}
       <div
         ref={scrollContainerRef}
-        className="w-full overflow-x-auto"
+        className="w-full overflow-x-auto hideScrollbar"
         style={{ paddingRight: `${stickyColumnsWidth}px` }} // Important: Make space for sticky columns
       >
         <table
