@@ -24,7 +24,7 @@ const TicketDelivery = (props) => {
       </p>
       <div className="bg-white border-[1px] border-[#eaeaf1] h-full p-4 flex flex-col gap-4">
         <p>Set your ticket delivery preference – deliver to the customer or to the partner</p>
-        <div className="w-[30%]">
+        <div className="md:w-[30%]">
           <ToggleStatus
             listItems={listItems}
             selectedItem={selectedItem}

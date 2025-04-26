@@ -171,33 +171,33 @@ const SignupForm = ({ fetchedCountryCodes }) => {
 
   return (
     <>
-      <div className="text-center flex flex-col gap-2 md:gap-3">
-        <p className="text-[#343432] text-xl md:text-2xl font-semibold">
+      <div className="text-center flex flex-col gap-1 sm:gap-2 md:gap-3">
+        <p className="text-[#343432] text-lg sm:text-xl md:text-2xl font-semibold">
           Sign Up
         </p>
-        <p className="text-[#7D82A4] text-sm font-normal">
+        <p className="text-[#7D82A4] text-xs sm:text-sm font-normal px-1">
           Join our network of trusted ticket sellers and buyers from around the
           world
         </p>
       </div>
       {emailVerficationSent ? (
-        <div className="flex flex-col gap-4 items-center w-full max-w-xs mx-auto">
-          <div className="bg-green-50 p-4 rounded-lg text-center">
-            <p className="text-green-700 font-medium">
+        <div className="flex flex-col gap-3 sm:gap-4 items-center w-full max-w-xs mx-auto">
+          <div className="bg-green-50 p-3 sm:p-4 rounded-lg text-center">
+            <p className="text-green-700 font-medium text-sm sm:text-base">
               Email Verification link sent!
             </p>
-            <p className="text-green-600 text-sm mt-1">
+            <p className="text-green-600 text-xs sm:text-sm mt-1">
               New User has been created successfully. We have e-mailed your
               email verify link!
             </p>
           </div>
           {resendVerificationLinkSent ? (
-            <p className="text-center text-sm text-green-500">
+            <p className="text-center text-xs sm:text-sm text-green-500">
               Verification Link sent
             </p>
           ) : (
             <p
-              className="text-sm cursor-pointer hover:underline text-center text-[#130061] font-medium"
+              className="text-xs sm:text-sm cursor-pointer hover:underline text-center text-[#130061] font-medium"
               onClick={handleResendClick}
             >
               Resend Verification Email
@@ -205,10 +205,13 @@ const SignupForm = ({ fetchedCountryCodes }) => {
           )}
         </div>
       ) : (
-        <form className="flex flex-col gap-6 w-full" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-4 sm:gap-5 md:gap-6 w-full"
+          onSubmit={handleSubmit}
+        >
           <div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
                 <div className="flex-1">
                   <FloatingLabelInput
                     id="first_name"
@@ -220,7 +223,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     onChange={handleChange}
                     error={errors.first_name}
                     className={
-                      "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
+                      "!py-[8px] sm:!py-[10px] !px-[10px] sm:!px-[12px] !text-[#343432] !text-[13px] sm:!text-[14px]"
                     }
                     autoComplete="off"
                     required
@@ -237,7 +240,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     onChange={handleChange}
                     error={errors.last_name}
                     className={
-                      "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
+                      "!py-[8px] sm:!py-[10px] !px-[10px] sm:!px-[12px] !text-[#343432] !text-[13px] sm:!text-[14px]"
                     }
                     autoComplete="off"
                     required
@@ -256,7 +259,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                   onChange={handleChange}
                   error={errors.email}
                   className={
-                    "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
+                    "!py-[8px] sm:!py-[10px] !px-[10px] sm:!px-[12px] !text-[#343432] !text-[13px] sm:!text-[14px]"
                   }
                   autoComplete="off"
                   required
@@ -270,7 +273,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                   type="password"
                   keyValue={"password"}
                   className={
-                    "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
+                    "!py-[8px] sm:!py-[10px] !px-[10px] sm:!px-[12px] !text-[#343432] !text-[13px] sm:!text-[14px]"
                   }
                   label="Password"
                   value={formData?.password}
@@ -290,7 +293,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                   type="password"
                   keyValue={"confirm_password"}
                   className={
-                    "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
+                    "!py-[8px] sm:!py-[10px] !px-[10px] sm:!px-[12px] !text-[#343432] !text-[13px] sm:!text-[14px]"
                   }
                   label="Confirm Password"
                   value={formData?.confirm_password}
@@ -305,8 +308,8 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                 )}
               </div>
 
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="md:w-1/4">
+              <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
+                <div className="w-full md:w-1/4">
                   <FloatingSelect
                     id="phone_code"
                     name="phone_code"
@@ -318,12 +321,12 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     searchable={true}
                     error={errors.phone_code}
                     options={countryCodes}
-                    paddingClassName="!py-[10px] !px-[12px]"
+                    paddingClassName="!py-[8px] sm:!py-[10px] !px-[10px] sm:!px-[12px]"
                     placeholder="+1"
-                    className={" !text-[#343432] !text-[14px]"}
+                    className={" !text-[#343432] !text-[13px] sm:!text-[14px]"}
                   />
                 </div>
-                <div className="md:w-3/4">
+                <div className="w-full md:w-3/4">
                   <FloatingLabelInput
                     id="mobile_number"
                     name="mobile_number"
@@ -334,23 +337,25 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                     onChange={handleChange}
                     error={errors.mobile_number}
                     className={
-                      "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
+                      "!py-[8px] sm:!py-[10px] !px-[10px] sm:!px-[12px] !text-[#343432] !text-[13px] sm:!text-[14px]"
                     }
                   />
                 </div>
               </div>
             </div>
             {errorText && (
-              <p className="text-[12px] text-red-500">{errorText}</p>
+              <p className="text-[11px] sm:text-[12px] text-red-500 mt-1">
+                {errorText}
+              </p>
             )}
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2 sm:gap-3">
             <Button
               label={"Create Account"}
               type="primary"
               classNames={{
-                root: "justify-center items-center",
-                label_: "text-base text-center w-full font-medium",
+                root: "justify-center items-center py-2 sm:py-3",
+                label_: "text-sm sm:text-base text-center w-full font-medium",
               }}
               submitButton={true}
               loading={loader}

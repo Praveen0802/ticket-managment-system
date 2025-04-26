@@ -83,14 +83,14 @@ const OrderDetails = ({ show, onClose, data }) => {
       >
         <div
           className={`transition-custom ${
-            expandedVersion ? "w-full h-full" : "m-2 sm:m-4"
+            expandedVersion ? "w-full h-full" : "m-2 sm:m-4 "
           }`}
         >
           <div
             className={`
               transition-custom overflow-auto rounded-md bg-white
               ${
-                expandedVersion ? "w-full h-full" : "max-w-[676px] max-h-[90vh]"
+                expandedVersion ? "w-full h-full" : "max-w-[676px] max-md:h-[500px] md:max-h-[90vh]"
               }
               ${isTransitioning ? "scale-transition" : ""}
             `}

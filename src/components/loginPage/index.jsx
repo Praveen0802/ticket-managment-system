@@ -9,7 +9,7 @@ const LoginPage = (props) => {
   const [signUpForm, setSignUpForm] = useState(false);
 
   return (
-    <div className="bg-[#696D76] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
+    <div className="bg-[#696D76] w-full min-h-screen overflow-auto flex items-center justify-center py-4 sm:py-6 md:py-8 px-3 sm:px-4 relative">
       <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row min-h-[432px] z-10 relative">
         <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
         <RightFold

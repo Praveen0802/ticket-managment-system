@@ -9,6 +9,7 @@ import {
 } from "@/utils/apiHandler/request";
 import { toast } from "react-toastify";
 import FooterButton from "@/components/footerButton";
+import useIsMobile from "@/utils/helperFunctions/useIsmobile";
 
 const AddEditAddress = ({
   onClose,
@@ -104,6 +105,7 @@ const AddEditAddress = ({
     setFormFieldValues({ ...formFieldValues, is_default: e.target.checked });
   };
 
+  const isMobile = useIsMobile();
   const isFormValid = () => {
     const requiredFields = [
       "first_name",
@@ -220,7 +222,7 @@ const AddEditAddress = ({
                 formFields={[
                   {
                     type: "select",
-                    label: "Phone Code",
+                    label: isMobile ? "Phone C.." : "Phone Code",
                     id: "phone_code",
                     name: "phone_code",
                     value: formFieldValues?.phone_code,
@@ -406,7 +408,7 @@ const AddEditAddress = ({
     const payload = {
       first_name: formFieldValues.first_name,
       last_name: formFieldValues.last_name,
-      email:formFieldValues?.email,
+      email: formFieldValues?.email,
       company_name: formFieldValues.company_name,
       address_line1: formFieldValues?.address_line_1,
       address_line2: formFieldValues?.address_line_2,

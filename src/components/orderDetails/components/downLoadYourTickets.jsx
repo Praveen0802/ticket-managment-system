@@ -70,11 +70,11 @@ const DownloadYourTickets = ({ tickets, bookingId }) => {
         />
       </div>
       {/* Tab navigation */}
-      <div className="flex border-b border-gray-200">
+      <div className="flex border-b border-gray-200 overflow-auto hideScrollbar">
         {availableTabs.map((tab) => (
           <button
             key={tab.id}
-            className={`px-6 py-3 cursor-pointer font-medium transition-colors ${
+            className={`px-6 py-3 cursor-pointer whitespace-nowrap font-medium transition-colors ${
               activeTab === tab.id
                 ? "text-[#343432] border-b-2 border-indigo-600"
                 : "text-gray-500 hover:text-gray-700"

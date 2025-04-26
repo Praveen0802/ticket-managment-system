@@ -138,7 +138,7 @@ const SettingsPage = (props) => {
             {profileValues?.map((value, index) => (
               <div
                 key={index}
-                className={`flex flex-col justify-center items-center p-2 ${
+                className={`flex flex-col min-w-[80px] w-[100px] justify-center items-center p-2 ${
                   activeTab === value?.key ? "text-[#130061]" : "text-gray-500"
                 }`}
                 onClick={() => handleTabClick(value?.key)}
@@ -147,15 +147,6 @@ const SettingsPage = (props) => {
                 <span className="text-xs mt-1 text-center">{value.title}</span>
               </div>
             ))}
-
-            {/* More menu for additional items */}
-            {/* <div
-              className="flex flex-col items-center p-2 text-gray-500"
-              onClick={toggleMobileMenu}
-            >
-              <IconStore.menu className="size-6 stroke-current" />
-              <span className="text-xs mt-1">More</span>
-            </div> */}
           </div>
 
           {/* Bottom padding to account for the fixed tab bar */}

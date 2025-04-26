@@ -75,8 +75,8 @@ const SecureLayout = ({ children }) => {
         {!hideLeftMenu && <LeftMenuBar />}
         <div
           className={`flex flex-col ${
-            hideHeader ? " " : "max-md:pt-20"
-          } w-full overflow-hidden`}
+            hideHeader ? " " : "max-md:pt-20 overflow-hidden"
+          } w-full `}
         >
           {!hideHeader && <Header />}
           <div className="flex-1 overflow-hidden">

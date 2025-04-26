@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 
 const TradeHome = (props) => {
   const { profile, response = {}, showEventSearch } = props;
-  console.log(response, "propsprops");
   const {
     hotEvents = {},
     lastMinuteEvents = [],
@@ -71,8 +70,17 @@ const TradeHome = (props) => {
   ];
 
   const [expandedSections, setExpandedSections] = useState(() => {
-    return sections.map((_, index) => index === 0);
+    // On mobile, only expand the first section by default
+    // On desktop, expand all sections
+    return sections.map((_, index) => (isMobile ? index === 0 : true));
   });
+
+  // Update expanded sections when screen size changes
+  useEffect(() => {
+    setExpandedSections(
+      sections.map((_, index) => (isMobile ? index === 0 : true))
+    );
+  }, [isMobile, sections.length]);
 
   const toggleSection = (index) => {
     setExpandedSections((currentExpandedSections) => {
@@ -100,14 +108,16 @@ const TradeHome = (props) => {
             <div
               key={`tab-${index}`}
               onClick={() => toggleSection(index)}
-              className={`flex-shrink-0 py-2 px-3 rounded-full flex items-center gap-1 ${
+              className={`flex-shrink-0 py-2 px-3 rounded-full flex items-center gap-1 cursor-pointer ${
                 expandedSections[index]
                   ? "bg-[#343432] text-white"
                   : "bg-white text-[#130061] border border-[#130061]"
               }`}
             >
               <IconStore.eye className="size-4" />
-              <span className="text-xs whitespace-nowrap">{section.name}</span>
+              <span className="text-xs whitespace-nowrap font-medium">
+                {section.name}
+              </span>
             </div>
           ))}
         </div>
@@ -118,7 +128,7 @@ const TradeHome = (props) => {
           <div
             key={index}
             className={`transition-all duration-300 ease-in-out ${
-              isMobile ? "mb-3" : "mb-4"
+              isMobile ? "mb-2" : "mb-4"
             }`}
           >
             {/* Section header */}
@@ -129,7 +139,7 @@ const TradeHome = (props) => {
               onClick={() => toggleSection(index)}
             >
               <div className="flex gap-3 items-center">
-                <IconStore.eye className="size-4" />
+              <IconStore.eye className="size-4" />
                 <span className="text-[14px] font-medium">{section.name}</span>
               </div>
               <div className="flex items-center bg-[#FFFFFF26] p-1 rounded-full">
