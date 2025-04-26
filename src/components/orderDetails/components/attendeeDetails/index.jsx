@@ -139,7 +139,6 @@ const AttendeeDetails = ({ attendee_details = [], bookingId }) => {
         ],
       })),
     };
-
     try {
       const response = await purchaseAttendeeDetails("", bookingId, {
         booking_no: bookingId,

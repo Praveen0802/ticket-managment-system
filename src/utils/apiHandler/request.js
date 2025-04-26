@@ -449,7 +449,7 @@ export const getDialingCode = async (token, params) => {
     return response?.data;
   } catch (error) {
     console.log("ERROR in getDialingCode", error);
-    throw error;
+    return error;
   }
 };
 

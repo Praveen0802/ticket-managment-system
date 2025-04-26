@@ -110,9 +110,9 @@ const PurchaseFolder = (props) => {
       category: item?.seat_category,
       ticketType: item?.ticket_type_name,
       qty: item?.quantity,
-      ticketPrice: `${item?.currency_icon}${item?.ticket_price}`,
-      subTotal: `${item?.currency_icon}${item?.total_ticket_price}`,
-      total: `${item?.currency_icon}${item?.total_amount}`,
+      ticketPrice: item?.ticket_price_converted,
+      subTotal: item?.total_ticket_price_converted,
+      total: item?.total_amount_converted,
     };
   });
 
