@@ -15,7 +15,7 @@ const LeftFold = ({ signUpForm, setSignUpForm }) => {
         width={200}
         height={170}
         alt="image-logo"
-        className="w-20 h-20 md:w-[200px] md:h-[130px]"
+        className="w-20 h-20 md:w-[200px] md:h-[90px]"
       />
       <div className="flex flex-col gap-2 md:gap-3">
         <p className="text-xl md:text-2xl text-center font-bold text-[#343432]">
@@ -24,7 +24,7 @@ const LeftFold = ({ signUpForm, setSignUpForm }) => {
         <p className="text-sm text-[#343432] font-normal text-center">
           {signUpForm
             ? "Log in to access your account and manage your ticket listings or purchases."
-            : "Whether you're a buyer or seller, List My Ticket gives you access to the world's most sought-after events."}
+            : "Whether you're a buyer or seller, seats Brokers gives you access to the world's most sought-after events."}
         </p>
       </div>
       <Button

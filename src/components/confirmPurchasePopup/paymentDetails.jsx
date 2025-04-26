@@ -23,7 +23,7 @@ const PaymentDetails = ({
   const linkedCards = paymentDetails?.[1]?.linked_cards || [];
   const radioButtonFields = [
     {
-      name: "LMT Pay",
+      name: "SB Pay",
       component: (
         <div className="flex gap-4 items-center">
           <p className="text-[12px] text-gray-700">
