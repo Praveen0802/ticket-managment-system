@@ -47,7 +47,7 @@ const LeftMenuBar = () => {
     },
     {
       image: documentupload,
-      name: "Lmt Trade",
+      name: "SB Trade",
       key: "lmt-trade",
       route: "trade/home",
     },

@@ -29,7 +29,7 @@ import { useRouter } from "next/router";
 const ConfirmPurchasePopup = ({ onClose }) => {
   const { confirmPurchasePopupFields } = useSelector((state) => state?.common);
   const [loader, setLoader] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState({ name: "LMT Pay" });
+  const [selectedPayment, setSelectedPayment] = useState({ name: "SB Pay" });
   const [addressDetails, setAddressDetails] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState();
@@ -163,7 +163,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
       }
 
       const paymentMethod =
-        selectedPayment?.name == "LMT Pay"
+        selectedPayment?.name == "SB Pay"
           ? 1
           : selectedPayment?.name == "New Credit or Debit Card"
           ? 2

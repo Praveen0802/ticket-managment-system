@@ -14,7 +14,7 @@ import ClearChip from "../inventoryFolder/components/clearChip";
 import { isEmptyObject } from "@/utils/helperFunctions";
 
 const PurchaseFolder = (props) => {
-  const { response, success,booking_no='' } = props;
+  const { response, success, booking_no = "" } = props;
   const [listTicketDetails, setListTicketDetails] = useState(
     response?.data?.data
   );
