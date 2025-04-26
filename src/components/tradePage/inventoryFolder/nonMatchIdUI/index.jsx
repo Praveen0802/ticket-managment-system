@@ -6,10 +6,10 @@ const NonMatchSelectUI = () => {
     <div className="h-full flex flex-col items-center justify-center py-16 px-4">
       <div className="bg-white rounded-lg shadow-md p-8 max-w-lg w-full flex flex-col items-center">
         <div className="mb-6">
-          <IconStore.calendar className="w-16 h-16 text-[#0137D5]" />
+          <IconStore.calendar className="w-16 h-16 text-[#343432]" />
         </div>
 
-        <h2 className="text-xl font-semibold text-[#323A70] mb-3">
+        <h2 className="text-xl font-semibold text-[#343432] mb-3">
           No Match Selected
         </h2>
 

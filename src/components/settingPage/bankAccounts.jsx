@@ -111,7 +111,7 @@ const BankAccounts = (props) => {
               setBankDetailsView({ show: true, type: "add" });
             }}
             classNames={{
-              root: "bg-[#130061] py-1 px-3 w-fit md:px-[14px] hover:bg-[#1e0096] transition-colors duration-300",
+              root: "bg-[#343432] py-1 px-3 w-fit md:px-[14px] hover:bg-[#1e0096] transition-colors duration-300",
               label_: "text-xs md:text-sm text-white font-normal",
             }}
           />

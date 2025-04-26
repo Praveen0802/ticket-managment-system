@@ -6,7 +6,7 @@ import ConfirmEmailFold from "./confirmEmailFold";
 const ConfirmEmailPage = (props) => {
   const { token } = props;
   return (
-    <div className="bg-[#130061] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
+    <div className="bg-[#696D76] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
       <div className="w-[500px] z-[10]">
         <ConfirmEmailFold token={token} />
       </div>

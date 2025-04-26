@@ -61,7 +61,7 @@ const ViewComponent = ({ item, onClick }) => {
               </div>
               <p
                 className={`${
-                  item?.hold ? "text-[#E93042]" : "text-[#323A70]"
+                  item?.hold ? "text-[#E93042]" : "text-[#343432]"
                 } text-[12px] font-semibold`}
               >
                 {item?.value}

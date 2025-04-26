@@ -18,10 +18,10 @@ const LeftFold = ({ signUpForm, setSignUpForm }) => {
         className="w-20 h-20 md:w-[200px] md:h-[130px]"
       />
       <div className="flex flex-col gap-2 md:gap-3">
-        <p className="text-xl md:text-2xl text-center font-bold text-[#323A70]">
+        <p className="text-xl md:text-2xl text-center font-bold text-[#343432]">
           {signUpForm ? "Already have an account?" : "Don't have an account?"}
         </p>
-        <p className="text-sm text-[#323A70] font-normal text-center">
+        <p className="text-sm text-[#343432] font-normal text-center">
           {signUpForm
             ? "Log in to access your account and manage your ticket listings or purchases."
             : "Whether you're a buyer or seller, List My Ticket gives you access to the world's most sought-after events."}
@@ -30,7 +30,7 @@ const LeftFold = ({ signUpForm, setSignUpForm }) => {
       <Button
         label={signUpForm ? "Login" : "Sign Up Now"}
         classNames={{
-          root: "bg-[#130061] rounded-md items-center justify-center py-3 px-6 md:px-8 w-full ",
+          root: "bg-[#343432] rounded-md items-center justify-center py-3 px-6 md:px-8 w-full ",
           label_: "text-white text-base font-medium text-center",
         }}
         onClick={toggleForm}

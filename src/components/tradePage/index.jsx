@@ -45,7 +45,7 @@ const TradePage = (props) => {
       key: "tracking",
       route: "/tracking",
       icon: (
-        <p className="text-white bg-[#130061] text-[10px] px-[6px] py-[2px] rounded-md">
+        <p className="text-white bg-[#343432] text-[10px] px-[6px] py-[2px] rounded-md">
           {fetchTabCount?.trackerCount}
         </p>
       ),
@@ -55,7 +55,7 @@ const TradePage = (props) => {
       key: "purchase",
       route: "/purchase",
       icon: (
-        <p className="text-white bg-[#130061] text-[10px] px-[6px] py-[2px] rounded-md">
+        <p className="text-white bg-[#343432] text-[10px] px-[6px] py-[2px] rounded-md">
           {fetchTabCount?.purchaseCount}
         </p>
       ),
@@ -147,7 +147,7 @@ const TradePage = (props) => {
                 : "md:-left-11 -left-11"
             } cursor-pointer -translate-y-1/2 -rotate-90 transform origin-center transition-all duration-300`}
           >
-            <div className="px-3 flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
+            <div className="px-3 flex items-center gap-1 py-2 bg-[#696D76] rounded-md">
               <p className="text-white text-xs font-medium">Event Search</p>
               <Image
                 src={chevronDown}

@@ -37,7 +37,7 @@ const AvailableFunds = ({ fetchWalletBalance }) => {
             {demoData.map((item, index) => (
               <p
                 key={index}
-                className="text-indigo-900 text-sm font-normal w-24 flex-shrink-0"
+                className="text-[#343432] text-sm font-normal w-24 flex-shrink-0"
               >
                 {item.balance_amount}
               </p>

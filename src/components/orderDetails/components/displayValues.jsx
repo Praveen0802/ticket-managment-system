@@ -39,7 +39,7 @@ const DisplayValues = ({
            `${
              orderFullfilled ? "bg-green-100 " : "bg-[#FFF4EC]"
            } px-1 py-0.5 rounded-md w-fit`
-         } text-sm font-normal text-[#323A70]`}
+         } text-sm font-normal text-[#343432]`}
       >
         {value}
         {copyKeys && (

@@ -64,7 +64,7 @@ const NoDataFound = () => {
           <path d="M9 15h6"></path>
         </svg>
       </div>
-      <h3 className="text-lg font-medium text-[#323A70] mb-1">No Data Found</h3>
+      <h3 className="text-lg font-medium text-[#343432] mb-1">No Data Found</h3>
       <p className="text-sm text-gray-500 text-center">
         There are no bookings available for the selected period.
       </p>
@@ -211,7 +211,7 @@ const LatestBookingTable = ({ listValues, meta }) => {
         <div className="bg-white border border-[#eaeaf1] h-full flex flex-col gap-3 md:gap-5 rounded-md">
           <div className="flex flex-col gap-2">
             <div className="flex flex-col sm:flex-row justify-between sm:gap-5 items-start sm:items-center p-3 md:p-5 border-b-[1px] border-[#eaeaf1]">
-              <p className="text-[#323A70] font-medium text-sm md:text-[18px] whitespace-nowrap">
+              <p className="text-[#343432] font-medium text-sm md:text-[18px] whitespace-nowrap">
                 Purchase History
               </p>
               <CustomSelect
@@ -254,23 +254,23 @@ const LatestBookingTable = ({ listValues, meta }) => {
                         key={booking?.booking_id}
                         className="border-t border-[#eaeaf1] hover:bg-gray-50"
                       >
-                        <td className="p-3 text-sm text-[#323A70] text-left">
+                        <td className="p-3 text-sm text-[#343432] text-left">
                           {booking?.booking_no}
                         </td>
                         <td
                           title={booking?.match_name}
-                          className="p-3 max-w-[200px] text-sm text-[#323A70]"
+                          className="p-3 max-w-[200px] text-sm text-[#343432]"
                         >
                           <div className="flex flex-col">
                             <span className="font-medium truncate">
                               {booking?.match_name}
                             </span>
-                            <span className="text-xs text-[#323A70] truncate">
+                            <span className="text-xs text-[#343432] truncate">
                               {booking?.tournament_name}
                             </span>
                           </div>
                         </td>
-                        <td className="p-3 text-sm text-[#323A70] whitespace-nowrap">
+                        <td className="p-3 text-sm text-[#343432] whitespace-nowrap">
                           <div className="flex items-center gap-1">
                             <IconStore.calendarDays className="size-4 flex-shrink-0" />
                             {formatDateTime(
@@ -279,10 +279,10 @@ const LatestBookingTable = ({ listValues, meta }) => {
                             )}
                           </div>
                         </td>
-                        <td className="p-3 text-sm text-[#323A70] text-center">
+                        <td className="p-3 text-sm text-[#343432] text-center">
                           {booking?.quantity}
                         </td>
-                        <td className="p-3 text-sm text-[#323A70] whitespace-nowrap">
+                        <td className="p-3 text-sm text-[#343432] whitespace-nowrap">
                           {booking?.price_with_currency}
                         </td>
                       </tr>
@@ -323,10 +323,10 @@ const LatestBookingTable = ({ listValues, meta }) => {
                     >
                       <div className="flex justify-between mb-2">
                         <div className="flex flex-col">
-                          <span className="font-medium text-sm text-[#323A70]">
+                          <span className="font-medium text-sm text-[#343432]">
                             {booking?.match_name}
                           </span>
-                          <span className="text-xs text-[#323A70]">
+                          <span className="text-xs text-[#343432]">
                             {booking?.tournament_name}
                           </span>
                         </div>
@@ -336,21 +336,21 @@ const LatestBookingTable = ({ listValues, meta }) => {
                       </div>
                       <div className="flex justify-between">
                         <div className="flex flex-col">
-                          <span className="text-xs text-[#323A70]">
+                          <span className="text-xs text-[#343432]">
                             {formatDateTime(
                               booking?.match_date,
                               booking?.match_time
                             )}
                           </span>
-                          <span className="text-xs text-[#323A70]">
+                          <span className="text-xs text-[#343432]">
                             {booking?.stadium_name}
                           </span>
-                          <span className="text-xs text-[#323A70]">
+                          <span className="text-xs text-[#343432]">
                             {booking?.city_name}, {booking?.country_name}
                           </span>
                         </div>
                         <div className="flex items-center">
-                          <span className="text-xs text-[#323A70] bg-gray-100 px-2 py-1 rounded">
+                          <span className="text-xs text-[#343432] bg-gray-100 px-2 py-1 rounded">
                             Qty: {booking?.quantity}
                           </span>
                         </div>

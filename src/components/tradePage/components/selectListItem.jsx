@@ -10,7 +10,7 @@ const SelectListItem = ({ selectedIndex, item, handleSelectItemClick }) => {
     >
       <p
         className={`text-[16px] font-medium ${
-          selectedIndex ? "text-[#0137D5]" : "text-[#323A70]"
+          selectedIndex ? "text-[#343432]" : "text-[#343432]"
         }`}
       >
         {item?.name}

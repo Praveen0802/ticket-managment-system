@@ -46,12 +46,12 @@ const TopPopupModal = ({ bankAccountDetails }) => {
   return (
     <div className=" ">
       <div className="p-4 flex flex-col gap-3 border-b-[1px] border-[#F0F0F5]">
-        <p className="text-[13px] text-[#323A70] text-left font-medium">
+        <p className="text-[13px] text-[#343432] text-left font-medium">
           Top up by bank transfer from your funding account. Payments can take
           up to 24 hours to appear in your LMT Pay account
         </p>
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] text-[#323A70] text-left font-medium">
+          <p className="text-[13px] text-[#343432] text-left font-medium">
             LMT Pay
           </p>
           <div className="grid grid-cols-2 gap-4">
@@ -60,7 +60,7 @@ const TopPopupModal = ({ bankAccountDetails }) => {
                 <div key={listIndex}>
                   <p className="text-[12px] text-gray-600">{list?.name}</p>
                   <div className="flex px-2 py-[3px] rounded-md bg-gray-200 justify-between items-center">
-                    <p className="text-[12px] text-[#323A70] font-semibold">
+                    <p className="text-[12px] text-[#343432] font-semibold">
                       {list?.value}
                     </p>
                     <button

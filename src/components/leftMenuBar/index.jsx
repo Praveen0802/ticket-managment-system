@@ -91,7 +91,7 @@ const LeftMenuBar = () => {
     return (
       <>
         {/* Mobile Header */}
-        <div className="fixed top-0 left-0 right-0 bg-[#130061] h-16 flex items-center justify-between px-4 z-20">
+        <div className="fixed top-0 left-0 right-0 bg-[#343432] h-16 flex items-center justify-between px-4 z-20">
           <Image src={logo} alt="logo" width={60} height={32} />
           <button onClick={toggleMobileMenu} className="p-2 text-white">
             <Menu size={24} />
@@ -100,7 +100,7 @@ const LeftMenuBar = () => {
 
         {/* Mobile Slide-in Menu */}
         <div
-          className={`fixed top-0 right-0 h-full bg-[#130061] w-64 transform z-[999] transition-transform duration-300 ease-in-out z-30 ${
+          className={`fixed top-0 right-0 h-full bg-[#343432] w-64 transform z-[999] transition-transform duration-300 ease-in-out z-30 ${
             mobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -177,7 +177,7 @@ const LeftMenuBar = () => {
   // Desktop view
   return (
     <div
-      className={`bg-[#130061] flex flex-col justify-between transition-all duration-300 ${
+      className={`bg-[#343432] flex flex-col justify-between transition-all duration-300 ${
         showFullDisplay ? "w-[200px]" : "w-[60px]"
       } h-[100vh]`}
     >

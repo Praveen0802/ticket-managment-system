@@ -32,7 +32,7 @@ const AvailableList = ({ list }) => {
         }
       }}
     >
-      <p className="text-2xl text-indigo-900">{list?.value}</p>
+      <p className="text-2xl text-[#343432]">{list?.value}</p>
       <div className="flex items-center gap-2 justify-between">
         <p className="text-xs text-gray-500 font-normal">{list?.name}</p>
         {list?.showCheckbox && (

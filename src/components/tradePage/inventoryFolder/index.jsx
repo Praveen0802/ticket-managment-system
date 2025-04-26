@@ -90,7 +90,7 @@ const InventoryFolder = (props) => {
     return (
       <div className="flex gap-[8px] items-center">
         {icon}
-        <p className="text-[12px] font-normal text-[#323A70] truncate">
+        <p className="text-[12px] font-normal text-[#343432] truncate">
           {text}
         </p>
       </div>
@@ -138,7 +138,7 @@ const InventoryFolder = (props) => {
     return (
       <div className="flex gap-2 items-center">
         {icon && icon}
-        <p className="text-[#323A70] text-[12px] font-normal">{text}</p>
+        <p className="text-[#343432] text-[12px] font-normal">{text}</p>
       </div>
     );
   };
@@ -268,7 +268,7 @@ const InventoryFolder = (props) => {
             {
               icon: <p>{item?.price_with_symbol}</p>,
               className:
-                "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
+                "border-r-[1px] border-[#E0E1EA] text-[#343432] text-[12px]",
             },
             {
               icon: (
@@ -442,7 +442,7 @@ const InventoryFolder = (props) => {
           <div className="bg-white w-full">
             {/* Match header info */}
             <div className="px-[16px] md:px-[30px] border-b-[1px] border-[#E0E1EA] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center">
-              <p className="py-[8px] md:py-[12px] pr-0 md:pr-[20px] text-[12px] font-medium text-[#323A70] border-b-[1px] md:border-b-0 w-full md:w-auto md:border-r-[1px] border-[#E0E1EA]">
+              <p className="py-[8px] md:py-[12px] pr-0 md:pr-[20px] text-[12px] font-medium text-[#343432] border-b-[1px] md:border-b-0 w-full md:w-auto md:border-r-[1px] border-[#E0E1EA]">
                 {selectedMatchData?.match}
               </p>
               <div className="py-[6px] md:py-[10px] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center w-full">
@@ -545,7 +545,7 @@ const InventoryFolder = (props) => {
             {isMobile && (
               <button
                 onClick={toggleMap}
-                className="bg-[#3E2E7E] text-white px-3 py-2 rounded-md flex items-center gap-1 mb-2"
+                className="bg-[#696D76] text-white px-3 py-2 rounded-md flex items-center gap-1 mb-2"
               >
                 <span className="text-[12px] font-medium">
                   {showMap ? "Hide Map" : "View Map"}
@@ -567,7 +567,7 @@ const InventoryFolder = (props) => {
                   showMap ? "left-[265px]" : "-left-9"
                 } cursor-pointer -translate-y-1/2 -rotate-90 origin-center transition-all duration-300`}
               >
-                <div className="px-3 text-white flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
+                <div className="px-3 text-white flex items-center gap-1 py-2 bg-[#343432] rounded-md">
                   <p className="text-white text-[12px] font-medium">View Map</p>
                   <IconStore.chevronDown
                     className={`stroke-white text-white size-3 transition-transform duration-300 ${
