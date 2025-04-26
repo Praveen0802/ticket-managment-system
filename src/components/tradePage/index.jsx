@@ -78,7 +78,7 @@ const TradePage = (props) => {
   };
 
   const selectedSubComponents = {
-    home: <TradeHome {...props} showEventSearch={showEventSearch}/>,
+    home: <TradeHome {...props} showEventSearch={showEventSearch} />,
     tracking: <TrackingPage {...props} />,
     purchase: <PurchaseFolder {...props} />,
     inventory: <InventoryFolder {...props} />,
@@ -88,7 +88,7 @@ const TradePage = (props) => {
 
   // Mobile bottom navigation
   const MobileNavigation = () => (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md border-t border-gray-200 z-50 flex justify-around">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md border-t border-gray-200 z-[9999] flex justify-around">
       {tabFields?.map((item, index) => {
         const isSelected = item?.key === selectedTab;
         return (
@@ -110,14 +110,16 @@ const TradePage = (props) => {
   return (
     <div className="bg-[#ECEDF2] w-full h-full relative">
       {/* Wallet info - Responsive for both desktop and mobile */}
-      <div className="absolute top-0 right-0 flex gap-3 items-center bg-white p-4 md:p-4 md:right-0 md:left-auto md:w-auto w-full justify-end">
-        <AvailableFunds fetchWalletBalance={fetchWalletBalance} />
+      <div className="md:absolute top-0 flex gap-2 md:gap-3 items-center bg-white p-2 md:p-4 w-full md:w-auto right-0 z-10">
+        <div className="flex-1 md:flex-none max-md:px-4">
+          <AvailableFunds fetchWalletBalance={fetchWalletBalance} />
+        </div>
         <div
           onClick={handleOpenAddWalletPopup}
-          className="flex gap-2 bg-[#F0F1F5] cursor-pointer rounded-md p-[8px] items-center"
+          className="flex gap-1 md:gap-2 bg-[#F0F1F5] max-md:px-4 cursor-pointer rounded-md p-1 md:p-[8px] items-center"
         >
           <Image src={roundedChevron} width={16} height={16} alt="logo" />
-          <p className="text-[14px] font-normal">Deposit</p>
+          <p className="text-[12px] md:text-[14px] font-normal">Deposit</p>
         </div>
       </div>
 
