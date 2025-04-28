@@ -22,7 +22,7 @@ const TradePage = (props) => {
   const isMobile = useIsMobile();
   const [selectedTab, setSelectedTab] = useState(profile);
 
-  const [showEventSearch, setShowEventSearch] = useState(true);
+  const [showEventSearch, setShowEventSearch] = useState(profile == 'home' ? true: false);
 
   const tabFields = [
     {
