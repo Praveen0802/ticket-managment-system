@@ -55,16 +55,16 @@ const TrackingPage = (props) => {
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
   const headers = [
-    { key: "status", label: "Status", sortable: true },
-    { key: "event", label: "Event", sortable: true },
-    { key: "venue", label: "Venue", sortable: true },
-    { key: "eventDate", label: "Event Date", sortable: true },
-    { key: "category", label: "Category", sortable: true },
-    { key: "ticketType", label: "Ticket Type", sortable: true },
-    { key: "qty", label: "Qty", sortable: true },
+    { key: "status", label: "Status" },
+    { key: "event", label: "Event" },
+    { key: "venue", label: "Venue" },
+    { key: "eventDate", label: "Event Date" },
+    { key: "category", label: "Category" },
+    { key: "ticketType", label: "Ticket Type" },
+    { key: "qty", label: "Qty" },
     ...(isMobile
       ? [
-          { key: "price", label: "Price", sortable: true },
+          { key: "price", label: "Price" },
           { key: "attachment", label: "" },
           { key: "hand", label: "" },
           { key: "document", label: "" },
@@ -316,6 +316,7 @@ const TrackingPage = (props) => {
     const params = {
       ...filterApplied,
       availability: availabilityStatus != 1 ? "" : 1,
+      page: 1,
     };
     await trackingFetchApi(
       params,
@@ -332,6 +333,7 @@ const TrackingPage = (props) => {
     const params = {
       ...filterApplied,
       search: value,
+      page: 1,
     };
     trackingFetchApi(params);
     setFIlterApplied(params);
@@ -434,6 +436,7 @@ const TrackingPage = (props) => {
                       const params = {
                         ...filterApplied,
                         match_date: dateValue?.startDate,
+                        page: 1,
                       };
                       trackingFetchApi(params);
                       setFIlterApplied(params);

@@ -83,19 +83,19 @@ const PurchaseFolder = (props) => {
   };
 
   const headers = [
-    { key: "status", label: "Status", sortable: true },
-    { key: "bookingNo", label: "Booking Status", sortable: true },
-    { key: "listmyTicket", label: "List my Ticket ID", sortable: true },
-    { key: "orderDate", label: "Order Date", sortable: true },
-    { key: "event", label: "Event", sortable: true },
-    { key: "venue", label: "Venue", sortable: true },
-    { key: "eventDate", label: "Event Date", sortable: true },
-    { key: "category", label: "Category", sortable: true },
-    { key: "ticketType", label: "Ticket Type", sortable: true },
-    { key: "qty", label: "Qty", sortable: true },
-    { key: "ticketPrice", label: "Ticket Price", sortable: true },
-    { key: "subTotal", label: "Subtotal", sortable: true },
-    { key: "total", label: "Total", sortable: true },
+    { key: "status", label: "Status", },
+    { key: "bookingNo", label: "Booking Status", },
+    { key: "listmyTicket", label: "Booking No", },
+    { key: "orderDate", label: "Order Date", },
+    { key: "event", label: "Event", },
+    { key: "venue", label: "Venue", },
+    { key: "eventDate", label: "Event Date", },
+    { key: "category", label: "Category", },
+    { key: "ticketType", label: "Ticket Type", },
+    { key: "qty", label: "Qty", },
+    { key: "ticketPrice", label: "Ticket Price", },
+    { key: "subTotal", label: "Subtotal", },
+    { key: "total", label: "Total", },
   ];
 
   const data = listTicketDetails?.map((item) => {
@@ -179,6 +179,7 @@ const PurchaseFolder = (props) => {
     const params = {
       ...filtersApplied,
       match_name: value,
+      page: 1,
     };
     fetchAPiDetails(params);
   };
@@ -191,6 +192,7 @@ const PurchaseFolder = (props) => {
         ...filtersApplied,
         event_date_from: dateRange?.startDate,
         event_date_to: dateRange?.endDate,
+        page:1
       };
     }
     if (key == "orderDate") {
@@ -221,6 +223,7 @@ const PurchaseFolder = (props) => {
       ...filtersApplied,
       upcomming: updatedCheckboxValue?.upcomming ? 1 : 0,
       expired: updatedCheckboxValue?.expired ? 1 : 0,
+      page: 1,
     };
     fetchAPiDetails(params);
   };
@@ -234,6 +237,7 @@ const PurchaseFolder = (props) => {
     const params = {
       ...filtersApplied,
       [key]: value,
+      page:1
     };
     fetchAPiDetails(params);
   };
@@ -262,7 +266,7 @@ const PurchaseFolder = (props) => {
             name="selectedMatch"
             keyValue={"selectedMatch"}
             type="text"
-            label="Search Match Event"
+            label="Search Match Event or Booking Number"
             value={selectedMatch}
             className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"}
             onChange={handleMatchSearch}

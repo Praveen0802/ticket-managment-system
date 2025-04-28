@@ -169,13 +169,13 @@ const InventoryFolder = (props) => {
   };
 
   const headers = [
-    { key: "qty", label: "Qty", sortable: true },
+    { key: "qty", label: "Qty", },
     { key: "category", label: "Category" },
     { key: "section", label: "Section/Block" },
     { key: "row", label: "Row" },
     ...(isMobile
       ? [
-          { key: "price", label: "Price", sortable: true },
+          { key: "price", label: "Price", },
           { key: "attachment", label: "" },
           { key: "hand", label: "" },
           { key: "document", label: "" },
@@ -319,23 +319,25 @@ const InventoryFolder = (props) => {
               ),
               className: "cursor-pointer pr-2",
               key: "document",
-              tooltipComponent:
-                item?.listing_note?.length > 0 &&
-                item?.listing_note?.map((note, index) => (
-                  <div className="flex flex-col gap-2" key={index}>
-                    <p className="text-left">Benifits/Restrictions</p>
-                    <ul
-                      className={`list-disc ml-[20px] ${
-                        item?.listing_note?.length > 3 &&
-                        "grid grid-cols-2 gap-1"
-                      }`}
-                    >
-                      {Object.values(note).map((value, i) => (
-                        <li key={i}>{value}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )),
+              tooltipComponent: item?.listing_note?.length > 0 && (
+                <div>
+                  <p className="text-left">Benifits/Restrictions</p>
+                  {item?.listing_note?.map((note, index) => (
+                    <div className="flex flex-col gap-2" key={index}>
+                      <ul
+                        className={`list-disc ml-[20px] ${
+                          item?.listing_note?.length > 3 &&
+                          "grid grid-cols-2 gap-1"
+                        }`}
+                      >
+                        {Object.values(note).map((value, i) => (
+                          <li key={i}>{value}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ),
               tooltipPosition: "top",
             },
           ]),
@@ -350,6 +352,11 @@ const InventoryFolder = (props) => {
             src={item?.trackingfound == 1 ? star : beforeFaviurates}
             alt="star"
           />
+        ),
+        tooltipComponent: (
+          <p className="text-center">
+            Track this ticket
+          </p>
         ),
         className: "border-x-[1px] px-2 border-[#E0E1EA] cursor-pointer",
         key: "star",

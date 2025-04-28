@@ -43,6 +43,8 @@ const OrderDetails = ({ show, onClose, data }) => {
     days_to_event: order_details?.days_left_to_event,
   };
 
+  const bookingId = order_details?.booking_status_id;
+
   const handleCollapseModal = () => {
     setIsTransitioning(true);
     setExpandedVersion(!expandedVersion);
@@ -90,7 +92,9 @@ const OrderDetails = ({ show, onClose, data }) => {
             className={`
               transition-custom overflow-auto rounded-md bg-white
               ${
-                expandedVersion ? "w-full h-full" : "max-w-[676px] max-md:h-[500px] md:max-h-[90vh]"
+                expandedVersion
+                  ? "w-full h-full"
+                  : "max-w-[676px] max-md:h-[500px] md:max-h-[90vh]"
               }
               ${isTransitioning ? "scale-transition" : ""}
             `}
@@ -137,7 +141,12 @@ const OrderDetails = ({ show, onClose, data }) => {
                   }`}
                 >
                   <OrderValues orderObject={orderObject} />
-                  <DownLoadYourTickets tickets={tickets} bookingId={order_details?.booking_id}/>
+                  {(bookingId == 4 || bookingId == 5 || bookingId == 6) && (
+                    <DownLoadYourTickets
+                      tickets={tickets}
+                      bookingId={order_details?.booking_id}
+                    />
+                  )}
                 </div>
                 <div
                   className={`flex flex-col gap-4  ${`transition-custom ${
@@ -158,7 +167,10 @@ const OrderDetails = ({ show, onClose, data }) => {
                 expandedVersion={expandedVersion}
                 benefits_restrictions={benefits_restrictions}
               />
-              <AttendeeDetails attendee_details={attendee_details} bookingId={order_details?.booking_id}/>
+              <AttendeeDetails
+                attendee_details={attendee_details}
+                bookingId={order_details?.booking_id}
+              />
             </div>
           </div>
         </div>
