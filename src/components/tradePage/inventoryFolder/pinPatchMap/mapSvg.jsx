@@ -123,8 +123,10 @@ const StadiumMap = ({
     // Update the block ID state
     const blockIdFull = section.getAttribute("data-section");
     const parts = blockIdFull.split("_");
+    console.log(parts,blockIdFull,'blockIdFullblockIdFullblockIdFull');
     const blockId = parts.length > 1 ? parts[1] : null;
-    handleMapBlockClick(blockId);
+
+    handleMapBlockClick(clickedCategoryId);
   };
 
   // Handle mouse enter on section

@@ -40,6 +40,7 @@ const AttendeeDetails = ({ attendee_details = [], bookingId }) => {
       const initialAttendees = attendee_details.map((detail, index) => {
         return {
           id: detail.id || index + 1,
+          atteneCount: index + 1,
           formData: {
             first_name: detail.first_name || "",
             last_name: detail.last_name || "",
@@ -545,7 +546,7 @@ const AttendeeDetails = ({ attendee_details = [], bookingId }) => {
                 >
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-sm md:text-md font-medium flex items-center gap-2">
-                      Attendee {attendee.id}
+                      Attendee {attendee.atteneCount}
                       {isComplete && (
                         <span className="text-green-500">
                           <IconStore.circleTick className="size-4 md:size-5" />

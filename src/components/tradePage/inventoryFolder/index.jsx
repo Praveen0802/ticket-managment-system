@@ -162,20 +162,23 @@ const InventoryFolder = (props) => {
     const params = {
       ...filtersApplied,
       page: 1,
-      ticket_category: blockId,
+      category:
+        filtersApplied?.category?.length > 0
+          ? [...filtersApplied?.category, blockId]
+          : blockId,
     };
     setFiltersApplied(params);
     fetchAPIDetails(params);
   };
 
   const headers = [
-    { key: "qty", label: "Qty", },
+    { key: "qty", label: "Qty" },
     { key: "category", label: "Category" },
     { key: "section", label: "Section/Block" },
     { key: "row", label: "Row" },
     ...(isMobile
       ? [
-          { key: "price", label: "Price", },
+          { key: "price", label: "Price" },
           { key: "attachment", label: "" },
           { key: "hand", label: "" },
           { key: "document", label: "" },
@@ -353,11 +356,7 @@ const InventoryFolder = (props) => {
             alt="star"
           />
         ),
-        tooltipComponent: (
-          <p className="text-center">
-            Track this ticket
-          </p>
-        ),
+        tooltipComponent: <p className="text-center">Track this ticket</p>,
         className: "border-x-[1px] px-2 border-[#E0E1EA] cursor-pointer",
         key: "star",
       },
