@@ -18,10 +18,11 @@ import AvailableFunds from "./components/availableFunds";
 const TradePage = (props) => {
   const { profile, allCategories, fetchTabCount, fetchWalletBalance } = props;
   const router = useRouter();
-  const [selectedTab, setSelectedTab] = useState(profile);
-  const [showEventSearch, setShowEventSearch] = useState(false);
 
   const isMobile = useIsMobile();
+  const [selectedTab, setSelectedTab] = useState(profile);
+
+  const [showEventSearch, setShowEventSearch] = useState(false);
 
   const tabFields = [
     {
@@ -149,7 +150,7 @@ const TradePage = (props) => {
                 : "md:-left-11 -left-11"
             } cursor-pointer -translate-y-1/2 -rotate-90 transform origin-center transition-all duration-300`}
           >
-            <div className="px-3 flex items-center gap-1 py-2 bg-[#696D76] rounded-md">
+            <div className="px-3 flex items-center gap-1 py-2  bg-[#64EAA5] rounded-md">
               <p className="text-white text-xs font-medium">Event Search</p>
               <Image
                 src={chevronDown}

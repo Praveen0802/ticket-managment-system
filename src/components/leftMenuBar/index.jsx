@@ -122,7 +122,7 @@ const LeftMenuBar = () => {
                     onClick={() => handleSelectedClick(index, item)}
                     className={`cursor-pointer flex gap-3 items-center p-3 transition-colors duration-200 ${
                       item?.key === active
-                        ? "bg-[#00A3ED] rounded-md"
+                        ? "bg-[#64EAA5] rounded-md"
                         : "hover:bg-[#5f6365] rounded-md"
                     }`}
                   >
@@ -192,7 +192,7 @@ const LeftMenuBar = () => {
               onClick={() => handleSelectedClick(index, item)}
               className={`cursor-pointer flex gap-3 items-center p-[6px] transition-colors duration-200 ${
                 item?.key === active
-                  ? "bg-[#00A3ED] rounded-md"
+                  ? "bg-[#64EAA5] rounded-md"
                   : "hover:bg-[#5f6365] rounded-md"
               }`}
             >
