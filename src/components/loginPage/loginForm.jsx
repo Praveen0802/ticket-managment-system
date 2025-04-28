@@ -132,7 +132,7 @@ const LoginForm = () => {
   return (
     <>
       <div className="text-center flex flex-col gap-2 md:gap-3">
-        <p className="text-[#343432] text-xl md:text-2xl font-semibold">
+        <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
           {isForgotPassword ? "Forgot Password" : "Login"}
         </p>
 
@@ -174,7 +174,7 @@ const LoginForm = () => {
                 value={formData?.email}
                 onChange={handleChange}
                 error={errors.email}
-                className={"!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"}
+                className={"!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"}
                 autoComplete="off"
                 required
               />
@@ -188,7 +188,7 @@ const LoginForm = () => {
                   type="password"
                   keyValue={"password"}
                   className={
-                    "!py-[10px] !px-[12px] !text-[#343432] !text-[14px]"
+                    "!py-[10px] !px-[12px] !text-[#323A70] !text-[14px]"
                   }
                   label="Password"
                   value={formData?.password}
@@ -207,7 +207,7 @@ const LoginForm = () => {
               label={isForgotPassword ? "Send Reset Link" : "Login"}
               type="primary"
               classNames={{
-                root: "justify-center items-center",
+                root: "justify-center max-md:bg-[#64EAA5] md:bg-[#343432] py-2 sm:py-3 px-4 sm:px-6 md:px-8 items-center",
                 label_: "text-base text-center w-full font-medium",
               }}
               submitButton={true}

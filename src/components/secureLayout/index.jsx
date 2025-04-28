@@ -79,7 +79,7 @@ const SecureLayout = ({ children }) => {
           } w-full `}
         >
           {!hideHeader && <Header />}
-          <div className="flex-1 overflow-hidden">
+          <div className={`flex-1 ${hideHeader ? "" : "overflow-hidden"}`}>
             {pageLoader ? <PageLoader /> : <>{children}</>}
           </div>
         </div>

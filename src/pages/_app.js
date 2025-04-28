@@ -21,6 +21,7 @@ axios.interceptors.response.use(
   },
   (error) => {
     if (error.code === "401") {
+      window?.location?.reload()
     }
     return Promise.reject(error);
   }

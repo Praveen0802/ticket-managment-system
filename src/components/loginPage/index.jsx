@@ -3,20 +3,29 @@ import Design from "../../../public/design.svg";
 import Image from "next/image";
 import LeftFold from "./leftFold";
 import RightFold from "./rightFold";
+import logo from "../../../public/white-logo.svg";
 
 const LoginPage = (props) => {
   const { fetchedCountryCodes = [] } = props;
   const [signUpForm, setSignUpForm] = useState(false);
 
   return (
-    <div className="bg-[#696D76] w-full min-h-screen overflow-auto flex items-center justify-center py-4 sm:py-6 md:py-8 px-3 sm:px-4 relative">
-      <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row min-h-[432px] z-10 relative">
-        <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
+    <div className="bg-[#7c7c7c] md:bg-[#696D76] w-full min-h-screen  overflow-auto flex items-center justify-center py-3 sm:py-6 md:py-8 px-3 sm:px-4 relative">
+      <div className="w-full max-w-4xl mx-auto flex flex-col max-md:gap-4 md:flex-row min-h-[432px] z-10 relative">
+        <Image
+          src={logo}
+          width={200}
+          height={170}
+          alt="image-logo"
+          className="md:hidden w-[300px] h-[90px] sm:w-20 sm:h-20 md:w-[200px] md:h-[90px]"
+        />
+          <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} hideMobile={true} />
         <RightFold
           setSignUpForm={setSignUpForm}
           signUpForm={signUpForm}
           fetchedCountryCodes={fetchedCountryCodes}
         />
+          <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
       </div>
       <Image
         src={Design}
