@@ -96,13 +96,13 @@ const ResetPasswordFold = ({ token }) => {
 
   return (
     <div className="flex flex-col gap-6 px-6 md:px-8 justify-center items-center py-6 md:py-8 bg-white w-full rounded-xl">
-      <Image
+      {/* <Image
         src={logo}
         width={80}
         height={80}
         alt="image-logo"
         className="w-20 h-20 md:w-28 md:h-28"
-      />
+      /> */}
       <div className="text-center flex flex-col gap-2 md:gap-3">
         <p className="text-[#343432] text-xl md:text-2xl font-semibold">
           Reset Password

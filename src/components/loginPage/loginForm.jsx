@@ -131,7 +131,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="text-center flex flex-col gap-2 md:gap-3">
+      <div className="text-center flex flex-col gap-2">
         <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
           {isForgotPassword ? "Forgot Password" : "Login"}
         </p>
@@ -162,8 +162,8 @@ const LoginForm = () => {
           />
         </div>
       ) : (
-        <form className="flex flex-col gap-8 w-full " onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4">
+        <form className="flex flex-col max-md:gap-8 md:gap-4 w-full " onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-3">
             <div>
               <FloatingLabelInput
                 id="email"

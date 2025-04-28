@@ -10,22 +10,28 @@ const LoginPage = (props) => {
   const [signUpForm, setSignUpForm] = useState(false);
 
   return (
-    <div className="bg-[#7c7c7c] md:bg-[#696D76] w-full min-h-screen  overflow-auto flex items-center justify-center py-3 sm:py-6 md:py-8 px-3 sm:px-4 relative">
-      <div className="w-full max-w-4xl mx-auto flex flex-col max-md:gap-4 md:flex-row min-h-[432px] z-10 relative">
+    <div className="bg-[#7c7c7c]  w-full min-h-screen  overflow-auto flex items-center justify-center py-3 sm:py-6 md:py-8 px-3 sm:px-4 relative">
+      <div className="w-full max-w-4xl mx-auto flex flex-col gap-4 items-center justify-center  z-10 relative">
         <Image
           src={logo}
           width={200}
           height={170}
           alt="image-logo"
-          className="md:hidden w-[300px] h-[90px] sm:w-20 sm:h-20 md:w-[200px] md:h-[90px]"
+          className=" w-[300px] h-[90px] "
         />
-          <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} hideMobile={true} />
-        <RightFold
-          setSignUpForm={setSignUpForm}
-          signUpForm={signUpForm}
-          fetchedCountryCodes={fetchedCountryCodes}
-        />
+        <div className="flex max-md:flex-col max-md:gap-4  min-h-[432px] z-10 relative">
+          <LeftFold
+            setSignUpForm={setSignUpForm}
+            signUpForm={signUpForm}
+            hideMobile={true}
+          />
+          <RightFold
+            setSignUpForm={setSignUpForm}
+            signUpForm={signUpForm}
+            fetchedCountryCodes={fetchedCountryCodes}
+          />
           <LeftFold setSignUpForm={setSignUpForm} signUpForm={signUpForm} />
+        </div>
       </div>
       <Image
         src={Design}

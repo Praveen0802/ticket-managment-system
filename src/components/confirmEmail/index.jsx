@@ -2,12 +2,20 @@ import React from "react";
 import Design from "../../../public/design.svg";
 import Image from "next/image";
 import ConfirmEmailFold from "./confirmEmailFold";
+import logo from "../../../public/white-logo.svg";
 
 const ConfirmEmailPage = (props) => {
   const { token } = props;
   return (
-    <div className="bg-[#696D76] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
-      <div className="w-[500px] z-[10]">
+    <div className="bg-[#7c7c7c] w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
+      <div className="w-[500px] z-[10] flex flex-col gap-4 items-center justify-center">
+        <Image
+          src={logo}
+          width={80}
+          height={80}
+          alt="image-logo"
+          className=" w-[250px] h-[90px] "
+        />
         <ConfirmEmailFold token={token} />
       </div>
       <Image

@@ -9,15 +9,15 @@ const LeftFold = ({ signUpForm, setSignUpForm,hideMobile=false }) => {
   };
 
   return (
-    <div className={`${hideMobile ? 'max-md:hidden bg-[#F0F1F5]' : 'md:hidden'}  w-full md:w-1/2 rounded-t-xl md:rounded-tr-none md:rounded-l-xl p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-6`}>
-      <Image
+    <div className={`${hideMobile ? 'max-md:hidden bg-[#F0F1F5]' : 'md:hidden'}  w-full md:w-1/2 rounded-t-xl md:rounded-tr-none md:rounded-l-xl p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center gap-3 md:gap-10`}>
+      {/* <Image
         src={logo}
         width={200}
         height={170}
         alt="image-logo"
         className="max-md:hidden w-16 h-16 sm:w-20 sm:h-20 md:w-[200px] md:h-[90px]"
-      />
-      <div className="flex flex-col gap-1 sm:gap-2 md:gap-3">
+      /> */}
+      <div className="flex flex-col gap-1 md:gap-10">
         <p className="text-lg sm:text-xl md:text-2xl text-center font-bold max-md:text-white text-[#343432]">
           {signUpForm ? "Already have an account?" : "Don't have an account?"}
         </p>
