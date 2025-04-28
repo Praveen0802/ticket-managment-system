@@ -445,11 +445,11 @@ const InventoryFolder = (props) => {
   return (
     <>
       {matchId ? (
-        <div className="flex flex-col gap-6 h-full">
+        <div className="flex flex-col gap-4 h-full">
           <div className="bg-white w-full">
             {/* Match header info */}
             <div className="px-[16px] md:px-[30px] border-b-[1px] border-[#E0E1EA] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center">
-              <p className="py-[8px] md:py-[12px] pr-0 md:pr-[20px] text-[12px] font-medium text-[#343432] border-b-[1px] md:border-b-0 w-full md:w-auto md:border-r-[1px] border-[#E0E1EA]">
+              <p className="py-[8px] md:py-[10px] whitespace-nowrap pr-0 md:pr-[20px] text-[12px] font-medium text-[#343432] border-b-[1px] md:border-b-0 w-full md:w-auto md:border-r-[1px] border-[#E0E1EA]">
                 {selectedMatchData?.match}
               </p>
               <div className="py-[6px] md:py-[10px] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center w-full">
@@ -490,7 +490,7 @@ const InventoryFolder = (props) => {
             </div>
 
             {/* Filter form */}
-            <div className="px-[16px] md:px-[24px] py-[16px] md:py-[20px] border-b-[1px] border-[#E0E1EA]">
+            <div className="px-[16px] md:px-[24px] py-[16px] md:py-[12px] border-b-[1px] border-[#E0E1EA]">
               <InventoryFilterForm
                 formFieldValues={formFieldValues}
                 handleChange={handleChange}
