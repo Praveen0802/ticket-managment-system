@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import logo from "../../../public/logo.svg";
@@ -30,6 +30,10 @@ const ConfirmEmailFold = ({ token }) => {
     }
   };
 
+  useEffect(() => {
+    handleVerify();
+  }, []);
+
   const goToLogin = () => {
     router.push("/login");
   };
@@ -45,10 +49,10 @@ const ConfirmEmailFold = ({ token }) => {
       /> */}
       <div className="text-center flex flex-col gap-2 md:gap-3">
         <p className="text-[#343432] text-xl md:text-2xl font-semibold">
-          Confirm Your Email
+          Email Verified Successfully!
         </p>
         <p className="text-[#7D82A4] text-sm font-normal">
-          Click the button below to verify your email address
+          Your email has been verified. You can now log in to your account.
         </p>
       </div>
 
