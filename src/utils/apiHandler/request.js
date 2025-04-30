@@ -547,7 +547,7 @@ export const FetchHotEvents = async (token, params = {}) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in FetchHotEvent", error);
-    throw error;
+    return {};
   }
 };
 
@@ -568,7 +568,7 @@ export const LastMinuteEvents = async (token, params = {}) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in LastMinuteEvents", error);
-    throw error;
+    return {}
   }
 };
 
@@ -658,7 +658,7 @@ export const fetchRecentlyViewedList = async (
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in fetchRecentlyViewedList", error);
-    throw error;
+    return {}
   }
 };
 

@@ -37,7 +37,7 @@ const TradeHome = (props) => {
   }, []);
 
   const constructViewDataType = (array) => {
-    return array?.map((item) => {
+    return Array.isArray(array) && array?.map((item) => {
       return {
         id: item?.m_id,
         name: item?.match_name,
