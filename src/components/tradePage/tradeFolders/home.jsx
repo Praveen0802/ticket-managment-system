@@ -10,6 +10,7 @@ import { fetchRecentlyViewedList } from "@/utils/apiHandler/request";
 import { useRouter } from "next/router";
 
 const TradeHome = (props) => {
+  console.log("TradeHome props", props);
   const { profile, response = {}, showEventSearch } = props;
   const {
     hotEvents = {},
@@ -55,17 +56,17 @@ const TradeHome = (props) => {
     {
       name: "Recently Viewed Events",
       icon: "eye",
-      events: constructViewDataType(recentlyViewedEvents),
+      events: constructViewDataType(recentlyViewedEvents?.value),
     },
     {
       name: "Hot Events",
       icon: "flame",
-      events: constructViewDataType(hotEvents?.top_matchs),
+      events: constructViewDataType(hotEvents?.value?.top_matchs),
     },
     {
       name: "Last-minute Events",
       icon: "clock",
-      events: constructViewDataType(lastMinuteEvents),
+      events: constructViewDataType(lastMinuteEvents?.value),
     },
   ];
 
