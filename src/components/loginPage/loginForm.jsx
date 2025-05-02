@@ -207,7 +207,7 @@ const LoginForm = () => {
               label={isForgotPassword ? "Send Reset Link" : "Login"}
               type="primary"
               classNames={{
-                root: "justify-center max-md:bg-[#64EAA5] md:bg-[#343432] py-2 sm:py-3 px-4 sm:px-6 md:px-8 items-center",
+                root: "justify-center max-md:bg-[#64EAA5] md:bg-[#64EAA5] py-2 sm:py-3 px-4 sm:px-6 md:px-8 items-center",
                 label_: "text-base text-center w-full font-medium",
               }}
               submitButton={true}

@@ -354,7 +354,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
               label={"Create Account"}
               type="primary"
               classNames={{
-                root: "justify-center items-center py-2 sm:py-3",
+                root: "justify-center md:bg-[#64EAA5] items-center py-2 sm:py-3",
                 label_: "text-sm sm:text-base text-center w-full font-medium",
               }}
               submitButton={true}

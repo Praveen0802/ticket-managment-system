@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import Design from "../../../public/design.svg";
+import Design from "../../../public/design-1.svg";
 import Image from "next/image";
 import LeftFold from "./leftFold";
 import RightFold from "./rightFold";
-import logo from "../../../public/white-logo.png";
+import logo from "../../../public/logo.png";
 
 const LoginPage = (props) => {
   const { fetchedCountryCodes = [] } = props;
   const [signUpForm, setSignUpForm] = useState(false);
 
   return (
-    <div className="bg-[#7c7c7c]  w-full min-h-screen  overflow-auto flex items-center justify-center py-3 sm:py-6 md:py-8 px-3 sm:px-4 relative">
+    <div className="bg-[#bababa] w-full min-h-screen  overflow-auto flex items-center justify-center py-3 sm:py-6 md:py-8 px-3 sm:px-4 relative">
       <div className="w-full max-w-4xl mx-auto flex flex-col gap-4 items-center justify-center  z-10 relative">
         <Image
           src={logo}
