@@ -1,6 +1,6 @@
 import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
-import logo from "../../../public/logo.svg";
+import logo from "../../../public//template-logo.png";
 import arrowRight from "../../../public/arrow-right.svg";
 import category from "../../../public/category.svg";
 import addSquare from "../../../public/add-square.svg";

@@ -85,7 +85,6 @@ export async function middleware(request) {
   } else if (validateAuthToken) {
     if (validateAuthToken?.token) {
       const response = NextResponse.next();
-      console.log("enteringHereeeee2222");
       response.cookies.set(
         "auth_token",
         decodeURIComponent(validateAuthToken?.token),

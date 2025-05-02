@@ -7,7 +7,6 @@ import { Roboto } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
-import logo from "../../public/logo.svg";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -32,7 +31,7 @@ export default function App({ Component, pageProps }) {
     <>
       <Head>
         <title>Seat Brokers</title>
-        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+        <link rel="icon" href="/template-logo.png" type="image/svg+xml" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"

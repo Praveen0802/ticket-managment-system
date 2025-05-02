@@ -3,7 +3,7 @@ import Design from "../../../public/design.svg";
 import Image from "next/image";
 import LeftFold from "./leftFold";
 import RightFold from "./rightFold";
-import logo from "../../../public/white-logo.svg";
+import logo from "../../../public/white-logo.png";
 
 const LoginPage = (props) => {
   const { fetchedCountryCodes = [] } = props;

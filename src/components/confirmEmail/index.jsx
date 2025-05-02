@@ -2,7 +2,7 @@ import React from "react";
 import Design from "../../../public/design.svg";
 import Image from "next/image";
 import ConfirmEmailFold from "./confirmEmailFold";
-import logo from "../../../public/white-logo.svg";
+import logo from "../../../public/white-logo.png";
 
 const ConfirmEmailPage = (props) => {
   const { token } = props;

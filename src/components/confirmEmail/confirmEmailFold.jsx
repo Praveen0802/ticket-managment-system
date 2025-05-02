@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import logo from "../../../public/logo.svg";
+import logo from "../../../public/logo.png";
 import Button from "@/components/commonComponents/button";
 import { VerifyEmail } from "@/utils/apiHandler/request";
 

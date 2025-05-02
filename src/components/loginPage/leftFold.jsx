@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import logo from "../../../public/logo.svg";
+import logo from "../../../public/logo.png";
 import Button from "../commonComponents/button";
 
 const LeftFold = ({ signUpForm, setSignUpForm,hideMobile=false }) => {
