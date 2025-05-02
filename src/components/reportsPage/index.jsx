@@ -322,7 +322,7 @@ const ReportsPage = (props) => {
                 <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
                 <input
                   type="text"
-                  placeholder="search Transactions"
+                  placeholder="Search transactions"
                   onChange={(e) => setPaymentReference(e.target.value)}
                   value={paymentReference}
                   onBlur={(e) => handleInputBlurOrEnter(e, true)}
@@ -335,7 +335,7 @@ const ReportsPage = (props) => {
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <FloatingSelect
                   label={
-                    !transactionTab ? "Transaction Status" : "Transaction Type"
+                    !transactionTab ? "Transaction status" : "Transaction type"
                   }
                   options={
                     !transactionTab
@@ -362,7 +362,7 @@ const ReportsPage = (props) => {
                   name="transactionDate"
                   keyValue="transactionDate"
                   parentClassName="!w-full sm:!w-[50%]"
-                  label="Transaction Date"
+                  label="Transaction date"
                   className="!py-[8px] !px-[16px] mobile:text-xs"
                   value={dateRange}
                   onChange={handleDateChange}

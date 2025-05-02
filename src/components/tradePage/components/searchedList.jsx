@@ -37,7 +37,7 @@ const SearchedList = ({ item }) => {
       </div>
       {renderIconText(
         <Image src={grayLocation} width={16} height={16} alt="logo" />,
-        `${item?.stadium},${item?.city},${item?.country}`,
+        `${item?.stadium} , ${item?.city} , ${item?.country}`,
         'truncate'
       )}
     </div>

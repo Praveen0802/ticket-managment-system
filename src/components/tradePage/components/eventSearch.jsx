@@ -223,7 +223,7 @@ const EventSearch = ({ onClose, allCategories }) => {
       onChange: (e) => handleChange(e, "event_date"),
       className: `!py-[6px] !text-[13px] !px-[10px]`,
       labelClassName: "!text-[12px] text-gray-600  block",
-      placeholder: "Enter Event/Performer",
+      placeholder: "Enter event/performer",
     },
     {
       label: "Venue/City",
@@ -237,10 +237,10 @@ const EventSearch = ({ onClose, allCategories }) => {
       onChange: (e) => handleChange(e, "venue"),
       className: `!py-[6px] !text-[13px] !px-[10px] `,
       labelClassName: "!text-[12px] text-gray-600  block",
-      placeholder: "Enter Venue/City",
+      placeholder: "Enter venue/city",
     },
     {
-      label: "All Event  Categories",
+      label: "All event categories",
       type: "select",
       searchable: true,
       mandatory: true,
@@ -365,10 +365,11 @@ const EventSearch = ({ onClose, allCategories }) => {
       <div className="p-4 flex flex-col gap-[14px]">
         <FormFields formFields={formValues} />
         <SelectDateComponent
-          label="Date Range"
+          label="Date range"
           onChange={handleDateChange}
           selected={selected}
           setSelected={setSelected}
+          labelClassName= "!text-[12px] text-gray-600  block"
           id="date-picker"
           paddingClassName="!py-[6px] text-[12px] !px-[10px]"
           dateOptions={dateOptions}

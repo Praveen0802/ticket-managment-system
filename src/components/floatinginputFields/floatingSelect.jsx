@@ -229,7 +229,7 @@ const FloatingSelect = ({
         <span
           style={{ fontSize: isFocused || isOpen ? "11px" : "13px" }}
           className={`${labelClassName} ${
-            error ? "text-red-500" : "text-[#808082]"
+            error ? "text-red-500" : ""
           } truncate`}
         >
           {label}

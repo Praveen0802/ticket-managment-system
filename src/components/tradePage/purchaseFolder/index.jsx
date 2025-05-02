@@ -266,7 +266,7 @@ const PurchaseFolder = (props) => {
             name="selectedMatch"
             keyValue={"selectedMatch"}
             type="text"
-            label="Search Match Event or Booking Number"
+            label="Search Match event or Booking number"
             value={selectedMatch}
             className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"}
             onChange={handleMatchSearch}
@@ -279,7 +279,7 @@ const PurchaseFolder = (props) => {
             name="eventDate"
             keyValue="eventDate"
             parentClassName="!w-full"
-            label="Event Date"
+            label="Event date"
             className="!py-[8px] !px-[16px] text-xs"
             value={eventDate}
             onChange={(dateValue) => handleDateChange(dateValue, "eventDate")}
@@ -290,14 +290,14 @@ const PurchaseFolder = (props) => {
             name="orderDate"
             keyValue="orderDate"
             parentClassName="!w-full"
-            label="Order Date"
+            label="Order date"
             className="!py-[8px] !px-[16px] text-xs"
             value={orderDate}
             onChange={(dateValue) => handleDateChange(dateValue, "orderDate")}
           />
 
           <FloatingSelect
-            label={"Ticket Status"}
+            label={"Ticket status"}
             options={[
               { value: "fulfilled", label: "Fulfilled" },
               { value: "incomplete", label: "Incomplete" },
@@ -309,10 +309,11 @@ const PurchaseFolder = (props) => {
               handleSelectChange(e, "ticket_status");
             }}
             paddingClassName="!py-[6px] !px-[12px] w-full text-xs"
+                labelClassName="!text-[11px]"
           />
 
           <FloatingSelect
-            label={"Booking Status"}
+            label={"Booking status"}
             options={[
               { value: 0, label: "Failed" },
               { value: 1, label: "Confirmed" },
@@ -330,6 +331,7 @@ const PurchaseFolder = (props) => {
               handleSelectChange(e, "booking_status");
             }}
             paddingClassName="!py-[6px] !px-[12px] w-full text-xs"
+                labelClassName="!text-[11px]"
           />
         </div>
       )}
@@ -362,7 +364,7 @@ const PurchaseFolder = (props) => {
         name="selectedMatch"
         keyValue={"selectedMatch"}
         type="text"
-        label="Search Match Event"
+        label="Search Match event or Booking number"
         value={selectedMatch}
         className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px] "}
         onChange={handleMatchSearch}
@@ -374,7 +376,7 @@ const PurchaseFolder = (props) => {
         name="eventDate"
         keyValue="eventDate"
         parentClassName="!w-[200px]"
-        label="Event Date"
+        label="Event date"
         subParentClassName="!w-[200px]"
         className="!py-[8px] !px-[16px] mobile:text-xs"
         value={eventDate}
@@ -386,13 +388,13 @@ const PurchaseFolder = (props) => {
         keyValue="orderDate"
         parentClassName="!w-[350px]"
         subParentClassName="!w-[200px]"
-        label="Order Date"
+        label="Order date"
         className="!py-[8px] !px-[16px] mobile:text-xs"
         value={orderDate}
         onChange={(dateValue) => handleDateChange(dateValue, "orderDate")}
       />
       <FloatingSelect
-        label={"Ticket Status"}
+        label={"Ticket status"}
         options={[
           { value: "fulfilled", label: "Fulfilled" },
           { value: "incomplete", label: "Incomplete" },
@@ -404,9 +406,10 @@ const PurchaseFolder = (props) => {
           handleSelectChange(e, "ticket_status");
         }}
         paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-xs"
+        labelClassName="!text-[11px]"
       />
       <FloatingSelect
-        label={"Booking Status"}
+        label={"Booking status"}
         options={bookingStatusOptions}
         selectedValue={selectedBookingStatus}
         keyValue="booking_status"
@@ -415,6 +418,7 @@ const PurchaseFolder = (props) => {
           handleSelectChange(e, "booking_status");
         }}
         paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-xs"
+            labelClassName="!text-[11px]"
       />
     </div>
   );

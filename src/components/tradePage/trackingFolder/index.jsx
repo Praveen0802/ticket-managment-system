@@ -446,13 +446,13 @@ const TrackingPage = (props) => {
               )}
             </div>
           ) : (
-            <div className="py-[20px] px-[24px] flex max-md:flex-col gap-4 items-center w-[50%]">
+            <div className=" flex max-md:flex-col gap-4 items-center w-[50%]">
               <FloatingLabelInput
                 id="selectedMatch"
                 name="selectedMatch"
                 keyValue={"selectedMatch"}
                 type="text"
-                label="Search Match Event"
+                label="Search match event"
                 value={selectedMatch}
                 className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"}
                 onChange={handleMatchSearch}
@@ -463,7 +463,7 @@ const TrackingPage = (props) => {
                 name="eventDate"
                 keyValue="eventDate"
                 parentClassName="md:w-[350px] !max-md:w-full"
-                label="Event Date"
+                label="Event date"
                 className="!py-[8px] !px-[16px] mobile:text-xs"
                 value={selectedDate}
                 singleDateMode={true}

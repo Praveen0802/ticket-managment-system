@@ -72,9 +72,9 @@ const FloatingLabelInput = ({
         hasError={!!error}
       >
         <span
-          style={{ fontSize: isFocused ? "11px" : "13px" }}
+          style={{ fontSize: isFocused ? "11px" : "12px" }}
           className={`${labelClassName}  ${
-            error ? "text-red-500" : "text-[#808082]"
+            error ? "text-red-500" : ""
           }`}
         >
           {label}
