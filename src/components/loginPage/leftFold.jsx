@@ -9,7 +9,7 @@ const LeftFold = ({ signUpForm, setSignUpForm,hideMobile=false }) => {
   };
 
   return (
-    <div className={`${hideMobile ? 'max-md:hidden bg-[#F0F1F5]' : 'md:hidden'}  w-full md:w-1/2 rounded-t-xl md:rounded-tr-none md:rounded-l-xl p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center gap-3 md:gap-10`}>
+    <div className={`${hideMobile ? 'max-md:hidden bg-[#E0E1EA]' : 'md:hidden'}  w-full md:w-1/2 rounded-t-xl md:rounded-tr-none md:rounded-l-xl p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center gap-3 md:gap-4`}>
       {/* <Image
         src={logo}
         width={200}
@@ -17,14 +17,14 @@ const LeftFold = ({ signUpForm, setSignUpForm,hideMobile=false }) => {
         alt="image-logo"
         className="max-md:hidden w-16 h-16 sm:w-20 sm:h-20 md:w-[200px] md:h-[90px]"
       /> */}
-      <div className="flex flex-col gap-1 md:gap-10">
+      <div className="flex flex-col gap-1 md:gap-4">
         <p className="text-lg sm:text-xl md:text-2xl text-center font-bold  text-[#343432]">
           {signUpForm ? "Already have an account?" : "Don't have an account?"}
         </p>
         <p className="text-xs sm:text-sm text-[#343432]  font-normal text-center">
           {signUpForm
             ? "Log in to access your account and manage your ticket listings or purchases."
-            : "Whether you're a buyer or seller, SeatsBrokers gives you access to the world's most sought-after events."}
+            : "Whether you're a buyer or seller, Seats Brokers gives you access to the world's most sought-after event tickets!."}
         </p>
       </div>
       <Button

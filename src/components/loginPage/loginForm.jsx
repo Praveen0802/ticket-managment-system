@@ -131,12 +131,12 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="text-center flex flex-col gap-2">
+      <div className="text-center flex flex-col gap-4">
         <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
           {isForgotPassword ? "Forgot Password" : "Login"}
         </p>
 
-        <p className="text-[#7D82A4] text-sm font-normal">
+        <p className="text-[#7D82A4] text-[13px] font-normal">
           {isForgotPassword
             ? "Enter your email address to receive a password reset link"
             : "Connecting trusted ticket sellers together with our worldwide distribution network"}
@@ -162,7 +162,7 @@ const LoginForm = () => {
           />
         </div>
       ) : (
-        <form className="flex flex-col max-md:gap-8 md:gap-4 w-full " onSubmit={handleSubmit}>
+        <form className="flex flex-col max-md:gap-8 md:gap-8 w-full " onSubmit={handleSubmit}>
           <div className="flex flex-col gap-3">
             <div>
               <FloatingLabelInput
@@ -202,7 +202,7 @@ const LoginForm = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-6">
             <Button
               label={isForgotPassword ? "Send Reset Link" : "Login"}
               type="primary"
