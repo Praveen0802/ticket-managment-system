@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Seat Brokers</title>
+        <title>Seats Brokers</title>
         <link rel="icon" href="/template-logo.png" type="image/svg+xml" />
         <link
           rel="apple-touch-icon"
