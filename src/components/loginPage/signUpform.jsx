@@ -24,6 +24,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
     confirm_password: "",
     mobile_number: "",
     phone_code: "44",
+    terms_accepted: false, // Add new field for terms acceptance
   });
   const [emailVerficationSent, setEmailVerificationSent] = useState(false);
   const [errors, setErrors] = useState({
@@ -34,6 +35,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
     confirm_password: "",
     mobile_number: "",
     phone_code: "",
+    terms_accepted: "", // Add error field for terms
   });
 
   const [errorText, setErrorText] = useState("");
@@ -44,7 +46,16 @@ const SignupForm = ({ fetchedCountryCodes }) => {
 
   const handleChange = (e, key, type) => {
     const name = key;
-    const value = type === "select" ? e : e.target?.value;
+    let value;
+    
+    if (type === "select") {
+      value = e;
+    } else if (type === "checkbox") {
+      value = e.target.checked;
+    } else {
+      value = e.target?.value;
+    }
+    
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -68,6 +79,7 @@ const SignupForm = ({ fetchedCountryCodes }) => {
       confirm_password: "",
       mobile_number: "",
       phone_code: "",
+      terms_accepted: "",
     };
 
     if (!formData.first_name.trim()) {
@@ -113,6 +125,12 @@ const SignupForm = ({ fetchedCountryCodes }) => {
 
     if (formData.mobile_number && !formData.phone_code) {
       newErrors.phone_code = "Country code is required with mobile number";
+      valid = false;
+    }
+
+    // Validate terms acceptance
+    if (!formData.terms_accepted) {
+      newErrors.terms_accepted = "You must accept the Terms and Conditions and Privacy Policy";
       valid = false;
     }
 
@@ -342,6 +360,39 @@ const SignupForm = ({ fetchedCountryCodes }) => {
                   />
                 </div>
               </div>
+
+              {/* Terms and Conditions Checkbox */}
+              <div className="flex items-start mt-1">
+                <div className="flex items-center h-5">
+                  <input
+                    id="terms_accepted"
+                    name="terms_accepted"
+                    type="checkbox"
+                    checked={formData.terms_accepted}
+                    onChange={(e) => handleChange(e, "terms_accepted", "checkbox")}
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-2 focus:ring-[#64EAA5] cursor-pointer"
+                    required
+                  />
+                </div>
+                <label
+                  htmlFor="terms_accepted"
+                  className="ml-2 text-[11px] text-[#343432]"
+                >
+                  By signing up, you agree to our{" "}
+                  <a href="/terms" className="text-[#130061] hover:underline font-medium">
+                    Terms and Conditions
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy" className="text-[#130061] hover:underline font-medium">
+                    Privacy Policy
+                  </a>
+                </label>
+              </div>
+              {errors.terms_accepted && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.terms_accepted}
+                </p>
+              )}
             </div>
             {errorText && (
               <p className="text-[11px] sm:text-[12px] text-red-500 mt-1">

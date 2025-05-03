@@ -19,7 +19,7 @@ const LoginPage = (props) => {
           alt="image-logo"
           className=" w-[300px] h-[90px] md:w-[400px] md:h-[120px]"
         />
-        <div className="flex max-md:flex-col max-md:gap-4 md:pb-[80px]  min-h-[432px] z-10 relative">
+        <div className="flex max-md:flex-col max-md:gap-4 md:pb-[100px]  min-h-[432px] z-10 relative">
           <LeftFold
             setSignUpForm={setSignUpForm}
             signUpForm={signUpForm}
