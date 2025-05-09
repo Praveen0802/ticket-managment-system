@@ -508,7 +508,7 @@ export const VerifyEmail = async (token, data) => {
       ...(token && { token: token }),
       data: data,
     });
-    return response?.data?.success ? response?.data?.data : {};
+    return response?.data;
   } catch (error) {
     console.log("ERROR in VerifyEmail", error);
     throw error;

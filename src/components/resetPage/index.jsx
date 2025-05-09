@@ -8,14 +8,14 @@ const ResetPasswordPage = (props) => {
   const { token } = props;
   return (
     <div className="bg-[#f3f4f6]   w-full min-h-screen flex items-center justify-center py-8 px-4 relative">
-        <div className="w-[500px] z-[10] flex flex-col gap-4 items-center justify-center">
-      <Image
-        src={logo}
-        width={80}
-        height={80}
-        alt="image-logo"
-        className=" w-[300px] h-[90px] md:w-[400px] md:h-[120px]"
-      />
+      <div className="w-[500px] z-[10] flex flex-col gap-4 items-center justify-center">
+        <Image
+          src={logo}
+          width={200}
+          height={170}
+          alt="image-logo"
+          className=" w-[300px] h-[90px] md:w-[400px] md:h-[120px]"
+        />
         <ResetPasswordFold token={token} />
       </div>
       <Image

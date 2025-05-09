@@ -21,7 +21,14 @@ const ConfirmEmailFold = ({ token }) => {
         token: token,
       };
       const response = await VerifyEmail("", body);
-      setVerifySuccess(true);
+      console.log(response,'responseresponse')
+      if (response?.error) {
+        console.error("Error verifying email:", error);
+        setError(response?.error);
+      } else {
+        setVerifySuccess(true);
+      }
+
       setLoader(false);
     } catch (error) {
       console.error("Error verifying email:", error);
@@ -49,7 +56,7 @@ const ConfirmEmailFold = ({ token }) => {
       /> */}
       <div className="text-center flex flex-col gap-2 md:gap-3">
         <p className="text-[#343432] text-xl md:text-2xl font-semibold">
-          Email Verified Successfully!
+          Email Verification
         </p>
         <p className="text-[#7D82A4] text-sm font-normal">
           Your email has been verified. You can now log in to your account.
@@ -59,9 +66,6 @@ const ConfirmEmailFold = ({ token }) => {
       {verifySuccess ? (
         <div className="flex flex-col gap-4 items-center w-full max-w-xs mx-auto">
           <div className="bg-green-50 p-4 rounded-lg text-center">
-            <p className="text-green-700 font-medium">
-              Email Verified Successfully!
-            </p>
             <p className="text-green-600 text-sm mt-1">
               Your email has been verified. You can now log in to your account.
             </p>
