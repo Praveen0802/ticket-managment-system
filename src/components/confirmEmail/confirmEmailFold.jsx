@@ -8,6 +8,7 @@ import { VerifyEmail } from "@/utils/apiHandler/request";
 const ConfirmEmailFold = ({ token }) => {
   const [loader, setLoader] = useState(false);
   const [verifySuccess, setVerifySuccess] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState("");
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -26,6 +27,7 @@ const ConfirmEmailFold = ({ token }) => {
         setError(response?.error);
       } else {
         setVerifySuccess(true);
+        setVerifyMessage(response?.message);
       }
 
       setLoader(false);
@@ -57,16 +59,14 @@ const ConfirmEmailFold = ({ token }) => {
         <p className="text-[#343432] text-xl md:text-2xl font-semibold">
           Email Verification
         </p>
-        <p className="text-[#7D82A4] text-sm font-normal">
-          Your email has been verified. You can now log in to your account.
-        </p>
       </div>
 
       {verifySuccess ? (
         <div className="flex flex-col gap-4 items-center w-full max-w-xs mx-auto">
           <div className="bg-green-50 p-4 rounded-lg text-center">
             <p className="text-green-600 text-sm mt-1">
-              Your email has been verified. You can now log in to your account.
+              {verifyMessage ||
+                "Your email has been verified. You can now log in to your account."}
             </p>
           </div>
           <Button
