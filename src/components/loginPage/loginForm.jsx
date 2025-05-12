@@ -86,7 +86,6 @@ const LoginForm = () => {
         try {
           const response = await loginUser(null, body);
           const authToken = response?.token;
-
           if (authToken) {
             if (getCookie("auth_token")) {
               await setCookie("auth_token", "");
@@ -100,15 +99,15 @@ const LoginForm = () => {
             router.push("/dashboard");
           } else {
             setErrors({
-              email: "Invalid email or password",
-              password: "Invalid email or password",
+              email: response?.message || "Invalid email or password",
+              password: response?.message || "Invalid email or password",
             });
             setLoader(false);
           }
         } catch {
           setErrors({
-            email: "Invalid email or password",
-            password: "Invalid email or password",
+            email: response?.message || "Invalid email or password",
+            password: response?.message || "Invalid email or password",
           });
           setLoader(false);
         }
@@ -162,7 +161,10 @@ const LoginForm = () => {
           />
         </div>
       ) : (
-        <form className="flex flex-col max-md:gap-8 md:gap-8 w-full " onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col max-md:gap-8 md:gap-8 w-full "
+          onSubmit={handleSubmit}
+        >
           <div className="flex flex-col gap-3">
             <div>
               <FloatingLabelInput

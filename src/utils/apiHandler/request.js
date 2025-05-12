@@ -59,6 +59,7 @@ export const loginUser = async (token, data) => {
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
+    return error?.response?.data;
     console.log("ERROR in loginUser", error);
     throw error;
   }

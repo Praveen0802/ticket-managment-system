@@ -21,7 +21,6 @@ const ConfirmEmailFold = ({ token }) => {
         token: token,
       };
       const response = await VerifyEmail("", body);
-      console.log(response,'responseresponse')
       if (response?.error) {
         console.error("Error verifying email:", error);
         setError(response?.error);
