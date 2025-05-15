@@ -3,7 +3,7 @@ const nextConfig = {
   env: {
     API_BASE_URL: "https://api2.listmyticket.com/b2b",
     DOMAIN_KEY:
-      "jgcvdp9FwDg94kpEQY9yb9nnlOGW39srytB7YTOXHb1jnWfPf1za8Dr0FVqrM0BK",
+      "Y7K9DzQDttNcQR4Pw+KTpE63M3LzUNB8Zql5MBL21T76E3gVHmWuSV+eKTJxp1z9",
   },
   
   // Add the rewrites configuration using ES module syntax
