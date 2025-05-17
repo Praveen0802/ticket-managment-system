@@ -103,7 +103,7 @@ const EventSearch = ({ onClose, allCategories }) => {
     const dateType = type === "date"; // Fixed equality check
     const value = selectType || dateType ? e : e.target.value;
     setFormFieldValues({ ...formFieldValues, [key]: value });
-
+    console.log(selectedObject, "selectedObjectselectedObject");
     if (key === "event_date") {
       const updatedQueryValues = {
         ...filtersApplied,
@@ -124,10 +124,11 @@ const EventSearch = ({ onClose, allCategories }) => {
     if (key == "event_categories") {
       const updatedQueryValues = {
         ...filtersApplied,
-        is_tournament: selectedObject?.is_tournament || "",
-        is_game_category: selectedObject?.is_game_category || "",
-        category_id: selectedObject?.id || "",
+        is_tournament: selectedObject?.is_tournament,
+        is_game_category: selectedObject?.is_game_category,
+        category_id: selectedObject?.id,
       };
+      console.log(updatedQueryValues, "updatedQueryValues");
       setFiltersApplied(updatedQueryValues);
       fetchApiCall(updatedQueryValues);
     }
@@ -369,7 +370,7 @@ const EventSearch = ({ onClose, allCategories }) => {
           onChange={handleDateChange}
           selected={selected}
           setSelected={setSelected}
-          labelClassName= "!text-[12px] text-gray-600  block"
+          labelClassName="!text-[12px] text-gray-600  block"
           id="date-picker"
           paddingClassName="!py-[6px] text-[12px] !px-[10px]"
           dateOptions={dateOptions}

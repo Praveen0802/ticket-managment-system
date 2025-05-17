@@ -579,6 +579,7 @@ export const FetchEventSearch = async (token, params = {}) => {
     lang: "en",
     currency: "GBP",
   };
+  console.log(queryParams,'queryParamsqueryParams')
   try {
     const response = await makeRequest({
       url: API_ROUTES.FETCH_EVENT_SEARCH,
