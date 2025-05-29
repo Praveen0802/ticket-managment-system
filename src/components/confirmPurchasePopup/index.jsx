@@ -25,6 +25,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdyenDropIn from "./adyenPurchaseNewCard";
 import { useRouter } from "next/router";
+import GuestDetails from "./guestDetails";
 
 const ConfirmPurchasePopup = ({ onClose }) => {
   const { confirmPurchasePopupFields } = useSelector((state) => state?.common);
@@ -38,6 +39,9 @@ const ConfirmPurchasePopup = ({ onClose }) => {
   const [phoneCodeOptions, setPhoneCodeOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
   const [countryOptions, setCountryOptions] = useState([]);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [guestFormFieldValues, setGuestFormFieldValues] = useState({});
+  const [guestDetails, setGuestDetails] = useState([]);
   const [hideCta, setHideCta] = useState(false);
   const [bookingNo, setBookingNo] = useState(null);
 
@@ -135,7 +139,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
 
   const router = useRouter();
 
-  const bookingConfirm = async (success, message,booking) => {
+  const bookingConfirm = async (success, message, booking) => {
     if (success) {
       toast.success(message);
       router.push(`/trade/purchase?success=true&booking_no=${booking}`);
@@ -147,9 +151,52 @@ const ConfirmPurchasePopup = ({ onClose }) => {
     }
   };
 
-  // useEffect(()=>{
+  const paymentSubmit = async (paymentMethod, bookingId) => {
+    if (paymentMethod == 1) {
+      const confirmationPayload = {
+        booking_id: bookingId, //apiResponse?.booking_id,
+        payment_method: paymentMethod,
+      };
 
-  // })
+      const confirmResponse = await purchaseTicketConfirm(
+        "",
+        confirmationPayload
+      );
+
+      if (confirmResponse?.result?.booking_status == "Success") {
+        bookingConfirm(
+          true,
+          "Booking Confirmed Successfully",
+          apiResponse?.booking_no
+        );
+      } else {
+        bookingConfirm(
+          false,
+          confirmResponse?.result?.message || "Booking confirmation failed"
+        );
+      }
+    } else if (paymentMethod == 2) {
+      setAdyenBookingId(bookingId);
+      setShowAdyenDropIn(true);
+      setHideCta(true);
+    } else if (paymentMethod == 3) {
+      const response = await paymentWithExistingCard("", {
+        booking_id: bookingId,
+        payment_method: 3,
+        recurringDetailReference:
+          selectedPayment?.field?.RecurringDetail?.recurringDetailReference,
+      });
+      if (response?.result?.status == 1) {
+        bookingConfirm(
+          true,
+          "Booking Confirmed Successfully",
+          apiResponse?.booking_no
+        );
+      } else {
+        bookingConfirm(false, response?.message || "Booking failed");
+      }
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -161,13 +208,44 @@ const ConfirmPurchasePopup = ({ onClose }) => {
         setLoader(false);
         return;
       }
-
       const paymentMethod =
         selectedPayment?.name == "SB Pay"
           ? 1
           : selectedPayment?.name == "New Credit or Debit Card"
           ? 2
           : 3;
+      setSelectedPaymentMethod(paymentMethod);
+      if (guestDetails?.length > 0) {
+        console.log(guestDetails, "guestDetailsguestDetails");
+        try {
+          const allFieldsFilled = guestDetails.every((guest) => {
+            console.log(guest, "guestguest");
+            return guest.required_fields.every((field) => {
+              const fieldValue = guestFormFieldValues[field];
+              // Check if field exists, has values for this guest index, and the value is not empty
+              return (
+                fieldValue &&
+                fieldValue[guest.index] &&
+                fieldValue[guest.index].trim() !== ""
+              );
+            });
+          });
+          if (allFieldsFilled) {
+            paymentSubmit(paymentMethod, adyenBookingId);
+            return;
+          } else {
+            toast.error("submit all guest details");
+            setLoader(false);
+            return;
+          }
+        } catch (error) {
+          console.error("Error validating guest details:", error);
+          toast.error("An error occurred while validating guest details");
+          setLoader(false);
+          return;
+        }
+      }
+
       const fetchOrderIdPayload = {
         currrency: data?.purchase?.price_breakdown?.currency,
         client_country: "IN",
@@ -183,7 +261,6 @@ const ConfirmPurchasePopup = ({ onClose }) => {
         {},
         fetchOrderIdPayload
       );
-
       if (response?.status == 1) {
         const secondApiPayload = {
           cart_id: response?.cart_id,
@@ -211,47 +288,17 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           {},
           secondApiPayload
         );
-        console.log(apiResponse?.booking_no, "apiResponse?.booking_no");
         setBookingNo(apiResponse?.booking_no);
+        setAdyenBookingId(apiResponse?.booking_id);
+
+        if (apiResponse?.guest_data?.length > 0) {
+          const guestData = apiResponse?.guest_data;
+          setGuestDetails(guestData);
+          setLoader(false);
+          return;
+        }
         if (apiResponse?.status == "success") {
-          if (paymentMethod == 1) {
-            const confirmationPayload = {
-              booking_id: apiResponse?.booking_id,
-              payment_method: paymentMethod,
-            };
-
-            const confirmResponse = await purchaseTicketConfirm(
-              "",
-              confirmationPayload
-            );
-
-            if (confirmResponse?.result?.booking_status == "Success") {
-              bookingConfirm(true, "Booking Confirmed Successfully",apiResponse?.booking_no);
-            } else {
-              bookingConfirm(
-                false,
-                confirmResponse?.result?.message ||
-                  "Booking confirmation failed"
-              );
-            }
-          } else if (paymentMethod == 2) {
-            setAdyenBookingId(apiResponse?.booking_id);
-            setShowAdyenDropIn(true);
-            setHideCta(true);
-          } else if (paymentMethod == 3) {
-            const response = await paymentWithExistingCard("", {
-              booking_id: apiResponse?.booking_id,
-              payment_method: 3,
-              recurringDetailReference:
-                selectedPayment?.field?.RecurringDetail
-                  ?.recurringDetailReference,
-            });
-            if (response?.result?.status == 1) {
-              bookingConfirm(true, "Booking Confirmed Successfully",apiResponse?.booking_no);
-            } else {
-              bookingConfirm(false, response?.message || "Booking failed");
-            }
-          }
+          paymentSubmit(paymentMethod, apiResponse?.booking_id);
         } else {
           bookingConfirm(false, apiResponse?.data || "Booking failed");
         }
@@ -266,7 +313,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
     } finally {
     }
   };
-
+  console.log(guestDetails, "data in confirm purchase popup");
   return (
     <div className="flex flex-col h-full max-h-screen">
       {/* Toast container */}
@@ -305,6 +352,13 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           countryList={countryOptions}
           cityOptions={cityOptions}
         />
+        {guestDetails?.length > 0 && (
+          <GuestDetails
+            guestDetails={guestDetails}
+            formFieldValues={guestFormFieldValues}
+            setFormFieldValues={setGuestFormFieldValues}
+          />
+        )}
         <PaymentDetails
           data={data}
           selectedPayment={selectedPayment}

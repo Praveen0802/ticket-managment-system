@@ -569,7 +569,7 @@ export const LastMinuteEvents = async (token, params = {}) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in LastMinuteEvents", error);
-    return {}
+    return {};
   }
 };
 
@@ -579,7 +579,7 @@ export const FetchEventSearch = async (token, params = {}) => {
     lang: "en",
     currency: "GBP",
   };
-  console.log(queryParams,'queryParamsqueryParams')
+  console.log(queryParams, "queryParamsqueryParams");
   try {
     const response = await makeRequest({
       url: API_ROUTES.FETCH_EVENT_SEARCH,
@@ -660,7 +660,7 @@ export const fetchRecentlyViewedList = async (
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in fetchRecentlyViewedList", error);
-    return {}
+    return {};
   }
 };
 
@@ -1017,6 +1017,21 @@ export const downloadTicketLinks = async (token, url) => {
       ...(token && { token: token }),
     });
     return response?.data;
+  } catch (error) {
+    console.log("ERROR in getWalletBalance", error);
+    return error?.response?.data;
+  }
+};
+
+export const updateNominee = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.UPDATE_NOMINEE}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in getWalletBalance", error);
     return error?.response?.data;
