@@ -20,6 +20,7 @@ import {
   purchaseTicketConfirm,
   purchaseTicketsBuy,
   purchaseTicketValidate,
+  updateNominee,
 } from "@/utils/apiHandler/request";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -231,6 +232,10 @@ const ConfirmPurchasePopup = ({ onClose }) => {
             });
           });
           if (allFieldsFilled) {
+            await updateNominee("", {
+              booking_id: adyenBookingId,
+              ...guestFormFieldValues,
+            });
             paymentSubmit(paymentMethod, adyenBookingId);
             return;
           } else {
