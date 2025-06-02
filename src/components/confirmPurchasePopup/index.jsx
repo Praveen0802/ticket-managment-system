@@ -152,7 +152,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
     }
   };
 
-  const paymentSubmit = async (paymentMethod, bookingId) => {
+  const paymentSubmit = async (paymentMethod, bookingId, bookingNo) => {
     if (paymentMethod == 1) {
       const confirmationPayload = {
         booking_id: bookingId, //apiResponse?.booking_id,
@@ -163,13 +163,8 @@ const ConfirmPurchasePopup = ({ onClose }) => {
         "",
         confirmationPayload
       );
-
       if (confirmResponse?.result?.booking_status == "Success") {
-        bookingConfirm(
-          true,
-          "Booking Confirmed Successfully",
-          apiResponse?.booking_no
-        );
+        bookingConfirm(true, "Booking Confirmed Successfully", bookingNo);
       } else {
         bookingConfirm(
           false,
@@ -191,7 +186,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
         bookingConfirm(
           true,
           "Booking Confirmed Successfully",
-          apiResponse?.booking_no
+          bookingNo
         );
       } else {
         bookingConfirm(false, response?.message || "Booking failed");
@@ -235,7 +230,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
               booking_id: adyenBookingId,
               ...guestFormFieldValues,
             });
-            paymentSubmit(paymentMethod, adyenBookingId);
+            paymentSubmit(paymentMethod, adyenBookingId, bookingNo);
             return;
           } else {
             toast.error("submit all guest details");
@@ -302,7 +297,11 @@ const ConfirmPurchasePopup = ({ onClose }) => {
           return;
         }
         if (apiResponse?.status == "success") {
-          paymentSubmit(paymentMethod, apiResponse?.booking_id);
+          paymentSubmit(
+            paymentMethod,
+            apiResponse?.booking_id,
+            apiResponse?.booking_no
+          );
         } else {
           bookingConfirm(false, apiResponse?.data || "Booking failed");
         }
@@ -317,7 +316,7 @@ const ConfirmPurchasePopup = ({ onClose }) => {
     } finally {
     }
   };
-  console.log(guestDetails, "data in confirm purchase popup");
+
   return (
     <div className="flex flex-col h-full max-h-screen">
       {/* Toast container */}
