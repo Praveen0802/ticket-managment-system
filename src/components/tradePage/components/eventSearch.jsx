@@ -124,9 +124,17 @@ const EventSearch = ({ onClose, allCategories }) => {
     if (key == "event_categories") {
       const updatedQueryValues = {
         ...filtersApplied,
-        is_tournament: selectedObject?.is_tournament,
-        is_game_category: selectedObject?.is_game_category,
-        category_id: selectedObject?.id,
+        is_tournament:
+          selectedObject?.is_tournament != undefined
+            ? selectedObject?.is_tournament == 0
+              ? 0
+              : selectedObject?.is_tournament
+            : "",
+        is_game_category:
+          selectedObject?.is_game_category != undefined
+            ? selectedObject?.is_game_category
+            : "",
+        category_id: selectedObject?.id != undefined ? selectedObject?.id : "",
       };
       console.log(updatedQueryValues, "updatedQueryValues");
       setFiltersApplied(updatedQueryValues);
