@@ -18,10 +18,11 @@ import AvailableFunds from "./components/availableFunds";
 const TradePage = (props) => {
   const { profile, allCategories, fetchTabCount, fetchWalletBalance } = props;
   const router = useRouter();
-  const [selectedTab, setSelectedTab] = useState(profile);
-  const [showEventSearch, setShowEventSearch] = useState(false);
 
   const isMobile = useIsMobile();
+  const [selectedTab, setSelectedTab] = useState(profile);
+
+  const [showEventSearch, setShowEventSearch] = useState(profile == 'home' ? true: false);
 
   const tabFields = [
     {
@@ -45,7 +46,7 @@ const TradePage = (props) => {
       key: "tracking",
       route: "/tracking",
       icon: (
-        <p className="text-white bg-[#130061] text-[10px] px-[6px] py-[2px] rounded-md">
+        <p className="text-white bg-[#343432] text-[10px] px-[6px] py-[2px] rounded-md">
           {fetchTabCount?.trackerCount}
         </p>
       ),
@@ -55,7 +56,7 @@ const TradePage = (props) => {
       key: "purchase",
       route: "/purchase",
       icon: (
-        <p className="text-white bg-[#130061] text-[10px] px-[6px] py-[2px] rounded-md">
+        <p className="text-white bg-[#343432] text-[10px] px-[6px] py-[2px] rounded-md">
           {fetchTabCount?.purchaseCount}
         </p>
       ),
@@ -78,7 +79,7 @@ const TradePage = (props) => {
   };
 
   const selectedSubComponents = {
-    home: <TradeHome {...props} />,
+    home: <TradeHome {...props} showEventSearch={showEventSearch} />,
     tracking: <TrackingPage {...props} />,
     purchase: <PurchaseFolder {...props} />,
     inventory: <InventoryFolder {...props} />,
@@ -88,7 +89,7 @@ const TradePage = (props) => {
 
   // Mobile bottom navigation
   const MobileNavigation = () => (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md border-t border-gray-200 z-50 flex justify-around">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md border-t border-gray-200 z-[999] flex justify-around">
       {tabFields?.map((item, index) => {
         const isSelected = item?.key === selectedTab;
         return (
@@ -110,14 +111,16 @@ const TradePage = (props) => {
   return (
     <div className="bg-[#ECEDF2] w-full h-full relative">
       {/* Wallet info - Responsive for both desktop and mobile */}
-      <div className="absolute top-0 right-0 flex gap-3 items-center bg-white p-4 md:p-4 md:right-0 md:left-auto md:w-auto w-full justify-end">
-        <AvailableFunds fetchWalletBalance={fetchWalletBalance} />
+      <div className="md:absolute top-0 flex gap-2 md:gap-3 items-center bg-white p-2 md:p-4 w-full md:w-auto right-0 z-10">
+        <div className="flex-1 md:flex-none max-md:px-4">
+          <AvailableFunds fetchWalletBalance={fetchWalletBalance} />
+        </div>
         <div
           onClick={handleOpenAddWalletPopup}
-          className="flex gap-2 bg-[#F0F1F5] cursor-pointer rounded-md p-[8px] items-center"
+          className="flex gap-1 md:gap-2 bg-[#F0F1F5] max-md:px-4 cursor-pointer rounded-md p-1 md:p-[8px] items-center"
         >
           <Image src={roundedChevron} width={16} height={16} alt="logo" />
-          <p className="text-[14px] font-normal">Deposit</p>
+          <p className="text-[12px] md:text-[14px] font-normal">Deposit</p>
         </div>
       </div>
 
@@ -147,7 +150,7 @@ const TradePage = (props) => {
                 : "md:-left-11 -left-11"
             } cursor-pointer -translate-y-1/2 -rotate-90 transform origin-center transition-all duration-300`}
           >
-            <div className="px-3 flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
+            <div className="px-3 flex items-center gap-1 py-2  bg-[#64EAA5] rounded-md">
               <p className="text-white text-xs font-medium">Event Search</p>
               <Image
                 src={chevronDown}

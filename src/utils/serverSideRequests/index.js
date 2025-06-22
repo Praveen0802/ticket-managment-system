@@ -111,7 +111,7 @@ export const fetchDashboardPageDetails = async (token) => {
 export const fetchTradePageData = async (tradeType, token, matchId) => {
   if (tradeType === "home") {
     const [hotEvents, lastMinuteEvents, recentlyViewedEvents] =
-      await Promise.all([
+      await Promise.allSettled([
         FetchHotEvents(token),
         LastMinuteEvents(token),
         fetchRecentlyViewedList(token),

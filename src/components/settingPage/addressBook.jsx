@@ -248,7 +248,7 @@ const AddressBook = (props) => {
                       });
                     }}
                     classNames={{
-                      root: "bg-[#130061] py-1 px-3 w-fit md:px-[14px]",
+                      root: "bg-[#343432] py-1 px-3 w-fit md:px-[14px]",
                       label_: "text-xs md:text-sm text-white font-normal",
                     }}
                   />

@@ -1,6 +1,6 @@
 import { loginUser, sendResetRequest } from "@/utils/apiHandler/request";
 import { currentTimeEpochTimeInMilliseconds } from "@/utils/helperFunctions";
-import { setCookie } from "@/utils/helperFunctions/cookie";
+import { getCookie, setCookie } from "@/utils/helperFunctions/cookie";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Button from "../commonComponents/button";
@@ -80,14 +80,16 @@ const LoginForm = () => {
       } else {
         // Handle normal login
         const body = {
-          email: formData.email,
+          user_name: formData.email,
           password: formData.password,
         };
         try {
           const response = await loginUser(null, body);
           const authToken = response?.token;
-
           if (authToken) {
+            if (getCookie("auth_token")) {
+              await setCookie("auth_token", "");
+            }
             setCookie("auth_token", authToken);
             setCookie(
               "auth_token_validity",
@@ -97,15 +99,15 @@ const LoginForm = () => {
             router.push("/dashboard");
           } else {
             setErrors({
-              email: "Invalid email or password",
-              password: "Invalid email or password",
+              email: response?.message || "Invalid email or password",
+              password: response?.message || "Invalid email or password",
             });
             setLoader(false);
           }
         } catch {
           setErrors({
-            email: "Invalid email or password",
-            password: "Invalid email or password",
+            email: response?.message || "Invalid email or password",
+            password: response?.message || "Invalid email or password",
           });
           setLoader(false);
         }
@@ -128,12 +130,12 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="text-center flex flex-col gap-2 md:gap-3">
+      <div className="text-center flex flex-col gap-4">
         <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
           {isForgotPassword ? "Forgot Password" : "Login"}
         </p>
 
-        <p className="text-[#7D82A4] text-sm font-normal">
+        <p className="text-[#7D82A4] text-[13px] font-normal">
           {isForgotPassword
             ? "Enter your email address to receive a password reset link"
             : "Connecting trusted ticket sellers together with our worldwide distribution network"}
@@ -159,8 +161,11 @@ const LoginForm = () => {
           />
         </div>
       ) : (
-        <form className="flex flex-col gap-8 w-full " onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4">
+        <form
+          className="flex flex-col max-md:gap-8 md:gap-8 w-full "
+          onSubmit={handleSubmit}
+        >
+          <div className="flex flex-col gap-3">
             <div>
               <FloatingLabelInput
                 id="email"
@@ -199,12 +204,12 @@ const LoginForm = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-6">
             <Button
               label={isForgotPassword ? "Send Reset Link" : "Login"}
               type="primary"
               classNames={{
-                root: "justify-center items-center",
+                root: "justify-center bg-[#64EAA5] py-2 sm:py-3 px-4 sm:px-6 md:px-8 items-center",
                 label_: "text-base text-center w-full font-medium",
               }}
               submitButton={true}

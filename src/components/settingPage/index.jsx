@@ -30,6 +30,22 @@ const SettingsPage = (props) => {
       key: "overview",
     },
     {
+      icon: <IconStore.myContacts className={IconclassName} />,
+      title: "My Account",
+      key: "myAccount",
+    },
+    {
+      icon: <IconStore.password className={IconclassName} />,
+      title: "Change Password",
+      key: "changepassword",
+    },
+    {
+      icon: <IconStore.myContacts className={IconclassName} />,
+      title: "Address Book",
+      key: "addressBook",
+    },
+
+    {
       icon: <IconStore.password className={IconclassName} />,
       title: "TX Pay",
       key: "txPay",
@@ -39,37 +55,23 @@ const SettingsPage = (props) => {
       title: "My Referral",
       key: "myRefferal",
     },
-    // {
-    //   icon: <IconStore.profile className={IconclassName} />,
-    //   title: "My Account",
-    //   key: "myAccount",
-    // },
-    // {
-    //   icon: <IconStore.password className={IconclassName} />,
-    //   title: "Change Password",
-    //   key: "changepassword",
-    // },
-    // {
-    //   icon: <IconStore.myContacts className={IconclassName} />,
-    //   title: "Address Book",
-    //   key: "addressBook",
-    // },
+   
 
-    // {
-    //   icon: <IconStore.profile className={IconclassName} />,
-    //   title: "My Customers",
-    //   key: "myCustomers",
-    // },
+    {
+      icon: <IconStore.profile className={IconclassName} />,
+      title: "My Customers",
+      key: "myCustomers",
+    },
     // {
     //   icon: <IconStore.tickets className={IconclassName} />,
     //   title: "Ticket Delivery",
     //   key: "ticketDelivery",
     // },
-    // {
-    //   icon: <IconStore.cards className={IconclassName} />,
-    //   title: "Linked Cards",
-    //   key: "linkedCards",
-    // },
+    {
+      icon: <IconStore.cards className={IconclassName} />,
+      title: "Linked Cards",
+      key: "linkedCards",
+    },
   ];
 
   const handleTabClick = (tab) => {
@@ -85,13 +87,14 @@ const SettingsPage = (props) => {
   const stepperComponent = {
     overview: <Overview />,
     myRefferal: <MyRefferal />,
-    // myAccount: <MyAccountTeam {...apiData} />,
-    // changepassword: <ChangePassword {...apiData} />,
-    // addressBook: <AddressBook {...apiData} />,
-    // bankAccounts: <BankAccounts {...apiData} />,
-    // myCustomers: <MyTeamView {...apiData} />,
-    // linkedCards: <LinkedCards {...apiData} />,
-    // ticketDelivery: <TicketDelivery {...apiData} />,
+    myAccount: <MyAccountTeam {...apiData} />,
+    // UpdateAccount: <MyAccountTeam {...apiData} />,
+    changepassword: <ChangePassword {...apiData} />,
+    addressBook: <AddressBook {...apiData} />,
+    bankAccounts: <BankAccounts {...apiData} />,
+    myCustomers: <MyTeamView {...apiData} />,
+    linkedCards: <LinkedCards {...apiData} />,
+    ticketDelivery: <TicketDelivery {...apiData} />,
     txPay: <TXPay />,
   };
 
@@ -155,7 +158,7 @@ const SettingsPage = (props) => {
             {profileValues?.map((value, index) => (
               <div
                 key={index}
-                className={`flex flex-col justify-center items-center p-2 ${
+                className={`flex flex-col min-w-[80px] w-[100px] justify-center items-center p-2 ${
                   activeTab === value?.key ? "text-[#130061]" : "text-gray-500"
                 }`}
                 onClick={() => handleTabClick(value?.key)}
@@ -164,15 +167,6 @@ const SettingsPage = (props) => {
                 <span className="text-xs mt-1 text-center">{value.title}</span>
               </div>
             ))}
-
-            {/* More menu for additional items */}
-            {/* <div
-              className="flex flex-col items-center p-2 text-gray-500"
-              onClick={toggleMobileMenu}
-            >
-              <IconStore.menu className="size-6 stroke-current" />
-              <span className="text-xs mt-1">More</span>
-            </div> */}
           </div>
 
           {/* Bottom padding to account for the fixed tab bar */}
@@ -193,7 +187,7 @@ const SettingsPage = (props) => {
                   onClick={() => handleTabClick(value?.key)}
                 >
                   {value?.icon}
-                  <span>{value.title}</span>
+                  <span className="whitespace-nowrap">{value.title}</span>
                 </li>
               ))}
             </ul>

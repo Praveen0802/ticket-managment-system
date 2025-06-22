@@ -59,6 +59,7 @@ export const loginUser = async (token, data) => {
     });
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
+    return error?.response?.data;
     console.log("ERROR in loginUser", error);
     throw error;
   }
@@ -449,7 +450,7 @@ export const getDialingCode = async (token, params) => {
     return response?.data;
   } catch (error) {
     console.log("ERROR in getDialingCode", error);
-    throw error;
+    return error;
   }
 };
 
@@ -508,7 +509,7 @@ export const VerifyEmail = async (token, data) => {
       ...(token && { token: token }),
       data: data,
     });
-    return response?.data?.success ? response?.data?.data : {};
+    return response?.data;
   } catch (error) {
     console.log("ERROR in VerifyEmail", error);
     throw error;
@@ -547,7 +548,7 @@ export const FetchHotEvents = async (token, params = {}) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in FetchHotEvent", error);
-    throw error;
+    return {};
   }
 };
 
@@ -568,7 +569,7 @@ export const LastMinuteEvents = async (token, params = {}) => {
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in LastMinuteEvents", error);
-    throw error;
+    return {};
   }
 };
 
@@ -578,6 +579,7 @@ export const FetchEventSearch = async (token, params = {}) => {
     lang: "en",
     currency: "GBP",
   };
+  console.log(queryParams, "queryParamsqueryParams");
   try {
     const response = await makeRequest({
       url: API_ROUTES.FETCH_EVENT_SEARCH,
@@ -658,7 +660,7 @@ export const fetchRecentlyViewedList = async (
     return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in fetchRecentlyViewedList", error);
-    throw error;
+    return {};
   }
 };
 
@@ -939,7 +941,7 @@ export const purchaseAttendeeDetails = async (token, id, data) => {
   try {
     const response = await makeRequest({
       url: `${API_ROUTES.PURCHASE_ATTENDEE_DETAILS}/${id}`,
-      method: "PUT",
+      method: "POST",
       ...(token && { token: token }),
       data: data,
     });
@@ -1015,6 +1017,21 @@ export const downloadTicketLinks = async (token, url) => {
       ...(token && { token: token }),
     });
     return response?.data;
+  } catch (error) {
+    console.log("ERROR in getWalletBalance", error);
+    return error?.response?.data;
+  }
+};
+
+export const updateNominee = async (token, data) => {
+  try {
+    const response = await makeRequest({
+      url: `${API_ROUTES.UPDATE_NOMINEE}`,
+      method: "POST",
+      ...(token && { token: token }),
+      data: data,
+    });
+    return response?.data?.success ? response?.data?.data : {};
   } catch (error) {
     console.log("ERROR in getWalletBalance", error);
     return error?.response?.data;

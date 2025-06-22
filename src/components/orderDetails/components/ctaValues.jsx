@@ -10,7 +10,7 @@ const CtaValues = ({ ctaText }) => {
             key={index}
             className="px-[16px] flex border-[1px] border-[#E0E1EA] rounded-md w-[50%] justify-between items-center py-[12px]"
           >
-            <p className="text-[16px] font-semibold text-[#323A70]">
+            <p className="text-[16px] font-semibold text-[#343432]">
               {item?.title}
             </p>
             <Button

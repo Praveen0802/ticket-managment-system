@@ -21,7 +21,7 @@ const SearchedList = ({ item }) => {
   };
   return (
     <div className="flex flex-col gap-2 p-4 border-[1px] border-[#E0E1EA] rounded-md">
-      <p className="text-[14px] text-[#323A70] font-semibold">
+      <p className="text-[14px] text-[#343432] font-semibold">
         {item?.match_name}
       </p>
       <div className="flex items-center gap-4">
@@ -37,7 +37,7 @@ const SearchedList = ({ item }) => {
       </div>
       {renderIconText(
         <Image src={grayLocation} width={16} height={16} alt="logo" />,
-        `${item?.stadium},${item?.city},${item?.country}`,
+        `${item?.stadium} , ${item?.city} , ${item?.country}`,
         'truncate'
       )}
     </div>

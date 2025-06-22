@@ -39,7 +39,8 @@ const AttendeeDetails = ({ attendee_details = [], bookingId }) => {
     if (attendee_details && attendee_details.length > 0) {
       const initialAttendees = attendee_details.map((detail, index) => {
         return {
-          id: detail.serial || index + 1,
+          id: detail.id || index + 1,
+          atteneCount: index + 1,
           formData: {
             first_name: detail.first_name || "",
             last_name: detail.last_name || "",
@@ -113,38 +114,35 @@ const AttendeeDetails = ({ attendee_details = [], bookingId }) => {
     setIsEditMode(!isEditMode);
   };
 
+  console.log(attendees, "attendeesattendees");
   const saveAttendeeDetails = async () => {
     toggleEditMode();
 
     const formattedData = {
       tickets: attendees.map((attendee) => ({
-        attendee: attendee.id,
-        fields: [
-          { first_name: attendee.formData.first_name },
-          { last_name: attendee.formData.last_name },
-          { email: attendee.formData.email },
-          { nationality: attendee.formData.nationality },
-          {
-            dob:
-              attendee.formData.dob_year &&
-              attendee.formData.dob_month &&
-              attendee.formData.dob_day
-                ? `${attendee.formData.dob_year}-${attendee.formData.dob_month}-${attendee.formData.dob_day}`
-                : null,
-          },
-          { phone: attendee.formData.phone },
-          { passport: attendee.formData.passport },
-          { gender: attendee.formData.gender },
-          { seat: attendee.formData.seat },
-        ],
+        id: attendee.id,
+        first_name: attendee.formData.first_name,
+        last_name: attendee.formData.last_name,
+        email: attendee.formData.email,
+        nationality: attendee.formData.nationality,
+        dob:
+          attendee.formData.dob_year &&
+          attendee.formData.dob_month &&
+          attendee.formData.dob_day
+            ? `${attendee.formData.dob_year}-${attendee.formData.dob_month}-${attendee.formData.dob_day}`
+            : null,
+        phone: attendee.formData.phone,
+        passport: attendee.formData.passport,
+        gender: attendee.formData.gender,
+        seat: attendee.formData.seat,
       })),
     };
-
     try {
-      const response = await purchaseAttendeeDetails("", bookingId, {
-        booking_no: bookingId,
-        attendees: formattedData?.tickets,
-      });
+      const response = await purchaseAttendeeDetails(
+        "",
+        bookingId,
+        formattedData
+      );
       console.log(response, "responseresponse");
     } catch (error) {
       console.error("Error saving attendee details:", error);
@@ -548,7 +546,7 @@ const AttendeeDetails = ({ attendee_details = [], bookingId }) => {
                 >
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-sm md:text-md font-medium flex items-center gap-2">
-                      Attendee {attendee.id}
+                      Attendee {attendee.atteneCount}
                       {isComplete && (
                         <span className="text-green-500">
                           <IconStore.circleTick className="size-4 md:size-5" />

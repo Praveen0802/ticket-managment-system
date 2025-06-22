@@ -13,7 +13,7 @@ const WalletPage = () => {
     iban: "HSGHSGAYATY989898I",
     swift: "MOYPGS",
     refernce: "22VSTS",
-    note: "Please include the reference when making the bank transfer. This ensures your funds are transferred directly to your LMT pay wallet",
+    note: "Please include the reference when making the bank transfer. This ensures your funds are transferred directly to your SB pay wallet",
     fundingAccount: {
       name: "first Abu Dhabi Bank",
       ticket: "Ticket Services DMCCC",
@@ -156,7 +156,7 @@ const WalletPage = () => {
                   : "bg-[#f9f9f9] py-3"
               } rounded-md px-3 flex gap-8 border-t-[1px] cursor-pointer border-x-[1px] border-[#E0E1EA] items-center justify-between`}
             >
-              <p className="text-[16px] font-medium text-[#323A70] ">
+              <p className="text-[16px] font-medium text-[#343432] ">
                 {item?.name}
               </p>
               <p className="text-white bg-[#0137D5] text-[12px] rounded-md px-[4px] py-[2px]">
@@ -191,7 +191,7 @@ const WalletPage = () => {
           />
         </div>
         <div className="border-b-[1px] border-[#E0E1EA]">
-          <p className="p-4  w-fit border-[#E0E1EA] border-r-[1px] text-[14px] text-[#323A70] font-semibold">
+          <p className="p-4  w-fit border-[#E0E1EA] border-r-[1px] text-[14px] text-[#343432] font-semibold">
             {transactionStatus?.length} transactions
           </p>
         </div>

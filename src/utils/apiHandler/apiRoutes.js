@@ -59,5 +59,5 @@ export const API_ROUTES = {
   GET_WALLET_BALANCE: "/wallet/get-wallet-balance",
   GET_PARTNER_SETTINGS: "/settings/get-partner-setting",
   POST_PARTNER_SETTINGS: "/settings/partner-setting",
-  
+  UPDATE_NOMINEE: "/update_applynominee",
 };

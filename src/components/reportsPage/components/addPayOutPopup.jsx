@@ -172,7 +172,7 @@ const AddPayOutPopup = ({ show, onClose, item = {}, countriesList }) => {
     <CustomModal show={show} onClose={onClose} outSideClickClose={false}>
       <div className="bg-white rounded-lg w-fullmax-md:w-[320px]  md:w-[600px] max-w-full">
         <div className="flex px-4 md:px-[24px] py-3 md:py-[16px] border-b-[1px] border-[#E0E1EA] justify-between items-center">
-          <p className="text-[16px] md:text-[18px] text-[#323A70] font-semibold">
+          <p className="text-[16px] md:text-[18px] text-[#343432] font-semibold">
             {editType ? "Update" : "Add"} Accounts
           </p>
           <div onClick={onClose} className="cursor-pointer">

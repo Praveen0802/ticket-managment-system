@@ -90,7 +90,7 @@ const InventoryFolder = (props) => {
     return (
       <div className="flex gap-[8px] items-center">
         {icon}
-        <p className="text-[12px] font-normal text-[#323A70] truncate">
+        <p className="text-[12px] font-normal text-[#343432] truncate">
           {text}
         </p>
       </div>
@@ -138,7 +138,7 @@ const InventoryFolder = (props) => {
     return (
       <div className="flex gap-2 items-center">
         {icon && icon}
-        <p className="text-[#323A70] text-[12px] font-normal">{text}</p>
+        <p className="text-[#343432] text-[12px] font-normal">{text}</p>
       </div>
     );
   };
@@ -162,20 +162,23 @@ const InventoryFolder = (props) => {
     const params = {
       ...filtersApplied,
       page: 1,
-      ticket_category: blockId,
+      category:
+        filtersApplied?.category?.length > 0
+          ? [...filtersApplied?.category, blockId]
+          : blockId,
     };
     setFiltersApplied(params);
     fetchAPIDetails(params);
   };
 
   const headers = [
-    { key: "qty", label: "Qty", sortable: true },
+    { key: "qty", label: "Qty" },
     { key: "category", label: "Category" },
     { key: "section", label: "Section/Block" },
     { key: "row", label: "Row" },
     ...(isMobile
       ? [
-          { key: "price", label: "Price", sortable: true },
+          { key: "price", label: "Price" },
           { key: "attachment", label: "" },
           { key: "hand", label: "" },
           { key: "document", label: "" },
@@ -268,7 +271,7 @@ const InventoryFolder = (props) => {
             {
               icon: <p>{item?.price_with_symbol}</p>,
               className:
-                "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
+                "border-r-[1px] border-[#E0E1EA] text-[#343432] text-[12px]",
             },
             {
               icon: (
@@ -319,23 +322,25 @@ const InventoryFolder = (props) => {
               ),
               className: "cursor-pointer pr-2",
               key: "document",
-              tooltipComponent:
-                item?.listing_note?.length > 0 &&
-                item?.listing_note?.map((note, index) => (
-                  <div className="flex flex-col gap-2" key={index}>
-                    <p className="text-left">Benifits/Restrictions</p>
-                    <ul
-                      className={`list-disc ml-[20px] ${
-                        item?.listing_note?.length > 3 &&
-                        "grid grid-cols-2 gap-1"
-                      }`}
-                    >
-                      {Object.values(note).map((value, i) => (
-                        <li key={i}>{value}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )),
+              tooltipComponent: item?.listing_note?.length > 0 && (
+                <div>
+                  <p className="text-left">Benifits/Restrictions</p>
+                  {item?.listing_note?.map((note, index) => (
+                    <div className="flex flex-col gap-2" key={index}>
+                      <ul
+                        className={`list-disc ml-[20px] ${
+                          item?.listing_note?.length > 3 &&
+                          "grid grid-cols-2 gap-1"
+                        }`}
+                      >
+                        {Object.values(note).map((value, i) => (
+                          <li key={i}>{value}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ),
               tooltipPosition: "top",
             },
           ]),
@@ -351,6 +356,7 @@ const InventoryFolder = (props) => {
             alt="star"
           />
         ),
+        tooltipComponent: <p className="text-center">Track this ticket</p>,
         className: "border-x-[1px] px-2 border-[#E0E1EA] cursor-pointer",
         key: "star",
       },
@@ -438,11 +444,11 @@ const InventoryFolder = (props) => {
   return (
     <>
       {matchId ? (
-        <div className="flex flex-col gap-6 h-full">
+        <div className="flex flex-col gap-4 h-full">
           <div className="bg-white w-full">
             {/* Match header info */}
             <div className="px-[16px] md:px-[30px] border-b-[1px] border-[#E0E1EA] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center">
-              <p className="py-[8px] md:py-[12px] pr-0 md:pr-[20px] text-[12px] font-medium text-[#323A70] border-b-[1px] md:border-b-0 w-full md:w-auto md:border-r-[1px] border-[#E0E1EA]">
+              <p className="py-[8px] md:py-[10px] whitespace-nowrap pr-0 md:pr-[20px] text-[12px] font-medium text-[#343432] border-b-[1px] md:border-b-0 w-full md:w-auto md:border-r-[1px] border-[#E0E1EA]">
                 {selectedMatchData?.match}
               </p>
               <div className="py-[6px] md:py-[10px] flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center w-full">
@@ -483,7 +489,7 @@ const InventoryFolder = (props) => {
             </div>
 
             {/* Filter form */}
-            <div className="px-[16px] md:px-[24px] py-[16px] md:py-[20px] border-b-[1px] border-[#E0E1EA]">
+            <div className="px-[16px] md:px-[24px] py-[16px] md:py-[12px] border-b-[1px] border-[#E0E1EA]">
               <InventoryFilterForm
                 formFieldValues={formFieldValues}
                 handleChange={handleChange}
@@ -517,10 +523,9 @@ const InventoryFolder = (props) => {
                 </div>
               </div>
               {!isEmptyObject(filtersApplied) && (
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 flex-wrap items-center">
                   {Object.entries(filtersApplied)?.map(
                     ([key, value], index) => {
-                      console.log(value, key, "valuekey");
                       if (key === "page" || !value || value?.length == 0)
                         return null;
                       return (
@@ -546,7 +551,7 @@ const InventoryFolder = (props) => {
             {isMobile && (
               <button
                 onClick={toggleMap}
-                className="bg-[#3E2E7E] text-white px-3 py-2 rounded-md flex items-center gap-1 mb-2"
+                className="bg-[#696D76] text-white px-3 py-2 rounded-md flex items-center gap-1 mb-2"
               >
                 <span className="text-[12px] font-medium">
                   {showMap ? "Hide Map" : "View Map"}
@@ -568,7 +573,7 @@ const InventoryFolder = (props) => {
                   showMap ? "left-[265px]" : "-left-9"
                 } cursor-pointer -translate-y-1/2 -rotate-90 origin-center transition-all duration-300`}
               >
-                <div className="px-3 text-white flex items-center gap-1 py-2 bg-[#3E2E7E] rounded-md">
+                <div className="px-3 text-white flex items-center gap-1 py-2 bg-[#343432] rounded-md">
                   <p className="text-white text-[12px] font-medium">View Map</p>
                   <IconStore.chevronDown
                     className={`stroke-white text-white size-3 transition-transform duration-300 ${

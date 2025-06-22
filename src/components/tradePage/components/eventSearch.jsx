@@ -103,7 +103,7 @@ const EventSearch = ({ onClose, allCategories }) => {
     const dateType = type === "date"; // Fixed equality check
     const value = selectType || dateType ? e : e.target.value;
     setFormFieldValues({ ...formFieldValues, [key]: value });
-
+    console.log(selectedObject, "selectedObjectselectedObject");
     if (key === "event_date") {
       const updatedQueryValues = {
         ...filtersApplied,
@@ -124,10 +124,19 @@ const EventSearch = ({ onClose, allCategories }) => {
     if (key == "event_categories") {
       const updatedQueryValues = {
         ...filtersApplied,
-        is_tournament: selectedObject?.is_tournament || "",
-        is_game_category: selectedObject?.is_game_category || "",
-        category_id: selectedObject?.id || "",
+        is_tournament:
+          selectedObject?.is_tournament != undefined
+            ? selectedObject?.is_tournament == 0
+              ? 0
+              : selectedObject?.is_tournament
+            : "",
+        is_game_category:
+          selectedObject?.is_game_category != undefined
+            ? selectedObject?.is_game_category
+            : "",
+        category_id: selectedObject?.id != undefined ? selectedObject?.id : "",
       };
+      console.log(updatedQueryValues, "updatedQueryValues");
       setFiltersApplied(updatedQueryValues);
       fetchApiCall(updatedQueryValues);
     }
@@ -223,7 +232,7 @@ const EventSearch = ({ onClose, allCategories }) => {
       onChange: (e) => handleChange(e, "event_date"),
       className: `!py-[6px] !text-[13px] !px-[10px]`,
       labelClassName: "!text-[12px] text-gray-600  block",
-      placeholder: "Enter Event/Performer",
+      placeholder: "Enter event/performer",
     },
     {
       label: "Venue/City",
@@ -237,10 +246,10 @@ const EventSearch = ({ onClose, allCategories }) => {
       onChange: (e) => handleChange(e, "venue"),
       className: `!py-[6px] !text-[13px] !px-[10px] `,
       labelClassName: "!text-[12px] text-gray-600  block",
-      placeholder: "Enter Venue/City",
+      placeholder: "Enter venue/city",
     },
     {
-      label: "All Event  Categories",
+      label: "All event categories",
       type: "select",
       searchable: true,
       mandatory: true,
@@ -285,7 +294,7 @@ const EventSearch = ({ onClose, allCategories }) => {
                       "event_date"
                     );
                   }}
-                  className="border border-[#E0E1EA] mx-4 px-1 rounded-md py-1 text-[13px] text-[#323A70] cursor-pointer hover:scale-105 transition-transform duration-200"
+                  className="border border-[#E0E1EA] mx-4 px-1 rounded-md py-1 text-[13px] text-[#343432] cursor-pointer hover:scale-105 transition-transform duration-200"
                 >
                   {item?.team_name}
                 </p>
@@ -352,7 +361,7 @@ const EventSearch = ({ onClose, allCategories }) => {
   return (
     <div className="bg-white w-full h-full shadow-md border-r-[1px] border-[#E0E1EA] flex flex-col">
       <div className="flex justify-between items-center border-b-[1px] border-[#E0E1EA] p-4">
-        <p className="text-[#323A70] text-[18px] font-semibold">Event Search</p>
+        <p className="text-[#343432] text-[18px] font-semibold">Event Search</p>
         <div className="flex gap-2 items-center">
           <button onClick={handleClickReset} className="cursor-pointer">
             <IconStore.reload className="stroke-[#3E2E7E] size-4" />
@@ -365,10 +374,11 @@ const EventSearch = ({ onClose, allCategories }) => {
       <div className="p-4 flex flex-col gap-[14px]">
         <FormFields formFields={formValues} />
         <SelectDateComponent
-          label="Date Range"
+          label="Date range"
           onChange={handleDateChange}
           selected={selected}
           setSelected={setSelected}
+          labelClassName="!text-[12px] text-gray-600  block"
           id="date-picker"
           paddingClassName="!py-[6px] text-[12px] !px-[10px]"
           dateOptions={dateOptions}

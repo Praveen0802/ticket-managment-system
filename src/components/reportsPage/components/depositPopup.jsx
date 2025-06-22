@@ -99,7 +99,7 @@ const DepositPopup = ({ onClose, data }) => {
             )}
           </div>
           <div className="flex items-baseline">
-            <h1 className="text-2xl font-bold text-[#323A70]">
+            <h1 className="text-2xl font-bold text-[#343432]">
               {data?.price_with_currency}
             </h1>
           </div>

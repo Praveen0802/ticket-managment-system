@@ -12,7 +12,7 @@ const ViewContainer = ({
   return (
     <div className="bg-white border border-[#eaeaf1] flex flex-col gap-3 md:gap-4 w-full rounded-md p-3 md:p-5">
       <div className="flex justify-between items-center flex-wrap gap-2">
-        <p className="text-[#323A70] text-sm md:text-base whitespace-nowrap">
+        <p className="text-[#343432] text-sm md:text-base whitespace-nowrap">
           {title}
         </p>
         <CustomSelect
@@ -38,11 +38,11 @@ const ViewContainer = ({
                     className="w-4 h-4"
                   />
                 </div>
-                <p className="text-[#323A70] text-xs md:text-sm">
+                <p className="text-[#343432] text-xs md:text-sm">
                   {listItem?.text}
                 </p>
               </div>
-              <p className="text-[#323A70] text-sm md:text-base font-semibold">
+              <p className="text-[#343432] text-sm md:text-base font-semibold">
                 {listItem?.count}
               </p>
             </div>

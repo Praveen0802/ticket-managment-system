@@ -12,7 +12,7 @@ const RightViewContainer = (props) => {
                 className="border-b-[1px] text-[12px] text-[#7D82A4] font-normal border-[#eaeaf1] p-2"
                 key={headIndex}
               >
-                <p className="text-[#323A70] text-[12px]">{head}</p>
+                <p className="text-[#343432] text-[12px]">{head}</p>
               </th>
             ))}
           </tr>
@@ -25,7 +25,7 @@ const RightViewContainer = (props) => {
                 {body?.map((item, itemIndex) => {
                   return (
                     <td className="p-2" key={itemIndex}>
-                      <p className="text-[#323A70] text-[12px]">{item}</p>
+                      <p className="text-[#343432] text-[12px]">{item}</p>
                     </td>
                   );
                 })}

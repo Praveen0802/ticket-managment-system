@@ -40,13 +40,13 @@ const TableView = (props) => {
                 <div className="flex gap-2 items-center">
                   <button
                     onClick={() => handleEditClick(user)}
-                    className="text-[#323A70] hover:text-[#130061]"
+                    className="text-[#343432] hover:text-[#130061]"
                   >
                     <IconStore.pencilEdit className="size-4 stroke-[#130061]" />
                   </button>
                   <button
                     onClick={() => handleDeleteClick(user)}
-                    className="text-[#323A70] "
+                    className="text-[#343432] "
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -151,13 +151,13 @@ const TableView = (props) => {
                     <div className="flex gap-2 items-center">
                       <button
                         onClick={() => handleEditClick(user)}
-                        className="text-[#323A70] cursor-pointer hover:text-[#130061]"
+                        className="text-[#343432] cursor-pointer hover:text-[#130061]"
                       >
                         <IconStore.pencilEdit className="size-4 stroke-[#130061]" />
                       </button>
                       <button
                         onClick={() => handleDeleteClick(user)}
-                        className="text-[#323A70] hover:text-red-600 cursor-pointer"
+                        className="text-[#343432] hover:text-red-600 cursor-pointer"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

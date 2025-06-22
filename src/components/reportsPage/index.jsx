@@ -253,7 +253,7 @@ const ReportsPage = (props) => {
       <div className="bg-white flex border-b-[1px] border-[#eaeaf1] justify-end px-3 flex-shrink-0">
         <div className="flex gap-2 items-center">
           <Button
-            type="blueType"
+            type="primary"
             classNames={{
               root: "px-2 my-[8px] md:px-3 py-1.5 md:py-2",
               label_: "text-xs md:text-sm font-medium",
@@ -304,7 +304,7 @@ const ReportsPage = (props) => {
                 onClick={() => handleSelectTab(item?.value)}
                 className={`${
                   selectedTab == item?.value
-                    ? "text-[#0137D5] border-b-[1px] border-[#0137D5]"
+                    ? "text-[#343432] border-b-[1px] border-[#0137D5]"
                     : "text-[#7D82A4]"
                 } text-[14px] md:text-[16px] mobile:text-[12px] font-medium pb-2 cursor-pointer whitespace-nowrap`}
               >
@@ -322,7 +322,7 @@ const ReportsPage = (props) => {
                 <IconStore.search className="size-4 stroke-[#130061] stroke-4" />
                 <input
                   type="text"
-                  placeholder="search Transactions"
+                  placeholder="Search transactions"
                   onChange={(e) => setPaymentReference(e.target.value)}
                   value={paymentReference}
                   onBlur={(e) => handleInputBlurOrEnter(e, true)}
@@ -335,7 +335,7 @@ const ReportsPage = (props) => {
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <FloatingSelect
                   label={
-                    !transactionTab ? "Transaction Status" : "Transaction Type"
+                    !transactionTab ? "Transaction status" : "Transaction type"
                   }
                   options={
                     !transactionTab
@@ -362,7 +362,7 @@ const ReportsPage = (props) => {
                   name="transactionDate"
                   keyValue="transactionDate"
                   parentClassName="!w-full sm:!w-[50%]"
-                  label="Transaction Date"
+                  label="Transaction date"
                   className="!py-[8px] !px-[16px] mobile:text-xs"
                   value={dateRange}
                   onChange={handleDateChange}

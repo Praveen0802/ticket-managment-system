@@ -21,8 +21,8 @@ export const getServerSideProps = async (context) => {
   //   return nextRedirect("login");
   // }
   // const response = await fetchDashboardData(authToken);
-  const response = await fetchDashboardPageDetails(authToken);
+  // const response = await fetchDashboardPageDetails(authToken);
   return {
-    props: { apiData: response ?? {} },
+    props: {  },
   };
 };

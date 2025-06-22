@@ -31,7 +31,7 @@ const OrderedTickets = ({ ticket_details }) => {
 
   return (
     <div className="border-[1px] border-[#E0E1EA] rounded-md">
-      <p className="px-[16px] py-[12px] text-[16px] font-semibold text-[#323A70] border-b-[1px] border-[#E0E1EA]">
+      <p className="px-[16px] py-[12px] text-[16px] font-semibold text-[#343432] border-b-[1px] border-[#E0E1EA]">
         Tickets Ordered
       </p>
       <div className="grid grid-cols-2 gap-4 p-4">

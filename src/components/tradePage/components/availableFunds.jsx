@@ -37,7 +37,7 @@ const AvailableFunds = ({ fetchWalletBalance }) => {
             {demoData.map((item, index) => (
               <p
                 key={index}
-                className="text-indigo-900 text-sm font-normal w-24 flex-shrink-0"
+                className="text-[#343432] text-sm font-normal w-24 flex-shrink-0"
               >
                 {item.balance_amount}
               </p>
@@ -55,7 +55,7 @@ const AvailableFunds = ({ fetchWalletBalance }) => {
       </div>
 
       {/* Optional: Dots indicator for number of slides */}
-      <div className="flex gap-1 mt-1 justify-center">
+      {/* <div className="flex gap-1 mt-1 justify-center">
         {demoData.map((_, index) => (
           <span
             key={index}
@@ -64,7 +64,7 @@ const AvailableFunds = ({ fetchWalletBalance }) => {
             }`}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

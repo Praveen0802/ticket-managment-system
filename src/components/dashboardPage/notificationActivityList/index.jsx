@@ -61,7 +61,7 @@ const NotificationActivityList = () => {
             }}
             className={`${
               item?.key == activeTab
-                ? "text-[#0137D5] font-semibold border-b-[1px] border-[#0137D5]"
+                ? "text-[#343432] font-semibold border-b-[1px] border-[#0137D5]"
                 : "text-[#7D82A4] font-normal"
             } text-[14px] sm:text-[16px] pb-4 cursor-pointer`}
           >
@@ -75,7 +75,7 @@ const NotificationActivityList = () => {
             key={index}
             className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-[10px] border-b-[1px] border-[#F0F0F5]"
           >
-            <p className="text-[#323A70] text-[13px] font-normal mb-1 sm:mb-0 sm:mr-2 sm:flex-1">
+            <p className="text-[#343432] text-[13px] font-normal mb-1 sm:mb-0 sm:mr-2 sm:flex-1">
               {item?.name}
             </p>
             <p className="text-[#03BA8A] text-[13px] font-normal whitespace-nowrap">

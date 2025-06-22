@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import logo from "../../../public/logo.svg";
+import logo from "../../../public/logo.png";
 import Button from "@/components/commonComponents/button";
 import { VerifyEmail } from "@/utils/apiHandler/request";
 
 const ConfirmEmailFold = ({ token }) => {
   const [loader, setLoader] = useState(false);
   const [verifySuccess, setVerifySuccess] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState("");
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -21,7 +22,14 @@ const ConfirmEmailFold = ({ token }) => {
         token: token,
       };
       const response = await VerifyEmail("", body);
-      setVerifySuccess(true);
+      if (response?.error) {
+        console.error("Error verifying email:", error);
+        setError(response?.error);
+      } else {
+        setVerifySuccess(true);
+        setVerifyMessage(response?.message);
+      }
+
       setLoader(false);
     } catch (error) {
       console.error("Error verifying email:", error);
@@ -30,36 +38,35 @@ const ConfirmEmailFold = ({ token }) => {
     }
   };
 
+  useEffect(() => {
+    handleVerify();
+  }, []);
+
   const goToLogin = () => {
     router.push("/login");
   };
 
   return (
     <div className="flex flex-col gap-6 px-6 md:px-8 justify-center items-center py-6 md:py-8 bg-white w-full rounded-xl">
-      <Image
+      {/* <Image
         src={logo}
         width={80}
         height={80}
         alt="image-logo"
         className="w-20 h-20 md:w-28 md:h-28"
-      />
+      /> */}
       <div className="text-center flex flex-col gap-2 md:gap-3">
-        <p className="text-[#323A70] text-xl md:text-2xl font-semibold">
-          Confirm Your Email
-        </p>
-        <p className="text-[#7D82A4] text-sm font-normal">
-          Click the button below to verify your email address
+        <p className="text-[#343432] text-xl md:text-2xl font-semibold">
+          Email Verification
         </p>
       </div>
 
       {verifySuccess ? (
         <div className="flex flex-col gap-4 items-center w-full max-w-xs mx-auto">
           <div className="bg-green-50 p-4 rounded-lg text-center">
-            <p className="text-green-700 font-medium">
-              Email Verified Successfully!
-            </p>
             <p className="text-green-600 text-sm mt-1">
-              Your email has been verified. You can now log in to your account.
+              {verifyMessage ||
+                "Your email has been verified. You can now log in to your account."}
             </p>
           </div>
           <Button

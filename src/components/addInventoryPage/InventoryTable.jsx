@@ -6,16 +6,7 @@ import blueLocation from "../../../public/blue-location.svg";
 import blueClock from "../../../public/blue-clock.svg";
 import FormFields from "../formFieldsComponent";
 
-const renderListValue = (icon, text) => {
-  return (
-    <div className="flex gap-[8px] items-center">
-      {icon}
-      <p className="text-[12px] font-normal text-white truncate">{text}</p>
-    </div>
-  );
-};
-
-const InventoryTable = ({ listArrayValues }) => {
+const InventoryTable = ({ listArrayValues, dynamicKeys = [] }) => {
   const [expandedAccordions, setExpandedAccordions] = useState([]);
 
   const toggleAccordion = (index) => {
@@ -29,65 +20,30 @@ const InventoryTable = ({ listArrayValues }) => {
   const fieldStyle =
     "w-full rounded-md border border-gray-300 p-2 text-gray-700 focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:outline-none transition-all duration-200";
 
-  const createFormField = (key, value, type = "select") => {
-    if (key === "ticketType") {
-      return {
-        hideLabel: true,
-        label: "Ticket Type",
+  // Default field configurations
+  const getFieldConfig = (key) => {
+    const configs = {
+      ticketType: {
         type: "select",
         searchable: true,
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
         options: [
           { label: "E-ticket", value: "E-ticket" },
           { label: "Paper ticket", value: "Paper ticket" },
           { label: "Mobile ticket", value: "Mobile ticket" },
         ],
-      };
-    } else if (
-      key === "quantity" ||
-      key === "maxDisplayedTickets" ||
-      key === "row" ||
-      key === "firstSeat"
-    ) {
-      return {
-        hideLabel: true,
-        label:
-          key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1"),
-        type: "text",
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
-      };
-    } else if (key === "splitType") {
-      return {
-        hideLabel: true,
-        label: "Split Type",
+      },
+      splitType: {
         type: "select",
         searchable: true,
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
         options: [
           { label: "Split Type", value: "Split Type" },
           { label: "No Split", value: "No Split" },
           { label: "Free Split", value: "Free Split" },
         ],
-      };
-    } else if (key === "fanArea") {
-      return {
-        hideLabel: true,
-        label: "Fan Area",
+      },
+      fanArea: {
         type: "select",
         searchable: true,
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
         options: [
           {
             label: "Longside Lower Tier Central",
@@ -96,366 +52,270 @@ const InventoryTable = ({ listArrayValues }) => {
           { label: "Longside Upper Tier", value: "Longside Upper Tier" },
           { label: "Behind Goal", value: "Behind Goal" },
         ],
-      };
-    } else if (key === "sectionBlock") {
-      return {
-        hideLabel: true,
-        label: "Section/Block",
+      },
+      sectionBlock: {
         type: "select",
         searchable: true,
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
         options: [
           { label: "Block 1", value: "Block 1" },
           { label: "Block 2", value: "Block 2" },
           { label: "Block 3", value: "Block 3" },
         ],
-      };
-    } else if (key === "faceValue" || key === "payoutPrice") {
-      return {
-        hideLabel: true,
-        label:
-          key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1"),
-        type: "text",
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
-        prefix: "£",
-      };
-    } else if (key === "seatingArrangement") {
-      return {
-        hideLabel: true,
-        label: "Seating Arrangement",
+      },
+      seatingArrangement: {
         type: "select",
         searchable: true,
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
         options: [
           { label: "No preference", value: "No preference" },
           { label: "Together", value: "Together" },
           { label: "Separate", value: "Separate" },
         ],
-      };
-    } else if (key === "ticketsInHand") {
+      },
+      ticketsInHand: {
+        type: "checkbox",
+      },
+      dateToShip: {
+        type: "date",
+      },
+      faceValue: {
+        type: "text",
+        prefix: "£",
+      },
+      payoutPrice: {
+        type: "text",
+        prefix: "£",
+      },
+    };
+
+    return configs[key] || { type: "text" };
+  };
+
+  const createFormField = (key, value) => {
+    const config = getFieldConfig(key);
+    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
+
+    const baseField = {
+      hideLabel: true,
+      label: label,
+      id: key,
+      name: key,
+      value: value,
+      className: `!py-1 !px-2 ${fieldStyle}`,
+    };
+
+    if (config.type === "checkbox") {
       return {
-        hideLabel: true,
-        id: key,
-        name: key,
-        label: "Tickets In Hand",
+        ...baseField,
         type: "checkbox",
         checked: value,
-        className: `!py-1 !px-2`,
-      };
-    } else {
-      return {
-        hideLabel: true,
-        label:
-          key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1"),
-        type: type,
-        id: key,
-        name: key,
-        value: value,
-        className: `!py-1 !px-2 ${fieldStyle}`,
+        className: "!py-1 !px-2",
       };
     }
+
+    return {
+      ...baseField,
+      type: config.type,
+      searchable: config.searchable,
+      options: config.options,
+      prefix: config.prefix,
+    };
+  };
+
+  // Get column width class based on key
+  const getColumnWidth = (key) => {
+    const widthMap = {
+      ticketType: "w-24",
+      splitType: "w-24",
+      seatingArrangement: "w-32",
+      fanArea: "w-48",
+      sectionBlock: "w-28",
+      faceValue: "w-28",
+      payoutPrice: "w-28",
+      benefits: "w-24",
+      restrictions: "w-24",
+      dateToShip: "w-28",
+      ticketsInHand: "w-24",
+      uploadTickets: "w-24",
+    };
+    return widthMap[key] || "w-20";
+  };
+
+  // Determine which keys to display - use dynamicKeys if provided, otherwise use tableHeader
+  const getDisplayKeys = (item) => {
+    if (dynamicKeys.length > 0) {
+      return dynamicKeys;
+    }
+    return item.tableHeader || [];
+  };
+
+  // Calculate minimum table width based on number of columns
+  const getMinTableWidth = (columnCount) => {
+    const baseWidth = 1200;
+    const extraWidth = Math.max(0, (columnCount - 10) * 100);
+    return baseWidth + extraWidth;
   };
 
   return (
     <div className="bg-white rounded-md shadow-sm mb-4">
-      {listArrayValues.map((item, index) => (
-        <div key={index} className="mb-4">
-          <div
-            className="bg-[#130061] text-white p-4 rounded-t-md flex justify-between items-center cursor-pointer"
-            onClick={() => toggleAccordion(index)}
-          >
-            <div className="flex flex-col md:flex-row md:gap-4 items-start md:items-center">
-              <h3 className="text-lg font-medium">
-                {item.accordionTitle.title}
-              </h3>
-              <div className="flex flex-wrap items-center gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={blueCalendar}
-                    alt="calendar"
-                    width={14}
-                    height={14}
-                    className="invert"
-                  />
-                  <span className="text-[12px] font-normal text-white truncate">
-                    {item.accordionTitle.date}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={blueClock}
-                    alt="clock"
-                    width={14}
-                    height={14}
-                    className="invert"
-                  />
-                  <span className="text-[12px] font-normal text-white truncate">
-                    {item.accordionTitle.time}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={blueLocation}
-                    alt="location"
-                    width={14}
-                    height={14}
-                    className="invert"
-                  />
-                  <span className="text-[12px] font-normal text-white truncate">
-                    {item.accordionTitle.location}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <span>
-                {expandedAccordions.includes(index) ? (
-                  <IconStore.chevronUp className="size-5" />
-                ) : (
-                  <IconStore.chevronDown className="size-5" />
-                )}
-              </span>
-            </div>
-          </div>
+      {listArrayValues.map((item, index) => {
+        const displayKeys = getDisplayKeys(item);
+        const minTableWidth = getMinTableWidth(displayKeys.length + 3); // +3 for checkbox, actions, and buffer
 
-          {expandedAccordions.includes(index) && (
-            <div className="border border-t-0 border-[#E0E1EA] rounded-b-md relative">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[1200px]">
-                  <thead>
-                    <tr className="bg-[#F5F7FA] border-b border-[#E0E1EA]">
-                      <th className="w-10 px-2 py-3 sticky left-0 bg-[#F5F7FA] z-10">
-                        <input type="checkbox" className="rounded" />
-                      </th>
-                      {item.tableHeader.map((header, headerIndex) => (
-                        <th
-                          key={headerIndex}
-                          className="px-2 py-3 text-left text-sm font-medium text-[#323A70] whitespace-nowrap"
-                        >
-                          {header.title}
-                        </th>
-                      ))}
-                      <th className="px-2 py-3 text-left text-sm font-medium text-[#323A70] sticky right-0 bg-[#F5F7FA] z-10">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {item?.tableKey?.map((row, rowIndex) => (
-                      <tr
-                        key={rowIndex}
-                        className="border-b border-[#E0E1EA] hover:bg-gray-50"
-                      >
-                        <td className="px-2 py-2 sticky left-0 bg-white z-10">
-                          <input type="checkbox" className="rounded" />
-                        </td>
-                        <td className="px-2 py-2 w-full">
-                          <div className="w-24">
-                            <FormFields
-                              formFields={[
-                                createFormField("ticketType", row.ticketType),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <FormFields
-                            formFields={[
-                              createFormField("quantity", row.quantity, "text"),
-                            ]}
-                          />
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-24">
-                            <FormFields
-                              formFields={[
-                                createFormField("splitType", row.splitType),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-32">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "seatingArrangement",
-                                  row.seatingArrangement
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <FormFields
-                            formFields={[
-                              createFormField(
-                                "maxDisplayedTickets",
-                                row.maxDisplayedTickets,
-                                "text"
-                              ),
-                            ]}
-                          />
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-48">
-                            <FormFields
-                              formFields={[
-                                createFormField("fanArea", row.fanArea),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <FormFields
-                            formFields={[
-                              createFormField("category", row.category, "text"),
-                            ]}
-                          />
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-28">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "sectionBlock",
-                                  row.sectionBlock
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <FormFields
-                            formFields={[
-                              createFormField("row", row.row, "text"),
-                            ]}
-                          />
-                        </td>
-                        <td className="px-2 py-2">
-                          <FormFields
-                            formFields={[
-                              createFormField(
-                                "firstSeat",
-                                row.firstSeat,
-                                "text"
-                              ),
-                            ]}
-                          />
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-28">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "faceValue",
-                                  row.faceValue,
-                                  "text"
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-28">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "payoutPrice",
-                                  row.payoutPrice,
-                                  "text"
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-24">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "benefits",
-                                  row.benefits,
-                                  "text"
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-24">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "restrictions",
-                                  row.restrictions,
-                                  "text"
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-28">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "dateToShip",
-                                  row.dateToShip,
-                                  "date"
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-24 flex justify-center">
-                            <FormFields
-                              formFields={[
-                                createFormField(
-                                  "ticketsInHand",
-                                  row.ticketsInHand,
-                                  "checkbox"
-                                ),
-                              ]}
-                            />
-                          </div>
-                        </td>
-                        <td className="px-2 py-2">
-                          <div className="w-24">
-                            <button className="bg-blue-50 text-blue-600 px-3 py-1 rounded text-sm">
-                              Upload
-                            </button>
-                          </div>
-                        </td>
-                        <td className="px-2 py-2 sticky right-0 bg-white z-10">
-                          <div className="flex space-x-2">
-                            <button className="text-gray-500 hover:text-blue-600">
-                              <IconStore.copy className="size-5" />
-                            </button>
-                            <button className="text-gray-500 hover:text-blue-600">
-                              <IconStore.download className="size-5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        return (
+          <div key={index} className="mb-4">
+            <div
+              className="bg-[#343432] text-white p-4 rounded-t-md flex justify-between items-center cursor-pointer"
+              onClick={() => toggleAccordion(index)}
+            >
+              <div className="flex flex-col md:flex-row md:gap-4 items-start md:items-center min-w-0 flex-1">
+                <h3 className="text-lg font-medium truncate max-w-full md:max-w-xs">
+                  {item.accordionTitle?.title}
+                </h3>
+                <div className="flex flex-wrap items-center gap-4 text-sm min-w-0">
+                  {item.accordionTitle?.date && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Image
+                        src={blueCalendar}
+                        alt="calendar"
+                        width={14}
+                        height={14}
+                        className="invert flex-shrink-0"
+                      />
+                      <span className="text-[12px] font-normal text-white truncate">
+                        {item.accordionTitle.date}
+                      </span>
+                    </div>
+                  )}
+                  {item.accordionTitle?.time && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Image
+                        src={blueClock}
+                        alt="clock"
+                        width={14}
+                        height={14}
+                        className="invert flex-shrink-0"
+                      />
+                      <span className="text-[12px] font-normal text-white truncate">
+                        {item.accordionTitle.time}
+                      </span>
+                    </div>
+                  )}
+                  {item.accordionTitle?.location && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Image
+                        src={blueLocation}
+                        alt="location"
+                        width={14}
+                        height={14}
+                        className="invert flex-shrink-0"
+                      />
+                      <span className="text-[12px] font-normal text-white truncate max-w-[200px]">
+                        {item.accordionTitle.location}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center flex-shrink-0 ml-2">
+                <span>
+                  {expandedAccordions.includes(index) ? (
+                    <IconStore.chevronUp className="size-5" />
+                  ) : (
+                    <IconStore.chevronDown className="size-5" />
+                  )}
+                </span>
               </div>
             </div>
-          )}
-        </div>
-      ))}
+
+            {expandedAccordions.includes(index) && (
+              <div className="border border-t-0 border-[#E0E1EA] rounded-b-md relative">
+                <div className="overflow-x-auto">
+                  <table className="w-full" style={{ minWidth: `${minTableWidth}px` }}>
+                    <thead>
+                      <tr className="bg-[#F5F7FA] border-b border-[#E0E1EA]">
+                        <th className="w-10 px-2 py-3 sticky left-0 bg-[#F5F7FA] z-10">
+                          <input type="checkbox" className="rounded" />
+                        </th>
+                        {displayKeys.map((header, headerIndex) => (
+                          <th
+                            key={headerIndex}
+                            className="px-2 py-3 text-left text-sm font-medium text-[#323A70] whitespace-nowrap"
+                          >
+                            {typeof header === 'object' ? header.title : header}
+                          </th>
+                        ))}
+                        <th className="px-2 py-3 text-left text-sm font-medium text-[#323A70] sticky right-0 bg-[#F5F7FA] z-10">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {item?.tableKey?.map((row, rowIndex) => (
+                        <tr
+                          key={rowIndex}
+                          className="border-b border-[#E0E1EA] hover:bg-gray-50"
+                        >
+                          <td className="px-2 py-2 sticky left-0 bg-white z-10">
+                            <input type="checkbox" className="rounded" />
+                          </td>
+                          {displayKeys.map((header, colIndex) => {
+                            const key = typeof header === 'object' ? header.key : header;
+                            const value = row[key];
+
+                            if (key === 'uploadTickets') {
+                              return (
+                                <td key={colIndex} className="px-2 py-2">
+                                  <div className="w-24">
+                                    <button className="bg-blue-50 text-blue-600 px-3 py-1 rounded text-sm">
+                                      Upload
+                                    </button>
+                                  </div>
+                                </td>
+                              );
+                            }
+
+                            if (key === 'ticketsInHand') {
+                              return (
+                                <td key={colIndex} className="px-2 py-2">
+                                  <div className="w-24 flex justify-center">
+                                    <FormFields
+                                      formFields={[createFormField(key, value)]}
+                                    />
+                                  </div>
+                                </td>
+                              );
+                            }
+
+                            return (
+                              <td key={colIndex} className="px-2 py-2">
+                                <div className={getColumnWidth(key)}>
+                                  <FormFields
+                                    formFields={[createFormField(key, value)]}
+                                  />
+                                </div>
+                              </td>
+                            );
+                          })}
+                          <td className="px-2 py-2 sticky right-0 bg-white z-10">
+                            <div className="flex space-x-2">
+                              <button className="text-gray-500 hover:text-blue-600">
+                                <IconStore.copy className="size-5" />
+                              </button>
+                              <button className="text-gray-500 hover:text-blue-600">
+                                <IconStore.download className="size-5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };

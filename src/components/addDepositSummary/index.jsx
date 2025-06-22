@@ -169,8 +169,8 @@ const AddDepositSummary = ({ onClose }) => {
     <div className="w-full max-w-3xl mx-auto rounded-lg relative bg-white flex flex-col h-full sm:h-[100vh]">
       {/* Header - More compact on mobile */}
       <div className="flex px-3 sm:px-5 py-2 sm:py-3 justify-between border-b-[1px] border-gray-200 items-center rounded-t-lg">
-        <h2 className="text-base sm:text-lg md:text-[20px] text-[#323A70] font-semibold">
-          Top up your LMT pay Account
+        <h2 className="text-base sm:text-lg md:text-[20px] text-[#343432] font-semibold">
+          Top up your SB pay Account
         </h2>
         <button
           onClick={onClose}

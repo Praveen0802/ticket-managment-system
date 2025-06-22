@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StickyDataTable from "../components/stickyDataTable";
 import AvailableList from "../components/availableList";
 import FloatingLabelInput from "@/components/floatinginputFields";
@@ -52,17 +52,19 @@ const TrackingPage = (props) => {
   const dispatch = useDispatch();
   const isMobile = useIsMobile();
   const [filterApplied, setFIlterApplied] = useState({});
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+
   const headers = [
-    { key: "status", label: "Status", sortable: true },
-    { key: "event", label: "Event", sortable: true },
-    { key: "venue", label: "Venue", sortable: true },
-    { key: "eventDate", label: "Event Date", sortable: true },
-    { key: "category", label: "Category", sortable: true },
-    { key: "ticketType", label: "Ticket Type", sortable: true },
-    { key: "qty", label: "Qty", sortable: true },
+    { key: "status", label: "Status" },
+    { key: "event", label: "Event" },
+    { key: "venue", label: "Venue" },
+    { key: "eventDate", label: "Event Date" },
+    { key: "category", label: "Category" },
+    { key: "ticketType", label: "Ticket Type" },
+    { key: "qty", label: "Qty" },
     ...(isMobile
       ? [
-          { key: "price", label: "Price", sortable: true },
+          { key: "price", label: "Price" },
           { key: "attachment", label: "" },
           { key: "hand", label: "" },
           { key: "document", label: "" },
@@ -187,7 +189,7 @@ const TrackingPage = (props) => {
             {
               icon: <p>{item?.price_with_currency}</p>,
               className:
-                "border-r-[1px] border-[#E0E1EA] text-[#323A70] text-[12px]",
+                "border-r-[1px] border-[#E0E1EA] text-[#343432] text-[12px]",
             },
             {
               icon: (
@@ -314,6 +316,7 @@ const TrackingPage = (props) => {
     const params = {
       ...filterApplied,
       availability: availabilityStatus != 1 ? "" : 1,
+      page: 1,
     };
     await trackingFetchApi(
       params,
@@ -330,6 +333,7 @@ const TrackingPage = (props) => {
     const params = {
       ...filterApplied,
       search: value,
+      page: 1,
     };
     trackingFetchApi(params);
     setFIlterApplied(params);
@@ -354,11 +358,16 @@ const TrackingPage = (props) => {
     trackingFetchApi({});
   };
 
+  const toggleFilterExpand = () => {
+    setIsFilterExpanded(!isFilterExpanded);
+  };
+
   return (
-    <div className="flex flex-col gap-[24px]">
+    <div className="flex flex-col gap-[16px] md:gap-[24px]">
       <div className="bg-white">
-        <div className="py-[20px] px-[24px] border-b-[1px] border-[#E0E1EA]">
-          <div className=" flex max-md:flex-col gap-4 md:w-[70%]">
+        {/* Filter section */}
+        <div className="py-[16px] md:py-[20px] px-[16px] md:px-[24px] border-b-[1px] border-[#E0E1EA] overflow-x-auto">
+          <div className="flex gap-3 md:gap-4 md:w-[70%]">
             {items.map((item, index) => (
               <AvailableList
                 key={index}
@@ -376,76 +385,146 @@ const TrackingPage = (props) => {
             ))}
           </div>
         </div>
-        <div className="py-[20px] px-[24px] border-b-[1px] border-[#E0E1EA]">
-          <div className="flex max-md:flex-col gap-4 items-center w-[50%]">
-            <FloatingLabelInput
-              id="selectedMatch"
-              name="selectedMatch"
-              keyValue={"selectedMatch"}
-              type="text"
-              label="Search Match Event"
-              value={selectedMatch}
-              className={"!py-[7px] !px-[12px] !text-[#323A70] !text-[14px]"}
-              onChange={handleMatchSearch}
-              paddingClassName=""
-            />
-            <FloatingDateRange
-              id="eventDate"
-              name="eventDate"
-              keyValue="eventDate"
-              parentClassName="md:w-[350px] !max-md:w-full"
-              label="Event Date"
-              className="!py-[8px] !px-[16px] mobile:text-xs"
-              value={selectedDate}
-              singleDateMode={true}
-              onChange={(dateValue) => {
-                setSelectedDate(dateValue);
-                const params = {
-                  ...filterApplied,
-                  match_date: dateValue?.startDate,
-                };
-                trackingFetchApi(params);
-                setFIlterApplied(params);
-              }}
-            />
-          </div>
-        </div>
-        <div className="border-b-[1px] border-[#E0E1EA] flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <p
-              className={
-                "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
-              }
-            >
-              {data?.length} purchases
-            </p>
-            <button
-              onClick={() => resetFilters()}
-              className="border-[1px] cursor-pointer border-[#DADBE5] p-[4px]"
-            >
-              <IconStore.reload className="size-3.5" />
-            </button>
-          </div>
-          {!isEmptyObject(filterApplied) && (
-            <div className="flex gap-2 items-center">
-              {Object.entries(filterApplied)?.map(([key, value], index) => {
-                if (key === "page" || !value || value?.length == 0) return null;
-                return (
-                  <ClearChip
-                    key={index}
-                    text={key}
-                    value={
-                      Array.isArray(value) ? `${value?.length} selected` : value
+
+        {/* Search filters section */}
+        <div className="md:py-[20px] md:px-[24px] border-b-[1px] border-[#E0E1EA]">
+          {isMobile ? (
+            <div className="px-4 py-3">
+              <div
+                className="flex justify-between items-center cursor-pointer"
+                onClick={toggleFilterExpand}
+              >
+                <div className="flex items-center gap-2">
+                  {/* <IconStore.filter className="size-4" /> */}
+                  <span className="text-[14px] font-medium">Filters</span>
+                </div>
+                <div className="bg-gray-100 p-1 rounded-full">
+                  {isFilterExpanded ? (
+                    <IconStore.chevronUp className="size-4" />
+                  ) : (
+                    <IconStore.chevronDown className="size-4" />
+                  )}
+                </div>
+              </div>
+
+              {isFilterExpanded && (
+                <div className="mt-3 space-y-3">
+                  <FloatingLabelInput
+                    id="selectedMatch"
+                    name="selectedMatch"
+                    keyValue={"selectedMatch"}
+                    type="text"
+                    label="Search Match Event"
+                    value={selectedMatch}
+                    className={
+                      "!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"
                     }
-                    onClick={handleClearChip}
+                    onChange={handleMatchSearch}
+                    paddingClassName=""
                   />
-                );
-              })}
+                  <FloatingDateRange
+                    id="eventDate"
+                    name="eventDate"
+                    keyValue="eventDate"
+                    parentClassName="w-full"
+                    label="Event Date"
+                    className="!py-[8px] !px-[16px] text-xs"
+                    value={selectedDate}
+                    singleDateMode={true}
+                    onChange={(dateValue) => {
+                      setSelectedDate(dateValue);
+                      const params = {
+                        ...filterApplied,
+                        match_date: dateValue?.startDate,
+                        page: 1,
+                      };
+                      trackingFetchApi(params);
+                      setFIlterApplied(params);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className=" flex max-md:flex-col gap-4 items-center w-[50%]">
+              <FloatingLabelInput
+                id="selectedMatch"
+                name="selectedMatch"
+                keyValue={"selectedMatch"}
+                type="text"
+                label="Search match event"
+                value={selectedMatch}
+                className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"}
+                onChange={handleMatchSearch}
+                paddingClassName=""
+              />
+              <FloatingDateRange
+                id="eventDate"
+                name="eventDate"
+                keyValue="eventDate"
+                parentClassName="md:w-[350px] !max-md:w-full"
+                label="Event date"
+                className="!py-[8px] !px-[16px] mobile:text-xs"
+                value={selectedDate}
+                singleDateMode={true}
+                onChange={(dateValue) => {
+                  setSelectedDate(dateValue);
+                  const params = {
+                    ...filterApplied,
+                    match_date: dateValue?.startDate,
+                  };
+                  trackingFetchApi(params);
+                  setFIlterApplied(params);
+                }}
+              />
             </div>
           )}
         </div>
+
+        {/* Results count and filter chips */}
+        <div className="border-b-[1px] border-[#E0E1EA] py-2 md:py-0 px-4 md:px-0">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-2">
+              <p
+                className={
+                  "md:p-[20px] p-2 text-[13px] md:text-[14px] w-fit text-[#343432] font-semibold md:border-r-[1px] border-[#E0E1EA]"
+                }
+              >
+                {data?.length} purchases
+              </p>
+              <button
+                onClick={() => resetFilters()}
+                className="border-[1px] cursor-pointer border-[#DADBE5] p-[4px] hover:bg-gray-100"
+              >
+                <IconStore.reload className="size-3.5" />
+              </button>
+            </div>
+            {!isEmptyObject(filterApplied) && (
+              <div className="flex flex-wrap gap-2 items-center py-1 md:py-0">
+                {Object.entries(filterApplied)?.map(([key, value], index) => {
+                  if (key === "page" || !value || value?.length == 0)
+                    return null;
+                  return (
+                    <ClearChip
+                      key={index}
+                      text={key}
+                      value={
+                        Array.isArray(value)
+                          ? `${value?.length} selected`
+                          : value
+                      }
+                      onClick={handleClearChip}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="bg-white shadow rounded-lg mx-[24px] max-h-[350px] overflow-auto">
+
+      {/* Data table */}
+      <div className="bg-white shadow rounded-lg mx-[12px] md:mx-[24px] max-h-[350px] md:max-h-[350px] overflow-auto">
         <StickyDataTable
           headers={headers}
           data={data}

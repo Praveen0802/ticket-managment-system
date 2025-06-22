@@ -10,8 +10,8 @@ import { fetchRecentlyViewedList } from "@/utils/apiHandler/request";
 import { useRouter } from "next/router";
 
 const TradeHome = (props) => {
-  const { profile, response = {} } = props;
-  console.log(response, "propsprops");
+  console.log("TradeHome props", props);
+  const { profile, response = {}, showEventSearch } = props;
   const {
     hotEvents = {},
     lastMinuteEvents = [],
@@ -38,7 +38,7 @@ const TradeHome = (props) => {
   }, []);
 
   const constructViewDataType = (array) => {
-    return array?.map((item) => {
+    return Array.isArray(array) && array?.map((item) => {
       return {
         id: item?.m_id,
         name: item?.match_name,
@@ -56,23 +56,32 @@ const TradeHome = (props) => {
     {
       name: "Recently Viewed Events",
       icon: "eye",
-      events: constructViewDataType(recentlyViewedEvents),
+      events: constructViewDataType(recentlyViewedEvents?.value),
     },
     {
       name: "Hot Events",
       icon: "flame",
-      events: constructViewDataType(hotEvents?.top_matchs),
+      events: constructViewDataType(hotEvents?.value?.top_matchs),
     },
     {
       name: "Last-minute Events",
       icon: "clock",
-      events: constructViewDataType(lastMinuteEvents),
+      events: constructViewDataType(lastMinuteEvents?.value),
     },
   ];
 
   const [expandedSections, setExpandedSections] = useState(() => {
-    return sections.map((_, index) => index === 0);
+    // On mobile, only expand the first section by default
+    // On desktop, expand all sections
+    return sections.map((_, index) => (isMobile ? index === 0 : true));
   });
+
+  // Update expanded sections when screen size changes
+  useEffect(() => {
+    setExpandedSections(
+      sections.map((_, index) => (isMobile ? index === 0 : true))
+    );
+  }, [isMobile, sections.length]);
 
   const toggleSection = (index) => {
     setExpandedSections((currentExpandedSections) => {
@@ -100,14 +109,16 @@ const TradeHome = (props) => {
             <div
               key={`tab-${index}`}
               onClick={() => toggleSection(index)}
-              className={`flex-shrink-0 py-2 px-3 rounded-full flex items-center gap-1 ${
+              className={`flex-shrink-0 py-2 px-3 rounded-full flex items-center gap-1 cursor-pointer ${
                 expandedSections[index]
-                  ? "bg-[#130061] text-white"
+                  ? "bg-[#343432] text-white"
                   : "bg-white text-[#130061] border border-[#130061]"
               }`}
             >
               <IconStore.eye className="size-4" />
-              <span className="text-xs whitespace-nowrap">{section.name}</span>
+              <span className="text-xs whitespace-nowrap font-medium">
+                {section.name}
+              </span>
             </div>
           ))}
         </div>
@@ -118,18 +129,18 @@ const TradeHome = (props) => {
           <div
             key={index}
             className={`transition-all duration-300 ease-in-out ${
-              isMobile ? "mb-3" : "mb-4"
+              isMobile ? "mb-2" : "mb-4"
             }`}
           >
             {/* Section header */}
             <div
-              className={`flex items-center justify-between bg-[#130061] text-white px-4 py-[14px] ${
+              className={`flex items-center justify-between bg-[#343432] text-white px-4 py-[14px] ${
                 expandedSections[index] ? "rounded-t-[6px]" : "rounded-[6px]"
               } cursor-pointer`}
               onClick={() => toggleSection(index)}
             >
               <div className="flex gap-3 items-center">
-                <IconStore.eye className="size-4" />
+              <IconStore.eye className="size-4" />
                 <span className="text-[14px] font-medium">{section.name}</span>
               </div>
               <div className="flex items-center bg-[#FFFFFF26] p-1 rounded-full">
@@ -154,6 +165,7 @@ const TradeHome = (props) => {
                   section.events.map((event, eventIndex) => (
                     <EventListView
                       key={eventIndex}
+                      showEventSearch={showEventSearch}
                       event={event}
                       onClick={() => handleEventClick(event)}
                     />

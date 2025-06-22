@@ -26,7 +26,7 @@ const FloatingCheckbox = ({
         <div className=" flex items-center gap-2">
           <p
             title={label}
-            className={`${labelClassName} text-[12px] truncate text-[#323A70] font-normal`}
+            className={`${labelClassName} text-[12px] truncate text-[#343432] font-normal`}
           >
             {label}
           </p>

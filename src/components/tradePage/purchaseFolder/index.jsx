@@ -14,7 +14,7 @@ import ClearChip from "../inventoryFolder/components/clearChip";
 import { isEmptyObject } from "@/utils/helperFunctions";
 
 const PurchaseFolder = (props) => {
-  const { response, success,booking_no='' } = props;
+  const { response, success, booking_no = "" } = props;
   const [listTicketDetails, setListTicketDetails] = useState(
     response?.data?.data
   );
@@ -83,19 +83,19 @@ const PurchaseFolder = (props) => {
   };
 
   const headers = [
-    { key: "status", label: "Status", sortable: true },
-    { key: "bookingNo", label: "Booking Status", sortable: true },
-    { key: "listmyTicket", label: "List my Ticket ID", sortable: true },
-    { key: "orderDate", label: "Order Date", sortable: true },
-    { key: "event", label: "Event", sortable: true },
-    { key: "venue", label: "Venue", sortable: true },
-    { key: "eventDate", label: "Event Date", sortable: true },
-    { key: "category", label: "Category", sortable: true },
-    { key: "ticketType", label: "Ticket Type", sortable: true },
-    { key: "qty", label: "Qty", sortable: true },
-    { key: "ticketPrice", label: "Ticket Price", sortable: true },
-    { key: "subTotal", label: "Subtotal", sortable: true },
-    { key: "total", label: "Total", sortable: true },
+    { key: "status", label: "Status", },
+    { key: "bookingNo", label: "Booking Status", },
+    { key: "listmyTicket", label: "Booking No", },
+    { key: "orderDate", label: "Order Date", },
+    { key: "event", label: "Event", },
+    { key: "venue", label: "Venue", },
+    { key: "eventDate", label: "Event Date", },
+    { key: "category", label: "Category", },
+    { key: "ticketType", label: "Ticket Type", },
+    { key: "qty", label: "Qty", },
+    { key: "ticketPrice", label: "Ticket Price", },
+    { key: "subTotal", label: "Subtotal", },
+    { key: "total", label: "Total", },
   ];
 
   const data = listTicketDetails?.map((item) => {
@@ -110,9 +110,9 @@ const PurchaseFolder = (props) => {
       category: item?.seat_category,
       ticketType: item?.ticket_type_name,
       qty: item?.quantity,
-      ticketPrice: `${item?.currency_icon}${item?.ticket_price}`,
-      subTotal: `${item?.currency_icon}${item?.total_ticket_price}`,
-      total: `${item?.currency_icon}${item?.total_amount}`,
+      ticketPrice: item?.ticket_price_converted,
+      subTotal: item?.total_ticket_price_converted,
+      total: item?.total_amount_converted,
     };
   });
 
@@ -179,6 +179,7 @@ const PurchaseFolder = (props) => {
     const params = {
       ...filtersApplied,
       match_name: value,
+      page: 1,
     };
     fetchAPiDetails(params);
   };
@@ -191,6 +192,7 @@ const PurchaseFolder = (props) => {
         ...filtersApplied,
         event_date_from: dateRange?.startDate,
         event_date_to: dateRange?.endDate,
+        page:1
       };
     }
     if (key == "orderDate") {
@@ -221,6 +223,7 @@ const PurchaseFolder = (props) => {
       ...filtersApplied,
       upcomming: updatedCheckboxValue?.upcomming ? 1 : 0,
       expired: updatedCheckboxValue?.expired ? 1 : 0,
+      page: 1,
     };
     fetchAPiDetails(params);
   };
@@ -234,6 +237,7 @@ const PurchaseFolder = (props) => {
     const params = {
       ...filtersApplied,
       [key]: value,
+      page:1
     };
     fetchAPiDetails(params);
   };
@@ -242,7 +246,7 @@ const PurchaseFolder = (props) => {
     <>
       <div className="flex justify-between items-center mb-4">
         <button
-          className="flex items-center gap-2 text-[#323A70] font-medium"
+          className="flex items-center gap-2 text-[#343432] font-medium"
           onClick={() => setIsFilterExpanded(!isFilterExpanded)}
         >
           <span>{isFilterExpanded ? "Hide Filters" : "Show Filters"}</span>
@@ -262,9 +266,9 @@ const PurchaseFolder = (props) => {
             name="selectedMatch"
             keyValue={"selectedMatch"}
             type="text"
-            label="Search Match Event"
+            label="Search Match event or Booking number"
             value={selectedMatch}
-            className={"!py-[7px] !px-[12px] !text-[#323A70] !text-[14px]"}
+            className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px]"}
             onChange={handleMatchSearch}
             paddingClassName=""
             autoComplete="off"
@@ -275,7 +279,7 @@ const PurchaseFolder = (props) => {
             name="eventDate"
             keyValue="eventDate"
             parentClassName="!w-full"
-            label="Event Date"
+            label="Event date"
             className="!py-[8px] !px-[16px] text-xs"
             value={eventDate}
             onChange={(dateValue) => handleDateChange(dateValue, "eventDate")}
@@ -286,14 +290,14 @@ const PurchaseFolder = (props) => {
             name="orderDate"
             keyValue="orderDate"
             parentClassName="!w-full"
-            label="Order Date"
+            label="Order date"
             className="!py-[8px] !px-[16px] text-xs"
             value={orderDate}
             onChange={(dateValue) => handleDateChange(dateValue, "orderDate")}
           />
 
           <FloatingSelect
-            label={"Ticket Status"}
+            label={"Ticket status"}
             options={[
               { value: "fulfilled", label: "Fulfilled" },
               { value: "incomplete", label: "Incomplete" },
@@ -305,10 +309,11 @@ const PurchaseFolder = (props) => {
               handleSelectChange(e, "ticket_status");
             }}
             paddingClassName="!py-[6px] !px-[12px] w-full text-xs"
+                labelClassName="!text-[11px]"
           />
 
           <FloatingSelect
-            label={"Booking Status"}
+            label={"Booking status"}
             options={[
               { value: 0, label: "Failed" },
               { value: 1, label: "Confirmed" },
@@ -326,6 +331,7 @@ const PurchaseFolder = (props) => {
               handleSelectChange(e, "booking_status");
             }}
             paddingClassName="!py-[6px] !px-[12px] w-full text-xs"
+                labelClassName="!text-[11px]"
           />
         </div>
       )}
@@ -358,9 +364,9 @@ const PurchaseFolder = (props) => {
         name="selectedMatch"
         keyValue={"selectedMatch"}
         type="text"
-        label="Search Match Event"
+        label="Search Match event or Booking number"
         value={selectedMatch}
-        className={"!py-[7px] !px-[12px] !text-[#323A70] !text-[14px] "}
+        className={"!py-[7px] !px-[12px] !text-[#343432] !text-[14px] "}
         onChange={handleMatchSearch}
         paddingClassName=""
         autoComplete="off"
@@ -370,7 +376,7 @@ const PurchaseFolder = (props) => {
         name="eventDate"
         keyValue="eventDate"
         parentClassName="!w-[200px]"
-        label="Event Date"
+        label="Event date"
         subParentClassName="!w-[200px]"
         className="!py-[8px] !px-[16px] mobile:text-xs"
         value={eventDate}
@@ -382,13 +388,13 @@ const PurchaseFolder = (props) => {
         keyValue="orderDate"
         parentClassName="!w-[350px]"
         subParentClassName="!w-[200px]"
-        label="Order Date"
+        label="Order date"
         className="!py-[8px] !px-[16px] mobile:text-xs"
         value={orderDate}
         onChange={(dateValue) => handleDateChange(dateValue, "orderDate")}
       />
       <FloatingSelect
-        label={"Ticket Status"}
+        label={"Ticket status"}
         options={[
           { value: "fulfilled", label: "Fulfilled" },
           { value: "incomplete", label: "Incomplete" },
@@ -400,9 +406,10 @@ const PurchaseFolder = (props) => {
           handleSelectChange(e, "ticket_status");
         }}
         paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-xs"
+        labelClassName="!text-[11px]"
       />
       <FloatingSelect
-        label={"Booking Status"}
+        label={"Booking status"}
         options={bookingStatusOptions}
         selectedValue={selectedBookingStatus}
         keyValue="booking_status"
@@ -411,6 +418,7 @@ const PurchaseFolder = (props) => {
           handleSelectChange(e, "booking_status");
         }}
         paddingClassName="!py-[6px] !px-[12px] w-full mobile:text-xs"
+            labelClassName="!text-[11px]"
       />
     </div>
   );
@@ -502,7 +510,7 @@ const PurchaseFolder = (props) => {
             <div className="flex gap-2 items-center">
               <p
                 className={
-                  "p-[20px] text-[14px] w-fit text-[#323A70] font-semibold border-r-[1px] border-[#E0E1EA]"
+                  "p-[20px] text-[14px] w-fit text-[#343432] font-semibold border-r-[1px] border-[#E0E1EA]"
                 }
               >
                 {data?.length} purchases

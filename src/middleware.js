@@ -48,7 +48,8 @@ export async function middleware(request) {
       if (validateAuthToken) {
         if (validateAuthToken?.token) {
           const response = NextResponse.next();
-          response.cookies.set("auth_token", validateAuthToken.token, {
+          console.log("enteringHereeeee");
+          response.cookies.set("auth_token", decodeURIComponent(validateAuthToken?.token), {
             httpOnly: true,
             // secure: process.env.NODE_ENV === 'production',
             sameSite: "strict",
@@ -84,12 +85,16 @@ export async function middleware(request) {
   } else if (validateAuthToken) {
     if (validateAuthToken?.token) {
       const response = NextResponse.next();
-      response.cookies.set("auth_token", validateAuthToken?.token, {
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production',
-        sameSite: "strict",
-        // maxAge: 3600 // Optional: set expiration
-      });
+      response.cookies.set(
+        "auth_token",
+        decodeURIComponent(validateAuthToken?.token),
+        {
+          httpOnly: true,
+          // secure: process.env.NODE_ENV === 'production',
+          sameSite: "strict",
+          // maxAge: 3600 // Optional: set expiration
+        }
+      );
       response.cookies.set(
         "auth_token_validity",
         currentTimeEpochTimeInMilliseconds().toString()

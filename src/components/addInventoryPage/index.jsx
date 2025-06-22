@@ -6,7 +6,7 @@ import Image from "next/image";
 import { IconStore } from "@/utils/helperFunctions/iconStore";
 import AddViewForm from "./AddViewForm";
 import Button from "../commonComponents/button";
-import InventoryTable from "./InventoryTable"; // Import the new component
+import InventoryTable from "./InventoryTable";
 
 const renderListValue = (icon, text) => {
   return (
@@ -31,13 +31,43 @@ const AddInventoryPage = () => {
     },
   ];
 
+  // Define dynamic keys that you want to display - you can customize this array
+  const dynamicTableKeys = [
+    { title: "Ticket Type", key: "ticketType" },
+    { title: "Quantity", key: "quantity" },
+    { title: "Split Type", key: "splitType" },
+    { title: "Seating Arrangement", key: "seatingArrangement" },
+    { title: "Max Displayed Tickets", key: "maxDisplayedTickets" },
+    { title: "Fan Area", key: "fanArea" },
+    { title: "Category", key: "category" },
+    { title: "Section/Block", key: "sectionBlock" },
+    { title: "Row", key: "row" },
+    { title: "First Seat", key: "firstSeat" },
+    { title: "Face Value", key: "faceValue" },
+    { title: "Payout Price", key: "payoutPrice" },
+    { title: "Benefits", key: "benefits" },
+    { title: "Restrictions", key: "restrictions" },
+    { title: "Date to Ship", key: "dateToShip" },
+    { title: "Tickets In Hand", key: "ticketsInHand" },
+    { title: "Upload Tickets", key: "uploadTickets" },
+  ];
+
+  // Alternative: You can also use a simpler array with just the keys
+  // const dynamicTableKeys = [
+  //   "ticketType", 
+  //   "quantity", 
+  //   "faceValue", 
+  //   "payoutPrice", 
+  //   "ticketsInHand"
+  // ];
+
   const listArrayValues = [
     {
       accordionTitle: {
         title: "Chelsea vs Arsenal - Premier League",
         date: "Sun, 10 Nov 2024",
         time: "16:30",
-        location: "Stamford Bridge, London, United Kingdom ",
+        location: "Stamford Bridge, London, United Kingdom",
       },
       tableHeader: [
         { title: "Ticket Type", key: "ticketType" },
@@ -58,7 +88,7 @@ const AddInventoryPage = () => {
         { title: "First Seat", key: "firstSeat" },
         { title: "Face Value", key: "faceValue" },
         { title: "Payout Price", key: "payoutPrice" },
-        { title: "Benefits", key: "benifits" },
+        { title: "Benefits", key: "benefits" },
         { title: "Restrictions", key: "restrictions" },
         { title: "Date to Ship", key: "dateToShip" },
         { title: "Tickets In Hand", key: "ticketsInHand" },
@@ -112,7 +142,7 @@ const AddInventoryPage = () => {
         title: "Manchester United FC vs AFC Bournemouth",
         date: "Sun, 10 Nov 2024",
         time: "16:30",
-        location: "Stamford Bridge, London, United Kingdom ",
+        location: "Old Trafford, Manchester, United Kingdom",
       },
       tableHeader: [
         { title: "Ticket Type", key: "ticketType" },
@@ -133,7 +163,7 @@ const AddInventoryPage = () => {
         { title: "First Seat", key: "firstSeat" },
         { title: "Face Value", key: "faceValue" },
         { title: "Payout Price", key: "payoutPrice" },
-        { title: "Benefits", key: "benifits" },
+        { title: "Benefits", key: "benefits" },
         { title: "Restrictions", key: "restrictions" },
         { title: "Date to Ship", key: "dateToShip" },
         { title: "Tickets In Hand", key: "ticketsInHand" },
@@ -187,7 +217,7 @@ const AddInventoryPage = () => {
         title: "Arsenal vs AFC Bournemouth",
         date: "Sun, 10 Nov 2024",
         time: "16:30",
-        location: "Stamford Bridge, London, United Kingdom ",
+        location: "Emirates Stadium, London, United Kingdom",
       },
       tableHeader: [
         { title: "Ticket Type", key: "ticketType" },
@@ -208,7 +238,7 @@ const AddInventoryPage = () => {
         { title: "First Seat", key: "firstSeat" },
         { title: "Face Value", key: "faceValue" },
         { title: "Payout Price", key: "payoutPrice" },
-        { title: "Benefits", key: "benifits" },
+        { title: "Benefits", key: "benefits" },
         { title: "Restrictions", key: "restrictions" },
         { title: "Date to Ship", key: "dateToShip" },
         { title: "Tickets In Hand", key: "ticketsInHand" },
@@ -258,11 +288,12 @@ const AddInventoryPage = () => {
       ],
     },
   ];
+
   return (
     <div className="bg-[#F5F7FA]">
       <div className="bg-white">
         <div className="border-b-[1px] p-4 border-[#E0E1EA] flex flex-col gap-2">
-          <div className=" w-full md:w-auto  flex items-center justify-between ">
+          <div className="w-full md:w-auto flex items-center justify-between">
             {renderListValue(
               <Image
                 src={blueLocation}
@@ -270,7 +301,7 @@ const AddInventoryPage = () => {
                 width={14}
                 height={14}
               />,
-              "Stamford Bridge, London, United Kingdom "
+              "Stamford Bridge, London, United Kingdom"
             )}
             <p className="text-[12px] font-semibold text-[#0137D5] cursor-pointer hover:underline">
               View Map
@@ -289,7 +320,7 @@ const AddInventoryPage = () => {
                 {renderListValue(
                   <Image
                     src={blueCalendar}
-                    alt="location"
+                    alt="calendar"
                     width={14}
                     height={14}
                   />,
@@ -298,7 +329,7 @@ const AddInventoryPage = () => {
                 {renderListValue(
                   <Image
                     src={blueClock}
-                    alt="location"
+                    alt="clock"
                     width={14}
                     height={14}
                   />,
@@ -323,9 +354,12 @@ const AddInventoryPage = () => {
         </div>
       </div>
 
-      {/* Add the new InventoryTable component here */}
-      <div className="p-4">
-        <InventoryTable listArrayValues={listArrayValues} />
+      {/* InventoryTable with dynamic keys */}
+      <div className="p-4 max-h-[calc(100vh-450px)] overflow-y-auto">
+        <InventoryTable 
+          listArrayValues={listArrayValues} 
+          dynamicKeys={dynamicTableKeys} 
+        />
       </div>
     </div>
   );

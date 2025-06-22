@@ -10,6 +10,7 @@ const AdyenDropIn = ({
   paymentMethod,
   bookingConfirm,
   setHideCta,
+  bookingNo
 }) => {
   const dropinContainerRef = useRef(null);
 
@@ -69,7 +70,7 @@ const AdyenDropIn = ({
             })
               .then((data) => {
                 console.log("Final payment update response:", data);
-                bookingConfirm(true, "Payment successful");
+                bookingConfirm(true, "Payment successful",bookingNo);
                 // Optionally redirect or show message here
               })
               .catch((err) => {
