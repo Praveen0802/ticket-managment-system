@@ -91,6 +91,8 @@ const EventSearch = ({ onClose, allCategories }) => {
       label: item?.name,
       id: item?.id,
       ...(item?.is_tournament && { is_tournament: item?.is_tournament }),
+      ...(item?.game_category && { game_category: item?.game_category }),
+      ...(item?.is_tixstock && { is_tixstock: item?.is_tixstock }),
       ...(item?.is_game_category && {
         is_game_category: item?.is_game_category,
       }),
@@ -135,13 +137,14 @@ const EventSearch = ({ onClose, allCategories }) => {
             ? selectedObject?.is_game_category
             : "",
         category_id: selectedObject?.id != undefined ? selectedObject?.id : "",
+        is_tixstock: selectedObject?.is_tixstock || "",
+        game_category: selectedObject?.game_category || "",
       };
       console.log(updatedQueryValues, "updatedQueryValues");
       setFiltersApplied(updatedQueryValues);
       fetchApiCall(updatedQueryValues);
     }
   };
-
   const handleVenueViewClick = async (params, name, type) => {
     setFormFieldValues({ ...formFieldValues, [type]: name });
     setVenueOptions([]);
