@@ -364,7 +364,7 @@ const EventSearch = ({ onClose, allCategories }) => {
   return (
     <div className="bg-white w-full h-full shadow-md border-r-[1px] border-[#E0E1EA] flex flex-col">
       <div className="flex justify-between items-center border-b-[1px] border-[#E0E1EA] p-4">
-        <p className="text-[#343432] text-[18px] font-semibold">Event Search</p>
+        <p className="text-[#343432] text-[16px] font-semibold">Event/Tournament/Category/Venue/Team/<br/>Country/City</p>
         <div className="flex gap-2 items-center">
           <button onClick={handleClickReset} className="cursor-pointer">
             <IconStore.reload className="stroke-[#3E2E7E] size-4" />
