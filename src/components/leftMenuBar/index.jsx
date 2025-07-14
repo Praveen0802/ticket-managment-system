@@ -190,6 +190,7 @@ const LeftMenuBar = () => {
             <div
               key={index}
               onClick={() => handleSelectedClick(index, item)}
+              title={item?.key == "name" ?  currentUser?.first_name : item?.name ? item?.name : item?.text}
               className={`cursor-pointer flex gap-3 items-center p-[6px] transition-colors duration-200 ${
                 item?.key === active
                   ? "bg-[#64EAA5] rounded-md"
