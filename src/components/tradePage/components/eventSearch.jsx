@@ -283,71 +283,71 @@ const EventSearch = ({ onClose, allCategories }) => {
           ))}
         </div>
       );
-    } else {
-      // Check if there are no results
-      const hasPerformers = displayEventValues?.performers?.length > 0;
-      const hasEvents = displayEventValues?.events?.length > 0;
-      const hasSearched = Object.values(filtersApplied).length > 0;
-      // Only show "no results" if user has searched and there are no results
-      if (hasSearched && !hasPerformers && !hasEvents) {
-        return (
-          <div className="flex flex-col items-center justify-center py-8 px-4">
-            <div className="text-gray-400 mb-4">
-              <SearchX className="w-12 h-12" />
-            </div>
-            <p className="text-gray-500 text-center text-sm">
-              No results found
-            </p>
-            <p className="text-gray-400 text-center text-xs mt-1">
-              Try adjusting your search criteria
-            </p>
-          </div>
-        );
-      }
+    }
 
-      // Return empty div if no search has been performed yet
-      if (!hasSearched) {
-        return <div></div>;
-      }
+    const hasPerformers = displayEventValues?.performers?.length > 0;
+    const hasEvents = displayEventValues?.events?.length > 0;
+    const hasSearched = Object.values(filtersApplied).some(
+      (value) => value !== "" && value !== null && value !== undefined
+    );
 
+    // Return empty div if no search has been performed yet
+    if (!hasSearched) {
+      return <div></div>;
+    }
+
+    // Only show "no results" if user has searched and there are no results
+    if (!hasEvents ) {
       return (
-        <>
-          {hasPerformers && (
-            <div className="flex flex-col gap-2">
-              <p className="px-4 text-[13px] font-medium">Performers</p>
-              {displayEventValues?.performers?.map((item, index) => (
-                <p
-                  key={index}
-                  onClick={() => {
-                    handleChange(
-                      { target: { value: item?.team_name } },
-                      "event_date"
-                    );
-                  }}
-                  className="border border-[#E0E1EA] mx-4 px-1 rounded-md py-1 text-[13px] text-[#343432] cursor-pointer hover:scale-105 transition-transform duration-200"
-                >
-                  {item?.team_name}
-                </p>
-              ))}
-            </div>
-          )}
-          {hasEvents && (
-            <div className={`flex flex-col gap-2 p-3 `}>
-              <p className="px-4 text-[13px] font-medium">Events</p>
-              {displayEventValues.events.map((item, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleEventClick(item)}
-                  className="hover:scale-105 cursor-pointer transition-transform duration-200"
-                >
-                  <SearchedList item={item} />
-                </div>
-              ))}
-            </div>
-          )}
-        </>
+        <div className="flex flex-col items-center justify-center py-8 px-4">
+          <div className="text-gray-400 mb-4">
+            <SearchX className="w-12 h-12" />
+          </div>
+          <p className="text-gray-500 text-center text-sm">No results found</p>
+          <p className="text-gray-400 text-center text-xs mt-1">
+            Try adjusting your search criteria
+          </p>
+        </div>
       );
     }
+
+    return (
+      <>
+        {hasPerformers && (
+          <div className="flex flex-col gap-2">
+            <p className="px-4 text-[13px] font-medium">Performers</p>
+            {displayEventValues?.performers?.map((item, index) => (
+              <p
+                key={index}
+                onClick={() => {
+                  handleChange(
+                    { target: { value: item?.team_name } },
+                    "event_date"
+                  );
+                }}
+                className="border border-[#E0E1EA] mx-4 px-1 rounded-md py-1 text-[13px] text-[#343432] cursor-pointer hover:scale-105 transition-transform duration-200"
+              >
+                {item?.team_name}
+              </p>
+            ))}
+          </div>
+        )}
+        {hasEvents && (
+          <div className={`flex flex-col gap-2 p-3 `}>
+            <p className="px-4 text-[13px] font-medium">Events</p>
+            {displayEventValues.events.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => handleEventClick(item)}
+                className="hover:scale-105 cursor-pointer transition-transform duration-200"
+              >
+                <SearchedList item={item} />
+              </div>
+            ))}
+          </div>
+        )}
+      </>
+    );
   };
 
   const dateOptions = [
