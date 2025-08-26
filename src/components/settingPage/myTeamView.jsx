@@ -161,7 +161,7 @@ const MyTeamView = (props) => {
       <div className="bg-white p-3 sm:p-4 border-[1px] flex flex-col gap-3 sm:gap-4 border-[#eaeaf1] w-full flex-grow overflow-hidden">
         <div className="border-[1px] border-[#eaeaf1] rounded-md">
           {/* Search and filter area */}
-          <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <div className="p-3 sm:p-4 border-b-[1px] border-[#eaeaf1] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
             <div className="border-[1px] flex gap-2 items-center px-1 py-[4px] w-full sm:w-[40%] border-[#eaeaf1] rounded-md">
               <IconStore.search className="size-4 stroke-[#343432] stroke-4" />
               <input
@@ -174,6 +174,18 @@ const MyTeamView = (props) => {
                 className="outline-none  placeholder:font-[300] placeholder:opacity-50 text-xs sm:text-sm w-full"
               />
             </div>
+             <Button
+            label="+ Add Users"
+            onClick={() => {
+              setUserViewPopup({
+                show: true,
+                type: "add",
+              });
+            }}
+            classNames={{
+              root: "bg-[#343432] text-white w-fit px-4 py-2 text-xs sm:text-sm",
+            }}
+          />
           </div>
 
           {/* User count and pagination controls */}
@@ -245,18 +257,7 @@ const MyTeamView = (props) => {
               loading={isLoading}
             />
           </div>
-          <Button
-            label="+ Add Users"
-            onClick={() => {
-              setUserViewPopup({
-                show: true,
-                type: "add",
-              });
-            }}
-            classNames={{
-              root: "bg-[#343432] text-white w-fit px-4 py-2 text-xs sm:text-sm",
-            }}
-          />
+         
         </div>
       </div>
       <RightViewModal
