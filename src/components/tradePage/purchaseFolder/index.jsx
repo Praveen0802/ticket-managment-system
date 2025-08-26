@@ -28,7 +28,7 @@ const PurchaseFolder = (props) => {
     upcoming_count: response?.upcoming_count,
   });
   const [checkboxValue, setCheckboxValue] = useState({
-    upcomming: false,
+    upcomming: true,
     expired: false,
   });
   const [lastPage, setLastPage] = useState(response?.data?.last_page);
@@ -54,7 +54,7 @@ const PurchaseFolder = (props) => {
   ];
   const [listItems, setListItems] = useState(initialListItems);
 
-  const [filtersApplied, setFiltersApplied] = useState({});
+  const [filtersApplied, setFiltersApplied] = useState({ upcomming: 1, page: 1 });
   const [eventDate, setEventDate] = useState("");
   const [orderDate, setOrderDate] = useState("");
   const [showOrderPopup, setShowOrderPopup] = useState({
@@ -67,10 +67,13 @@ const PurchaseFolder = (props) => {
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
   useEffect(() => {
+    // Show toast if booking completed
     if (success == "true") {
       toast.success("Booking Completed successfully");
       eyeIconClick({ booking_no: booking_no });
     }
+    // Fetch initial data with Upcoming Event checked
+    fetchAPiDetails({ upcomming: 1, page: 1 });
   }, []);
   const eyeIconClick = async (item) => {
     const response = await purchaseHistory("", {

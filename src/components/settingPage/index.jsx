@@ -39,11 +39,11 @@ const SettingsPage = (props) => {
       key: "addressBook",
     },
 
-    {
-      icon: <IconStore.profile className={IconclassName} />,
-      title: "My Customers",
-      key: "myCustomers",
-    },
+    // {
+    //   icon: <IconStore.profile className={IconclassName} />,
+    //   title: "My Customers",
+    //   key: "myCustomers",
+    // },
     {
       icon: <IconStore.tickets className={IconclassName} />,
       title: "Ticket Delivery",
