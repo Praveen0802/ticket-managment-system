@@ -26,7 +26,7 @@ const TradePage = (props) => {
 
   const tabFields = [
     {
-      name: "Home",
+      name: "Search",
       key: "home",
       route: "/home",
       icon: (
@@ -34,7 +34,7 @@ const TradePage = (props) => {
       ),
     },
     {
-      name: "Inventory",
+      name: "Search Results",
       key: "inventory",
       route: "/inventory",
       icon: (
@@ -42,7 +42,7 @@ const TradePage = (props) => {
       ),
     },
     {
-      name: "Tracking",
+      name: "Favorites",
       key: "tracking",
       route: "/tracking",
       icon: (
@@ -52,7 +52,7 @@ const TradePage = (props) => {
       ),
     },
     {
-      name: "Purchase",
+      name: "My Purchases",
       key: "purchase",
       route: "/purchase",
       icon: (

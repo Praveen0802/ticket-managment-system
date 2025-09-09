@@ -6,7 +6,6 @@ import category from "../../../public/category.svg";
 import addSquare from "../../../public/add-square.svg";
 import diagram from "../../../public/diagram.svg";
 import ticket from "../../../public/ticket.svg";
-import documentupload from "../../../public/document-upload.svg";
 import listing from "../../../public/listing.svg";
 import shopping from "../../../public/shopping-cart-02.svg";
 import logout from "../../../public/logout.svg";
@@ -46,8 +45,8 @@ const LeftMenuBar = () => {
       route: "reports",
     },
     {
-      image: documentupload,
-      name: "SB Trade",
+      icon: <IconStore.search className="size-6 stroke-white shrink-0" />,
+      name: "Search Tickets",
       key: "lmt-trade",
       route: "trade/home",
     },
